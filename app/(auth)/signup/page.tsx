@@ -56,7 +56,7 @@ function SignUpForm() {
           email: formData.email,
           password: formData.password,
           redirect: true,
-          callbackUrl: "/business",
+          callbackUrl: "/home",
         });
       } else {
         const error = await res.json();

@@ -1,7 +1,9 @@
 "use client";
+import "../../../styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import React from "react";
-import Form from "./form";
+import NavBar from "../Navbar";
+import TreatmentsForm from "./treatmentsForm";
 
 export default function PriceListLayout({
   children,
@@ -11,9 +13,12 @@ export default function PriceListLayout({
   return (
     <section>
       <SessionProvider>
-        <Form />
+        <NavBar />
+        <div className="block pl-64">
+          {children}
+          <TreatmentsForm />
+        </div>
       </SessionProvider>
-      <div>{children}</div>
     </section>
   );
 }

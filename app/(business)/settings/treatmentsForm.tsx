@@ -11,7 +11,7 @@ type formData = {
   duration: string;
 };
 
-function Form() {
+function TreatmentsForm() {
   const router = useRouter();
   const { data: session } = useSession();
   const user = session?.user as User;
@@ -81,4 +81,4 @@ function Form() {
   );
 }
 
-export default Form;
+export default TreatmentsForm;

@@ -41,7 +41,7 @@ const Treatment = React.memo(({ item }: treatmentProps) => {
   if (error) return <h1>Error...</h1>;
 
   return (
-    <div className="p-10 bg-yellow-200 border-2 border-black m-2 shadow-xl">
+    <li className="p-10 bg-yellow-200 border-2 border-black m-2 shadow-xl">
       <p>id:{id}</p>
       <p>title: {title}</p>
       <p>cost: {cost}</p>
@@ -52,7 +52,7 @@ const Treatment = React.memo(({ item }: treatmentProps) => {
       >
         delete
       </button>
-    </div>
+    </li>
   );
 });
 

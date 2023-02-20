@@ -44,7 +44,7 @@ function SignUpForm() {
         email: "",
         password: "",
       });
-      router.push("/business");
+      router.push("/home");
     } catch (err: any) {
       console.log(err);
     }

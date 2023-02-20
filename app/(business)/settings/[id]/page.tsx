@@ -3,6 +3,7 @@ import React from "react";
 import prisma from "../../../../lib/prisma";
 import { IdProps } from "../../../../types";
 import Treatment from "./Treatment";
+import ProfileImage from "./ProfileImage";
 
 export const revalidate = 1;
 
@@ -23,11 +24,18 @@ async function PriceListPage({ params: { id } }: IdProps) {
   if (!user) return notFound();
 
   return (
-    <div>
-      {user?.treatment?.map((item: any) => {
-        console.log(item);
-        return <Treatment key={item.id} item={item} />;
-      })}
+    <div className="p-x-4 p-y-4">
+      <ProfileImage
+        img={`https://cdn.pixabay.com/photo/2016/04/25/07/49/man-1351346_960_720.png`}
+      />
+      <div>
+        <ul>
+          {user?.treatment?.map((item: any) => {
+            console.log(item);
+            return <Treatment key={item.id} item={item} />;
+          })}
+        </ul>
+      </div>
     </div>
   );
 }

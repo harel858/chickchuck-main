@@ -34,7 +34,10 @@ function StepOne({ handleNext, setRequestId }: any) {
   };
 
   return (
-    <form onSubmit={submitForm}>
+    <form
+      onSubmit={submitForm}
+      className="flex flex-col items-center gap-4 mt-4"
+    >
       <div>
         <label htmlFor="name">Enter Name</label>
         <input type="text" name="name" onChange={handleChange} />

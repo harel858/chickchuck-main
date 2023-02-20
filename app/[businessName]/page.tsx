@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import React from "react";
 import prisma from "../../lib/prisma";
 import Form from "./form";
@@ -16,6 +17,7 @@ const fetchUser = async (businessName: string) => {
       where: { businessName: value },
       include: { treatment: true, appointments: true },
     });
+
     if (user) return user;
   } catch (err) {
     console.log(err);
@@ -26,10 +28,12 @@ export default async function LandingPage({
   params: { businessName },
 }: LandingPageProps) {
   const user = await fetchUser(businessName);
+  console.log(user);
 
+  if (!user) return notFound();
   return (
-    <div>
+    <>
       <Form />
-    </div>
+    </>
   );
 }
