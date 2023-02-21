@@ -45,9 +45,9 @@ export default function Form() {
   ];
 
   return (
-    <div className="flex content-center my-12 ">
+    <>
       <Tabs
-        className="w-max bg-gray-900 px-8 pb-8 border-blue-900 border rounded-2xl"
+        className="w-full flex justify-around bg-gray-900 px-8 pb-8 border-blue-900 border rounded-2xl"
         activeKey={activeStep.toString()}
         size="large"
         tabPosition="top"
@@ -66,10 +66,6 @@ export default function Form() {
           ),
         }))}
       />
-      <br />
-      <br />
-      <br />
-      <Divider />
-    </div>
+    </>
   );
 }

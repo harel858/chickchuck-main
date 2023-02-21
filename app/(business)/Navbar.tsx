@@ -48,7 +48,7 @@ function NavBar() {
   );
 
   return (
-    <nav className="fixed top-0 h-screen w-max max-sm:hidden border-r-[1.2px] border-black shadow-[0_35px_60px_10px_rgba(0,0,0,0.3)] pt-12 gap-12 flex flex-col align-center items-center justify-start bg-gray-800">
+    <nav className="fixed top-0 h-screen w-max max-sm:hidden border-r-[1.2px] border-white shadow-[0_35px_60px_10px_rgba(0,0,0,0.3)] pt-12 gap-12 flex flex-col align-center items-center justify-start bg-gray-800">
       <h2
         className={`${font.className} text-white xl:text-3xl md:text-2xl sm:text-2xl w-max p-4`}
       >

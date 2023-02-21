@@ -5,7 +5,6 @@ import { signIn } from "next-auth/react";
 type formData = {
   name: string;
   email: string;
-  phone: string;
   password: string;
   businessName: string;
 };
@@ -14,7 +13,6 @@ function SignUpForm() {
   const [formData, setFormData] = useState<formData>({
     name: "",
     email: "",
-    phone: "",
     password: "",
     businessName: "",
   });
@@ -48,7 +46,6 @@ function SignUpForm() {
         setFormData({
           name: "",
           email: "",
-          phone: "",
           password: "",
           businessName: "",
         });
@@ -56,7 +53,7 @@ function SignUpForm() {
           email: formData.email,
           password: formData.password,
           redirect: true,
-          callbackUrl: "/home",
+          callbackUrl: "/business",
         });
       } else {
         const error = await res.json();
@@ -68,12 +65,12 @@ function SignUpForm() {
   };
 
   const displayInput = () => {
-    const data: any = ["name", "email", "phone", "password", "businessName"];
+    const data: any = ["name", "email", "password", "businessName"];
     return (
       <>
         {data?.map((item: keyof formData, _index: number, _array: string[]) => (
           <label key={_index}>
-            {item}:
+            {item == "password" ? "New Password" : item}:
             <input
               type={
                 item === "email"
