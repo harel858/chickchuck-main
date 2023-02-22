@@ -37,7 +37,7 @@ export default async function LandingPage({
     <div className="flex flex-col items-center justify-center h-screen w-full text-white">
       <h1 className="text-4xl font-bold mb-4">Responsive Tabs Example</h1>
       <div className="w-10/12  sm:w-8/12 md:w-6/12 lg:w-4/12 bg-gray-900 rounded-2xl border border-gray-800  harel-box">
-        <Tabs />
+        <Tabs user={user} />
       </div>
     </div>
   );

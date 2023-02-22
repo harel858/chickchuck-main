@@ -1,8 +1,10 @@
 "use client";
 import React from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Button, TextField } from "@mui/material";
 import { Poppins } from "@next/font/google";
+import { JackInTheBox } from "react-awesome-reveal";
+import { LoadingButton } from "@mui/lab";
 
 const font = Poppins({
   subsets: ["latin"],
@@ -18,6 +20,8 @@ function StepOne({ handleNext, setRequestId }: any) {
     name: "",
     phoneNumber: "",
   });
+  const [error, setError] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStepOneData({
@@ -27,80 +31,107 @@ function StepOne({ handleNext, setRequestId }: any) {
   };
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    setError("");
+    setLoading(true);
     e.preventDefault();
     console.log(stepOneData.name);
 
     try {
       const res = await axios.post(`/api/verification/stepone`, stepOneData);
       setRequestId(res.data);
-      if (res.status === 200) handleNext();
-    } catch (err) {
-      console.log(err);
+      console.log(res.data);
+
+      if (res.status === 200) {
+        setLoading(false);
+        handleNext();
+      }
+    } catch (err: any) {
+      setLoading(false);
+      err.response.data && setError(err.response.data);
     }
   };
 
   return (
-    <form
-      onSubmit={submitForm}
-      className="flex flex-col items-center gap-8 mt-4"
-    >
-      <div className="flex flex-col items-center gap-4 mt-4">
-        <TextField
-          id="outlined-basic"
-          label="Name"
-          variant="filled"
-          InputProps={{
-            style: { color: `white`, fontSize: `1.2em` },
-          }}
-          InputLabelProps={{
-            style: {
-              fontSize: "1.1em",
-              fontWeight: "500",
-              color: `rgba(245,245,220,.6)`,
-            },
-          }}
-          sx={{
-            bgcolor: "rgba(255, 255, 225,.2)",
-            borderRadius: "8px",
-          }}
-        />
-
-        <TextField
-          id="outlined-basic"
-          label="Phone Number"
-          variant="filled"
-          InputProps={{
-            style: { color: `white`, fontSize: `1.2em` },
-          }}
-          InputLabelProps={{
-            style: {
-              fontSize: "1.1em",
-              fontWeight: "500",
-              color: `rgba(245,245,220,.6)`,
-            },
-          }}
-          sx={{
-            bgcolor: "rgba(255, 255, 225,.2)",
-            borderRadius: "8px",
-            borderColor: "#e0e0e0",
-          }}
-        />
-      </div>
-
-      <Button
-        variant="contained"
-        className={`bg-orange-400 ${font.className} tracking-widest		`}
-        color="warning"
-        sx={{
-          fontSize: `1.2em`,
-          fontFamily: `sans-serif`,
-          borderRadius: `10px`,
-        }}
-        onClick={handleNext}
+    <JackInTheBox duration={500}>
+      <form
+        onSubmit={handleNext}
+        className="flex flex-col items-center gap-8 mt-4"
       >
-        Send SMS
-      </Button>
-    </form>
+        <div className="flex flex-col items-center gap-4 mt-4">
+          <TextField
+            id="outlined-basic"
+            label="Enter Name"
+            error={error ? true : false}
+            variant="outlined"
+            InputProps={{
+              style: { color: `white`, fontSize: `1.2em` },
+            }}
+            InputLabelProps={{
+              style: {
+                fontSize: "1.1em",
+                fontWeight: "500",
+                color: `rgba(245,245,220,.6)`,
+              },
+            }}
+            sx={{
+              bgcolor: "rgba(255, 255, 225,.2)",
+              borderRadius: "8px",
+              ":after": { border: `4px solid white ` },
+            }}
+          />
+
+          <TextField
+            id="outlined-basic"
+            label="Phone Number"
+            variant="outlined"
+            error={error ? true : false}
+            InputProps={{
+              style: { color: `white`, fontSize: `1.2em` },
+            }}
+            InputLabelProps={{
+              style: {
+                fontSize: "1.1em",
+                fontWeight: "500",
+                color: `rgba(245,245,220,.6)`,
+              },
+            }}
+            sx={{
+              bgcolor: "rgba(255, 255, 225,.2)",
+              borderRadius: "8px",
+              borderColor: "#e0e0e0",
+            }}
+          />
+        </div>
+        <JackInTheBox duration={500} delay={150}>
+          <LoadingButton
+            variant="contained"
+            className={`bg-orange-400 ${font.className} tracking-widest`}
+            style={
+              loading ? { backgroundColor: `#fb923c !important` } : undefined
+            }
+            color="warning"
+            type="submit"
+            loading={loading}
+            sx={
+              loading
+                ? {
+                    fontSize: `1.1em`,
+                    fontFamily: `sans-serif`,
+                    borderRadius: `15px`,
+                    backgroundColor: `#fb923c !important`,
+                  }
+                : {
+                    fontSize: `1.1em`,
+                    fontFamily: `sans-serif`,
+                    borderRadius: `15px`,
+                  }
+            }
+          >
+            Send SMS
+          </LoadingButton>
+        </JackInTheBox>
+      </form>
+    </JackInTheBox>
   );
 }
 

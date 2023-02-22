@@ -5,13 +5,22 @@ import StepTwo from "./stepTwo";
 import StepThree from "./StepThree";
 import Tab from "./Tab";
 import { Lobster } from "@next/font/google";
+import { Slide, SlideProps } from "react-awesome-reveal";
+import { appointment, treatment, User } from "@prisma/client";
 
 const font = Lobster({
   subsets: ["latin"],
   weight: "400",
 });
 
-function Tabs() {
+function Tabs({
+  user,
+}: {
+  user: User & {
+    treatment: treatment[];
+    appointments: appointment[];
+  };
+}) {
   const [activeTab, setActiveTab] = useState(0);
   const [requestId, setRequestId] = React.useState("");
 
@@ -29,7 +38,7 @@ function Tabs() {
     },
     {
       label: "Tab 3",
-      content: <StepThree />,
+      content: <StepThree user={user} />,
     },
   ];
   return (
@@ -52,7 +61,7 @@ function Tabs() {
       </div>
       <div className="h-full rounded-2xl rounded-t-none bg-gray-900 p-2">
         {tabs.map((tab, index) => (
-          <Tab active={activeTab === index} key={tab.label}>
+          <Tab active={activeTab === index} key={tab.label} user={user}>
             {activeTab === index && tab.content}
           </Tab>
         ))}
