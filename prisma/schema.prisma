@@ -27,15 +27,16 @@ model User {
 }
 
 model appointment {
-  id              String      @id @default(uuid())
-  name            String
-  phoneNumber     String
-  createAt        DateTime
-  appointmentTime String
-  business        User        @relation(fields: [businessId], references: [id])
-  treatment       treatment[]
-  businessId      String
-  treatmentId     String
+  id          String    @id @default(uuid())
+  name        String
+  phoneNumber String
+  createAt    DateTime
+  start       String
+  end         String
+  business    User      @relation(fields: [businessId], references: [id])
+  treatment   treatment @relation(fields: [treatmentId], references: [id])
+  businessId  String
+  treatmentId String
 }
 
 model treatment {

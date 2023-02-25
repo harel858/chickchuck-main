@@ -15,7 +15,11 @@ function UniqueLink({ link }: { link: string }) {
           <FileCopyIcon />
         </IconButton>
       </Tooltip>
-      <Link className="font-medium" href={link} target="_blank">
+      <Link
+        className="font-medium hover:underline hover:decoration-1	"
+        href={link}
+        target="_blank"
+      >
         {link}
       </Link>
     </div>

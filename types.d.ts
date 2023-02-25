@@ -71,8 +71,10 @@ export type appointment = {
   id: string;
   name: string;
   phoneNumber: string;
-  createAt: string;
-  appointmentTime: string;
+  createAt: Date;
+  start: Date;
+  business: User;
+  treatment: treatment[];
   businessId: string;
   treatmentId: string;
   treatment: [

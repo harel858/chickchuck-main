@@ -1,6 +1,8 @@
 import React from "react";
 import prisma from "../../../../lib/prisma";
 import { IdProps, User } from "../../../../types";
+import Loading from "../loading";
+import Calendar from "../Calendar";
 
 async function fetchUser(id: any) {
   const user = await prisma.user.findUnique({
@@ -14,14 +16,18 @@ async function fetchUser(id: any) {
 
 async function ScheduleListPage({ params: { id } }: IdProps) {
   const user = await fetchUser(id);
+  console.log(user);
 
   return (
-    <div>
-      {user?.appointments?.map((item) => {
-        console.log(item);
-        return <p>{item.name}</p>;
-      })}
-    </div>
+    <>
+      {user ? (
+        <div className="flex justify-center align-center content-center w-11/12">
+          <Calendar appointments={user?.appointments} />
+        </div>
+      ) : (
+        <Loading />
+      )}
+    </>
   );
 }
 

@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import React from "react";
 import prisma from "../../lib/prisma";
-import Form from "./form";
 import StepOne from "./stepOne";
 import Tabs from "./Tabs";
 
@@ -34,9 +33,8 @@ export default async function LandingPage({
   console.log(user);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen w-full text-white">
-      <h1 className="text-4xl font-bold mb-4">Responsive Tabs Example</h1>
-      <div className="w-10/12  sm:w-8/12 md:w-6/12 lg:w-4/12 bg-gray-900 rounded-2xl border border-gray-800  harel-box">
+    <div className="flex flex-col items-center justify-center h-screen w-full text-white ">
+      <div className="w-10/12  sm:w-8/12 md:w-6/12 lg:w-4/12 bg-gray-900 rounded-2xl border border-gray-800  harel-box ">
         <Tabs user={user} />
       </div>
     </div>

@@ -1,12 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import StepOne from "./stepOne";
 import StepTwo from "./stepTwo";
 import StepThree from "./StepThree";
 import Tab from "./Tab";
 import { Lobster } from "@next/font/google";
-import { Slide, SlideProps } from "react-awesome-reveal";
 import { appointment, treatment, User } from "@prisma/client";
+import Loading from "./loading";
+
+const StepOne = React.lazy(() => import("./stepOne"));
 
 const font = Lobster({
   subsets: ["latin"],
@@ -30,7 +31,11 @@ function Tabs({
   const tabs = [
     {
       label: "Tab 1",
-      content: <StepOne handleNext={handleNext} setRequestId={setRequestId} />,
+      content: (
+        <React.Suspense fallback={<Loading />}>
+          <StepOne handleNext={handleNext} setRequestId={setRequestId} />
+        </React.Suspense>
+      ),
     },
     {
       label: "Tab 2",
@@ -59,7 +64,7 @@ function Tabs({
           </button>
         ))}
       </div>
-      <div className="h-full rounded-2xl rounded-t-none bg-gray-900 p-2">
+      <div className="h-full rounded-2xl rounded-t-none bg-gray-900 pb-12">
         {tabs.map((tab, index) => (
           <Tab active={activeTab === index} key={tab.label} user={user}>
             {activeTab === index && tab.content}
