@@ -2,7 +2,7 @@ import React from "react";
 import prisma from "../../../../lib/prisma";
 import { IdProps, User } from "../../../../types";
 import Loading from "../loading";
-import Calendar from "../Calendar";
+import Calendar from "../(calendar)/Calendar";
 
 async function fetchUser(id: any) {
   const user = await prisma.user.findUnique({

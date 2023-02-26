@@ -1,0 +1,23 @@
+.fc-header-toolbar h2 {
+  color: white !important;
+}
+.fc-button-group {
+  display: flex;
+  gap: 0.5em !important;
+}
+
+.fc-button-group button {
+  border-radius: 0.5em !important;
+  border: 1.5px solid black !important;
+  padding: 0.2em 1em !important;
+  color: black !important;
+  font-size: 1.1em !important;
+  font-weight: 600 !important;
+  background: salmon !important;
+  transition: all 200ms ease-out !important;
+}
+.fc-button-group button:hover {
+  background: #005aa0 !important;
+  color: white !important;
+  transform: scale(1.1);
+}

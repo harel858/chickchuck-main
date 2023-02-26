@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import "./style.css";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -7,28 +8,21 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { appointment, treatment, User } from "@prisma/client";
 
 function Calendar({ appointments }: { appointments: appointment[] }) {
-  const handleDrop = (info: any) => {
-    // Get the event being dragged and the target date
-    const event = info?.event;
-    const date = info?.date;
-
-    // Update the start and end times of the event
-    const start = event.start;
-    const end = event.end;
-    const newStart = date;
-    const newEnd = new Date(
-      newStart.getTime() + (end.getTime() - start.getTime())
-    );
-  };
-
   // Update the event in the state
+  console.log(new Date());
 
   return (
     <div className="w-full">
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"
-        events={appointments}
+        events={[
+          {
+            title: "Event 1",
+            start: "2023-03-01T10:00:00",
+            end: "2023-03-01T10:15:00",
+          },
+        ]}
         headerToolbar={{
           left: "prev,next today",
           center: "title",
@@ -47,7 +41,6 @@ function Calendar({ appointments }: { appointments: appointment[] }) {
         height={`100vh`}
         editable={true}
         droppable={true}
-        eventDrop={handleDrop}
       />
     </div>
   );

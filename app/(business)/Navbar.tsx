@@ -5,9 +5,10 @@ import React, { useMemo } from "react";
 import { SessionData } from "../../types";
 import HomeIcon from "@mui/icons-material/Home";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import SettingsIcon from "@mui/icons-material/Settings";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import { useRouter, usePathname } from "next/navigation";
 import { Lobster } from "@next/font/google";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 
 const font = Lobster({
   subsets: ["latin"],
@@ -37,10 +38,17 @@ function NavBar() {
         ),
       },
       {
-        title: "Settings",
-        link: `/settings/${SessionData?.user?.id}`,
+        title: "Treatments",
+        link: `/treatments/${SessionData?.user?.id}`,
         icon: (
-          <SettingsIcon className="text-white self-center transition-all ease-in duration-200 group-hover:scale-125 text-xl" />
+          <AppRegistrationIcon className="text-white self-center transition-all ease-in duration-200 group-hover:scale-125 text-xl" />
+        ),
+      },
+      {
+        title: "Activity Time",
+        link: `/activityTime`,
+        icon: (
+          <AccessTimeOutlinedIcon className="text-white self-center transition-all ease-in duration-200 group-hover:scale-125 text-xl" />
         ),
       },
     ],
@@ -52,7 +60,7 @@ function NavBar() {
       <h2
         className={`${font.className} text-white xl:text-3xl md:text-2xl sm:text-2xl w-max p-4`}
       >
-        Chick Chuck
+        Hello {SessionData?.user?.name}
       </h2>
       <ul className="flex flex-col w-full gap-1 justify-start items-center align-between text-white text-md">
         {links.map((item, i) => {
