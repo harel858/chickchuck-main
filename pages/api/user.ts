@@ -26,13 +26,12 @@ export default async function handler(
   }
   if (req.method == "POST") {
     try {
-      const { name, email, phone, password, businessName } = req.body;
+      const { name, email, password, businessName } = req.body;
 
       //validate user
       const { error } = validateUser({
         name,
         email,
-        phone,
         password,
         businessName,
       });
@@ -59,7 +58,6 @@ export default async function handler(
         name,
         email,
         password: hashedPassword,
-        phone,
         businessName,
       });
 
