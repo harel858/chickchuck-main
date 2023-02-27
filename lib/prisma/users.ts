@@ -35,6 +35,9 @@ export async function getByEmail(email: string) {
         name: true,
         phone: true,
         businessName: true,
+        activityDays: true,
+        endActivity: true,
+        startActivity: true,
         email: true,
         appointments: true,
         treatment: true,
@@ -100,7 +103,6 @@ export async function signIn(email: any, password: any) {
         error: { message: `Check the details you provided are correct.` },
       };
     console.log(userExist);
-
     let pass = await bcrypt.compare(password, userExist.password);
     if (!pass)
       return {

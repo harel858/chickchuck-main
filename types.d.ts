@@ -1,9 +1,12 @@
 export type User = {
   id: string;
   name: string;
-  phone: string;
-  businessName: string;
   email: string;
+  password: string;
+  phone: string | null;
+  city: string | null;
+  street: string | null;
+  businessName: string;
   appointments: [
     {
       id: string;
@@ -24,6 +27,9 @@ export type User = {
       businessId: string;
     }
   ];
+  activityDays: number[]; // Define an array of integers field
+  startActivity: string | null; // Define start activity field
+  endActivity: string | null;
 };
 
 export type AllUsers = {

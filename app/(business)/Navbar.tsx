@@ -46,7 +46,7 @@ function NavBar() {
       },
       {
         title: "Activity Time",
-        link: `/activityTime`,
+        link: `/activityTime/${SessionData?.user?.id}`,
         icon: (
           <AccessTimeOutlinedIcon className="text-white self-center transition-all ease-in duration-200 group-hover:scale-125 text-xl" />
         ),

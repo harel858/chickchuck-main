@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,19 +8,20 @@ datasource db {
 }
 
 model User {
-  id                String        @id @default(uuid())
-  name              String
-  email             String        @unique
-  password          String
-  phone             String?
-  city              String?
-  street            String?
-  Street            String?
-  businessName      String        @unique
-  activityStartTime String?
-  activityEndtTime  String?
-  appointments      appointment[]
-  treatment         treatment[]
+  id             String          @id @default(uuid())
+  name           String
+  email          String          @unique
+  password       String
+  phone          String?
+  city           String?
+  street         String?
+  businessName   String          @unique
+  appointments   appointment[]
+  treatment      treatment[]
+  activityDays   Int[] // Define an array of integers field
+  startActivity  String? // Define start activity field
+  endActivity    String? // Define end activity field
+  availableSlots availableSlot[]
 }
 
 model appointment {
@@ -47,4 +45,12 @@ model treatment {
   business    User          @relation(fields: [businessId], references: [id])
   businessId  String
   appointment appointment[]
+}
+
+model availableSlot {
+  id         String @id @default(uuid())
+  start      String
+  end        String
+  business   User   @relation(fields: [businessId], references: [id])
+  businessId String
 }

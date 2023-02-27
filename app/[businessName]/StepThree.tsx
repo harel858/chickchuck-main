@@ -12,6 +12,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import { Poppins } from "@next/font/google";
 import { Zoom, ZoomProps } from "react-awesome-reveal";
 import Loading from "./loading";
+import { AvailableList } from "./AvailableList";
 
 const font = Poppins({
   subsets: ["latin"],
@@ -63,10 +64,7 @@ function StepThree({
     },
     {
       label: "Create an ad",
-      description: `Try out different ad text to see what brings in the most customers,
-          and learn how to enhance your ads using features like ad extensions.
-          If you run into any problems with your ads, find out how to tell if
-          they're running and how to resolve approval issues.`,
+      description: <AvailableList />,
     },
   ];
   const handleNext = () => {

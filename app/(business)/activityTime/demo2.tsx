@@ -7,6 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
+import { User } from "@prisma/client";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -30,17 +31,23 @@ const names = [
 ];
 console.log(new Date().getDay());
 
-export default function Demo2() {
+export default function Demo2({ user }: { user: User }) {
   const [workingDays, setWorkingDays] = React.useState<string[]>([]);
 
   const handleChange = (event: SelectChangeEvent<typeof workingDays>) => {
     const {
       target: { value },
     } = event;
+    let newVal = value as string[];
+
     setWorkingDays(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+
+    const activityDays = newVal.map((day) => names.indexOf(day));
+    // activityDays now contains an array of integers representing the selected days
+    console.log(activityDays);
   };
 
   return (
@@ -57,9 +64,9 @@ export default function Demo2() {
           renderValue={(selected) => selected.join(", ")}
           MenuProps={MenuProps}
         >
-          {names.map((name) => (
+          {names.map((name, i) => (
             <MenuItem key={name} value={name}>
-              <Checkbox checked={workingDays.indexOf(name) > -1} />
+              <Checkbox checked={user.activityDays.includes(i)} />
               <ListItemText primary={name} />
             </MenuItem>
           ))}
