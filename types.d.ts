@@ -41,6 +41,11 @@ export type AllUsers = {
   appointments: appointment[];
   treatment: treatment[];
 };
+export type AvailableSlot = {
+  id: string;
+  start: Dayjs;
+  end: Dayjs;
+};
 
 export type SessionData = {
   user: {

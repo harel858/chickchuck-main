@@ -3,7 +3,8 @@ import prisma from ".";
 export const createAppointment = async (
   name: string,
   phoneNumber: string,
-  appointmentTime: string,
+  start: any,
+  end: any,
   treatmentId: any,
   userId: string
 ) => {
@@ -14,7 +15,8 @@ export const createAppointment = async (
         name,
         phoneNumber,
         createAt: new Date(),
-        appointmentTime,
+        start,
+        end,
         treatment: { connect: { id: treatmentId } },
         business: { connect: { id: userId } },
       },

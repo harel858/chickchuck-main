@@ -16,8 +16,7 @@ export default async function handler(
     console.log(req.body);
 
     try {
-      const { name, phoneNumber, appointmentTime, treatmentId, userId } =
-        req.body;
+      const { name, phoneNumber, start, end, treatmentId, userId } = req.body;
 
       const { err, userExist } = await getById(userId);
       if (err || !userExist) return res.status(500).json(`business not found`);
@@ -32,7 +31,8 @@ export default async function handler(
       const { error } = validateAppointment({
         name,
         phoneNumber,
-        appointmentTime,
+        start,
+        end,
         treatmentId,
         userId,
       });
@@ -45,7 +45,8 @@ export default async function handler(
       const { newAppointment, appointmentErr } = await createAppointment(
         name,
         phoneNumber,
-        appointmentTime,
+        start,
+        end,
         treatmentId,
         userId
       );

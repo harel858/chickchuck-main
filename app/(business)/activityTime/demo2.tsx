@@ -7,7 +7,6 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
-import { User } from "@prisma/client";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -20,34 +19,36 @@ const MenuProps = {
   },
 };
 
-const names = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
+const days = [
+  { value: 0, label: "Sunday" },
+  { value: 1, label: "Monday" },
+  { value: 2, label: "Tuesday" },
+  { value: 3, label: "Wednesday" },
+  { value: 4, label: "Thursday" },
+  { value: 5, label: "Friday" },
+  { value: 6, label: "Saturday" },
 ];
-console.log(new Date().getDay());
 
-export default function Demo2({ user }: { user: User }) {
-  const [workingDays, setWorkingDays] = React.useState<string[]>([]);
-
-  const handleChange = (event: SelectChangeEvent<typeof workingDays>) => {
+export default function Demo2({
+  setHasChanges,
+  activityDays,
+  setActivityDays,
+}: {
+  setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
+  activityDays: any[];
+  setActivityDays: React.Dispatch<React.SetStateAction<any[]>>;
+}) {
+  const handleChange = (event: SelectChangeEvent<typeof activityDays>) => {
     const {
       target: { value },
     } = event;
-    let newVal = value as string[];
+    console.log(value);
 
-    setWorkingDays(
+    setActivityDays(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
-
-    const activityDays = newVal.map((day) => names.indexOf(day));
-    // activityDays now contains an array of integers representing the selected days
-    console.log(activityDays);
+    setHasChanges(false);
   };
 
   return (
@@ -58,16 +59,16 @@ export default function Demo2({ user }: { user: User }) {
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
-          value={workingDays}
+          value={activityDays}
           onChange={handleChange}
-          input={<OutlinedInput label="Working Days" />}
+          input={<OutlinedInput label="Tag" />}
           renderValue={(selected) => selected.join(", ")}
           MenuProps={MenuProps}
         >
-          {names.map((name, i) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={user.activityDays.includes(i)} />
-              <ListItemText primary={name} />
+          {days.map((day, i) => (
+            <MenuItem key={day.value} value={day.value}>
+              <Checkbox checked={activityDays.includes(day.value)} />
+              <ListItemText primary={day.label} />
             </MenuItem>
           ))}
         </Select>

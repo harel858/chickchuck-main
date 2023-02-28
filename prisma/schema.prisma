@@ -22,6 +22,7 @@ model User {
   startActivity  String? // Define start activity field
   endActivity    String? // Define end activity field
   availableSlots availableSlot[]
+  slotDuration   Int?
 }
 
 model appointment {

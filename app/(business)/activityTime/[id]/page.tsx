@@ -17,9 +17,9 @@ async function fetchUser(id: any) {
 async function page({ params: { id } }: IdProps) {
   const user = await fetchUser(id);
   if (!user) return notFound();
+
   return (
-    <div>
-      <Demo2 user={user} />
+    <div className="flex flex-col justify-center ">
       <Demo3 user={user} />
     </div>
   );
