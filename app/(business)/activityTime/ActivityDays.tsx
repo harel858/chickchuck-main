@@ -7,6 +7,8 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
+import { User } from "@prisma/client";
+import { ActivityDay } from "../../../types";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -19,7 +21,7 @@ const MenuProps = {
   },
 };
 
-const days = [
+const days: ActivityDay[] = [
   { value: 0, label: "Sunday" },
   { value: 1, label: "Monday" },
   { value: 2, label: "Tuesday" },
@@ -29,14 +31,14 @@ const days = [
   { value: 6, label: "Saturday" },
 ];
 
-export default function Demo2({
+export default function ActivityDays({
   setHasChanges,
   activityDays,
   setActivityDays,
 }: {
   setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
   activityDays: any[];
-  setActivityDays: React.Dispatch<React.SetStateAction<any[]>>;
+  setActivityDays: React.Dispatch<React.SetStateAction<ActivityDay[]>>;
 }) {
   const handleChange = (event: SelectChangeEvent<typeof activityDays>) => {
     const {
@@ -44,30 +46,33 @@ export default function Demo2({
     } = event;
     console.log(value);
 
-    setActivityDays(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    setActivityDays(typeof value === "string" ? value.split(",") : value);
+    // On autofill we get a stringified value.
     setHasChanges(false);
   };
 
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+        <InputLabel id="demo-multiple-checkbox-label">Activity Days</InputLabel>
         <Select
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
           multiple
           value={activityDays}
           onChange={handleChange}
-          input={<OutlinedInput label="Tag" />}
-          renderValue={(selected) => selected.join(", ")}
+          input={<OutlinedInput label="Activity Days" />}
+          renderValue={(selected) =>
+            days
+              .filter((day) => selected.includes(day.value))
+              .map((day) => day.label)
+              .join(", ")
+          }
           MenuProps={MenuProps}
         >
           {days.map((day, i) => (
             <MenuItem key={day.value} value={day.value}>
-              <Checkbox checked={activityDays.includes(day.value)} />
+              <Checkbox checked={activityDays.includes(i)} />
               <ListItemText primary={day.label} />
             </MenuItem>
           ))}

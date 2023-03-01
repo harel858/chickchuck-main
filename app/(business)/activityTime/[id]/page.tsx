@@ -2,8 +2,7 @@ import { notFound } from "next/navigation";
 import React from "react";
 import prisma from "../../../../lib/prisma";
 import { IdProps } from "../../../../types";
-import Demo2 from "../demo2";
-import Demo3 from "../demo3";
+import Form from "../Form";
 
 async function fetchUser(id: any) {
   const user = await prisma.user.findUnique({
@@ -20,7 +19,7 @@ async function page({ params: { id } }: IdProps) {
 
   return (
     <div className="flex flex-col justify-center ">
-      <Demo3 user={user} />
+      <Form user={user} />
     </div>
   );
 }

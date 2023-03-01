@@ -46,6 +46,10 @@ export type AvailableSlot = {
   start: Dayjs;
   end: Dayjs;
 };
+export type ActivityDay = {
+  value: number;
+  label: string;
+};
 
 export type SessionData = {
   user: {

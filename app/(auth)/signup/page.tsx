@@ -16,6 +16,7 @@ function SignUpForm() {
     password: "",
     businessName: "",
   });
+  const [error, setError] = useState("");
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -57,7 +58,7 @@ function SignUpForm() {
         });
       } else {
         const error = await res.json();
-        console.log(error);
+        setError(error);
       }
     } catch (err: any) {
       console.log(err);
@@ -93,6 +94,7 @@ function SignUpForm() {
   return (
     <form className="flex flex-col items-center gap-3 " onSubmit={handleSubmit}>
       {displayInput()}
+      <p className="test-red-500">{error ? error : ""}</p>
       <button type="submit">Submit</button>
     </form>
   );

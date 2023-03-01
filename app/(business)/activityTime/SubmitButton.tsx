@@ -1,4 +1,5 @@
 import * as React from "react";
+import dayjs, { Dayjs } from "dayjs";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { green } from "@mui/material/colors";
@@ -12,6 +13,8 @@ import { AvailableSlot } from "../../../types";
 type SubmitProps = {
   user: User;
   hasChanges: boolean;
+  startActivity: Dayjs;
+  endActivity: Dayjs;
   setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
   activityDays: any[];
   availableSlots: AvailableSlot[];
@@ -20,6 +23,8 @@ type SubmitProps = {
 export default function SubmitButton({
   user,
   hasChanges,
+  startActivity,
+  endActivity,
   setHasChanges,
   activityDays,
   availableSlots,
@@ -46,26 +51,38 @@ export default function SubmitButton({
   }, [hasChanges]);
 
   const handleButtonClick = async () => {
+    console.log(activityDays);
+
+    setSuccess(false);
+    setLoading(true);
     try {
       const res = await fetch(`/api/slots/slot`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ activityDays, availableSlots, id: user.id }),
+        body: JSON.stringify({
+          startActivity: startActivity.format("hh:mm A"),
+          endActivity: endActivity.format("hh:mm A"),
+          activityDays,
+          availableSlots,
+          id: user.id,
+        }),
       });
       const response = await res.json();
       console.log(response);
+      setSuccess(true);
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       console.log(err);
     }
   };
-  /*    setSuccess(true);
-        setLoading(false); */
+
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
       <Box sx={{ m: 1, position: "relative" }}>
         <Fab
           aria-label="save"
-          color="primary"
+          color="warning"
           sx={buttonSx}
           disabled={hasChanges}
           onClick={handleButtonClick}
@@ -88,6 +105,7 @@ export default function SubmitButton({
       <Box sx={{ m: 1, position: "relative" }}>
         <Button
           variant="contained"
+          color="warning"
           sx={buttonSx}
           disabled={loading || hasChanges}
           onClick={handleButtonClick}

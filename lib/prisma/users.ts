@@ -18,7 +18,9 @@ export async function getAllUsers() {
 
 export async function createUser(data: any) {
   try {
-    const newUser = await prisma?.user.create({ data });
+    const newUser = await prisma?.user.create({
+      data: { ...data, activityDays: [0, 1, 2, 3, 4, 5] },
+    });
     return { newUser };
   } catch (err) {
     return { err };
@@ -46,6 +48,46 @@ export async function getByEmail(email: string) {
     return { userExist };
   } catch (err) {
     return { err };
+  }
+}
+export async function updateActivityTime(
+  id: string,
+  startActivity: string,
+  endActivity: string
+) {
+  try {
+    const response = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        startActivity,
+        endActivity,
+      },
+    });
+    console.log(response);
+
+    return { response };
+  } catch (error) {
+    console.log(error);
+    return { error };
+  }
+}
+export async function updateActivityDays(id: string, activityDays: number[]) {
+  try {
+    const updateDaysSuccess = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        activityDays,
+      },
+    });
+
+    return { updateDaysSuccess };
+  } catch (updateDaysFailed) {
+    console.log(updateDaysFailed);
+    return { updateDaysFailed };
   }
 }
 
@@ -78,6 +120,7 @@ export async function getById(id: any) {
         name: true,
         phone: true,
         id: true,
+        activityDays: true,
         email: true,
         appointments: true,
         treatment: true,
