@@ -19,12 +19,9 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         try {
           const { email, password } = credentials as any;
-          console.log(email);
-          console.log(password);
 
           const { user, error } = await signIn(email, password);
           if (error) throw new Error(error.message);
-
           return user;
         } catch (err) {
           console.log(err);

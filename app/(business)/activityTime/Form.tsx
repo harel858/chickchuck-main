@@ -1,6 +1,5 @@
 "use client";
 import * as React from "react";
-/* import "./style.css"; */
 import dayjs, { Dayjs } from "dayjs";
 import { User } from "@prisma/client";
 import SlotDurationPicker from "./SlotDurationPicker";
@@ -11,12 +10,12 @@ import ActivityTimePicker from "./ActivityTimePicker";
 
 export default function Form({ user }: { user: User }) {
   const [startActivity, setStartActivity] = React.useState<Dayjs>(
-    dayjs("2022-04-07T09:00:00")
+    dayjs(user.startActivity, "hh:mm A")
   );
   const [endActivity, setEndActivity] = React.useState<Dayjs>(
-    dayjs("2022-04-07T17:00:00")
+    dayjs(user.endActivity, "hh:mm A")
   );
-  const [duration, setDuration] = React.useState<number>(45);
+  const [duration, setDuration] = React.useState<number>(15);
   const [hasChanges, setHasChanges] = React.useState<boolean>(true);
   const [activityDays, setActivityDays] = React.useState<any[]>(
     user.activityDays
@@ -24,6 +23,16 @@ export default function Form({ user }: { user: User }) {
   const [availableSlots, setAvailableSlots] = React.useState<AvailableSlot[]>(
     []
   );
+  React.useEffect(() => {
+    if (
+      startActivity.format() != user.startActivity ||
+      endActivity.format() != user.endActivity
+    ) {
+      generateAvailableSlots(startActivity, endActivity, duration);
+    }
+
+    setHasChanges(false);
+  }, [startActivity, setStartActivity, endActivity, setEndActivity, duration]);
 
   // This function will generate a list of available slots based on the start and end time of the activity
   const generateAvailableSlots = (
@@ -49,17 +58,6 @@ export default function Form({ user }: { user: User }) {
     setAvailableSlots(slots);
   };
 
-  React.useEffect(() => {
-    if (
-      startActivity.format() != user.startActivity ||
-      endActivity.format() != user.endActivity
-    ) {
-      generateAvailableSlots(startActivity, endActivity, duration);
-    }
-
-    setHasChanges(false);
-  }, [startActivity, setStartActivity, endActivity, setEndActivity, duration]);
-
   const handleSlotDurationChange = (duration: any) => {
     // Handle selected duration here
     setDuration(duration);
@@ -73,7 +71,10 @@ export default function Form({ user }: { user: User }) {
         setActivityDays={setActivityDays}
         setHasChanges={setHasChanges}
       />
-      <SlotDurationPicker onChange={handleSlotDurationChange} />
+      <SlotDurationPicker
+        duration={duration}
+        onChange={handleSlotDurationChange}
+      />
       <ActivityTimePicker
         startActivity={startActivity}
         setStartActivity={setStartActivity}

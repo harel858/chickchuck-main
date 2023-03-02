@@ -19,7 +19,7 @@ export async function getAllUsers() {
 export async function createUser(data: any) {
   try {
     const newUser = await prisma?.user.create({
-      data: { ...data, activityDays: [0, 1, 2, 3, 4, 5] },
+      data: { ...data, activityDays: [0, 1, 2, 3, 4, 5], slotDuration: 15 },
     });
     return { newUser };
   } catch (err) {
@@ -43,6 +43,7 @@ export async function getByEmail(email: string) {
         email: true,
         appointments: true,
         treatment: true,
+        availableSlots: true,
       },
     });
     return { userExist };

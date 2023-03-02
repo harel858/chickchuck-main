@@ -18,7 +18,7 @@ function ActivityTimePicker({
   setEndActivity,
 }: ActivityTimePickerProps) {
   return (
-    <div className="md:w-max flex flex-col justify-center gap-12  rounded-2xl bg-white/[0.8]">
+    <div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <StaticTimePicker
           displayStaticWrapperAs="mobile"
