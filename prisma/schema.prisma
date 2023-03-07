@@ -26,16 +26,23 @@ model User {
 }
 
 model appointment {
-  id          String    @id @default(uuid())
+  id              String        @id @default(uuid())
+  createAt        DateTime
+  availableSlot   availableSlot @relation(fields: [availableSlotId], references: [id])
+  availableSlotId String        @unique
+  business        User          @relation(fields: [businessId], references: [id])
+  treatment       treatment     @relation(fields: [treatmentId], references: [id])
+  businessId      String
+  treatmentId     String
+  customer        customer      @relation(fields: [customerId], references: [id])
+  customerId      String
+}
+
+model customer {
+  id          String        @id @default(uuid())
   name        String
-  phoneNumber String
-  createAt    DateTime
-  start       String
-  end         String
-  business    User      @relation(fields: [businessId], references: [id])
-  treatment   treatment @relation(fields: [treatmentId], references: [id])
-  businessId  String
-  treatmentId String
+  phoneNumber String        @unique
+  appointment appointment[]
 }
 
 model treatment {
@@ -49,9 +56,10 @@ model treatment {
 }
 
 model availableSlot {
-  id         String @id @default(uuid())
-  start      String
-  end        String
-  business   User   @relation(fields: [businessId], references: [id])
-  businessId String
+  id          String       @id @default(uuid())
+  start       String
+  end         String
+  business    User         @relation(fields: [businessId], references: [id])
+  businessId  String
+  appointment appointment?
 }

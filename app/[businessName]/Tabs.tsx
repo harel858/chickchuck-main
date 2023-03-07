@@ -6,6 +6,7 @@ import Tab from "./Tab";
 import { Lobster } from "@next/font/google";
 import { appointment, treatment, User } from "@prisma/client";
 import Loading from "./loading";
+import { formData } from "../../types";
 
 const StepOne = React.lazy(() => import("./stepOne"));
 
@@ -23,7 +24,12 @@ function Tabs({
   };
 }) {
   const [activeTab, setActiveTab] = useState(0);
-  const [requestId, setRequestId] = React.useState("");
+  const [customerData, setCustomerData] = React.useState<formData>({
+    name: "",
+    request_id:"",
+    phoneNumber: "",
+    code:""
+  });
 
   const handleNext = () => {
     setActiveTab((activeTab) => activeTab + 1);
@@ -33,13 +39,13 @@ function Tabs({
       label: "Tab 1",
       content: (
         <React.Suspense fallback={<Loading />}>
-          <StepOne handleNext={handleNext} setRequestId={setRequestId} />
+          <StepOne handleNext={handleNext} customerData={customerData} setCustomerData={setCustomerData} />
         </React.Suspense>
       ),
     },
     {
       label: "Tab 2",
-      content: <StepTwo handleNext={handleNext} requestId={requestId} />,
+      content: <StepTwo handleNext={handleNext} customerData={customerData} setCustomerData={setCustomerData}  />,
     },
     {
       label: "Tab 3",

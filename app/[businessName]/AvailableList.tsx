@@ -1,40 +1,48 @@
-"use client";
-import Calendar from "@fullcalendar/react";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
-import dayGridPlugin from "@fullcalendar/daygrid";
+import React, { useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { TextField, TextFieldProps } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-// Define the available time slots
-const availableSlots = [
-  {
-    start: "2022-03-01T09:00:00",
-    end: "2022-03-01T10:00:00",
-  },
-  {
-    start: "2022-03-02T11:00:00",
-    end: "2022-03-02T12:00:00",
-  },
-  // ... add more available slots
-];
+export default function AvailableList() {
+  const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
 
-// Map the available time slots to FullCalendar events
-const events = availableSlots.map((slot) => ({
-  title: "Available",
-  start: slot.start,
-  end: slot.end,
-}));
+  const handleDateChange = (event: Dayjs ) => {
+    setSelectedDate(event);
+  };
 
-export function AvailableList() {
+  const handlePreviousDay = () => {
+    setSelectedDate(selectedDate.subtract(1, 'day'));
+  };
+
+  const handleNextDay = () => {
+    setSelectedDate(selectedDate.add(1, 'day'));
+  };
+
   return (
-    <Calendar
-      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-      initialView="timeGridWeek"
-      events={events}
-      // Handle event click to schedule an appointment
-      eventClick={(info) => {
-        // Open a modal to collect appointment details
-        console.log("Selected:", info.event.start, info.event.end);
-      }}
-    />
+    <div>
+      <button onClick={handlePreviousDay}>&lt;</button>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          value={selectedDate}
+          onChange={(newDate) => newDate && handleDateChange(newDate)}
+          renderInput={(props) => <TextField {...props} type="text" />}
+        />
+      </LocalizationProvider>
+      <button onClick={handleNextDay}>&gt;</button>
+      <AvailableQueues date={selectedDate} />
+    </div>
+  );
+}
+
+function AvailableQueues({ date }: { date: Dayjs }) {
+  function handleDateSelected(date: Dayjs) {
+    console.log(`Selected date: ${date.format("YYYY-MM-DD")}`);
+  }
+
+  return (
+    <div>
+      <h1>Select a date: {date.format("YYYY-MM-DD")}</h1>
+    </div>
   );
 }

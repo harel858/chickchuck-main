@@ -5,22 +5,17 @@ import { Button, CircularProgress, TextField } from "@mui/material";
 import { Poppins } from "@next/font/google";
 import { JackInTheBox } from "react-awesome-reveal";
 import { LoadingButton } from "@mui/lab";
+import { formData } from "../../types";
 
 const font = Poppins({
   subsets: ["latin"],
   weight: "400",
 });
 
-type formData = {
-  name: string;
-  phoneNumber: string;
-};
+interface StepOneRes {phoneNumber:string,request_id:string}
 
-function StepOne({ handleNext, setRequestId }: any) {
-  const [stepOneData, setStepOneData] = React.useState<formData>({
-    name: "",
-    phoneNumber: "",
-  });
+function StepOne({ handleNext, customerData,setCustomerData }: any) {
+ 
 
   const [error, setError] = React.useState("");
   const [animate, setAnimate] = React.useState(false);
@@ -31,8 +26,8 @@ function StepOne({ handleNext, setRequestId }: any) {
   }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStepOneData({
-      ...stepOneData,
+    setCustomerData({
+      ...customerData,
       [event.target.name]: event.target.value,
     });
   };
@@ -41,12 +36,13 @@ function StepOne({ handleNext, setRequestId }: any) {
     setError("");
     setLoading(true);
     e.preventDefault();
-    console.log(stepOneData.name);
+    console.log(customerData.name);
 
     try {
-      const res = await axios.post(`/api/verification/stepone`, stepOneData);
-      setRequestId(res.data);
-      console.log(res.data);
+      const res = await axios.post(`/api/verification/stepone`, customerData);
+      const data = res.data as StepOneRes
+      console.log(data);
+      setCustomerData({...customerData,request_id:data.request_id,phoneNumber:data.phoneNumber})
 
       if (res.status === 200) {
         setLoading(false);
@@ -70,6 +66,8 @@ function StepOne({ handleNext, setRequestId }: any) {
               <TextField
                 id="outlined-basic"
                 label="Enter Name"
+                name="name"
+                onChange={handleChange}
                 error={error ? true : false}
                 variant="outlined"
                 InputProps={{
@@ -92,7 +90,9 @@ function StepOne({ handleNext, setRequestId }: any) {
               <TextField
                 id="outlined-basic"
                 label="Phone Number"
+                name="phoneNumber"
                 variant="outlined"
+                onChange={handleChange}
                 error={error ? true : false}
                 InputProps={{
                   style: { color: `white`, fontSize: `1.2em` },

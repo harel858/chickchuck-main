@@ -23,6 +23,8 @@ export async function createUser(data: any) {
     });
     return { newUser };
   } catch (err) {
+    console.log(err);
+    
     return { err };
   }
 }
@@ -57,7 +59,7 @@ export async function updateActivityTime(
   endActivity: string
 ) {
   try {
-    const response = await prisma.user.update({
+    const updated = await prisma.user.update({
       where: {
         id,
       },
@@ -66,8 +68,7 @@ export async function updateActivityTime(
         endActivity,
       },
     });
-    console.log(response);
-
+    const response = await prisma.user.findUnique({where:{id},select:{availableSlots:true}})
     return { response };
   } catch (error) {
     console.log(error);

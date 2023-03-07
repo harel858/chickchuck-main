@@ -58,6 +58,8 @@ function SignUpForm() {
         });
       } else {
         const error = await res.json();
+        console.log(error);
+        
         setError(error);
       }
     } catch (err: any) {

@@ -51,6 +51,13 @@ export type ActivityDay = {
   label: string;
 };
 
+export type formData = {
+  name: string;
+  request_id:string;
+  phoneNumber: string;
+  code:string;
+};
+
 export type SessionData = {
   user: {
     id: string;

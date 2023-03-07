@@ -4,29 +4,30 @@ import axios from "axios";
 import { Zoom } from "react-awesome-reveal";
 import { TextField, Button } from "@mui/material";
 import { Poppins } from "@next/font/google";
+import { formData } from "../../types";
+import { LoadingButton } from "@mui/lab";
 
+interface StepTwoProps {
+  handleNext: () => void;
+  customerData:formData;
+  setCustomerData:React.Dispatch<React.SetStateAction<formData>>
+}
 const font = Poppins({
   subsets: ["latin"],
   weight: "400",
 });
-type formData = {
-  request_id: string;
-  code: string;
-};
 
-function StepTwo({ handleNext, requestId }: any) {
-  console.log(requestId);
 
-  const [stepTwoData, setStepTwoData] = React.useState<formData>({
-    request_id: requestId,
-    code: "",
-  });
+function StepTwo({ handleNext,customerData,setCustomerData}: StepTwoProps) {
+  console.log(customerData.request_id);
+
+ 
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStepTwoData({
-      ...stepTwoData,
+    setCustomerData({
+      ...customerData,
       [event.target.name]: event.target.value,
     });
   };
@@ -37,7 +38,7 @@ function StepTwo({ handleNext, requestId }: any) {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`/api/verification/steptwo`, stepTwoData);
+      const res = await axios.post(`/api/verification/steptwo`, customerData);
       if (res.status === 200) {
         setLoading(false);
         handleNext();
@@ -52,7 +53,7 @@ function StepTwo({ handleNext, requestId }: any) {
   return (
     <Zoom duration={350} damping={10000}>
       <form
-        onSubmit={submitForm}
+        onSubmit={handleNext}
         className="flex flex-col items-center justify-center gap-12 "
       >
         <TextField
@@ -60,6 +61,8 @@ function StepTwo({ handleNext, requestId }: any) {
           label="Enter verification code"
           variant="filled"
           error={error ? true : false}
+          name="code"
+          onChange={handleChange}
           InputProps={{
             style: { color: `white`, fontSize: `1.2em` },
           }}
@@ -76,19 +79,32 @@ function StepTwo({ handleNext, requestId }: any) {
           }}
         />
         <Zoom duration={350} damping={10000} delay={150}>
-          <Button
-            variant="contained"
-            className={`bg-orange-400 ${font.className} tracking-wides`}
-            color="warning"
-            sx={{
-              fontSize: `1.1em`,
-              fontFamily: `sans-serif`,
-              borderRadius: `15px`,
-            }}
-            onClick={handleNext}
-          >
-            Send SMS
-          </Button>
+          <LoadingButton
+              variant="contained"
+              className={`bg-orange-400 ${font.className} tracking-widest`}
+              style={
+                loading ? { backgroundColor: `#fb923c !important` } : undefined
+              }
+              color="warning"
+              type="submit"
+              loading={loading}
+              sx={
+                loading
+                  ? {
+                      fontSize: `1.1em`,
+                      fontFamily: `sans-serif`,
+                      borderRadius: `15px`,
+                      backgroundColor: `#fb923c !important`,
+                    }
+                  : {
+                      fontSize: `1.1em`,
+                      fontFamily: `sans-serif`,
+                      borderRadius: `15px`,
+                    }
+              }
+            >
+              Send SMS
+            </LoadingButton>
         </Zoom>
       </form>
     </Zoom>

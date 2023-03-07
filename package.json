@@ -14,7 +14,8 @@
     "@fullcalendar/timegrid": "^6.1.4",
     "@mui/icons-material": "^5.11.9",
     "@mui/lab": "^5.0.0-alpha.120",
-    "@mui/material": "^5.11.10",
+    "@mui/material": "^5.11.12",
+    "@mui/styled-engine-sc": "^5.11.11",
     "@mui/x-date-pickers": "^5.0.20",
     "@next/font": "^13.1.6",
     "@types/react-big-calendar": "^1.6.0",
@@ -32,6 +33,7 @@
     "react-big-calendar": "^1.6.8",
     "react-datetime-picker": "^4.2.0",
     "react-dom": "18.2.0",
+    "styled-components": "^5.3.8",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

@@ -49,7 +49,7 @@ export default async function handler(
 
       //check if user exist
       const { userExist } = await getByEmail(email);
-      console.log(userExist);
+      console.log(!!userExist);
 
       if (userExist) return res.status(400).json(`user already exist`);
 
@@ -61,7 +61,8 @@ export default async function handler(
         businessName,
       });
 
-      if (err) throw new Error(JSON.stringify(err));
+      if (err) return res.status(500).json(err);
+
       return res.status(201).json(newUser);
     } catch (err) {
       console.log(err);

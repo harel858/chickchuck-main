@@ -12,7 +12,8 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import { Poppins } from "@next/font/google";
 import { Zoom, ZoomProps } from "react-awesome-reveal";
 import Loading from "./loading";
-import { AvailableList } from "./AvailableList";
+import AvailableList from "./AvailableList";
+
 
 const font = Poppins({
   subsets: ["latin"],

@@ -24,7 +24,8 @@ export default async function handler(
       console.log(sendSms);
 
       if (sendSms.status === `0`)
-        return res.status(200).send(sendSms.request_id);
+        return res.status(200).json({request_id:sendSms.request_id,
+        phoneNumber});
 
       return res.status(500).json(`something went wrong`);
     } catch (err) {

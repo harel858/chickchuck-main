@@ -24,8 +24,8 @@ function Calendar({ appointments }: { appointments: appointment[] }) {
           },
         ]}
         headerToolbar={{
-          left: "prev,next today",
-          center: "title",
+          left: "today",
+          center: "prev,title,next",
           right: "dayGridMonth,timeGridWeek,timeGridDay",
         }}
         dayHeaderClassNames="text-white"

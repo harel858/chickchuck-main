@@ -1,22 +1,29 @@
 .fc-header-toolbar h2 {
   color: white !important;
 }
+
+.fc-header-toolbar:nth-child(1) div {
+  display: flex !important;
+  gap: 2em;
+}
+
 .fc-button-group {
   display: flex;
   gap: 0.5em !important;
 }
 
-.fc-button-group button {
+.fc-button-group button,
+.fc-header-toolbar:nth-child(1) div button {
   border-radius: 0.5em !important;
   border: 1.5px solid black !important;
   padding: 0.2em 1em !important;
   color: black !important;
   font-size: 1.1em !important;
   font-weight: 600 !important;
-  background: salmon !important;
+  background: rgb(255, 123, 0) !important;
   transition: all 200ms ease-out !important;
 }
-.fc-button-group button:hover {
+.fc-button-group button:hover,.fc-header-toolbar:nth-child(1) button:hover {
   background: #005aa0 !important;
   color: white !important;
   transform: scale(1.1);
