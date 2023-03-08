@@ -16,8 +16,8 @@ export default async function handler(
       const { name, phoneNumber } = req.body;
       if (!phoneNumber && !name) return res.status(400).json(`missing values`);
       console.log(phoneNumber);
-
-      const sendSms = await vonage.verify.start({
+      return res.status(200).json({ request_id: "1233", phoneNumber });
+      /*  const sendSms = await vonage.verify.start({
         number: phoneNumber,
         brand: "Vonage",
       });
@@ -27,7 +27,7 @@ export default async function handler(
         return res.status(200).json({request_id:sendSms.request_id,
         phoneNumber});
 
-      return res.status(500).json(`something went wrong`);
+      return res.status(500).json(`something went wrong`); */
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);

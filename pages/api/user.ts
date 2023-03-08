@@ -49,7 +49,7 @@ export default async function handler(
 
       //check if user exist
       const { userExist } = await getByEmail(email);
-      console.log(!!userExist);
+      console.log(userExist);
 
       if (userExist) return res.status(400).json(`user already exist`);
 

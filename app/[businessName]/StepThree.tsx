@@ -1,5 +1,5 @@
 import * as React from "react";
-import { appointment, treatment, User } from "@prisma/client";
+import { Appointment, AvailableSlot, Treatment, User } from "@prisma/client";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -8,12 +8,10 @@ import StepContent from "@mui/material/StepContent";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import { Poppins } from "@next/font/google";
 import { Zoom, ZoomProps } from "react-awesome-reveal";
 import Loading from "./loading";
 import AvailableList from "./AvailableList";
-
 
 const font = Poppins({
   subsets: ["latin"],
@@ -24,19 +22,19 @@ function StepThree({
   user,
 }: {
   user: User & {
-    treatment: treatment[];
-    appointments: appointment[];
+    Treatment: Treatment[];
+    availableSlots: AvailableSlot[];
   };
 }) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [animate, setAnimate] = React.useState(false);
-  const [queue, setQueue] = React.useState<treatment | null>(null);
+  const [queue, setQueue] = React.useState<Treatment | null>(null);
 
   React.useEffect(() => {
     setAnimate(true);
   }, []);
 
-  const handleChange = (item: treatment) => {
+  const handleChange = (item: Treatment) => {
     setQueue(item);
   };
 
@@ -45,7 +43,7 @@ function StepThree({
       label: "Create an ad group",
       description: (
         <div className="py-12 gap-2 flex flex-wrap align-center items-center">
-          {user.treatment.map((item) => (
+          {user.Treatment.map((item) => (
             <button
               key={item.id}
               onClick={() => handleChange(item)}
@@ -65,7 +63,7 @@ function StepThree({
     },
     {
       label: "Create an ad",
-      description: <AvailableList />,
+      description: <AvailableList user={user} />,
     },
   ];
   const handleNext = () => {

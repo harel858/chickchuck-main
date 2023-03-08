@@ -4,7 +4,7 @@ import StepTwo from "./stepTwo";
 import StepThree from "./StepThree";
 import Tab from "./Tab";
 import { Lobster } from "@next/font/google";
-import { appointment, treatment, User } from "@prisma/client";
+import { AvailableSlot, Treatment, User } from "@prisma/client";
 import Loading from "./loading";
 import { formData } from "../../types";
 
@@ -19,16 +19,16 @@ function Tabs({
   user,
 }: {
   user: User & {
-    treatment: treatment[];
-    appointments: appointment[];
+    Treatment: Treatment[];
+    availableSlots: AvailableSlot[];
   };
 }) {
   const [activeTab, setActiveTab] = useState(0);
   const [customerData, setCustomerData] = React.useState<formData>({
     name: "",
-    request_id:"",
+    request_id: "",
     phoneNumber: "",
-    code:""
+    code: "",
   });
 
   const handleNext = () => {
@@ -39,13 +39,23 @@ function Tabs({
       label: "Tab 1",
       content: (
         <React.Suspense fallback={<Loading />}>
-          <StepOne handleNext={handleNext} customerData={customerData} setCustomerData={setCustomerData} />
+          <StepOne
+            handleNext={handleNext}
+            customerData={customerData}
+            setCustomerData={setCustomerData}
+          />
         </React.Suspense>
       ),
     },
     {
       label: "Tab 2",
-      content: <StepTwo handleNext={handleNext} customerData={customerData} setCustomerData={setCustomerData}  />,
+      content: (
+        <StepTwo
+          handleNext={handleNext}
+          customerData={customerData}
+          setCustomerData={setCustomerData}
+        />
+      ),
     },
     {
       label: "Tab 3",

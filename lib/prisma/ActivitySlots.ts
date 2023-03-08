@@ -6,13 +6,15 @@ export async function createAvailableSlots(
   availableSlots: AvailableSlot[],
   businessId: string
 ) {
+  console.log(dayjs(availableSlots[0].start).format("hh:mm A"));
+
   try {
     const slotsToSave = availableSlots.map((slot) => {
-      const start = dayjs(slot.start, "hh:mm A");
-      const end = dayjs(slot.end, "hh:mm A");
+      const start = dayjs(slot.start).format("hh:mm A");
+      const end = dayjs(slot.end).format("hh:mm A");
       return {
-        start: start.toISOString(),
-        end: end.toISOString(),
+        start,
+        end,
         businessId,
       };
     });

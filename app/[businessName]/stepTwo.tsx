@@ -9,19 +9,17 @@ import { LoadingButton } from "@mui/lab";
 
 interface StepTwoProps {
   handleNext: () => void;
-  customerData:formData;
-  setCustomerData:React.Dispatch<React.SetStateAction<formData>>
+  customerData: formData;
+  setCustomerData: React.Dispatch<React.SetStateAction<formData>>;
 }
 const font = Poppins({
   subsets: ["latin"],
   weight: "400",
 });
 
-
-function StepTwo({ handleNext,customerData,setCustomerData}: StepTwoProps) {
+function StepTwo({ handleNext, customerData, setCustomerData }: StepTwoProps) {
   console.log(customerData.request_id);
 
- 
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
@@ -40,6 +38,8 @@ function StepTwo({ handleNext,customerData,setCustomerData}: StepTwoProps) {
     try {
       const res = await axios.post(`/api/verification/steptwo`, customerData);
       if (res.status === 200) {
+        console.log(res.data);
+
         setLoading(false);
         handleNext();
       }
@@ -53,7 +53,7 @@ function StepTwo({ handleNext,customerData,setCustomerData}: StepTwoProps) {
   return (
     <Zoom duration={350} damping={10000}>
       <form
-        onSubmit={handleNext}
+        onSubmit={submitForm}
         className="flex flex-col items-center justify-center gap-12 "
       >
         <TextField
@@ -80,31 +80,31 @@ function StepTwo({ handleNext,customerData,setCustomerData}: StepTwoProps) {
         />
         <Zoom duration={350} damping={10000} delay={150}>
           <LoadingButton
-              variant="contained"
-              className={`bg-orange-400 ${font.className} tracking-widest`}
-              style={
-                loading ? { backgroundColor: `#fb923c !important` } : undefined
-              }
-              color="warning"
-              type="submit"
-              loading={loading}
-              sx={
-                loading
-                  ? {
-                      fontSize: `1.1em`,
-                      fontFamily: `sans-serif`,
-                      borderRadius: `15px`,
-                      backgroundColor: `#fb923c !important`,
-                    }
-                  : {
-                      fontSize: `1.1em`,
-                      fontFamily: `sans-serif`,
-                      borderRadius: `15px`,
-                    }
-              }
-            >
-              Send SMS
-            </LoadingButton>
+            variant="contained"
+            className={`bg-orange-400 ${font.className} tracking-widest`}
+            style={
+              loading ? { backgroundColor: `#fb923c !important` } : undefined
+            }
+            color="warning"
+            type="submit"
+            loading={loading}
+            sx={
+              loading
+                ? {
+                    fontSize: `1.1em`,
+                    fontFamily: `sans-serif`,
+                    borderRadius: `15px`,
+                    backgroundColor: `#fb923c !important`,
+                  }
+                : {
+                    fontSize: `1.1em`,
+                    fontFamily: `sans-serif`,
+                    borderRadius: `15px`,
+                  }
+            }
+          >
+            Send SMS
+          </LoadingButton>
         </Zoom>
       </form>
     </Zoom>

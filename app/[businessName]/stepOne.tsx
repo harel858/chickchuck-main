@@ -12,11 +12,12 @@ const font = Poppins({
   weight: "400",
 });
 
-interface StepOneRes {phoneNumber:string,request_id:string}
+interface StepOneRes {
+  phoneNumber: string;
+  request_id: string;
+}
 
-function StepOne({ handleNext, customerData,setCustomerData }: any) {
- 
-
+function StepOne({ handleNext, customerData, setCustomerData }: any) {
   const [error, setError] = React.useState("");
   const [animate, setAnimate] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -40,9 +41,13 @@ function StepOne({ handleNext, customerData,setCustomerData }: any) {
 
     try {
       const res = await axios.post(`/api/verification/stepone`, customerData);
-      const data = res.data as StepOneRes
+      const data = res.data as StepOneRes;
       console.log(data);
-      setCustomerData({...customerData,request_id:data.request_id,phoneNumber:data.phoneNumber})
+      setCustomerData({
+        ...customerData,
+        request_id: data.request_id,
+        phoneNumber: data.phoneNumber,
+      });
 
       if (res.status === 200) {
         setLoading(false);
@@ -59,7 +64,7 @@ function StepOne({ handleNext, customerData,setCustomerData }: any) {
       {animate ? (
         <JackInTheBox duration={500}>
           <form
-            onSubmit={handleNext}
+            onSubmit={submitForm}
             className="flex flex-col items-center gap-12 mt-4"
           >
             <div className="flex flex-col items-center gap-8 mt-4">

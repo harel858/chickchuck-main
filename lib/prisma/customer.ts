@@ -22,7 +22,7 @@ export const getCustomer = async (phoneNumber: string) => {
   try {
     const customer = await prisma.customer.findUnique({
       where: { phoneNumber },
-      select: { phoneNumber: true, appointment: true, id: true, name: true },
+      select: { appointments: true, id: true, name: true, phoneNumber: true },
     });
     console.log(customer);
 

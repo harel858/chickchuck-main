@@ -2,17 +2,7 @@ import prisma from ".";
 import bcrypt from "bcrypt";
 
 export async function getAllUsers() {
-  const users = await prisma?.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      phone: true,
-      businessName: true,
-      email: true,
-      appointments: true,
-      treatment: true,
-    },
-  });
+  const users = await prisma?.user.findMany({});
   return { users };
 }
 
@@ -24,7 +14,7 @@ export async function createUser(data: any) {
     return { newUser };
   } catch (err) {
     console.log(err);
-    
+
     return { err };
   }
 }
@@ -33,20 +23,6 @@ export async function getByEmail(email: string) {
   try {
     const userExist = await prisma?.user.findUnique({
       where: { email },
-      select: {
-        id: true,
-        password: true,
-        name: true,
-        phone: true,
-        businessName: true,
-        activityDays: true,
-        endActivity: true,
-        startActivity: true,
-        email: true,
-        appointments: true,
-        treatment: true,
-        availableSlots: true,
-      },
     });
     return { userExist };
   } catch (err) {
@@ -64,11 +40,14 @@ export async function updateActivityTime(
         id,
       },
       data: {
-        startActivity,
-        endActivity,
+        openingTime: startActivity,
+        closingTime: endActivity,
       },
     });
-    const response = await prisma.user.findUnique({where:{id},select:{availableSlots:true}})
+    const response = await prisma.user.findUnique({
+      where: { id },
+      select: { availableSlots: true },
+    });
     return { response };
   } catch (error) {
     console.log(error);
@@ -97,15 +76,6 @@ export async function getByBusinessName(businessName: any) {
   try {
     const userExist = await prisma?.user.findUnique({
       where: { businessName: businessName },
-      select: {
-        name: true,
-        phone: true,
-        id: true,
-        email: true,
-        appointments: true,
-        treatment: true,
-        businessName: true,
-      },
     });
     console.log(userExist);
     return { userExist };
@@ -118,16 +88,6 @@ export async function getById(id: any) {
   try {
     const userExist = await prisma?.user.findUnique({
       where: { id },
-      select: {
-        name: true,
-        phone: true,
-        id: true,
-        activityDays: true,
-        email: true,
-        appointments: true,
-        treatment: true,
-        businessName: true,
-      },
     });
     return { userExist };
   } catch (err) {

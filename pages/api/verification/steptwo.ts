@@ -14,13 +14,27 @@ export default async function handler(
 ) {
   if (req.method == "POST") {
     try {
+      console.log(req.body);
+
       const { request_id, code, phoneNumber, name } = req.body;
       console.log(req.body);
 
       const { customer, getCustomerErr } = await getCustomer(phoneNumber);
 
       if (getCustomerErr) return res.status(500).json(getCustomerErr);
-      const check = await vonage.verify.check(request_id, code);
+
+      if (customer) return res.status(200).json(customer);
+
+      const { newCustomer, createCustomerErr } = await createCustomer(
+        name,
+        phoneNumber
+      );
+      if (!newCustomer || createCustomerErr) {
+        return res.status(500).json(`faild`);
+      }
+      return res.status(200).json(newCustomer);
+
+      /*  const check = await vonage.verify.check(request_id, code);
       console.log(`check: ${JSON.stringify(check)}`);
       console.log(check);
 
@@ -39,7 +53,7 @@ export default async function handler(
         }
         return res.status(200).json(newCustomer);
       }
-      return res.status(400).json(`wrong number`);
+      return res.status(400).json(`wrong number`); */
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);

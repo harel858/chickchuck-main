@@ -3,20 +3,30 @@ import dayjs, { Dayjs } from "dayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { TextField, TextFieldProps } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { AvailableSlot, Treatment, User } from "@prisma/client";
 
-export default function AvailableList() {
+export default function AvailableListCalendar({
+  user,
+}: {
+  user: User & {
+    Treatment: Treatment[];
+    availableSlots: AvailableSlot[];
+  };
+}) {
+  console.log(user);
+
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
 
-  const handleDateChange = (event: Dayjs ) => {
+  const handleDateChange = (event: Dayjs) => {
     setSelectedDate(event);
   };
 
   const handlePreviousDay = () => {
-    setSelectedDate(selectedDate.subtract(1, 'day'));
+    setSelectedDate(selectedDate.subtract(1, "day"));
   };
 
   const handleNextDay = () => {
-    setSelectedDate(selectedDate.add(1, 'day'));
+    setSelectedDate(selectedDate.add(1, "day"));
   };
 
   return (

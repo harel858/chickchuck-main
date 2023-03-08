@@ -16,10 +16,9 @@ const fetchUser = async (businessName: string) => {
 
     const user = await prisma.user.findUnique({
       where: { businessName: value },
-      include: { treatment: true, appointments: true },
+      include: { Treatment: true, availableSlots: true },
     });
-
-    if (user) return user;
+    return user;
   } catch (err) {
     console.log(err);
   }

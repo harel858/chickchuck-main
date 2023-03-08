@@ -2,8 +2,8 @@ import prisma from ".";
 
 type CreateData = {
   title: string;
-  cost: string;
-  duration: string;
+  cost: number;
+  duration: number;
   businessId: string;
 };
 

@@ -4,5 +4,8 @@
   "cSpell.words": [
     "NEXTAUTH",
     "Vonage"
-  ]
+  ],
+  "editor.formatOnSave": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.formatOnPaste": true
 }
