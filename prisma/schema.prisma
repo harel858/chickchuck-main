@@ -33,15 +33,17 @@ model Address {
 }
 
 model Appointment {
-  id                String          @id @default(uuid())
-  customer          Customer        @relation(fields: [customerId], references: [id])
+  id                String            @id @default(uuid())
+  customer          Customer          @relation(fields: [customerId], references: [id])
   customerId        String
-  appointmentSlot   AppointmentSlot @relation(fields: [appointmentSlotId], references: [id])
-  appointmentSlotId String          @unique
-  treatment         Treatment       @relation(fields: [treatmentId], references: [id])
+  appointmentSlot   AppointmentSlot   @relation(fields: [appointmentSlotId], references: [id])
+  appointmentSlotId String            @unique
+  treatment         Treatment         @relation(fields: [treatmentId], references: [id])
   treatmentId       String
   dateTime          DateTime
-  createdAt         DateTime        @default(now())
+  status            AppointmentStatus
+  notes             String?
+  createdAt         DateTime          @default(now())
 }
 
 model Customer {
@@ -78,4 +80,10 @@ model AppointmentSlot {
   date           String
   availableSlots AvailableSlot[]
   appointments   Appointment[]
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CANCELLED
+  COMPLETED
 }

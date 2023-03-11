@@ -4,9 +4,14 @@ import StepTwo from "./stepTwo";
 import StepThree from "./StepThree";
 import Tab from "./Tab";
 import { Lobster } from "@next/font/google";
-import { AvailableSlot, Treatment, User } from "@prisma/client";
+import {
+  AppointmentSlot,
+  AvailableSlot,
+  Treatment,
+  User,
+} from "@prisma/client";
 import Loading from "./loading";
-import { formData } from "../../types";
+import { formData, UserData } from "../../types";
 
 const StepOne = React.lazy(() => import("./stepOne"));
 
@@ -15,14 +20,7 @@ const font = Lobster({
   weight: "400",
 });
 
-function Tabs({
-  user,
-}: {
-  user: User & {
-    Treatment: Treatment[];
-    availableSlots: AvailableSlot[];
-  };
-}) {
+function Tabs({ userData }: { userData: UserData }) {
   const [activeTab, setActiveTab] = useState(0);
   const [customerData, setCustomerData] = React.useState<formData>({
     name: "",
@@ -59,7 +57,7 @@ function Tabs({
     },
     {
       label: "Tab 3",
-      content: <StepThree user={user} />,
+      content: <StepThree userData={userData} />,
     },
   ];
   return (
@@ -82,7 +80,7 @@ function Tabs({
       </div>
       <div className="h-full rounded-2xl rounded-t-none bg-gray-900 pb-12">
         {tabs.map((tab, index) => (
-          <Tab active={activeTab === index} key={tab.label} user={user}>
+          <Tab active={activeTab === index} key={tab.label} userData={userData}>
             {activeTab === index && tab.content}
           </Tab>
         ))}

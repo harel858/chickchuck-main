@@ -19,8 +19,8 @@ export default async function handler(
       if (err || !userExist) return res.status(500).json(`user not found`);
       const { newTreatment, insertionErr } = await createTreatment({
         title,
-        cost,
-        duration,
+        cost: parseInt(cost),
+        duration: parseInt(duration),
         businessId,
       });
       if (insertionErr || !newTreatment)

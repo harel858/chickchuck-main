@@ -2,9 +2,10 @@
 import React, { useCallback, useState } from "react";
 import { treatment } from "../../../../types";
 import { useRouter } from "next/navigation";
+import { Treatment } from "@prisma/client";
 
 type treatmentProps = {
-  item: treatment;
+  item: Treatment;
 };
 
 const Treatment = React.memo(({ item }: treatmentProps) => {

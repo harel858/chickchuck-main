@@ -53,7 +53,7 @@ function StepTwo({ handleNext, customerData, setCustomerData }: StepTwoProps) {
   return (
     <Zoom duration={350} damping={10000}>
       <form
-        onSubmit={submitForm}
+        onSubmit={handleNext}
         className="flex flex-col items-center justify-center gap-12 "
       >
         <TextField

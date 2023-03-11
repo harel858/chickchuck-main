@@ -2,32 +2,37 @@ import React from "react";
 import prisma from "../../../../lib/prisma";
 import { IdProps, User } from "../../../../types";
 import Loading from "../loading";
-import Calendar from "../(calendar)/Calendar";
+import Calendar from "./(calendar)/Calendar";
 
 async function fetchUser(id: any) {
-  const user = await prisma.user.findUnique({
-    where: { id },
-    include: { appointments: true, treatment: true },
+  const appointments = await prisma.appointment.findMany({
+    where: {
+      treatment: {
+        businessId: id, // The ID of the user's business
+      },
+    },
+    include: {
+      customer: true,
+      treatment: true,
+    },
   });
-  if (user) {
-    return user;
-  }
+  return appointments;
 }
 
 async function ScheduleListPage({ params: { id } }: IdProps) {
-  const user = await fetchUser(id);
-  console.log(user);
+  const appointments = await fetchUser(id);
+  console.log(appointments);
 
   return (
-    <>
-      {user ? (
+    <div>
+      {appointments ? (
         <div className="flex justify-center align-center content-center w-11/12">
-          <Calendar appointments={user?.appointments} />
+          <Calendar appointments={appointments} />
         </div>
       ) : (
         <Loading />
       )}
-    </>
+    </div>
   );
 }
 

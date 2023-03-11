@@ -64,7 +64,7 @@ function StepOne({ handleNext, customerData, setCustomerData }: any) {
       {animate ? (
         <JackInTheBox duration={500}>
           <form
-            onSubmit={submitForm}
+            onSubmit={handleNext}
             className="flex flex-col items-center gap-12 mt-4"
           >
             <div className="flex flex-col items-center gap-8 mt-4">

@@ -10,7 +10,7 @@ export const revalidate = 1;
 async function fetchUser(id: any) {
   const user = await prisma.user.findUnique({
     where: { id },
-    include: { appointments: true, treatment: true },
+    include: { Treatment: true },
   });
   if (user) {
     return user;
@@ -19,7 +19,6 @@ async function fetchUser(id: any) {
 
 async function PriceListPage({ params: { id } }: IdProps) {
   const user = await fetchUser(id);
-  console.log(user);
 
   if (!user) return notFound();
 
@@ -30,7 +29,7 @@ async function PriceListPage({ params: { id } }: IdProps) {
       />
       <div>
         <ul>
-          {user?.treatment?.map((item: any) => {
+          {user?.Treatment?.map((item) => {
             console.log(item);
             return <Treatment key={item.id} item={item} />;
           })}

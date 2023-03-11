@@ -12,30 +12,26 @@ import { Poppins } from "@next/font/google";
 import { Zoom, ZoomProps } from "react-awesome-reveal";
 import Loading from "./loading";
 import AvailableList from "./AvailableList";
+import { UserData } from "../../types";
 
 const font = Poppins({
   subsets: ["latin"],
   weight: "400",
 });
 
-function StepThree({
-  user,
-}: {
-  user: User & {
-    Treatment: Treatment[];
-    availableSlots: AvailableSlot[];
-  };
-}) {
+function StepThree({ userData }: { userData: UserData }) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [animate, setAnimate] = React.useState(false);
-  const [queue, setQueue] = React.useState<Treatment | null>(null);
+  const [treatment, setTreatment] = React.useState<Treatment | null>(null);
 
   React.useEffect(() => {
     setAnimate(true);
   }, []);
 
   const handleChange = (item: Treatment) => {
-    setQueue(item);
+    console.log(item);
+
+    setTreatment(item);
   };
 
   const steps = [
@@ -43,14 +39,14 @@ function StepThree({
       label: "Create an ad group",
       description: (
         <div className="py-12 gap-2 flex flex-wrap align-center items-center">
-          {user.Treatment.map((item) => (
+          {userData?.user?.Treatment.map((item) => (
             <button
               key={item.id}
               onClick={() => handleChange(item)}
               className={`${
                 font.className
               } px-4 py-2  border-2 transition-all border-black ease-in-out duration-300 hover:bg-orange-500 font-medium ${
-                queue?.id == item?.id
+                treatment?.id == item?.id
                   ? `bg-orange-500  text-lg`
                   : `bg-rose-100 text-base  `
               } hover:text-lg   text-black rounded-xl`}
@@ -63,7 +59,7 @@ function StepThree({
     },
     {
       label: "Create an ad",
-      description: <AvailableList user={user} />,
+      description: <AvailableList userData={userData} />,
     },
   ];
   const handleNext = () => {

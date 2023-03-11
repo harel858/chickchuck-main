@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { TextField, TextFieldProps } from "@mui/material";
+import { Button, TextField, TextFieldProps } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { AvailableSlot, Treatment, User } from "@prisma/client";
+import { AvailableSlot } from "@prisma/client";
+import { UserData } from "../../types";
+import { Poppins } from "@next/font/google";
+
+const font = Poppins({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export default function AvailableListCalendar({
-  user,
+  userData,
 }: {
-  user: User & {
-    Treatment: Treatment[];
-    availableSlots: AvailableSlot[];
-  };
+  userData: UserData;
 }) {
-  console.log(user);
+  console.log(userData.user?.availableSlots);
 
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
 
@@ -40,19 +44,45 @@ export default function AvailableListCalendar({
         />
       </LocalizationProvider>
       <button onClick={handleNextDay}>&gt;</button>
-      <AvailableQueues date={selectedDate} />
+      <AvailableQueues date={selectedDate} userData={userData} />
     </div>
   );
 }
 
-function AvailableQueues({ date }: { date: Dayjs }) {
-  function handleDateSelected(date: Dayjs) {
-    console.log(`Selected date: ${date.format("YYYY-MM-DD")}`);
-  }
+function AvailableQueues({
+  date,
+  userData,
+}: {
+  date: Dayjs;
+  userData: UserData;
+}) {
+  const [availableSlot, setAvailableSlot] =
+    React.useState<AvailableSlot | null>(null);
+  console.log(userData.appointmentSlots);
+
+  const handleChange = (item: AvailableSlot) => {
+    console.log(item);
+
+    setAvailableSlot(item);
+  };
 
   return (
-    <div>
-      <h1>Select a date: {date.format("YYYY-MM-DD")}</h1>
+    <div className="py-12 gap-2 flex justify-start align-center items-center flex-wrap align-center items-center">
+      {userData?.appointmentSlots.map((item) => (
+        <button
+          key={item.id}
+          onClick={() => handleChange(item)}
+          className={`${
+            font.className
+          } px-4 py-2  border-2 transition-all border-black ease-in-out duration-300 hover:bg-orange-500 font-medium ${
+            availableSlot?.id == item?.id
+              ? `bg-orange-500  text-lg`
+              : `bg-rose-100 text-base  `
+          } hover:text-lg   text-black rounded-xl`}
+        >
+          {item?.start}
+        </button>
+      ))}
     </div>
   );
 }

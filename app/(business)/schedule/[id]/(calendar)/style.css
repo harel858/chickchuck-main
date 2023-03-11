@@ -24,7 +24,7 @@
   transition: all 200ms ease-out !important;
 }
 .fc-button-group button:hover,.fc-header-toolbar:nth-child(1) button:hover {
-  background: #005aa0 !important;
+  background: #9999 !important;
   color: white !important;
   transform: scale(1.1);
 }

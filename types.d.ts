@@ -1,3 +1,5 @@
+import { AvailableSlot } from "@prisma/client";
+
 export type User = {
   id: string;
   name: string;
@@ -41,11 +43,7 @@ export type AllUsers = {
   appointments: appointment[];
   treatment: treatment[];
 };
-export type AvailableSlot = {
-  id: string;
-  start: Dayjs;
-  end: Dayjs;
-};
+
 export type ActivityDay = {
   value: number;
   label: string;
@@ -53,9 +51,19 @@ export type ActivityDay = {
 
 export type formData = {
   name: string;
-  request_id:string;
+  request_id: string;
   phoneNumber: string;
-  code:string;
+  code: string;
+};
+
+export type UserData = {
+  appointmentSlots: AvailableSlot[];
+  user:
+    | (User & {
+        Treatment: Treatment[];
+        availableSlots: AvailableSlot[];
+      })
+    | null;
 };
 
 export type SessionData = {
