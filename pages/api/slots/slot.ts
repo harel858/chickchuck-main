@@ -1,12 +1,15 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { AvailableSlot } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { createAvailableSlots } from "../../../lib/prisma/ActivitySlots";
+import {
+  createAvailableSlots,
+  getQueuesByDate,
+} from "../../../lib/prisma/ActivitySlots";
 import {
   getById,
   updateActivityDays,
   updateActivityTime,
 } from "../../../lib/prisma/users";
-import { AvailableSlot } from "../../../types";
 
 type SlotBody = {
   activityDays: number[];
@@ -56,6 +59,29 @@ export default async function handler(
       if (error || !response) return res.status(500).json(`update Time Failed`);
 
       return res.status(200).json({ response, error });
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  }
+  if (req.method === "GET") {
+    try {
+      const { chosenDate, userId, duration } = req.query as {
+        chosenDate: string;
+        userId: string;
+        duration: string;
+      };
+      console.log(chosenDate);
+      console.log(userId);
+      const { availableSlots, err } = await getQueuesByDate(
+        userId,
+        chosenDate,
+        JSON.parse(duration)
+      );
+      console.log(availableSlots);
+
+      if (err || !availableSlots) return res.status(500).json(err);
+
+      return res.status(200).json(availableSlots);
     } catch (err) {
       return res.status(500).json(err);
     }

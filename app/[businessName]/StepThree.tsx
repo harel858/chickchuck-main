@@ -59,7 +59,7 @@ function StepThree({ userData }: { userData: UserData }) {
     },
     {
       label: "Create an ad",
-      description: <AvailableList userData={userData} />,
+      description: <AvailableList treatment={treatment} userData={userData} />,
     },
   ];
   const handleNext = () => {

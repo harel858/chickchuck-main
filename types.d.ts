@@ -1,4 +1,4 @@
-import { AvailableSlot } from "@prisma/client";
+import { AppointmentSlot, AvailableSlot, Treatment } from "@prisma/client";
 
 export type User = {
   id: string;
@@ -57,7 +57,9 @@ export type formData = {
 };
 
 export type UserData = {
-  appointmentSlots: AvailableSlot[];
+  availableSlot: (AvailableSlot & {
+    AppointmentSlot: AppointmentSlot | null;
+  })[];
   user:
     | (User & {
         Treatment: Treatment[];
@@ -65,7 +67,10 @@ export type UserData = {
       })
     | null;
 };
-
+export type Slots = {
+  start: string;
+  end: string;
+};
 export type SessionData = {
   user: {
     id: string;

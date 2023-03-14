@@ -7,8 +7,8 @@ import Button from "@mui/material/Button";
 import Fab from "@mui/material/Fab";
 import CheckIcon from "@mui/icons-material/Check";
 import SaveIcon from "@mui/icons-material/Save";
-import { User } from "@prisma/client";
-import { AvailableSlot } from "../../../types";
+import { AvailableSlot, User } from "@prisma/client";
+import { Slots } from "../../../types";
 
 type SubmitProps = {
   user: User;
@@ -17,7 +17,7 @@ type SubmitProps = {
   endActivity: Dayjs;
   setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
   activityDays: any[];
-  availableSlots: AvailableSlot[];
+  availableSlots: Slots[];
 };
 
 export default function SubmitButton({
@@ -60,8 +60,8 @@ export default function SubmitButton({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          startActivity: startActivity.format("hh:mm A"),
-          endActivity: endActivity.format("hh:mm A"),
+          startActivity: startActivity.toISOString(),
+          endActivity: endActivity.toISOString(),
           activityDays,
           availableSlots,
           id: user.id,

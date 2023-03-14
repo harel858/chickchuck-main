@@ -18,7 +18,7 @@ const fetchAppointmentSlots = async (businessName: string) => {
       where: { businessName: value },
       include: { Treatment: true, availableSlots: true },
     });
-    const appointmentSlots = await prisma.availableSlot.findMany({
+    const availableSlot = await prisma.availableSlot.findMany({
       where: {
         businessId: user?.id, // Replace with the ID of the user/business you want to book an appointment with
       },
@@ -27,7 +27,8 @@ const fetchAppointmentSlots = async (businessName: string) => {
       },
       orderBy: [{ AppointmentSlot: { date: "asc" } }, { start: "asc" }],
     });
-    return { appointmentSlots, user } as UserData;
+
+    return { availableSlot, user } as UserData;
   } catch (err) {
     console.log(err);
   }

@@ -1,6 +1,6 @@
 import prisma from ".";
-import { AvailableSlot } from "../../types";
 import dayjs, { Dayjs } from "dayjs";
+import { AvailableSlot } from "@prisma/client";
 
 export async function createAvailableSlots(
   availableSlots: AvailableSlot[],
@@ -10,11 +10,9 @@ export async function createAvailableSlots(
 
   try {
     const slotsToSave = availableSlots.map((slot) => {
-      const start = dayjs(slot.start).format("hh:mm A");
-      const end = dayjs(slot.end).format("hh:mm A");
       return {
-        start,
-        end,
+        start: slot.start,
+        end: slot.end,
         businessId,
       };
     });
@@ -64,4 +62,36 @@ export async function updateAvailableSlots(
 
   // Create new available slots with the updated array of slots
   await createAvailableSlots(availableSlots, businessId);
+}
+
+export async function getQueuesByDate(
+  userId: string,
+  chosenDate: any,
+  duration: number
+) {
+  console.log(duration);
+
+  try {
+    const availableSlots = await prisma.availableSlot.findMany({
+      where: {
+        AND: [
+          { businessId: userId },
+          { start: { gte: "00:00" } },
+          { end: { lte: "23:59" } },
+          { AppointmentSlot: null },
+          { business: { activityDays: { has: dayjs(chosenDate).day() } } },
+        ],
+      },
+      include: {
+        AppointmentSlot: true,
+        business: true,
+      },
+      orderBy: { start: "asc" },
+    });
+    console.log(availableSlots);
+
+    return { availableSlots };
+  } catch (err) {
+    return { err };
+  }
 }

@@ -1,35 +1,29 @@
 "use client";
 import * as React from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { User } from "@prisma/client";
+import { AvailableSlot, User } from "@prisma/client";
 import SlotDurationPicker from "./SlotDurationPicker";
 import SubmitButton from "./SubmitButton";
 import ActivityDays from "./ActivityDays";
-import { AvailableSlot } from "../../../types";
 import ActivityTimePicker from "./ActivityTimePicker";
+import { Slots } from "../../../types";
 
 export default function Form({ user }: { user: User }) {
   const [startActivity, setStartActivity] = React.useState<Dayjs>(
-    dayjs(user.startActivity, "hh:mm A")
+    dayjs(user.openingTime)
   );
   const [endActivity, setEndActivity] = React.useState<Dayjs>(
-    dayjs(user.endActivity, "hh:mm A")
+    dayjs(user.closingTime)
   );
   const [duration, setDuration] = React.useState<number>(15);
   const [hasChanges, setHasChanges] = React.useState<boolean>(true);
   const [activityDays, setActivityDays] = React.useState<any[]>(
     user.activityDays
   );
-  const [availableSlots, setAvailableSlots] = React.useState<AvailableSlot[]>(
-    []
-  );
+  const [availableSlots, setAvailableSlots] = React.useState<Slots[]>([]);
+
   React.useEffect(() => {
-    if (
-      startActivity.format() != user.startActivity ||
-      endActivity.format() != user.endActivity
-    ) {
-      generateAvailableSlots(startActivity, endActivity, duration);
-    }
+    generateAvailableSlots(startActivity, endActivity, duration);
 
     setHasChanges(false);
   }, [startActivity, setStartActivity, endActivity, setEndActivity, duration]);
@@ -40,16 +34,18 @@ export default function Form({ user }: { user: User }) {
     end: Dayjs,
     duration: number
   ) => {
-    const slots: AvailableSlot[] = [];
+    const slots: Slots[] = [];
+    console.log(startActivity.startOf("day").hour());
 
     // Create slots with specified duration
     let currentSlotStart = start;
     while (currentSlotStart.isBefore(end)) {
       const currentSlotEnd = currentSlotStart.add(duration, "minute");
+      console.log(currentSlotStart.format("HH:mm"));
+
       slots.push({
-        id: `${currentSlotStart.hour()}-${currentSlotEnd.hour()}`,
-        start: currentSlotStart,
-        end: currentSlotEnd,
+        start: currentSlotStart.format("HH:mm"),
+        end: currentSlotEnd.format("HH:mm"),
       });
       currentSlotStart = currentSlotEnd;
     }
