@@ -1,6 +1,9 @@
 import prisma from ".";
 import dayjs, { Dayjs } from "dayjs";
-import { AvailableSlot } from "@prisma/client";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { AppointmentSlot, AvailableSlot, User } from "@prisma/client";
+
+dayjs.extend(customParseFormat);
 
 export async function createAvailableSlots(
   availableSlots: AvailableSlot[],
@@ -63,13 +66,14 @@ export async function updateAvailableSlots(
   // Create new available slots with the updated array of slots
   await createAvailableSlots(availableSlots, businessId);
 }
-
 export async function getQueuesByDate(
   userId: string,
   chosenDate: any,
-  duration: number
+  duration: number,
+  user: User
 ) {
-  console.log(duration);
+  const slotDuration = user.slotDuration;
+  const slotsNeeded = Math.ceil(duration / slotDuration);
 
   try {
     const availableSlots = await prisma.availableSlot.findMany({
@@ -90,8 +94,44 @@ export async function getQueuesByDate(
     });
     console.log(availableSlots);
 
-    return { availableSlots };
-  } catch (err) {
-    return { err };
+    let consecutiveSlots: (AvailableSlot & {
+      business: User;
+      AppointmentSlot: AppointmentSlot | null;
+    })[] = [];
+    let result = [];
+
+    for (let i = 0; i < availableSlots.length; i++) {
+      if (consecutiveSlots.length === 0) {
+        consecutiveSlots.push(availableSlots[i]);
+      } else {
+        const prevSlotStart = dayjs(
+          consecutiveSlots[consecutiveSlots.length - 1].start,
+          "HH:mm"
+        );
+
+        const currentSlotEnd = dayjs(availableSlots[i - 1].end, "HH:mm");
+
+        const minutesBetweenSlots = currentSlotEnd.diff(
+          prevSlotStart,
+          "minute"
+        );
+
+        console.log(minutesBetweenSlots);
+
+        if (minutesBetweenSlots >= slotDuration) {
+          consecutiveSlots.push(availableSlots[i]);
+          if (consecutiveSlots.length >= slotsNeeded) {
+            result.push(consecutiveSlots);
+            consecutiveSlots = [];
+          }
+        } else {
+          consecutiveSlots = [availableSlots[i]];
+        }
+      }
+    }
+
+    return { availableSlots: [...result] };
+  } catch (slotsErr) {
+    return { slotsErr };
   }
 }

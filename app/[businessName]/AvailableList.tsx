@@ -63,9 +63,10 @@ function AvailableQueues({
   userData: UserData;
   duration: number | undefined;
 }) {
-  const [availableSlot, setAvailableSlot] =
-    React.useState<AvailableSlot | null>(null);
-  const [queues, setQueues] = React.useState<AvailableSlot[]>([]);
+  const [availableSlot, setAvailableSlot] = React.useState<
+    AvailableSlot[] | []
+  >([]);
+  const [queues, setQueues] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -85,27 +86,31 @@ function AvailableQueues({
     getQueues(date);
   }, [date]);
 
-  const handleChange = (item: AvailableSlot) => {
+  const handleChange = (item: AvailableSlot[]) => {
     setAvailableSlot(item);
   };
 
   return (
     <div className="py-12 gap-2 flex justify-start align-center items-center flex-wrap align-center items-center">
-      {queues?.map((item) => (
-        <button
-          key={item.id}
-          onClick={() => handleChange(item)}
-          className={`${
-            font.className
-          } px-4 py-2  border-2 transition-all border-black ease-in-out duration-300 hover:bg-orange-500 font-medium ${
-            availableSlot?.id == item?.id
-              ? `bg-orange-500  text-lg`
-              : `bg-rose-100 text-base  `
-          } hover:text-lg   text-black rounded-xl`}
-        >
-          {item?.start}
-        </button>
-      ))}
+      {queues?.map((item) => {
+        console.log(item[0]);
+
+        return (
+          <button
+            key={item[0].id}
+            onClick={() => handleChange(item)}
+            className={`${
+              font.className
+            } px-4 py-2  border-2 transition-all border-black ease-in-out duration-300 hover:bg-orange-500 font-medium ${
+              availableSlot[0]?.id == item[0]?.id
+                ? `bg-orange-500  text-lg`
+                : `bg-rose-100 text-base  `
+            } hover:text-lg   text-black rounded-xl`}
+          >
+            {item[0]?.start} - {item[item.length - 1]?.end}
+          </button>
+        );
+      })}
     </div>
   );
 }

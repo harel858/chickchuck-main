@@ -72,14 +72,17 @@ export default async function handler(
       };
       console.log(chosenDate);
       console.log(userId);
-      const { availableSlots, err } = await getQueuesByDate(
+      const { userExist, err } = await getById(userId);
+      if (!userExist || err) return res.status(400).json("no existing user");
+      const { availableSlots, slotsErr } = await getQueuesByDate(
         userId,
         chosenDate,
-        JSON.parse(duration)
+        JSON.parse(duration),
+        userExist
       );
       console.log(availableSlots);
 
-      if (err || !availableSlots) return res.status(500).json(err);
+      if (slotsErr || !availableSlots) return res.status(500).json(err);
 
       return res.status(200).json(availableSlots);
     } catch (err) {
