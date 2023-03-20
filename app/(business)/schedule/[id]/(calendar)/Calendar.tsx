@@ -16,7 +16,7 @@ function Calendar({
   })[];
 }) {
   return (
-    <div className="w-full transition-all duration-300 ease-in-out">
+    <div className=" transition-all duration-300 ease-in-out fixed top-4 w-3/4">
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"

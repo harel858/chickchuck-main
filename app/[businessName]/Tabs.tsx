@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
 import StepTwo from "./stepTwo";
 import StepThree from "./StepThree";
 import Tab from "./Tab";
@@ -7,11 +8,12 @@ import { Lobster } from "@next/font/google";
 import {
   AppointmentSlot,
   AvailableSlot,
+  Customer,
   Treatment,
   User,
 } from "@prisma/client";
 import Loading from "./loading";
-import { formData, UserData } from "../../types";
+import { AppointmentInput, formData, UserData } from "../../types";
 
 const StepOne = React.lazy(() => import("./stepOne"));
 
@@ -22,12 +24,20 @@ const font = Lobster({
 
 function Tabs({ userData }: { userData: UserData }) {
   const [activeTab, setActiveTab] = useState(0);
-  const [customerData, setCustomerData] = React.useState<formData>({
+  const [customerInput, setCustomerInput] = React.useState<formData>({
     name: "",
     request_id: "",
     phoneNumber: "",
     code: "",
   });
+  const [appointmentInput, setAppointmentInput] =
+    React.useState<AppointmentInput>({
+      treatment: null,
+      customer: null,
+      availableSlot: [],
+      userData,
+      date: dayjs(),
+    });
 
   const handleNext = () => {
     setActiveTab((activeTab) => activeTab + 1);
@@ -39,8 +49,8 @@ function Tabs({ userData }: { userData: UserData }) {
         <React.Suspense fallback={<Loading />}>
           <StepOne
             handleNext={handleNext}
-            customerData={customerData}
-            setCustomerData={setCustomerData}
+            customerInput={customerInput}
+            setCustomerInput={setCustomerInput}
           />
         </React.Suspense>
       ),
@@ -50,14 +60,22 @@ function Tabs({ userData }: { userData: UserData }) {
       content: (
         <StepTwo
           handleNext={handleNext}
-          customerData={customerData}
-          setCustomerData={setCustomerData}
+          customerInput={customerInput}
+          appointmentInput={appointmentInput}
+          setAppointmentInput={setAppointmentInput}
+          setCustomerInput={setCustomerInput}
         />
       ),
     },
     {
       label: "Tab 3",
-      content: <StepThree userData={userData} />,
+      content: (
+        <StepThree
+          appointmentInput={appointmentInput}
+          setAppointmentInput={setAppointmentInput}
+          userData={userData}
+        />
+      ),
     },
   ];
   return (

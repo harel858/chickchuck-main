@@ -4,28 +4,37 @@ import axios from "axios";
 import { Zoom } from "react-awesome-reveal";
 import { TextField, Button } from "@mui/material";
 import { Poppins } from "@next/font/google";
-import { formData } from "../../types";
+import { AppointmentInput, formData } from "../../types";
 import { LoadingButton } from "@mui/lab";
+import { Appointment, Customer } from "@prisma/client";
 
 interface StepTwoProps {
   handleNext: () => void;
-  customerData: formData;
-  setCustomerData: React.Dispatch<React.SetStateAction<formData>>;
+  customerInput: formData;
+  appointmentInput: AppointmentInput;
+  setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
+  setCustomerInput: React.Dispatch<React.SetStateAction<formData>>;
 }
 const font = Poppins({
   subsets: ["latin"],
   weight: "400",
 });
 
-function StepTwo({ handleNext, customerData, setCustomerData }: StepTwoProps) {
-  console.log(customerData.request_id);
+function StepTwo({
+  handleNext,
+  customerInput,
+  appointmentInput,
+  setCustomerInput,
+  setAppointmentInput,
+}: StepTwoProps) {
+  console.log(customerInput.request_id);
 
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerData({
-      ...customerData,
+    setCustomerInput({
+      ...customerInput,
       [event.target.name]: event.target.value,
     });
   };
@@ -36,9 +45,10 @@ function StepTwo({ handleNext, customerData, setCustomerData }: StepTwoProps) {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`/api/verification/steptwo`, customerData);
+      const res = await axios.post(`/api/verification/steptwo`, customerInput);
       if (res.status === 200) {
-        console.log(res.data);
+        const customer = res.data as Customer;
+        setAppointmentInput({ ...appointmentInput, customer });
 
         setLoading(false);
         handleNext();
@@ -53,7 +63,7 @@ function StepTwo({ handleNext, customerData, setCustomerData }: StepTwoProps) {
   return (
     <Zoom duration={350} damping={10000}>
       <form
-        onSubmit={handleNext}
+        onSubmit={submitForm}
         className="flex flex-col items-center justify-center gap-12 "
       >
         <TextField

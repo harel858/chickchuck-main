@@ -20,7 +20,7 @@
   color: black !important;
   font-size: 1.1em !important;
   font-weight: 600 !important;
-  background: rgb(255, 123, 0) !important;
+  background:azure !important;
   transition: all 200ms ease-out !important;
 }
 .fc-button-group button:hover,.fc-header-toolbar:nth-child(1) button:hover {

@@ -11,13 +11,21 @@ const font = Poppins({
   subsets: ["latin"],
   weight: "400",
 });
-
+type StepOneProps = {
+  handleNext: () => void;
+  customerInput: formData;
+  setCustomerInput: React.Dispatch<React.SetStateAction<formData>>;
+};
 interface StepOneRes {
   phoneNumber: string;
   request_id: string;
 }
 
-function StepOne({ handleNext, customerData, setCustomerData }: any) {
+function StepOne({
+  handleNext,
+  customerInput,
+  setCustomerInput,
+}: StepOneProps) {
   const [error, setError] = React.useState("");
   const [animate, setAnimate] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -27,8 +35,8 @@ function StepOne({ handleNext, customerData, setCustomerData }: any) {
   }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerData({
-      ...customerData,
+    setCustomerInput({
+      ...customerInput,
       [event.target.name]: event.target.value,
     });
   };
@@ -37,14 +45,14 @@ function StepOne({ handleNext, customerData, setCustomerData }: any) {
     setError("");
     setLoading(true);
     e.preventDefault();
-    console.log(customerData.name);
+    console.log(customerInput.name);
 
     try {
-      const res = await axios.post(`/api/verification/stepone`, customerData);
+      const res = await axios.post(`/api/verification/stepone`, customerInput);
       const data = res.data as StepOneRes;
       console.log(data);
-      setCustomerData({
-        ...customerData,
+      setCustomerInput({
+        ...customerInput,
         request_id: data.request_id,
         phoneNumber: data.phoneNumber,
       });
@@ -64,7 +72,7 @@ function StepOne({ handleNext, customerData, setCustomerData }: any) {
       {animate ? (
         <JackInTheBox duration={500}>
           <form
-            onSubmit={handleNext}
+            onSubmit={submitForm}
             className="flex flex-col items-center gap-12 mt-4"
           >
             <div className="flex flex-col items-center gap-8 mt-4">
