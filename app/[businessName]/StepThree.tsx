@@ -94,7 +94,7 @@ function StepThree({
     try {
       const res = await axios.post("api/appointments", appointmentInput);
       console.log(res.data);
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
     }
   };

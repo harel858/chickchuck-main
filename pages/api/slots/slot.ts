@@ -70,6 +70,8 @@ export default async function handler(
         userId: string;
         duration: string;
       };
+      console.log(`chosenDate:${chosenDate}`);
+
       console.log(chosenDate);
       console.log(userId);
       const { userExist, err } = await getById(userId);

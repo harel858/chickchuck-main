@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { Button, TextField, TextFieldProps } from "@mui/material";
+import { TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { AvailableSlot, Customer, Treatment } from "@prisma/client";
+import { AvailableSlot } from "@prisma/client";
 import { AppointmentInput, UserData } from "../../types";
 import { Poppins } from "@next/font/google";
 import axios from "axios";
@@ -72,17 +72,21 @@ function AvailableQueues({
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
+    console.log(date.format());
+
     const getQueues = async (date: Dayjs) => {
       try {
         let res = await axios.get(
           `/api/slots/slot?chosenDate=${date}&userId=${userData.user?.id}&duration=${appointmentInput?.treatment?.duration}`
         );
-        console.log(res.data);
+
         setQueues(res.data);
       } catch (err) {
         console.log(err);
       }
     };
+    setAppointmentInput({ ...appointmentInput, date });
+
     getQueues(date);
   }, [date]);
 

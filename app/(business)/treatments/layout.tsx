@@ -2,7 +2,7 @@
 import "../../../styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import React from "react";
-import NavBar from "../Navbar";
+import NavBar from "../(navbar)/Navbar";
 import TreatmentsForm from "./treatmentsForm";
 
 export default function PriceListLayout({

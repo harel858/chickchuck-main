@@ -1,4 +1,9 @@
-import { AppointmentSlot, AvailableSlot, Treatment } from "@prisma/client";
+import {
+  AppointmentSlot,
+  AvailableSlot,
+  Treatment,
+  Customer,
+} from "@prisma/client";
 import { Dayjs } from "dayjs";
 
 export type AllUsers = {
@@ -25,7 +30,7 @@ export type formData = {
 
 export type UserData = {
   availableSlot: (AvailableSlot & {
-    AppointmentSlot: AppointmentSlot | null;
+    AppointmentSlot: AppointmentSlot[];
   })[];
   user:
     | (User & {
@@ -65,6 +70,6 @@ export type AppointmentInput = {
   treatment: Treatment | null;
   customer: Customer | null;
   userData: UserData;
-  availableSlot: AvailableSlot[] | [];
+  availableSlot: AvailableSlot[];
   date: Dayjs;
 };

@@ -1,0 +1,34 @@
+import React from "react";
+import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
+
+interface NavItemProps {
+  title: string;
+  link: string;
+  icon: JSX.Element;
+}
+
+function NavBarItem({ title, link, icon }: NavItemProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const isActive = pathname === link;
+
+  return (
+    <li
+      className="flex justify-start gap-8 w-full group hover:bg-opacity-10 hover:bg-white cursor-pointer p-4 my-0 transition-all ease-in duration-200"
+      onClick={() => router.push(link)}
+    >
+      {icon}
+      <Link
+        href={link}
+        className={`relative ${
+          isActive ? `font-semibold` : `font-light`
+        } after:absolute after:bottom-0 after:mt-1 after:left-0 after:h-0.5 after:w-full after:bg-blue-500 after:translate-y-1 after:scale-x-0 after:ease-in after:duration-200 ease-in duration-200 group-hover:after:scale-x-100 xl:text-xl md:text:md`}
+      >
+        {title}
+      </Link>
+    </li>
+  );
+}
+
+export default NavBarItem;

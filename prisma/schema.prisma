@@ -40,7 +40,6 @@ model Appointment {
   appointmentSlotId String            @unique
   treatment         Treatment         @relation(fields: [treatmentId], references: [id])
   treatmentId       String
-  dateTime          DateTime
   status            AppointmentStatus
   notes             String?
   createdAt         DateTime          @default(now())
@@ -64,13 +63,12 @@ model Treatment {
 }
 
 model AvailableSlot {
-  id                String           @id @default(uuid())
-  start             String
-  end               String
-  business          User             @relation(fields: [businessId], references: [id])
-  businessId        String
-  AppointmentSlot   AppointmentSlot? @relation(fields: [appointmentSlotId], references: [id])
-  appointmentSlotId String?
+  id              String            @id @default(uuid())
+  start           String
+  end             String
+  business        User              @relation(fields: [businessId], references: [id])
+  businessId      String
+  AppointmentSlot AppointmentSlot[]
 }
 
 model AppointmentSlot {

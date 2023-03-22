@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { SessionProvider } from "next-auth/react";
-import NavBar from "../Navbar";
+import NavBar from "../(navbar)/Navbar";
 
 export default function BusinessLayout({
   children,
@@ -11,7 +11,7 @@ export default function BusinessLayout({
   return (
     <SessionProvider>
       <NavBar />
-      <div className="block pl-64">{children}</div>
+      {children}
     </SessionProvider>
   );
 }

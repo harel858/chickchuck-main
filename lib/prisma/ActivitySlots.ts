@@ -68,7 +68,7 @@ export async function updateAvailableSlots(
 }
 export async function getQueuesByDate(
   userId: string,
-  chosenDate: any,
+  chosenDate: string,
   duration: number,
   user: User
 ) {
@@ -82,8 +82,16 @@ export async function getQueuesByDate(
           { businessId: userId },
           { start: { gte: "00:00" } },
           { end: { lte: "23:59" } },
-          { AppointmentSlot: null },
           { business: { activityDays: { has: dayjs(chosenDate).day() } } },
+          {
+            NOT: {
+              AppointmentSlot: {
+                some: {
+                  date: dayjs(chosenDate).format("DD/MM/YYYY"),
+                },
+              },
+            },
+          },
         ],
       },
       include: {
@@ -96,7 +104,7 @@ export async function getQueuesByDate(
 
     let consecutiveSlots: (AvailableSlot & {
       business: User;
-      AppointmentSlot: AppointmentSlot | null;
+      AppointmentSlot: AppointmentSlot[];
     })[] = [];
     let result = [];
 
@@ -132,6 +140,8 @@ export async function getQueuesByDate(
 
     return { availableSlots: [...result] };
   } catch (slotsErr) {
+    console.log(slotsErr);
+
     return { slotsErr };
   }
 }

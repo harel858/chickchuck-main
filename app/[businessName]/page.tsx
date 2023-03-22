@@ -25,7 +25,7 @@ const fetchAppointmentSlots = async (businessName: string) => {
       include: {
         AppointmentSlot: true,
       },
-      orderBy: [{ AppointmentSlot: { date: "asc" } }, { start: "asc" }],
+      orderBy: [{ start: "asc" }],
     });
 
     return { availableSlot, user } as UserData;
@@ -38,10 +38,8 @@ export default async function LandingPage({
   params: { businessName },
 }: LandingPageProps) {
   const userData = await fetchAppointmentSlots(businessName);
-  console.log(userData);
 
   if (!userData) return notFound();
-  console.log(userData);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full text-white ">
