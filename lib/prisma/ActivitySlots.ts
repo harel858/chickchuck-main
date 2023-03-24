@@ -72,8 +72,13 @@ export async function getQueuesByDate(
   duration: number,
   user: User
 ) {
-  const slotDuration = user.slotDuration;
+  console.log(duration);
+
+  const slotDuration = 5;
+  console.log(`slotDuration: ${slotDuration}`);
+
   const slotsNeeded = Math.ceil(duration / slotDuration);
+  console.log(`slotsNeeded: ${slotsNeeded}`);
 
   try {
     const availableSlots = await prisma.availableSlot.findMany({
@@ -94,18 +99,12 @@ export async function getQueuesByDate(
           },
         ],
       },
-      include: {
-        AppointmentSlot: true,
-        business: true,
-      },
+
       orderBy: { start: "asc" },
     });
     console.log(availableSlots);
 
-    let consecutiveSlots: (AvailableSlot & {
-      business: User;
-      AppointmentSlot: AppointmentSlot[];
-    })[] = [];
+    let consecutiveSlots: AvailableSlot[] = [];
     let result = [];
 
     for (let i = 0; i < availableSlots.length; i++) {
@@ -118,17 +117,26 @@ export async function getQueuesByDate(
         );
 
         const currentSlotEnd = dayjs(availableSlots[i - 1].end, "HH:mm");
+        const currentSlotStart = dayjs(availableSlots[i].start, "HH:mm");
 
         const minutesBetweenSlots = currentSlotEnd.diff(
           prevSlotStart,
           "minute"
         );
+        const minutesToCurrentSlot = currentSlotStart.diff(
+          prevSlotStart,
+          "minute"
+        );
 
-        console.log(minutesBetweenSlots);
+        console.log(`minutesBetweenSlots:${minutesBetweenSlots}`);
+        console.log(`minutesToCurrentSlot:${minutesToCurrentSlot}`);
 
-        if (minutesBetweenSlots >= slotDuration) {
+        if (
+          minutesBetweenSlots >= slotDuration &&
+          minutesToCurrentSlot === slotDuration
+        ) {
           consecutiveSlots.push(availableSlots[i]);
-          if (consecutiveSlots.length >= slotsNeeded) {
+          if (consecutiveSlots.length == slotsNeeded) {
             result.push(consecutiveSlots);
             consecutiveSlots = [];
           }
