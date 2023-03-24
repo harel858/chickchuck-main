@@ -77,8 +77,9 @@ function AvailableQueues({
     const getQueues = async (date: Dayjs) => {
       try {
         let res = await axios.get(
-          `/api/slots/slot?chosenDate=${date}&userId=${userData.user?.id}&duration=${appointmentInput?.treatment?.duration}`
+          `/api/slots/slot?chosenDate=${date}&userId=${userData.userId}&duration=${appointmentInput?.treatment?.duration}`
         );
+        console.log(res.data);
 
         setQueues(res.data);
       } catch (err) {

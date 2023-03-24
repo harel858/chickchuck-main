@@ -2,7 +2,7 @@
 
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-const durations = [15, 30, 45];
+const durations = [5, 15, 30, 45];
 
 export default function SlotDurationPicker({
   onChange,

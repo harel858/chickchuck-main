@@ -15,7 +15,7 @@ export default function Form({ user }: { user: User }) {
   const [endActivity, setEndActivity] = React.useState<Dayjs>(
     dayjs(user.closingTime)
   );
-  const [duration, setDuration] = React.useState<number>(15);
+  const [duration, setDuration] = React.useState<number>(user.slotDuration);
   const [hasChanges, setHasChanges] = React.useState<boolean>(true);
   const [activityDays, setActivityDays] = React.useState<any[]>(
     user.activityDays
@@ -86,6 +86,7 @@ export default function Form({ user }: { user: User }) {
         setHasChanges={setHasChanges}
         activityDays={activityDays}
         availableSlots={availableSlots}
+        duration={duration}
       />
     </>
   );

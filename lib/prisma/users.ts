@@ -29,10 +29,12 @@ export async function getByEmail(email: string) {
     return { err };
   }
 }
+
 export async function updateActivityTime(
   id: string,
   startActivity: string,
-  endActivity: string
+  endActivity: string,
+  duration: number
 ) {
   try {
     const updated = await prisma.user.update({
@@ -42,6 +44,7 @@ export async function updateActivityTime(
       data: {
         openingTime: startActivity,
         closingTime: endActivity,
+        slotDuration: duration,
       },
     });
     const response = await prisma.user.findUnique({

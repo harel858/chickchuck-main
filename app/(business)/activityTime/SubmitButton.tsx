@@ -18,6 +18,7 @@ type SubmitProps = {
   setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
   activityDays: any[];
   availableSlots: Slots[];
+  duration: number;
 };
 
 export default function SubmitButton({
@@ -28,6 +29,7 @@ export default function SubmitButton({
   setHasChanges,
   activityDays,
   availableSlots,
+  duration,
 }: SubmitProps) {
   const [loading, setLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
@@ -65,6 +67,7 @@ export default function SubmitButton({
           activityDays,
           availableSlots,
           id: user.id,
+          duration: duration,
         }),
       });
       const response = await res.json();

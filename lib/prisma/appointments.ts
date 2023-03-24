@@ -9,12 +9,15 @@ import {
 } from "@prisma/client";
 
 export async function createAppointment(
+  userId: string,
   customerId: string,
   slots: AvailableSlot[],
   treatmentId: string,
   notes: string | null,
   date: string
 ) {
+  console.log(userId);
+
   try {
     // Create the appointment slot
     const appointmentSlot = await prisma.appointmentSlot.create({
@@ -23,12 +26,14 @@ export async function createAppointment(
         end: slots[slots.length - 1].end,
         date: dayjs(date).format("DD/MM/YYYY"),
         availableSlots: { connect: slots.map((slot) => ({ id: slot.id })) },
+        business: { connect: { id: userId } },
       },
     });
 
     // Create the appointment
     const appointment = await prisma.appointment.create({
       data: {
+        User: { connect: { id: userId } },
         customer: { connect: { id: customerId } },
         appointmentSlot: { connect: { id: appointmentSlot.id } },
         treatment: { connect: { id: treatmentId } },
@@ -47,6 +52,8 @@ export async function createAppointment(
 
     return { appointment };
   } catch (createErr) {
+    console.log(createErr);
+
     return { createErr };
   }
 }

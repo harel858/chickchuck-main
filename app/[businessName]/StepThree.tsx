@@ -47,7 +47,7 @@ function StepThree({
       label: "Create an ad group",
       description: (
         <div className="py-12 gap-2 flex flex-wrap align-center items-center">
-          {userData?.user?.Treatment.map((item: Treatment) => (
+          {userData?.treatments.map((item: Treatment) => (
             <button
               key={item.id}
               onClick={() => handleChange(item)}
@@ -92,7 +92,11 @@ function StepThree({
     console.log(appointmentInput);
 
     try {
-      const res = await axios.post("api/appointments", appointmentInput);
+      const res = await axios.post("api/appointments", {
+        ...appointmentInput,
+        userId: userData.userId,
+        customerId: appointmentInput.customer?.id,
+      });
       console.log(res.data);
     } catch (err: any) {
       console.log(err);

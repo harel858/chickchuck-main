@@ -1,19 +1,17 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-
-import { getById } from "../../lib/prisma/users";
-import { getTreatmentById } from "../../lib/prisma/treatment";
-import validateAppointment from "../../lib/validation/appointmentValidation";
-import { AppointmentInput, UserData } from "../../types";
 import { createAppointment } from "../../lib/prisma/appointments";
+
 import { AvailableSlot, Customer, Treatment } from "@prisma/client";
+import validateAppointment from "../../lib/validation/appointmentValidation";
+import { getById } from "../../lib/prisma/users";
 
 interface ReqBody {
   availableSlot: AvailableSlot[];
-  customer: Customer;
+  customerId: string;
   date: string;
   treatment: Treatment;
-  userData: UserData;
+  userId: string;
 }
 
 export default async function handler(
@@ -22,25 +20,40 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const { availableSlot, customer, date, treatment, userData } =
+      const { availableSlot, customerId, date, treatment, userId } =
         req.body as ReqBody;
-      console.log(`date:${date}`);
-      if (customer && treatment) {
-        const { appointment, createErr } = await createAppointment(
-          customer.id,
-          availableSlot,
-          treatment?.id,
-          null,
-          date
-        );
-        console.log(appointment);
-        console.log(createErr);
-        if (appointment) return res.status(200).json(appointment);
-        return res.status(500).json("error with the appointment function");
+
+      const { error } = validateAppointment({
+        availableSlot,
+        customerId,
+        date,
+        treatment,
+        userId,
+      });
+
+      if (error) {
+        const validationError = error?.details[0].message;
+        console.log(validationError);
+        return res.status(400).json(validationError);
       }
-      return res.status(400).json("missing values");
+
+      const { userExist, err } = await getById(userId);
+      if (!userExist || err) return res.status(500).json("user not found");
+
+      const { appointment, createErr } = await createAppointment(
+        userExist.id,
+        customerId,
+        availableSlot,
+        treatment.id,
+        null,
+        date
+      );
+
+      if (appointment) return res.status(200).json(appointment);
+      return res.status(500).json("error with the appointment function");
     } catch (err) {
-      return res.status(500).json(`server error`);
+      console.log(err);
+      return res.status(500).json(err);
     }
   }
   res.setHeader("Allow", ["GET", "POST"]);

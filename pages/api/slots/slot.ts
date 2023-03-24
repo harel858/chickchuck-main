@@ -17,6 +17,7 @@ type SlotBody = {
   id: string;
   startActivity: string;
   endActivity: string;
+  duration: number;
 };
 
 export default async function handler(
@@ -25,8 +26,14 @@ export default async function handler(
 ) {
   if (req.method == "POST") {
     try {
-      const { activityDays, availableSlots, id, startActivity, endActivity } =
-        req.body as SlotBody;
+      const {
+        activityDays,
+        availableSlots,
+        id,
+        startActivity,
+        endActivity,
+        duration,
+      } = req.body as SlotBody;
 
       const { userExist, err } = await getById(id);
       if (err || !userExist) return res.status(500).json(`user not found`);
@@ -54,7 +61,8 @@ export default async function handler(
       const { response, error } = await updateActivityTime(
         id,
         startActivity,
-        endActivity
+        endActivity,
+        duration
       );
       if (error || !response) return res.status(500).json(`update Time Failed`);
 

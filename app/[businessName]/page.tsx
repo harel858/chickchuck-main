@@ -22,13 +22,14 @@ const fetchAppointmentSlots = async (businessName: string) => {
       where: {
         businessId: user?.id, // Replace with the ID of the user/business you want to book an appointment with
       },
-      include: {
-        AppointmentSlot: true,
-      },
       orderBy: [{ start: "asc" }],
     });
 
-    return { availableSlot, user } as UserData;
+    return {
+      availableSlot,
+      treatments: user?.Treatment,
+      userId: user?.id,
+    } as UserData;
   } catch (err) {
     console.log(err);
   }

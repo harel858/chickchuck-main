@@ -29,15 +29,9 @@ export type formData = {
 };
 
 export type UserData = {
-  availableSlot: (AvailableSlot & {
-    AppointmentSlot: AppointmentSlot[];
-  })[];
-  user:
-    | (User & {
-        Treatment: Treatment[];
-        availableSlots: AvailableSlot[];
-      })
-    | null;
+  availableSlot: AvailableSlot[];
+  treatments: Treatment[];
+  userId: string;
 };
 export type Slots = {
   start: string;

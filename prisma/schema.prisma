@@ -8,19 +8,21 @@ datasource db {
 }
 
 model User {
-  id             String          @id @default(uuid())
-  name           String
-  email          String          @unique
-  password       String
-  phone          String?
-  businessName   String          @unique
-  openingTime    String?
-  closingTime    String?
-  activityDays   Int[]
-  slotDuration   Int
-  availableSlots AvailableSlot[]
-  Address        Address[]
-  Treatment      Treatment[]
+  id               String            @id @default(uuid())
+  name             String
+  email            String            @unique
+  password         String
+  phone            String?
+  businessName     String            @unique
+  openingTime      String?
+  closingTime      String?
+  activityDays     Int[]
+  slotDuration     Int
+  appointments     Appointment[]
+  availableSlots   AvailableSlot[]
+  appointmentSlots AppointmentSlot[]
+  Address          Address[]
+  Treatment        Treatment[]
 }
 
 model Address {
@@ -43,6 +45,8 @@ model Appointment {
   status            AppointmentStatus
   notes             String?
   createdAt         DateTime          @default(now())
+  User              User              @relation(fields: [userId], references: [id])
+  userId            String
 }
 
 model Customer {
@@ -76,6 +80,8 @@ model AppointmentSlot {
   start          String
   end            String
   date           String
+  business       User            @relation(fields: [businessId], references: [id])
+  businessId     String
   availableSlots AvailableSlot[]
   appointments   Appointment[]
 }
