@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { User } from "@prisma/client";
 
 type signInData = {
   email: string;
@@ -36,6 +38,11 @@ function SignUpForm() {
       });
 
       if (!result?.ok) return setError(`the details you provided are correct.`);
+      const res = await axios.get(
+        `api/user?email=${formData.email}&password=${formData.password}`
+      );
+      const user = res.data[0] as User;
+      console.log(user);
 
       setError("");
 
@@ -44,7 +51,7 @@ function SignUpForm() {
         email: "",
         password: "",
       });
-      router.push("/home");
+      router.push(`/home/${user.businessName}`);
     } catch (err: any) {
       console.log(err);
     }

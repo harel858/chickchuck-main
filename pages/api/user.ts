@@ -6,6 +6,7 @@ import {
   getByEmail,
   getByBusinessName,
   getById,
+  signIn,
 } from "../../lib/prisma/users";
 import bcrypt from "bcrypt";
 import validateUser from "../../lib/validation/userValidation";
@@ -79,6 +80,22 @@ export default async function handler(
       if (err || !userExist) return res.status(500).json("not found");
 
       return res.status(200).json(userExist);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  }
+
+  if (req.method == "GET" && req.query.email && req.query.password) {
+    try {
+      const { email, password } = req.query;
+      console.log(email);
+
+      if (!email || !password) return res.status(500).json("server Error");
+      const { user, error } = await signIn(email, password);
+      if (error || !user) return res.status(500).json("not found");
+
+      return res.status(200).json(user);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);

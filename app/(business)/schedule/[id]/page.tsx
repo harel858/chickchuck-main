@@ -1,6 +1,6 @@
 import React from "react";
 import prisma from "../../../../lib/prisma";
-import { IdProps, User } from "../../../../types";
+import { IdProps } from "../../../../types";
 import Loading from "../loading";
 import Calendar from "./(calendar)/Calendar";
 

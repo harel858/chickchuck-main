@@ -17,7 +17,6 @@ model User {
   openingTime      String?
   closingTime      String?
   activityDays     Int[]
-  slotDuration     Int
   appointments     Appointment[]
   availableSlots   AvailableSlot[]
   appointmentSlots AppointmentSlot[]

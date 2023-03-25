@@ -22,6 +22,7 @@ export const authOptions: NextAuthOptions = {
 
           const { user, error } = await signIn(email, password);
           if (error) throw new Error(error.message);
+
           return user;
         } catch (err) {
           console.log(err);

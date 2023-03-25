@@ -1,0 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Lobster+Two&display=swap");
+
+.h2 {
+  font-family: "Lobster Two", cursive;
+}
+
+.icon{
+    transition: all 200ms ease-in-out;
+}
+.icon:hover{
+    transform: scale(1.25);
+}

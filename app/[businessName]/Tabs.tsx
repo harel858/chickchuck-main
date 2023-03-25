@@ -1,26 +1,14 @@
 "use client";
 import React, { useState } from "react";
+import classes from "./style.module.css";
 import dayjs, { Dayjs } from "dayjs";
 import StepTwo from "./stepTwo";
 import StepThree from "./StepThree";
 import Tab from "./Tab";
-import { Lobster } from "@next/font/google";
-import {
-  AppointmentSlot,
-  AvailableSlot,
-  Customer,
-  Treatment,
-  User,
-} from "@prisma/client";
 import Loading from "./loading";
 import { AppointmentInput, formData, UserData } from "../../types";
 
 const StepOne = React.lazy(() => import("./stepOne"));
-
-const font = Lobster({
-  subsets: ["latin"],
-  weight: "400",
-});
 
 function Tabs({ userData }: { userData: UserData }) {
   const [activeTab, setActiveTab] = useState(0);
@@ -85,7 +73,7 @@ function Tabs({ userData }: { userData: UserData }) {
           <button
             disabled={activeTab >= index ? false : true}
             key={tab.label}
-            className={`py-4 px-6 ${font.className} ${
+            className={`py-4 px-6 ${classes.tabLabel} ${
               activeTab == index
                 ? "font:bold border-b border-white"
                 : "font-light opacity-50"
