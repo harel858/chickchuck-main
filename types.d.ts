@@ -52,8 +52,8 @@ export type SessionData = {
 export type pagesProps = {
   params: { businessName: string };
 };
-export type IdProps = {
-  params: { id: string };
+export type BusinessNameProps = {
+  params: { businessName: string };
 };
 
 export type UserProps = {
