@@ -51,7 +51,9 @@ function SignUpForm() {
         email: "",
         password: "",
       });
-      router.push(`/home/${user.businessName}`);
+      const value = user.businessName.replace(/ /g, "-");
+
+      router.push(`/home/${value}`);
     } catch (err: any) {
       console.log(err);
     }

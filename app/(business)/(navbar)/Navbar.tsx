@@ -13,6 +13,7 @@ import { notFound } from "next/navigation";
 
 function NavBar({ user }: { user: User }) {
   console.log(user);
+  const value = user.businessName.replace(/ /g, "-");
 
   return (
     <nav className="fixed top-0 h-screen w-max max-sm:hidden border-r-[1.2px] border-white shadow-[0_35px_60px_10px_rgba(0,0,0,0.3)] pt-12 gap-12 flex flex-col align-center items-center justify-start bg-gray-800">
@@ -24,31 +25,23 @@ function NavBar({ user }: { user: User }) {
       <ul className="flex flex-col w-full gap-1 justify-start items-center align-between text-white text-md">
         <NavBarItem
           title={"Home"}
-          link={"/home"}
-          icon={
-            <HomeIcon className="text-white self-center transition-all ease-in duration-200 group-hover:scale-125" />
-          }
+          link={`/home/${value}`}
+          icon={<HomeIcon />}
         />
         <NavBarItem
           title={"Schedule"}
-          link={`/schedule/${user.id}`}
-          icon={
-            <CalendarMonthIcon className="text-white self-center transition-all ease-in duration-200 group-hover:scale-125 text-xl" />
-          }
+          link={`/schedule/${value}`}
+          icon={<CalendarMonthIcon />}
         />
         <NavBarItem
           title={"Treatments"}
           link={`/treatments/${user.id}`}
-          icon={
-            <AppRegistrationIcon className="text-white self-center transition-all ease-in duration-200 group-hover:scale-125 text-xl" />
-          }
+          icon={<AppRegistrationIcon />}
         />
         <NavBarItem
           title={"Activity Time"}
           link={`/activityTime/${user.id}`}
-          icon={
-            <AccessTimeOutlinedIcon className="text-white self-center transition-all ease-in duration-200 group-hover:scale-125 text-xl" />
-          }
+          icon={<AccessTimeOutlinedIcon />}
         />
       </ul>
     </nav>

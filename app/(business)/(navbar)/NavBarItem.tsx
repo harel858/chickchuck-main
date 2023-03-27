@@ -19,7 +19,9 @@ function NavBarItem({ title, link, icon }: NavItemProps) {
       className="flex justify-start gap-8 w-full group hover:bg-opacity-10 hover:bg-white cursor-pointer p-4 my-0 transition-all ease-in duration-200"
       onClick={() => router.push(link)}
     >
-      {icon}
+      <div className="text-white self-center transition-all ease-in duration-200 group-hover:scale-125 text-xl">
+        {icon}
+      </div>
       <Link
         href={link}
         className={`relative ${

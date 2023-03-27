@@ -39,8 +39,9 @@ export default async function LandingPage({
   params: { businessName },
 }: LandingPageProps) {
   const userData = await fetchAppointmentSlots(businessName);
+  console.log(userData);
 
-  if (!userData) return notFound();
+  if (!userData?.userId) return notFound();
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full text-white ">

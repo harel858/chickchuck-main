@@ -108,7 +108,7 @@ function AvailableQueues({
               appointmentInput?.availableSlot[0]?.id == item[0]?.id
                 ? `bg-orange-500 text-lg`
                 : `bg-rose-100 text-base`
-            } hover:text-lg   text-black rounded-xl`}
+            } hover:text-lg   text-black rounded-3xl`}
           >
             {item[0]?.start} - {item[item.length - 1]?.end}
           </button>
