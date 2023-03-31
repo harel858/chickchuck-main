@@ -44,7 +44,6 @@ export async function updateActivityTime(
       data: {
         openingTime: startActivity,
         closingTime: endActivity,
-        slotDuration: duration,
       },
     });
     const response = await prisma.user.findUnique({

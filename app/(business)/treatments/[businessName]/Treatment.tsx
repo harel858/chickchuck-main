@@ -1,6 +1,5 @@
 "use client";
 import React, { useCallback, useState } from "react";
-import { treatment } from "../../../../types";
 import { useRouter } from "next/navigation";
 import { Treatment } from "@prisma/client";
 

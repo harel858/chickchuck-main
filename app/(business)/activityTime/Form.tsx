@@ -1,8 +1,7 @@
 "use client";
 import * as React from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { AvailableSlot, User } from "@prisma/client";
-import SlotDurationPicker from "./SlotDurationPicker";
+import { User } from "@prisma/client";
 import SubmitButton from "./SubmitButton";
 import ActivityDays from "./ActivityDays";
 import ActivityTimePicker from "./ActivityTimePicker";
@@ -15,7 +14,7 @@ export default function Form({ user }: { user: User }) {
   const [endActivity, setEndActivity] = React.useState<Dayjs>(
     dayjs(user.closingTime)
   );
-  const [duration, setDuration] = React.useState<number>(user.slotDuration);
+  const [duration, setDuration] = React.useState<number>(5);
   const [hasChanges, setHasChanges] = React.useState<boolean>(true);
   const [activityDays, setActivityDays] = React.useState<any[]>(
     user.activityDays
@@ -61,15 +60,11 @@ export default function Form({ user }: { user: User }) {
   };
 
   return (
-    <>
+    <div className="flex flex-col justify-center w-full relative">
       <ActivityDays
         activityDays={activityDays}
         setActivityDays={setActivityDays}
         setHasChanges={setHasChanges}
-      />
-      <SlotDurationPicker
-        duration={duration}
-        onChange={handleSlotDurationChange}
       />
       <ActivityTimePicker
         startActivity={startActivity}
@@ -88,6 +83,6 @@ export default function Form({ user }: { user: User }) {
         availableSlots={availableSlots}
         duration={duration}
       />
-    </>
+    </div>
   );
 }

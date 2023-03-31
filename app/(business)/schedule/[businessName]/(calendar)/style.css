@@ -1,30 +1,28 @@
-.fc-header-toolbar h2 {
-  color: white !important;
-}
-
-.fc-header-toolbar:nth-child(1) div {
-  display: flex !important;
-  gap: 2em;
-}
-
-.fc-button-group {
+.md-sync-views {
   display: flex;
-  gap: 0.5em !important;
 }
 
-.fc-button-group button,
-.fc-header-toolbar:nth-child(1) div button {
-  border-radius: 0.5em !important;
-  border: 1.5px solid black !important;
-  padding: 0.2em 1em !important;
-  color: black !important;
-  font-size: 1.1em !important;
-  font-weight: 600 !important;
-  background:azure !important;
-  transition: all 200ms ease-out !important;
+.md-sync-cal {
+  width: 350px;
 }
-.fc-button-group button:hover,.fc-header-toolbar:nth-child(1) button:hover {
-  background: #9999 !important;
-  color: white !important;
-  transform: scale(1.1);
+
+.md-sync-list {
+  flex: 1;
+  border-left: 1px solid #ccc;
+}
+
+.demo-synchronized-views,
+.md-sync-views,
+.md-sync-list {
+  height: 100%;
+}
+
+@media screen and (max-width: 700px) {
+  .md-sync-views {
+    display: block;
+  }
+
+  .md-sync-cal {
+    width: auto;
+  }
 }

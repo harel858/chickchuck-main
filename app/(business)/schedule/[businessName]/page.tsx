@@ -3,7 +3,7 @@ import React from "react";
 import prisma from "../../../../lib/prisma";
 import { BusinessNameProps } from "../../../../types";
 import Loading from "../loading";
-import Calendar from "./(calendar)/Calendar";
+import CalendarComponent from "./(calendar)/Calendar";
 
 const fetchUser = async (businessName: string) => {
   console.log(`businessName:${businessName}`);
@@ -46,7 +46,7 @@ async function ScheduleListPage({
   return (
     <div>
       <div className="flex justify-center align-center content-center w-11/12">
-        <Calendar appointments={appointments} />
+        <CalendarComponent appointments={appointments} />
       </div>
     </div>
   );

@@ -1,15 +1,12 @@
 "use client";
-import { getSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import classes from "./style.module.css";
-import { SessionData } from "../../../types";
 import HomeIcon from "@mui/icons-material/Home";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import NavBarItem from "./NavBarItem";
 import { User } from "@prisma/client";
-import { notFound } from "next/navigation";
 
 function NavBar({ user }: { user: User }) {
   console.log(user);
@@ -35,12 +32,12 @@ function NavBar({ user }: { user: User }) {
         />
         <NavBarItem
           title={"Treatments"}
-          link={`/treatments/${user.id}`}
+          link={`/treatments/${value}`}
           icon={<AppRegistrationIcon />}
         />
         <NavBarItem
           title={"Activity Time"}
-          link={`/activityTime/${user.id}`}
+          link={`/activityTime/${value}`}
           icon={<AccessTimeOutlinedIcon />}
         />
       </ul>

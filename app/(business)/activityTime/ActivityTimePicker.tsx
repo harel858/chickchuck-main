@@ -26,9 +26,6 @@ function ActivityTimePicker({
           onChange={(newValue) => {
             newValue && setStartActivity(newValue);
           }}
-          renderInput={(params) => (
-            <TextField {...params} label="Start Activity" />
-          )}
         />
         <StaticTimePicker
           displayStaticWrapperAs="mobile"
@@ -36,9 +33,6 @@ function ActivityTimePicker({
           onChange={(newValue) => {
             newValue && setEndActivity(newValue);
           }}
-          renderInput={(params) => (
-            <TextField {...params} label="End Activity" />
-          )}
         />
       </LocalizationProvider>
     </div>

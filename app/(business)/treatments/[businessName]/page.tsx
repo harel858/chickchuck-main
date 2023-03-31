@@ -1,24 +1,33 @@
 import { notFound } from "next/navigation";
 import React from "react";
 import prisma from "../../../../lib/prisma";
-import { IdProps } from "../../../../types";
 import Treatment from "./Treatment";
 import ProfileImage from "./ProfileImage";
+import { BusinessNameProps } from "../../../../types";
 
 export const revalidate = 1;
 
-async function fetchUser(id: any) {
-  const user = await prisma.user.findUnique({
-    where: { id },
-    include: { Treatment: true },
-  });
-  if (user) {
-    return user;
-  }
-}
+const fetchUser = async (businessName: string) => {
+  try {
+    const value = businessName
+      .replace(/-/g, " ")
+      .replace(/%20/g, " ")
+      .replace(/%60/g, "`");
+    console.log(`value:${value}`);
 
-async function PriceListPage({ params: { id } }: IdProps) {
-  const user = await fetchUser(id);
+    const user = await prisma.user.findUnique({
+      where: { businessName: value },
+      include: { Treatment: true },
+    });
+
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+async function PriceListPage({ params: { businessName } }: BusinessNameProps) {
+  const user = await fetchUser(businessName);
 
   if (!user) return notFound();
 

@@ -1,9 +1,8 @@
 "use client";
 import React from "react";
 import dayjs, { Dayjs } from "dayjs";
+import { Alert, Calendar } from "antd";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import "@mobiscroll/react/dist/css/mobiscroll.min.css";
-import { Eventcalendar } from "@mobiscroll/react";
 import {
   Appointment,
   AppointmentSlot,
@@ -12,7 +11,7 @@ import {
 } from "@prisma/client";
 dayjs.extend(customParseFormat);
 
-function Calendar({
+function CalendarComponent({
   appointments,
 }: {
   appointments: (Appointment & {
@@ -21,9 +20,11 @@ function Calendar({
     customer: Customer;
   })[];
 }) {
-  console.log(appointments);
-
-  const [myEvents, setEvents] = React.useState<any[]>([]);
+  const [events, setEvents] = React.useState<any[]>([]);
+  const [value, setValue] = React.useState(() => dayjs("2017-01-25"));
+  const [selectedValue, setSelectedValue] = React.useState(() =>
+    dayjs("2017-01-25")
+  );
 
   React.useEffect(() => {
     const events = appointments.map((appointment) => {
@@ -42,46 +43,33 @@ function Calendar({
         color: "#007aff", // set a default color for all events
       };
     });
+
     setEvents(events);
   }, [appointments]);
+  console.log(events);
 
-  const responsive = React.useMemo(() => {
-    return {
-      xsmall: {
-        view: {
-          calendar: {
-            type: "week",
-          },
-          agenda: {
-            type: "day",
-          },
-        },
-      },
-      custom: {
-        // Custom breakpoint
-        breakpoint: 600,
-        view: {
-          calendar: {
-            labels: true,
-          },
-        },
-      },
-    };
-  }, []);
+  const onSelect = (newValue: Dayjs) => {
+    setValue(newValue);
+    setSelectedValue(newValue);
+  };
+
+  const onPanelChange = (newValue: Dayjs) => {
+    setValue(newValue);
+  };
 
   return (
-    <Eventcalendar
-      theme="ios"
-      themeVariant="light"
-      clickToCreate={false}
-      dragToCreate={false}
-      dragToMove={false}
-      dragToResize={false}
-      eventDelete={false}
-      data={myEvents}
-      responsive={responsive}
-    />
+    <div className="flex flex-col w-1/2 fixed rounded-full">
+      <Alert
+        message={`You selected date: ${selectedValue?.format("YYYY-MM-DD")}`}
+      />
+      <Calendar
+        className="rounded-xl p-5 w-1/2"
+        value={value}
+        onSelect={onSelect}
+        onPanelChange={onPanelChange}
+      />
+    </div>
   );
 }
 
-export default Calendar;
+export default CalendarComponent;
