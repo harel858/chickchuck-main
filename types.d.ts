@@ -16,6 +16,14 @@ export type AllUsers = {
   treatment: treatment[];
 };
 
+export type AppointmentEvent = {
+  start: string;
+  end: string;
+  date: string;
+  text: string;
+  color: string;
+};
+
 export type ActivityDay = {
   value: number;
   label: string;
