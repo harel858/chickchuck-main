@@ -18,9 +18,10 @@ function ActivityTimePicker({
   setEndActivity,
 }: ActivityTimePickerProps) {
   return (
-    <div>
+    <div className="rounded-full ">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <StaticTimePicker
+          className="rounded-3xl  border-2 border-gray-900  bg-white/10 p-10"
           displayStaticWrapperAs="mobile"
           value={startActivity}
           onChange={(newValue) => {

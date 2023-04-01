@@ -1,11 +1,14 @@
-import { notFound } from "next/navigation";
 import React from "react";
+import dayjs, { Dayjs } from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { notFound } from "next/navigation";
 import prisma from "../../../../lib/prisma";
-import { BusinessNameProps } from "../../../../types";
-import Loading from "../loading";
+import { BusinessNameProps, AppointmentEvent } from "../../../../types";
 import CalendarComponent from "./(calendar)/Calendar";
+dayjs.extend(customParseFormat);
+export const revalidate = 60;
 
-const fetchUser = async (businessName: string) => {
+const fetchEvents = async (businessName: string) => {
   console.log(`businessName:${businessName}`);
 
   try {
@@ -27,8 +30,28 @@ const fetchUser = async (businessName: string) => {
         customer: true,
       },
     });
+    const events = appointments.map((appointment) => {
+      const start = dayjs(appointment.appointmentSlot.date, "DD/MM/YYYY")
+        .hour(parseInt(appointment.appointmentSlot.start.split(":")[0]))
+        .minute(parseInt(appointment.appointmentSlot.start.split(":")[1]))
+        .toISOString();
+      const end = dayjs(appointment.appointmentSlot.date, "DD/MM/YYYY")
+        .hour(parseInt(appointment.appointmentSlot.end.split(":")[0]))
+        .minute(parseInt(appointment.appointmentSlot.end.split(":")[1]))
+        .toISOString();
+      const date = dayjs(appointment.appointmentSlot.date, "DD/MM/YYYY").format(
+        "DD/MM/YYYY"
+      );
+      return {
+        start,
+        end,
+        date,
+        text: appointment.treatment.title,
+        color: "#007aff", // set a default color for all events
+      };
+    });
 
-    return appointments;
+    return events as AppointmentEvent[];
   } catch (err) {
     console.log(err);
   }
@@ -37,19 +60,13 @@ const fetchUser = async (businessName: string) => {
 async function ScheduleListPage({
   params: { businessName },
 }: BusinessNameProps) {
-  const appointments = await fetchUser(businessName);
-  console.log(appointments);
+  const events = await fetchEvents(businessName);
+  console.log(events);
 
-  if (!appointments) return notFound();
-  console.log(appointments);
+  if (!events) return notFound();
+  console.log(events);
 
-  return (
-    <div>
-      <div className="flex justify-center align-center content-center w-11/12">
-        <CalendarComponent appointments={appointments} />
-      </div>
-    </div>
-  );
+  return <CalendarComponent events={events} />;
 }
 
 export async function generateStaticParams() {

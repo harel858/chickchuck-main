@@ -42,7 +42,9 @@ export default async function HomeLayout({
   return (
     <>
       <NavBar user={userData} />
-      {children}
+      <section className="w-full flex pl-64 justify-center content-center">
+        {children}
+      </section>
     </>
   );
 }

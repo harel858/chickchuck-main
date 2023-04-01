@@ -4,6 +4,7 @@ import prisma from "../../../../lib/prisma";
 import Treatment from "./Treatment";
 import ProfileImage from "./ProfileImage";
 import { BusinessNameProps } from "../../../../types";
+import TreatmentsForm from "../treatmentsForm";
 
 export const revalidate = 1;
 
@@ -32,11 +33,12 @@ async function PriceListPage({ params: { businessName } }: BusinessNameProps) {
   if (!user) return notFound();
 
   return (
-    <div className="p-x-4 p-y-4">
+    <div className="flex flex-col justify-center align-center content-center items-center ">
       <ProfileImage
         img={`https://cdn.pixabay.com/photo/2016/04/25/07/49/man-1351346_960_720.png`}
       />
       <div>
+        <TreatmentsForm user={user} />
         <ul>
           {user?.Treatment?.map((item) => {
             console.log(item);

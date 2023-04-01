@@ -1,9 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Lobster+Two&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins&display=swap');
 
 .h2 {
   font-family: "Lobster Two", cursive;
 }
 
+.openSans{
+font-family: 'Open Sans', sans-serif;
+}
 .icon{
     transition: all 200ms ease-in-out;
 }

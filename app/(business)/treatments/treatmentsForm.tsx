@@ -1,9 +1,8 @@
 "use client";
-import { useSession } from "next-auth/react";
+import { Treatment, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
 import React, { useState } from "react";
-import { User } from "../../../types";
 
 type formData = {
   title: string;
@@ -11,10 +10,14 @@ type formData = {
   duration: string;
 };
 
-function TreatmentsForm() {
+function TreatmentsForm({
+  user,
+}: {
+  user: User & {
+    Treatment: Treatment[];
+  };
+}) {
   const router = useRouter();
-  const { data: session } = useSession();
-  const user = session?.user as User;
 
   const [formData, setFormData] = useState<formData>({
     title: "",

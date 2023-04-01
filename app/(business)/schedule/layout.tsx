@@ -6,9 +6,5 @@ export default function ScheduleLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <section>
-      <div>{children}</div>
-    </section>
-  );
+  return <>{children}</>;
 }

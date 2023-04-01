@@ -1,53 +1,35 @@
 "use client";
 import React from "react";
+import AppointmentList from "./AppointmentList";
+import { Calendar, theme } from "antd";
 import dayjs, { Dayjs } from "dayjs";
-import { Alert, Calendar } from "antd";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import {
-  Appointment,
-  AppointmentSlot,
-  Customer,
-  Treatment,
-} from "@prisma/client";
+import { AppointmentEvent } from "../../../../../types";
 dayjs.extend(customParseFormat);
 
-function CalendarComponent({
-  appointments,
-}: {
-  appointments: (Appointment & {
-    appointmentSlot: AppointmentSlot;
-    treatment: Treatment;
-    customer: Customer;
-  })[];
-}) {
-  const [events, setEvents] = React.useState<any[]>([]);
-  const [value, setValue] = React.useState(() => dayjs("2017-01-25"));
-  const [selectedValue, setSelectedValue] = React.useState(() =>
-    dayjs("2017-01-25")
+function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
+  const { token } = theme.useToken();
+  const [value, setValue] = React.useState(() => dayjs());
+  const [selectedValue, setSelectedValue] = React.useState(() => dayjs());
+  const [eventsByDate, setEventsByDate] = React.useState<AppointmentEvent[]>(
+    []
   );
-
   React.useEffect(() => {
-    const events = appointments.map((appointment) => {
-      const start = dayjs(appointment.appointmentSlot.date, "DD/MM/YYYY")
-        .hour(parseInt(appointment.appointmentSlot.start.split(":")[0]))
-        .minute(parseInt(appointment.appointmentSlot.start.split(":")[1]))
-        .toISOString();
-      const end = dayjs(appointment.appointmentSlot.date, "DD/MM/YYYY")
-        .hour(parseInt(appointment.appointmentSlot.end.split(":")[0]))
-        .minute(parseInt(appointment.appointmentSlot.end.split(":")[1]))
-        .toISOString();
-      return {
-        start,
-        end,
-        text: appointment.treatment.title,
-        color: "#007aff", // set a default color for all events
-      };
+    const value: AppointmentEvent[] = [];
+
+    events.map((event, i) => {
+      if (event.date === selectedValue.format("DD/MM/YYYY")) value.push(event);
+      return;
     });
+    console.log(value);
+    setEventsByDate(value);
+  }, [value, selectedValue]);
 
-    setEvents(events);
-  }, [appointments]);
-  console.log(events);
-
+  const wrapperStyle: React.CSSProperties = {
+    width: 300,
+    border: `1px solid ${token.colorBorderSecondary}`,
+    borderRadius: token.borderRadiusLG,
+  };
   const onSelect = (newValue: Dayjs) => {
     setValue(newValue);
     setSelectedValue(newValue);
@@ -58,17 +40,22 @@ function CalendarComponent({
   };
 
   return (
-    <div className="flex flex-col w-1/2 fixed rounded-full">
-      <Alert
-        message={`You selected date: ${selectedValue?.format("YYYY-MM-DD")}`}
+    <section className="flex justify-center content-center mt-28 w-2/5">
+      <div>
+        <Calendar
+          className="border-2 border-black"
+          style={wrapperStyle}
+          fullscreen={false}
+          onPanelChange={onPanelChange}
+          value={value}
+          onSelect={onSelect}
+        />
+      </div>
+      <AppointmentList
+        selectedValue={selectedValue}
+        eventsByDate={eventsByDate}
       />
-      <Calendar
-        className="rounded-xl p-5 w-1/2"
-        value={value}
-        onSelect={onSelect}
-        onPanelChange={onPanelChange}
-      />
-    </div>
+    </section>
   );
 }
 
