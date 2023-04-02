@@ -1,12 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Lobster+Two&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Concert+One&family=Open+Sans&family=Poppins&family=Slabo+27px&display=swap');
 .h2 {
   font-family: "Lobster Two", cursive;
 }
 
 .openSans{
 font-family: 'Open Sans', sans-serif;
+}
+.poppins{
+  font-family: 'Poppins', sans-serif;
+}
+.slabo{
+  font-family: 'Slabo 27px', serif;
+}
+.concertOne{
+  font-family: 'Concert One', cursive;
 }
 .icon{
     transition: all 200ms ease-in-out;

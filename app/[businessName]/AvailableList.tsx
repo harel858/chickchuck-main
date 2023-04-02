@@ -43,7 +43,6 @@ export default function AvailableListCalendar({
         <DatePicker
           value={selectedDate}
           onChange={(newDate) => newDate && handleDateChange(newDate)}
-          renderInput={(props) => <TextField {...props} type="text" />}
         />
       </LocalizationProvider>
       <button onClick={handleNextDay}>&gt;</button>

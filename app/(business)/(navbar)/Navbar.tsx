@@ -15,8 +15,8 @@ function NavBar({ user }: { user: User }) {
   return (
     <>
       <HorizontalNav user={user} />
-      <nav className="fixed top-0 h-screen w-max max-sm:hidden  shadow-[0_35px_60px_10px_rgba(0,0,0,0.3)] pt-12 gap-12 flex flex-col align-center items-center justify-start bg-white/50">
-        <ul className="flex flex-col w-full pt-32 gap-1 justify-start items-center align-between text-black text-md">
+      <nav className="fixed top-0 h-screen w-max max-sm:hidden  shadow-[0_35px_60px_10px_rgba(0,0,0,0.3)] pt-12 gap-12 flex flex-col align-center items-center justify-start bg-white/60 border-r border-gray-800">
+        <ul className="flex flex-col w-full pt-32 gap-1 justify-start items-center align-between text-black text-md ">
           <NavBarItem
             title={"Home"}
             link={`/home/${value}`}

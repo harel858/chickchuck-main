@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import AppointmentList from "./AppointmentList";
-import { Calendar, theme } from "antd";
+import { Calendar, ConfigProvider, theme } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentEvent } from "../../../../../types";
@@ -26,9 +26,17 @@ function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
   }, [value, selectedValue]);
 
   const wrapperStyle: React.CSSProperties = {
-    width: 300,
-    border: `1px solid ${token.colorBorderSecondary}`,
-    borderRadius: token.borderRadiusLG,
+    width: 500,
+    borderRadius: "1.5rem",
+    borderTopRightRadius: "0",
+    fontSize: "1.05em",
+    backgroundColor: "rgba(255,255,255,0.9)",
+    display: "flex",
+    gap: "1em",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "space-around",
   };
   const onSelect = (newValue: Dayjs) => {
     setValue(newValue);
@@ -40,18 +48,18 @@ function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
   };
 
   return (
-    <section className="flex justify-center content-center mt-28 w-2/5">
+    <section className="flex justify-center items-stretch content-center  w-9/12">
       <div>
         <Calendar
-          className="border-2 border-black"
+          fullscreen={true}
           style={wrapperStyle}
-          fullscreen={false}
           onPanelChange={onPanelChange}
           value={value}
           onSelect={onSelect}
         />
       </div>
       <AppointmentList
+        onSelect={onSelect}
         selectedValue={selectedValue}
         eventsByDate={eventsByDate}
       />

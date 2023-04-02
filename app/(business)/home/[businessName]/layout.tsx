@@ -42,7 +42,7 @@ export default async function HomeLayout({
   return (
     <>
       <NavBar user={userData} />
-      {children}
+      <section className="mt-20">{children}</section>
     </>
   );
 }
