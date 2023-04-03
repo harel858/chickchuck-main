@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 body {
-  background: linear-gradient(to bottom, #002b4d, #007ee5);
+  background: linear-gradient(to top, #05243c, #46b4e4);
   background-repeat: no-repeat;
   background-position: center;
   width: 100vw;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: hidden; 
 }
 
 .harel-box {

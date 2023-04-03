@@ -1,14 +1,14 @@
 "use client";
 import React from "react";
 import AppointmentList from "./AppointmentList";
-import { Calendar, ConfigProvider, theme } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentEvent } from "../../../../../types";
+import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 dayjs.extend(customParseFormat);
 
 function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
-  const { token } = theme.useToken();
   const [value, setValue] = React.useState(() => dayjs());
   const [selectedValue, setSelectedValue] = React.useState(() => dayjs());
   const [eventsByDate, setEventsByDate] = React.useState<AppointmentEvent[]>(
@@ -25,19 +25,6 @@ function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
     setEventsByDate(value);
   }, [value, selectedValue]);
 
-  const wrapperStyle: React.CSSProperties = {
-    width: 500,
-    borderRadius: "1.5rem",
-    borderTopRightRadius: "0",
-    fontSize: "1.05em",
-    backgroundColor: "rgba(255,255,255,0.9)",
-    display: "flex",
-    gap: "1em",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    alignContent: "space-around",
-  };
   const onSelect = (newValue: Dayjs) => {
     setValue(newValue);
     setSelectedValue(newValue);
@@ -48,22 +35,22 @@ function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
   };
 
   return (
-    <section className="flex justify-center items-stretch content-center  w-9/12">
-      <div>
-        <Calendar
-          fullscreen={true}
-          style={wrapperStyle}
-          onPanelChange={onPanelChange}
+    <div className="flex justify-center items-stretch content-center border border-gray-800 pb-20  rounded-3xl w-9/12">
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateCalendar
           value={value}
-          onSelect={onSelect}
+          onChange={(e) => e && onSelect(e)}
+          className="bg-white/70 rounded-tl-3xl rounded-br-3xl  rounded-bl-3xl"
+          defaultValue={dayjs()}
         />
-      </div>
+      </LocalizationProvider>
+
       <AppointmentList
         onSelect={onSelect}
         selectedValue={selectedValue}
         eventsByDate={eventsByDate}
       />
-    </section>
+    </div>
   );
 }
 

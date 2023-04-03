@@ -17,6 +17,7 @@ export type AllUsers = {
 };
 
 export type AppointmentEvent = {
+  id: string;
   start: string;
   end: string;
   date: string;

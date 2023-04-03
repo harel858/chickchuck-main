@@ -43,6 +43,7 @@ const fetchEvents = async (businessName: string) => {
         "DD/MM/YYYY"
       );
       return {
+        id: appointment.id,
         start,
         end,
         date,
