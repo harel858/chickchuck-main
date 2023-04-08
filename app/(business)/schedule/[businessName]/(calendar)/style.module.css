@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Lobster+Two&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Concert+One&family=Open+Sans&family=Poppins&family=Roboto:ital,wght@1,300&family=Slabo+27px&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Concert+One&family=Open+Sans&family=Poppins&family=Roboto:wght@400&family=Slabo+27px&display=swap');
 .openSans {
   font-family: 'Open Sans', sans-serif;
 }
@@ -8,11 +8,15 @@
 }
 
 .roboto {
+font-family: 'Roboto', sans-serif;}
+
+.robotoBold {
   font-family: 'Roboto', sans-serif;
+  font-weight: 800;
 }
 
 .listNav{
-  background: linear-gradient(to top ,#FF9C00,#ff7800);
+  background: #ffa13c;
 }
 
 .md-sync-views {

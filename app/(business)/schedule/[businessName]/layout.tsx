@@ -42,9 +42,9 @@ export default async function HomeLayout({
   return (
     <>
       <NavBar user={userData} />
-      <section className="w-full flex pl-28  pt-32 justify-center content-center h-screen  overflow-hidden">
-        {children}
-      </section>
+      <main className="flex justify-center items-center h-screen overflow-hidden pl-40 max-sm:p-0">
+        <div className="w-5/6 h-3/4">{children}</div>
+      </main>
     </>
   );
 }

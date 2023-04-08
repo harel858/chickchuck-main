@@ -35,21 +35,15 @@ function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
   };
 
   return (
-    <div className="flex justify-center items-stretch content-center border border-gray-800 pb-20  rounded-3xl w-9/12">
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateCalendar
+    <div className="flex justify-center h-full">
+      <div className="flex justify-center flex-grow content-center h-full rounded-3xl w-9/12">
+        <AppointmentList
           value={value}
-          onChange={(e) => e && onSelect(e)}
-          className="bg-white/70 rounded-tl-3xl rounded-br-3xl  rounded-bl-3xl"
-          defaultValue={dayjs()}
+          onSelect={onSelect}
+          selectedValue={selectedValue}
+          eventsByDate={eventsByDate}
         />
-      </LocalizationProvider>
-
-      <AppointmentList
-        onSelect={onSelect}
-        selectedValue={selectedValue}
-        eventsByDate={eventsByDate}
-      />
+      </div>
     </div>
   );
 }

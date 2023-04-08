@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Lobster+Two&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Concert+One&family=Open+Sans&family=Poppins&family=Roboto:ital,wght@1,300&family=Slabo+27px&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Concert+One&family=Open+Sans&family=Poppins&family=Roboto:wght@300&family=Slabo+27px&display=swap');
+
 .h2 {
   font-family: "Lobster Two", cursive;
 }
@@ -18,6 +19,9 @@ font-family: 'Open Sans', sans-serif;
 }
 .roboto{
   font-family: 'Roboto', sans-serif;
+}
+.navColor{
+  background: #1e2124;
 }
 .icon{
     transition: all 200ms ease-in-out;
