@@ -42,7 +42,7 @@ export default async function HomeLayout({
   return (
     <>
       <NavBar user={userData} />
-      {children}
+      <div className="mt-32">{children}</div>
     </>
   );
 }

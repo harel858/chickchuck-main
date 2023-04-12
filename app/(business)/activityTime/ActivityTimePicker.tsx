@@ -4,6 +4,7 @@ import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
+import { MobileTimePicker } from "@mui/x-date-pickers";
 
 type ActivityTimePickerProps = {
   startActivity: Dayjs;
@@ -18,18 +19,18 @@ function ActivityTimePicker({
   setEndActivity,
 }: ActivityTimePickerProps) {
   return (
-    <div className="rounded-full ">
+    <div className="rounded-full flex gap-2">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <StaticTimePicker
-          className="rounded-3xl  border-2 border-gray-900  bg-white/10 p-10"
-          displayStaticWrapperAs="mobile"
+        <MobileTimePicker
+          orientation="portrait"
+          views={["hours", "minutes"]}
           value={startActivity}
           onChange={(newValue) => {
             newValue && setStartActivity(newValue);
           }}
         />
-        <StaticTimePicker
-          displayStaticWrapperAs="mobile"
+        <MobileTimePicker
+          orientation="portrait"
           value={endActivity}
           onChange={(newValue) => {
             newValue && setEndActivity(newValue);

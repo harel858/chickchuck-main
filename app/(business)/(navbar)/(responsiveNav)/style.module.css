@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Concert+One&family=Open+Sans&family=Poppins&family=Roboto:wght@300&family=Slabo+27px&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Concert+One&family=Open+Sans&family=Poppins&family=Roboto:wght@400&family=Slabo+27px&display=swap");
 
 .h2 {
   font-family: "Lobster Two", cursive;
@@ -25,7 +25,8 @@
   bottom: 0;
   width: 100%;
   cursor: pointer;
-  background: linear-gradient(to top, #054a90, #007FFF);}
+  background: beige;
+}
 
 .button {
     outline: none;

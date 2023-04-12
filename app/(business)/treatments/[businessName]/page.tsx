@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import React from "react";
 import prisma from "../../../../lib/prisma";
 import Treatment from "./Treatment";
-import ProfileImage from "./ProfileImage";
+import ProfileImage from "../../(navbar)/ProfileImage";
 import { BusinessNameProps } from "../../../../types";
 import TreatmentsForm from "../treatmentsForm";
 
@@ -34,9 +34,7 @@ async function PriceListPage({ params: { businessName } }: BusinessNameProps) {
 
   return (
     <div className="flex flex-col justify-center align-center content-center items-center ">
-      <ProfileImage
-        img={`https://cdn.pixabay.com/photo/2016/04/25/07/49/man-1351346_960_720.png`}
-      />
+      <ProfileImage />
       <div>
         <TreatmentsForm user={user} />
         <ul>

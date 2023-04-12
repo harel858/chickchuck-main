@@ -42,7 +42,7 @@ export default async function HomeLayout({
   return (
     <>
       <NavBar user={userData} />
-      <div className="flex justify-center align-center content-center">
+      <div className="flex mt-32 justify-center align-center content-center">
         {children}
       </div>
     </>

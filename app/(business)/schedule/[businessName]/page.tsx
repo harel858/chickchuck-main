@@ -9,8 +9,6 @@ dayjs.extend(customParseFormat);
 export const revalidate = 60;
 
 const fetchEvents = async (businessName: string) => {
-  console.log(`businessName:${businessName}`);
-
   try {
     const value = businessName
       .replace(/-/g, " ")
@@ -20,6 +18,21 @@ const fetchEvents = async (businessName: string) => {
 
     const user = await prisma.user.findUnique({
       where: { businessName: value },
+      include: { appointmentSlots: true },
+    });
+    const now = dayjs();
+
+    user?.appointmentSlots.forEach(async (slot) => {
+      const slotEnd = dayjs(slot.date, "DD/MM/YYYY")
+        .hour(parseInt(slot.end.split(":")[0]))
+        .minute(parseInt(slot.end.split(":")[1]));
+
+      if (now.isAfter(slotEnd)) {
+        await prisma.appointment.update({
+          where: { appointmentSlotId: slot.id },
+          data: { status: "COMPLETED" },
+        });
+      }
     });
 
     const appointments = await prisma.appointment.findMany({
@@ -30,6 +43,7 @@ const fetchEvents = async (businessName: string) => {
         customer: true,
       },
     });
+
     const events = appointments.map((appointment) => {
       const start = dayjs(appointment.appointmentSlot.date, "DD/MM/YYYY")
         .hour(parseInt(appointment.appointmentSlot.start.split(":")[0]))
@@ -42,13 +56,24 @@ const fetchEvents = async (businessName: string) => {
       const date = dayjs(appointment.appointmentSlot.date, "DD/MM/YYYY").format(
         "DD/MM/YYYY"
       );
+
+      const color =
+        appointment.status === "SCHEDULED"
+          ? "bg-green-600"
+          : appointment.status === "CANCELLED"
+          ? "bg-red-600"
+          : "bg-orange-600";
+
       return {
         id: appointment.id,
         start,
         end,
         date,
-        text: appointment.treatment.title,
-        color: "#007aff", // set a default color for all events
+        treatment: appointment.treatment,
+        customer: appointment.customer,
+        appointmentSlot: appointment.appointmentSlot,
+        status: appointment.status,
+        color, // set a default color for all events
       };
     });
 
@@ -62,10 +87,8 @@ async function ScheduleListPage({
   params: { businessName },
 }: BusinessNameProps) {
   const events = await fetchEvents(businessName);
-  console.log(events);
 
   if (!events) return notFound();
-  console.log(events);
 
   return <CalendarComponent events={events} />;
 }

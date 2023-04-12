@@ -1,11 +1,9 @@
 "use client";
 import React from "react";
-import AppointmentList from "./AppointmentList";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentEvent } from "../../../../../types";
-import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import MemoizedAppointmentList from "./AppointmentList";
 dayjs.extend(customParseFormat);
 
 function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
@@ -14,30 +12,29 @@ function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
   const [eventsByDate, setEventsByDate] = React.useState<AppointmentEvent[]>(
     []
   );
-  React.useEffect(() => {
-    const value: AppointmentEvent[] = [];
+  React.useMemo(() => {
+    const filteredEvents: AppointmentEvent[] = events.filter(
+      (event) => event.date === selectedValue.format("DD/MM/YYYY")
+    );
 
-    events.map((event, i) => {
-      if (event.date === selectedValue.format("DD/MM/YYYY")) value.push(event);
-      return;
+    const sortedEvents = filteredEvents.slice().sort((a, b) => {
+      const startTimeA = dayjs(a.start).valueOf();
+      const startTimeB = dayjs(b.start).valueOf();
+      return startTimeA - startTimeB;
     });
-    console.log(value);
-    setEventsByDate(value);
-  }, [value, selectedValue]);
 
-  const onSelect = (newValue: Dayjs) => {
+    setEventsByDate(sortedEvents);
+  }, [selectedValue, events]);
+
+  const onSelect = React.useCallback((newValue: Dayjs) => {
     setValue(newValue);
     setSelectedValue(newValue);
-  };
-
-  const onPanelChange = (newValue: Dayjs) => {
-    setValue(newValue);
-  };
+  }, []);
 
   return (
     <div className="flex justify-center h-full">
-      <div className="flex justify-center flex-grow content-center h-full rounded-3xl w-9/12">
-        <AppointmentList
+      <div className="flex justify-center flex-grow content-center h-max rounded-3xl w-9/12">
+        <MemoizedAppointmentList
           value={value}
           onSelect={onSelect}
           selectedValue={selectedValue}

@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
+import { User } from "@prisma/client";
 
 type formData = {
   name: string;
@@ -41,7 +42,8 @@ function SignUpForm() {
       });
 
       if (res.ok) {
-        const user = await res.json();
+        const user = (await res.json()) as User;
+        console.log(user);
 
         // reset formData
         setFormData({
@@ -54,7 +56,7 @@ function SignUpForm() {
           email: formData.email,
           password: formData.password,
           redirect: true,
-          callbackUrl: "/home",
+          callbackUrl: `/home/${user.businessName}`,
         });
       } else {
         const error = await res.json();

@@ -21,7 +21,9 @@ export type AppointmentEvent = {
   start: string;
   end: string;
   date: string;
-  text: string;
+  treatment: Treatment;
+  customer: Customer;
+  appointmentSlot: AppointmentSlot;
   color: string;
 };
 

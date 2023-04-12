@@ -60,7 +60,7 @@ export default function Form({ user }: { user: User }) {
   };
 
   return (
-    <div className="flex flex-col justify-center w-full relative">
+    <div className="flex flex-col items-center justify-center w-full relative">
       <ActivityDays
         activityDays={activityDays}
         setActivityDays={setActivityDays}

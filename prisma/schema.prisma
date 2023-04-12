@@ -15,6 +15,7 @@ model User {
   phone            String?
   businessName     String            @unique
   openingTime      String?
+  profileSrc       String?
   closingTime      String?
   activityDays     Int[]
   appointments     Appointment[]

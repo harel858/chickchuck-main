@@ -73,7 +73,7 @@ export const Navigation = ({
         variants={variantHeader}
         className={`${classes.h2} ${
           !isOpen ? `hidden` : `block`
-        }  text-white absolute top-5  left-2 text-2xl min:text-xl  w-max `}
+        }  text-black absolute top-5  left-2 text-2xl min:text-xl  w-max `}
       >
         Hello {user.name}
       </motion.h2>
