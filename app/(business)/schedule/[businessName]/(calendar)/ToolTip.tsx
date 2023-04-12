@@ -1,13 +1,25 @@
+import classes from "./style.module.css";
 import React from "react";
-import Typography from "@mui/material/Typography";
+import { AppointmentEvent } from "../../../../../types";
+import dayjs from "dayjs";
 
-function ToolTip() {
+function ToolTip({ event }: { event: AppointmentEvent }) {
+  const start = dayjs(event.start).format("h:mm A");
+  const end = dayjs(event.end).format("h:mm A");
   return (
-    <React.Fragment>
-      <Typography color="inherit">Tooltip with HTML</Typography>
-      <em>{"And here's"}</em> <b>{"some"}</b> <u>{"amazing content"}</u>.{" "}
-      {"It's very engaging. Right?"}
-    </React.Fragment>
+    <div
+      className={`flex bg-white/20 rounded-3xl  ${classes.roboto} w-full   overflow-hidden`}
+    >
+      <nav
+        className={`flex justify-between gap-5 ${event.color} text-white rounded-t-3xl w-max px-5 relative top-0 py-3`}
+      >
+        <p className="font-normal text-lg w-max">{event.customer.name}</p>
+        <p className="font-normal text-lg w-max">
+          {start} - {end}
+        </p>
+      </nav>
+      <div></div>
+    </div>
   );
 }
 
