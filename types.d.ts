@@ -3,6 +3,7 @@ import {
   AvailableSlot,
   Treatment,
   Customer,
+  AppointmentStatus,
 } from "@prisma/client";
 import { Dayjs } from "dayjs";
 
@@ -24,6 +25,7 @@ export type AppointmentEvent = {
   treatment: Treatment;
   customer: Customer;
   appointmentSlot: AppointmentSlot;
+  status: AppointmentStatus;
   color: string;
 };
 

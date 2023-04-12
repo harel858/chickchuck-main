@@ -52,6 +52,7 @@ function AppointmentList({
         <div className="flex justify-center items-center gap-5">
           <motion.div
             whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
             transition={scaleSpringTransition}
           >
             <BsArrowLeftCircle
@@ -64,6 +65,7 @@ function AppointmentList({
           </h2>
           <motion.div
             whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
             transition={scaleSpringTransition}
           >
             <BsArrowRightCircle
