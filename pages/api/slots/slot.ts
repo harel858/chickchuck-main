@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { AvailableSlot } from "@prisma/client";
+import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
   createAvailableSlots,
@@ -78,10 +79,8 @@ export default async function handler(
         userId: string;
         duration: string;
       };
-      console.log(`chosenDate:${chosenDate}`);
-
-      console.log(chosenDate);
-      console.log(userId);
+      if (dayjs(chosenDate).isBefore(dayjs()))
+        return res.status(400).json("The date has passed");
       const { userExist, err } = await getById(userId);
       if (!userExist || err) return res.status(400).json("no existing user");
       const { availableSlots, slotsErr } = await getQueuesByDate(

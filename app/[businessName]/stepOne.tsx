@@ -5,7 +5,7 @@ import { Button, CircularProgress, TextField } from "@mui/material";
 import { Poppins } from "@next/font/google";
 import { JackInTheBox } from "react-awesome-reveal";
 import { LoadingButton } from "@mui/lab";
-import { formData } from "../../types";
+import { formData } from "../../types/types";
 
 const font = Poppins({
   subsets: ["latin"],

@@ -40,14 +40,18 @@ export default async function handler(
       const { userExist, err } = await getById(userId);
       if (!userExist || err) return res.status(500).json("user not found");
 
-      const { appointment, createErr } = await createAppointment(
-        userExist.id,
-        customerId,
-        availableSlot,
-        treatment.id,
-        null,
-        date
-      );
+      const { existingAppointment, appointment, createErr } =
+        await createAppointment(
+          userExist.id,
+          customerId,
+          availableSlot,
+          treatment.id,
+          null,
+          date
+        );
+
+      if (existingAppointment)
+        return res.status(400).json("appointment already exists");
 
       if (appointment) return res.status(200).json(appointment);
       return res.status(500).json("error with the appointment function");

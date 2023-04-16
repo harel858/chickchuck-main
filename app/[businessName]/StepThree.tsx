@@ -12,7 +12,7 @@ import { Poppins } from "@next/font/google";
 import { Zoom } from "react-awesome-reveal";
 import Loading from "./loading";
 import AvailableList from "./AvailableList";
-import { AppointmentInput, UserData } from "../../types";
+import { AppointmentInput, UserData } from "../../types/types";
 import axios from "axios";
 
 type StepThreeProps = {

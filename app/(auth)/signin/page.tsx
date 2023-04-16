@@ -21,6 +21,8 @@ function SignUpForm() {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    console.log(event.target.value);
+
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
@@ -39,9 +41,10 @@ function SignUpForm() {
 
       if (!result?.ok) return setError(`the details you provided are correct.`);
       const res = await axios.get(
-        `api/user?email=${formData.email}&password=${formData.password}`
+        `api/user/get?email=${formData.email}&password=${formData.password}`
       );
-      const user = res.data[0] as User;
+
+      const user = res.data as User;
       console.log(user);
 
       setError("");

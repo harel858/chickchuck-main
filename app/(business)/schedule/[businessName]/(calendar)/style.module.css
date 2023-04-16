@@ -6,7 +6,15 @@
 .poppins{
   font-family: 'Poppins', sans-serif;
 }
+.mobileDatePicker{
+  background: #ff9955;
+  border: 1px solid rgb(107 114 128);
+}
 
+.ToolTip{
+  background: beige;
+    font-family: 'Open Sans', sans-serif;
+}
 
 .roboto {
 font-family: 'Roboto', sans-serif;}
@@ -17,7 +25,7 @@ font-family: 'Roboto', sans-serif;}
 }
 
 .primaryColor{
-  background: #F4B183;
+  background: #ff9955;
 }
 
 .md-sync-views {
@@ -37,6 +45,10 @@ font-family: 'Roboto', sans-serif;}
 .md-sync-views,
 .md-sync-list {
   height: 100%;
+}
+
+.ul{
+  font-family: 'Roboto', sans-serif;
 }
 
 .ul::-webkit-scrollbar {

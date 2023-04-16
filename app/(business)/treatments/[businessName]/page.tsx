@@ -3,7 +3,7 @@ import React from "react";
 import prisma from "../../../../lib/prisma";
 import Treatment from "./Treatment";
 import ProfileImage from "../../(navbar)/ProfileImage";
-import { BusinessNameProps } from "../../../../types";
+import { BusinessNameProps } from "../../../../types/types";
 import TreatmentsForm from "../treatmentsForm";
 
 export const revalidate = 1;
@@ -34,7 +34,7 @@ async function PriceListPage({ params: { businessName } }: BusinessNameProps) {
 
   return (
     <div className="flex flex-col justify-center align-center content-center items-center ">
-      <ProfileImage />
+      <ProfileImage user={user} />
       <div>
         <TreatmentsForm user={user} />
         <ul>

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import React from "react";
 import prisma from "../../lib/prisma";
-import { UserData } from "../../types";
+import { UserData } from "../../types/types";
 import Tabs from "./Tabs";
 
 type LandingPageProps = {

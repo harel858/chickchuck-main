@@ -1,12 +1,7 @@
 import prisma from ".";
 import dayjs, { Dayjs } from "dayjs";
 
-import {
-  AppointmentStatus,
-  AvailableSlot,
-  Prisma,
-  PrismaClient,
-} from "@prisma/client";
+import { AppointmentStatus, AvailableSlot } from "@prisma/client";
 
 export async function createAppointment(
   userId: string,
@@ -19,6 +14,31 @@ export async function createAppointment(
   console.log(userId);
 
   try {
+    // Check if appointment slot is already booked
+    const existingAppointment = await prisma.appointmentSlot.findFirst({
+      where: {
+        date: dayjs(date).format("DD/MM/YYYY"),
+        start: slots[0].start,
+        end: slots[slots.length - 1].end,
+        appointments: {
+          none: {
+            // Filter out appointment slots that already have appointments scheduled
+            status: AppointmentStatus.CANCELLED,
+          },
+        },
+        business: {
+          // Connect to the user who owns the appointment slots
+          id: userId,
+        },
+      },
+    });
+    console.log(existingAppointment);
+
+    if (existingAppointment) {
+      // If the appointment slot already exists, return an error or handle it however you like
+      return { existingAppointment };
+    }
+
     // Create the appointment slot
     const appointmentSlot = await prisma.appointmentSlot.create({
       data: {

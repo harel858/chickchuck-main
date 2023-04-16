@@ -5,7 +5,7 @@ import { User } from "@prisma/client";
 import SubmitButton from "./SubmitButton";
 import ActivityDays from "./ActivityDays";
 import ActivityTimePicker from "./ActivityTimePicker";
-import { Slots } from "../../../types";
+import { Slots } from "../../../types/types";
 
 export default function Form({ user }: { user: User }) {
   const [startActivity, setStartActivity] = React.useState<Dayjs>(

@@ -3,7 +3,7 @@ import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { notFound } from "next/navigation";
 import prisma from "../../../../lib/prisma";
-import { BusinessNameProps, AppointmentEvent } from "../../../../types";
+import { BusinessNameProps, AppointmentEvent } from "../../../../types/types";
 import CalendarComponent from "./(calendar)/Calendar";
 dayjs.extend(customParseFormat);
 export const revalidate = 60;
@@ -18,26 +18,35 @@ const fetchEvents = async (businessName: string) => {
 
     const user = await prisma.user.findUnique({
       where: { businessName: value },
-      include: { appointmentSlots: true },
+    });
+    const appointmentSlots = await prisma.appointmentSlot.findMany({
+      where: { businessId: user?.id },
+      include: { appointments: true },
     });
     const now = dayjs();
 
-    user?.appointmentSlots.forEach(async (slot) => {
-      const slotEnd = dayjs(slot.date, "DD/MM/YYYY")
-        .hour(parseInt(slot.end.split(":")[0]))
-        .minute(parseInt(slot.end.split(":")[1]));
+    if (user && appointmentSlots) {
+      for (let i = 0; i < appointmentSlots.length; i++) {
+        const slotEnd = dayjs(appointmentSlots[i].date, "DD/MM/YYYY")
+          .hour(parseInt(appointmentSlots[i].end.split(":")[0]))
+          .minute(parseInt(appointmentSlots[i].end.split(":")[1]));
 
-      if (now.isAfter(slotEnd)) {
-        await prisma.appointment.update({
-          where: { appointmentSlotId: slot.id },
-          data: { status: "COMPLETED" },
-        });
+        if (
+          now.isAfter(slotEnd) &&
+          appointmentSlots[i].appointments[0].status === "SCHEDULED"
+        ) {
+          await prisma.appointment.update({
+            where: { appointmentSlotId: appointmentSlots[i].id },
+            data: { status: "COMPLETED" },
+          });
+        }
       }
-    });
+    }
 
     const appointments = await prisma.appointment.findMany({
       where: { userId: user?.id },
       include: {
+        User: true,
         appointmentSlot: true,
         treatment: true,
         customer: true,
@@ -62,7 +71,7 @@ const fetchEvents = async (businessName: string) => {
           ? "bg-green-600"
           : appointment.status === "CANCELLED"
           ? "bg-red-600"
-          : "bg-orange-600";
+          : "bg-yellow-500";
 
       return {
         id: appointment.id,

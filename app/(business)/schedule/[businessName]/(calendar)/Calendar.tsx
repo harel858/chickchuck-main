@@ -1,9 +1,11 @@
 "use client";
+import classes from "./style.module.css";
 import React from "react";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { AppointmentEvent } from "../../../../../types";
+import { AppointmentEvent } from "../../../../../types/types";
 import MemoizedAppointmentList from "./AppointmentList";
+import ListNav from "./ListNav";
 dayjs.extend(customParseFormat);
 
 function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
@@ -34,12 +36,16 @@ function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
   return (
     <div className="flex justify-center h-full">
       <div className="flex justify-center flex-grow content-center h-max rounded-3xl w-9/12">
-        <MemoizedAppointmentList
-          value={value}
-          onSelect={onSelect}
-          selectedValue={selectedValue}
-          eventsByDate={eventsByDate}
-        />
+        <div
+          className={`flex-1 bg-white/60 rounded-3xl ${classes.openSans} overflow-hidden max-h-full shadow-2xl shadow-black/50 p-0`}
+        >
+          <ListNav selectedValue={selectedValue} onSelect={onSelect} />
+          <MemoizedAppointmentList
+            value={value}
+            onSelect={onSelect}
+            eventsByDate={eventsByDate}
+          />
+        </div>
       </div>
     </div>
   );

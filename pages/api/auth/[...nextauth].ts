@@ -1,9 +1,14 @@
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import prisma from "../../../lib/prisma";
 import { signIn } from "../../../lib/prisma/users";
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
+
+  adapter: PrismaAdapter(prisma),
+  pages: { signIn: "/signIn" },
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
@@ -48,21 +53,32 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
 
-    async jwt({ token, user, account, profile, isNewUser }) {
-      if (user) {
-        token.user = user as any;
-      }
-      return token;
-    },
-
     async session({ session, token, user }: any) {
-      session.user = token.user;
+      if (token) {
+        session.user.id = token.id;
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.image = token.picture;
+      }
 
       return session;
     },
-  },
+    async jwt({ token, user, account, profile, isNewUser }) {
+      const dbUser = await prisma.user.findUnique({
+        where: { email: token.email! },
+      });
 
-  pages: { signIn: "/signIn" },
+      if (!dbUser) {
+        token.id = user!.id;
+        return token;
+      }
+      return {
+        id: dbUser.id,
+        name: dbUser.name,
+        email: dbUser.email,
+      };
+    },
+  },
 };
 
 export default NextAuth(authOptions);

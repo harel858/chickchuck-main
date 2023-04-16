@@ -7,15 +7,7 @@ import { FaRegCalendarTimes } from "react-icons/fa";
 
 function NoAppointments() {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.5 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{
-        duration: 0.8,
-        ease: [0, 0.71, 0.2, 1.01],
-      }}
-      className="flex flex-1 flex-col gap-10 justify-center content-center items-center py-10"
-    >
+    <div className="flex flex-1 flex-col border-t border-gray-500 max-xl:border-0 gap-10 justify-center content-center items-center py-10">
       <Fade
         delay={250}
         cascade
@@ -24,8 +16,17 @@ function NoAppointments() {
       >
         No Appointments For Today
       </Fade>
-      <FaRegCalendarTimes className="text-9xl" />
-    </motion.div>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 0.3,
+          ease: [0, 0.71, 0.2, 1.01],
+        }}
+      >
+        <FaRegCalendarTimes className="text-9xl" />
+      </motion.div>
+    </div>
   );
 }
 

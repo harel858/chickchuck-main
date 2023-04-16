@@ -72,8 +72,6 @@ export async function getQueuesByDate(
   duration: number,
   user: User
 ) {
-  console.log(duration);
-
   const slotDuration = 5;
   console.log(`slotDuration: ${slotDuration}`);
 

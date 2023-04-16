@@ -4,7 +4,7 @@ import axios from "axios";
 import { Zoom } from "react-awesome-reveal";
 import { TextField, Button } from "@mui/material";
 import { Poppins } from "@next/font/google";
-import { AppointmentInput, formData } from "../../types";
+import { AppointmentInput, formData } from "../../types/types";
 import { LoadingButton } from "@mui/lab";
 import { Appointment, Customer } from "@prisma/client";
 

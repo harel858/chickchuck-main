@@ -1,7 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Vonage } from "@vonage/server-sdk";
-import { createCustomer, getCustomer } from "../../../lib/prisma/customer";
+import {
+  createCustomer,
+  getCustomer,
+  updateCustomer,
+} from "../../../lib/prisma/customer";
 
 const vonage = new (Vonage as any)({
   apiKey: `${process.env.API_KEY}`,
@@ -16,13 +20,19 @@ export default async function handler(
     try {
       console.log(req.body);
 
-      const { request_id, code, phoneNumber, name } = req.body;
+      const { request_id, code, phoneNumber, name } = req.body as {
+        request_id: string;
+        code: string;
+        phoneNumber: string;
+        name: string;
+      };
       console.log(req.body);
 
       const { customer, getCustomerErr } = await getCustomer(phoneNumber);
 
       if (getCustomerErr) return res.status(500).json(getCustomerErr);
 
+      if (customer?.name !== name) await updateCustomer(name, phoneNumber);
       if (customer) return res.status(200).json(customer);
 
       const { newCustomer, createCustomerErr } = await createCustomer(

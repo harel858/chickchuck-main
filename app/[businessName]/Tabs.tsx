@@ -6,7 +6,7 @@ import StepTwo from "./stepTwo";
 import StepThree from "./StepThree";
 import Tab from "./Tab";
 import Loading from "./loading";
-import { AppointmentInput, formData, UserData } from "../../types";
+import { AppointmentInput, formData, UserData } from "../../types/types";
 
 const StepOne = React.lazy(() => import("./stepOne"));
 

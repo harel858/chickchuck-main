@@ -8,7 +8,7 @@ import Fab from "@mui/material/Fab";
 import CheckIcon from "@mui/icons-material/Check";
 import SaveIcon from "@mui/icons-material/Save";
 import { AvailableSlot, User } from "@prisma/client";
-import { Slots } from "../../../types";
+import { Slots } from "../../../types/types";
 
 type SubmitProps = {
   user: User;

@@ -15,18 +15,20 @@ function NavBar({ user }: { user: User }) {
   console.log(user);
   const value = user.businessName.replace(/ /g, "-");
 
+  /* shadow-[0_35px_60px_10px_rgba(0,0,0,0.3)] */
+
   return (
     <>
       <Hamburger user={user} />
       <HorizontalNav user={user} />
-      <nav className="fixed top-0 h-screen w-max max-sm:hidden  shadow-[0_35px_60px_10px_rgba(0,0,0,0.3)] pt-12 gap-12 flex flex-col align-center items-center justify-start bg-white/60 border-r border-gray-800">
+      <nav className="fixed top-0 h-screen w-max max-sm:hidden  pt-12 gap-12 flex flex-col align-center items-center justify-start bg-white/60 border-r border-gray-700">
         <div className="relative top-20 left-0 flex justify-center content-center items-center gap-5 flex-col">
           <h2
             className={`${classes.h2} text-black  xl:text-4xl md:text-3xl sm:text-2xl w-max `}
           >
             Queue
           </h2>
-          <ProfileImage />
+          <ProfileImage user={user} />
           <h3
             className={`${classes.roboto} font-medium text-black  xl:text-2xl md:text-lg sm:text-md w-max `}
           >

@@ -33,3 +33,19 @@ export const getCustomer = async (phoneNumber: string) => {
     return { getCustomerErr };
   }
 };
+
+export const updateCustomer = async (name: string, phoneNumber: string) => {
+  try {
+    const updatedcustomer = await prisma.customer.update({
+      where: { phoneNumber },
+      data: { name },
+    });
+    console.log(updatedcustomer);
+
+    return { updatedcustomer };
+  } catch (updateCustomerErr) {
+    console.log(updateCustomerErr);
+
+    return { updateCustomerErr };
+  }
+};
