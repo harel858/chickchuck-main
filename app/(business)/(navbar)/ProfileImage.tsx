@@ -1,9 +1,28 @@
 "use client";
 import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
+import axios from "axios";
+import { User } from "@prisma/client";
 
-function ProfileImage() {
-  const [avatarSrc, setAvatarSrc] = useState("/static/images/avatar/1.jpg");
+function ProfileImage({ user }: { user: User }) {
+  const [avatarSrc, setAvatarSrc] = useState<string | undefined>(
+    user.profileSrc ?? undefined
+  );
+
+  const postData = async (imageSrc: string) => {
+    console.log(imageSrc);
+
+    try {
+      const response = await axios.post("/api/user/profileImage", {
+        imageSrc,
+        userId: user.id,
+      });
+      const responseData = response.data;
+      console.log(responseData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleAvatarChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -13,12 +32,16 @@ function ProfileImage() {
 
       if (file) {
         const reader = new FileReader();
-        reader.onload = () => {
-          setAvatarSrc(reader.result as string);
+        reader.onload = async () => {
+          const imageSrc = reader.result as string;
+          setAvatarSrc(imageSrc);
+          await postData(imageSrc);
         };
         reader.readAsDataURL(file);
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <div className="flex justify-center">
