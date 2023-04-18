@@ -9,7 +9,7 @@ import {
 import Event from "./Event";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
-import { AppointmentEvent } from "../../../../../types/types";
+import { AppointmentEvent } from "../../../types/types";
 
 function AppointmentList({
   value,
@@ -67,7 +67,7 @@ function AppointmentList({
             className={`${classes.ul} flex flex-1 w-full flex-col justify-start content-center items-start overflow-y-auto overflow-x-hidden border-t border-gray-500 rounded-br-3xl max-h-[27.5rem]`}
           >
             {eventsByDate.map((event, i) => (
-              <Event event={event} />
+              <Event key={event.id} event={event} />
             ))}
           </ul>
         )}

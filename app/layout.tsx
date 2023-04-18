@@ -1,5 +1,14 @@
+import "@styles/globals.css";
 import React from "react";
-import "../styles/globals.css";
+import { Inter } from "@next/font/google";
+import Providers from "@ui/Providers";
+import { cn } from "@lib/utils";
+import Navbar from "@ui/(navbar)/Navbar";
+import { ServerThemeProvider } from "next-themes";
+
+const inter = Inter({ subsets: ["latin"] });
+
+console.log(inter.className);
 
 export default function RootLayout({
   children,
@@ -7,8 +16,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    <ServerThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <html
+        lang="en"
+        className={cn("bg-white text-slate-900 antialiased", inter.className)}
+      >
+        <body className="min-h-screen bg-slate-50 dark:bg-slate-900 antialiased">
+          <Providers>
+            {/* @ts-expect-error Server Component */}
+            <Navbar />
+
+            <main>{children}</main>
+          </Providers>
+
+          {/*Allow more height for mobile menu on mobile*/}
+          <div className="h-40 md:hidden" />
+        </body>
+      </html>
+    </ServerThemeProvider>
   );
 }

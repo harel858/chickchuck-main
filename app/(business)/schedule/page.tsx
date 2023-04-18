@@ -2,22 +2,18 @@ import React from "react";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { notFound } from "next/navigation";
-import prisma from "../../../../lib/prisma";
-import { BusinessNameProps, AppointmentEvent } from "../../../../types/types";
-import CalendarComponent from "./(calendar)/Calendar";
+import prisma from "../../../lib/prisma";
+import { BusinessNameProps, AppointmentEvent } from "../../../types/types";
+import { getServerSession } from "next-auth";
+import CalendarComponent from "@ui/(calendar)/Calendar";
 dayjs.extend(customParseFormat);
 export const revalidate = 60;
 
-const fetchEvents = async (businessName: string) => {
+const fetchEvents = async (email: string | null | undefined) => {
   try {
-    const value = businessName
-      .replace(/-/g, " ")
-      .replace(/%20/g, " ")
-      .replace(/%60/g, "`");
-    console.log(`value:${value}`);
-
+    if (!email) return null;
     const user = await prisma.user.findUnique({
-      where: { businessName: value },
+      where: { email },
     });
     const appointmentSlots = await prisma.appointmentSlot.findMany({
       where: { businessId: user?.id },
@@ -92,21 +88,20 @@ const fetchEvents = async (businessName: string) => {
   }
 };
 
-async function ScheduleListPage({
-  params: { businessName },
-}: BusinessNameProps) {
-  const events = await fetchEvents(businessName);
+async function ScheduleListPage() {
+  const session = await getServerSession();
+  if (!session) return notFound();
 
-  if (!events) return notFound();
+  const events = await fetchEvents(session?.user?.email);
 
-  return <CalendarComponent events={events} />;
+  return <CalendarComponent events={events ?? []} />;
 }
 
-export async function generateStaticParams() {
+/* export async function generateStaticParams() {
   const users = await prisma.user.findMany();
   const params = users?.map((user) => ({ id: user.id.toString() }));
 
   return params;
-}
+} */
 
 export default ScheduleListPage;

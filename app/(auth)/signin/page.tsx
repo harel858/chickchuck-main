@@ -4,13 +4,15 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { User } from "@prisma/client";
+import { Button } from "@ui/Button";
 
 type signInData = {
   email: string;
   password: string;
 };
 
-function SignUpForm() {
+function SignInForm() {
+  const [isLodaing, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<signInData>({
     email: "",
     password: "",
@@ -34,31 +36,35 @@ function SignUpForm() {
 
     // Use formData for API call
     try {
+      setIsLoading(true);
       const result = await signIn("credentials", {
         ...formData,
         redirect: false,
       });
 
-      if (!result?.ok) return setError(`the details you provided are correct.`);
       const res = await axios.get(
         `api/user/get?email=${formData.email}&password=${formData.password}`
       );
 
       const user = res.data as User;
-      console.log(user);
-
-      setError("");
-
       // reset formData
       setFormData({
         email: "",
         password: "",
       });
       const value = user.businessName.replace(/ /g, "-");
+      if (user) setIsLoading(false);
 
-      router.push(`/home/${value}`);
-    } catch (err: any) {
+      router.push(`/home`);
+    } catch (err) {
+      setIsLoading(false);
       console.log(err);
+
+      /* toast({
+        title: "Error Signing In",
+        message: "Please try again later",
+        type: "error",
+      }); */
     }
   };
   const displayInput = () => {
@@ -87,9 +93,9 @@ function SignUpForm() {
     <form className="flex flex-col items-center gap-3 " onSubmit={handleSubmit}>
       {displayInput()}
       <p className="test-red-500">{error ? error : ""}</p>
-      <button type="submit">Submit</button>
+      <Button isLoading={isLodaing}>Submit</Button>
     </form>
   );
 }
 
-export default SignUpForm;
+export default SignInForm;

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { User } from "@prisma/client";
+import { Button } from "@ui/Button";
 
 type formData = {
   name: string;
@@ -11,6 +12,7 @@ type formData = {
 };
 
 function SignUpForm() {
+  const [isLodaing, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<formData>({
     name: "",
     email: "",
@@ -33,8 +35,7 @@ function SignUpForm() {
 
     // Use formData for API call
     try {
-      console.log(JSON.stringify(formData));
-
+      setIsLoading(true);
       const res = await fetch("/api/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -44,7 +45,6 @@ function SignUpForm() {
       if (res.ok) {
         const user = (await res.json()) as User;
         console.log(user);
-
         // reset formData
         setFormData({
           name: "",
@@ -52,6 +52,7 @@ function SignUpForm() {
           password: "",
           businessName: "",
         });
+        setIsLoading(false);
         signIn("credentials", {
           email: formData.email,
           password: formData.password,
@@ -64,8 +65,14 @@ function SignUpForm() {
 
         setError(error);
       }
-    } catch (err: any) {
+    } catch (err) {
+      setIsLoading(false);
       console.log(err);
+      /* toast({
+        title: "Error Signing In",
+        message: "Please try again later",
+        type: "error",
+      }); */
     }
   };
 
@@ -99,7 +106,7 @@ function SignUpForm() {
     <form className="flex flex-col items-center gap-3 " onSubmit={handleSubmit}>
       {displayInput()}
       <p className="test-red-500">{error ? error : ""}</p>
-      <button type="submit">Submit</button>
+      <Button isLoading={isLodaing}>Submit</Button>
     </form>
   );
 }

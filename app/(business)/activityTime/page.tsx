@@ -1,7 +1,8 @@
-import React from "react";
 import prisma from "@lib/prisma";
 import { getServerSession } from "next-auth";
-import UniqueLink from "./UniqueLink";
+import { notFound } from "next/navigation";
+import React from "react";
+import Form from "./Form";
 
 async function fetchUser(email: string | null | undefined) {
   try {
@@ -16,11 +17,14 @@ async function fetchUser(email: string | null | undefined) {
 
 async function Page() {
   const session = await getServerSession();
-
   const user = await fetchUser(session?.user?.email);
-  const value = user?.businessName.replace(/ /g, "-");
+  if (!user) return notFound();
 
-  return <UniqueLink link={`http://localhost:3000/${value}`} />;
+  return (
+    <div className="flex flex-col justify-center">
+      <Form user={user} />
+    </div>
+  );
 }
 
 export default Page;

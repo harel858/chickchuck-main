@@ -3,6 +3,7 @@ import React from "react";
 import prisma from "../../lib/prisma";
 import { UserData } from "../../types/types";
 import Tabs from "./Tabs";
+export const dynamic = "force-static";
 
 type LandingPageProps = {
   params: {
@@ -13,6 +14,7 @@ type LandingPageProps = {
 const fetchAppointmentSlots = async (businessName: string) => {
   try {
     const value = businessName.replace(/-/g, " ").replace(/%60/g, "`");
+    console.log(value);
 
     const user = await prisma.user.findUnique({
       where: { businessName: value },
@@ -41,7 +43,7 @@ export default async function LandingPage({
   const userData = await fetchAppointmentSlots(businessName);
   console.log(userData);
 
-  if (!userData?.userId) return notFound();
+  if (!userData) return notFound();
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full text-white ">

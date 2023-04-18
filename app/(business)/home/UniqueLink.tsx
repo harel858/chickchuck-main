@@ -17,7 +17,7 @@ function UniqueLink({ link }: { link: string }) {
         </IconButton>
       </Tooltip>
       <Link
-        className="font-medium hover:underline hover:decoration-1	"
+        className="font-medium hover:underline hover:decoration-1	text-black"
         href={link}
         target="_blank"
       >

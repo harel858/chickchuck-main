@@ -1,7 +1,7 @@
 import classes from "./style.module.css";
 import React from "react";
 import { motion } from "framer-motion";
-import { AppointmentEvent } from "../../../../../types/types";
+import { AppointmentEvent } from "../../../types/types";
 import dayjs from "dayjs";
 
 function ToolTip({ event }: { event: AppointmentEvent }) {

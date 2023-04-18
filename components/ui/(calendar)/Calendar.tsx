@@ -3,7 +3,7 @@ import classes from "./style.module.css";
 import React from "react";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { AppointmentEvent } from "../../../../../types/types";
+import { AppointmentEvent } from "../../../types/types";
 import MemoizedAppointmentList from "./AppointmentList";
 import ListNav from "./ListNav";
 dayjs.extend(customParseFormat);

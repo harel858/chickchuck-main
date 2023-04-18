@@ -6,5 +6,9 @@ export default function ScheduleLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <section className="flex justify-center items-center h-screen overflow-hidden pl-40 max-sm:p-0">
+      {children}
+    </section>
+  );
 }
