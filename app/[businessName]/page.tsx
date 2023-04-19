@@ -20,6 +20,7 @@ const fetchAppointmentSlots = async (businessName: string) => {
       where: { businessName: value },
       include: { Treatment: true, availableSlots: true },
     });
+    if (!user) return null;
     const availableSlot = await prisma.availableSlot.findMany({
       where: {
         businessId: user?.id, // Replace with the ID of the user/business you want to book an appointment with

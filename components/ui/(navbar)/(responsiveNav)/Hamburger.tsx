@@ -37,7 +37,7 @@ export const Hamburger = ({ user }: { user: User }) => {
     <motion.nav
       className={`${
         !isOpen ? `hidden pointer-events-none` : `flex`
-      } fixed z-20 top-0 h-screen w-3/5 max-sm:flex pt-12 gap-12 hidden flex-col align-center items-center justify-start`}
+      } fixed z-50 top-0 left-0 h-screen w-3/5 max-sm:flex pt-12 gap-12 hidden flex-col align-center items-center justify-start`}
       initial={true}
       animate={isOpen ? "open" : "closed"}
       custom={height}

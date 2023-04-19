@@ -1,9 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import axios from "axios";
-import { User } from "@prisma/client";
 import { Button } from "@ui/Button";
 
 type signInData = {
@@ -12,13 +9,12 @@ type signInData = {
 };
 
 function SignInForm() {
+  const [error, setError] = useState("");
   const [isLodaing, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<signInData>({
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
-  const router = useRouter();
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -39,23 +35,12 @@ function SignInForm() {
       setIsLoading(true);
       const result = await signIn("credentials", {
         ...formData,
-        redirect: false,
+        redirect: true,
+        callbackUrl: "/home",
       });
+      if (result?.error) setIsLoading(false);
 
-      const res = await axios.get(
-        `api/user/get?email=${formData.email}&password=${formData.password}`
-      );
-
-      const user = res.data as User;
       // reset formData
-      setFormData({
-        email: "",
-        password: "",
-      });
-      const value = user.businessName.replace(/ /g, "-");
-      if (user) setIsLoading(false);
-
-      router.push(`/home`);
     } catch (err) {
       setIsLoading(false);
       console.log(err);
@@ -70,12 +55,13 @@ function SignInForm() {
   const displayInput = () => {
     const data: any = ["email", "password"];
     return (
-      <>
+      <div className="w-11/12">
         {data?.map(
           (item: keyof signInData, _index: number, _array: string[]) => (
             <label key={_index}>
               {item}:
               <input
+                className="w-full py-3 rounded-xl border border-gray-500 focus:outline-none focus:border-2 dark:focus:border-white/80 focus:border-black/80 transition duration-300 transform scale-95 hover:scale-100"
                 type={item === "email" ? "email" : "password"}
                 name={item}
                 required
@@ -85,12 +71,15 @@ function SignInForm() {
             </label>
           )
         )}
-      </>
+      </div>
     );
   };
 
   return (
-    <form className="flex flex-col items-center gap-3 " onSubmit={handleSubmit}>
+    <form
+      className="flex flex-col items-center gap-3 w-1/3 py-4 rounded-lg bg-white/20"
+      onSubmit={handleSubmit}
+    >
       {displayInput()}
       <p className="test-red-500">{error ? error : ""}</p>
       <Button isLoading={isLodaing}>Submit</Button>

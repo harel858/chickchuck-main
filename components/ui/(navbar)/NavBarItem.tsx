@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import classes from "./style.module.css";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -31,7 +30,7 @@ function NavBarItem({ title, link, icon }: NavItemProps) {
       </div>
       <Link
         href={link}
-        className={`relative ${classes.roboto} ${
+        className={`relative ${
           isActive ? `font-extrabold ` : `font-normal`
         } after:absolute after:bottom-0 after:mt-1 after:left-0 after:h-0.5 after:w-full after:bg-blue-700 after:translate-y-1 after:scale-x-0 after:ease-in after:duration-200 ease-in duration-200 group-hover:after:scale-x-100 xl:text-xl md:text:md`}
       >

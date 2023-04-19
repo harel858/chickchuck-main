@@ -6,7 +6,7 @@ import { User } from "@prisma/client";
 
 function ProfileImage({ user }: { user: User }) {
   const [avatarSrc, setAvatarSrc] = useState<string | undefined>(
-    user.profileSrc ?? undefined
+    user?.profileSrc ?? undefined
   );
 
   const postData = async (imageSrc: string) => {
@@ -15,9 +15,9 @@ function ProfileImage({ user }: { user: User }) {
     try {
       const response = await axios.post("/api/user/profileImage", {
         imageSrc,
-        userId: user.id,
+        userId: user?.id,
       });
-      const responseData = response.data;
+      const responseData = response?.data;
       console.log(responseData);
     } catch (error) {
       console.error(error);

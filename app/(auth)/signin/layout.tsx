@@ -5,5 +5,9 @@ export default function SignInLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <section className="mt-56">{children}</section>;
+  return (
+    <section className="h-screen w-full flex justify-center items-center">
+      {children}
+    </section>
+  );
 }

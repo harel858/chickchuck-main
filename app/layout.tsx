@@ -1,12 +1,12 @@
 import "@styles/globals.css";
 import React from "react";
-import { Inter } from "@next/font/google";
+import { Inter, Roboto } from "@next/font/google";
 import Providers from "@ui/Providers";
 import { cn } from "@lib/utils";
 import Navbar from "@ui/(navbar)/Navbar";
 import { ServerThemeProvider } from "next-themes";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Roboto({ weight: ["300", "400"], subsets: ["latin"] });
 
 console.log(inter.className);
 
