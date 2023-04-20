@@ -1,3 +1,4 @@
+import { AvailableSlot, Treatment } from "@prisma/client";
 import { notFound } from "next/navigation";
 import React from "react";
 import prisma from "../../lib/prisma";
@@ -16,23 +17,28 @@ const fetchAppointmentSlots = async (businessName: string) => {
     const value = businessName.replace(/-/g, " ").replace(/%60/g, "`");
     console.log(value);
 
-    const user = await prisma.user.findUnique({
+    const business = await prisma.business.findUnique({
       where: { businessName: value },
-      include: { Treatment: true, availableSlots: true },
+      include: { user: { include: { Treatment: true } } },
     });
-    if (!user) return null;
-    const availableSlot = await prisma.availableSlot.findMany({
-      where: {
-        businessId: user?.id, // Replace with the ID of the user/business you want to book an appointment with
-      },
-      orderBy: [{ start: "asc" }],
-    });
+    if (!business) return null;
+    let UsersData: UserData[] = [];
+    for (let i = 0; i < business.user.length; i++) {
+      let result = await prisma.availableSlot.findMany({
+        where: {
+          userId: business.user[i]?.id, // Replace with the ID of the user/business you want to book an appointment with
+        },
+        orderBy: [{ start: "asc" }],
+      });
+      UsersData.push({
+        name: business.user[i].name,
+        AvailableSlot: result,
+        treatments: business.user[i].Treatment,
+        userId: business.user[i].id,
+      });
+    }
 
-    return {
-      availableSlot,
-      treatments: user?.Treatment,
-      userId: user?.id,
-    } as UserData;
+    return UsersData;
   } catch (err) {
     console.log(err);
   }
@@ -56,9 +62,9 @@ export default async function LandingPage({
 }
 
 export async function generateStaticParams() {
-  const users = await prisma.user.findMany();
-  const params = users?.map((user) => ({
-    businessName: user.businessName.toString(),
+  const business = await prisma.business.findMany();
+  const params = business?.map((item) => ({
+    businessName: item.businessName.toString(),
   }));
 
   return params;

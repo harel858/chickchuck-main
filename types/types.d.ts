@@ -42,10 +42,12 @@ export type formData = {
 };
 
 export type UserData = {
-  availableSlot: AvailableSlot[];
+  name: string;
+  AvailableSlot: AvailableSlot[];
   treatments: Treatment[];
   userId: string;
 };
+
 export type Slots = {
   start: string;
   end: string;
@@ -76,7 +78,7 @@ export type UserProps = {
 export type AppointmentInput = {
   treatment: Treatment | null;
   customer: Customer | null;
-  userData: UserData;
+  user: UserData | null;
   availableSlot: AvailableSlot[];
   date: Dayjs;
 };

@@ -7,10 +7,9 @@ import StepThree from "./StepThree";
 import Tab from "./Tab";
 import Loading from "./loading";
 import { AppointmentInput, formData, UserData } from "../../types/types";
-
 const StepOne = React.lazy(() => import("./stepOne"));
 
-function Tabs({ userData }: { userData: UserData }) {
+function Tabs({ userData }: { userData: UserData[] }) {
   const [activeTab, setActiveTab] = useState(0);
   const [customerInput, setCustomerInput] = React.useState<formData>({
     name: "",
@@ -23,7 +22,7 @@ function Tabs({ userData }: { userData: UserData }) {
       treatment: null,
       customer: null,
       availableSlot: [],
-      userData,
+      user: null,
       date: dayjs(),
     });
 

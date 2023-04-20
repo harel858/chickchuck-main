@@ -42,6 +42,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, children, variant, isLoading, size, ...props }, ref) => {
     return (
       <button
+        type="submit"
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         disabled={isLoading}

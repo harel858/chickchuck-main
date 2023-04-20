@@ -16,7 +16,7 @@ import { AppointmentInput, UserData } from "../../types/types";
 import axios from "axios";
 
 type StepThreeProps = {
-  userData: UserData;
+  userData: UserData[];
   appointmentInput: AppointmentInput;
   setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
 };
@@ -38,19 +38,45 @@ function StepThree({
     setAnimate(true);
   }, []);
 
-  const handleChange = (treatment: Treatment) => {
-    setAppointmentInput({ ...appointmentInput, treatment });
+  const changeRecipient = (userData: UserData) => {
+    setAppointmentInput({ ...appointmentInput, user: userData });
+  };
+
+  const changeTreatments = (treatement: Treatment) => {
+    setAppointmentInput({ ...appointmentInput, treatment: treatement });
   };
 
   const steps = [
     {
-      label: "Create an ad group",
+      label: "With Who",
       description: (
         <div className="py-12 gap-2 flex flex-wrap align-center items-center">
-          {userData?.treatments.map((item: Treatment) => (
+          {userData.map((item) => (
+            <button
+              key={item.userId}
+              onClick={() => changeRecipient(item)}
+              className={`${
+                font.className
+              } px-4 py-2  border-2 transition-all border-black ease-in-out duration-300 hover:bg-orange-500 font-medium ${
+                appointmentInput.user?.userId == item?.userId
+                  ? `bg-orange-500  text-lg`
+                  : `bg-rose-100 text-base  `
+              } hover:text-lg   text-black rounded-xl`}
+            >
+              {item.name}
+            </button>
+          ))}
+        </div>
+      ),
+    },
+    {
+      label: "For What",
+      description: (
+        <div className="py-12 gap-2 flex flex-wrap align-center items-center">
+          {appointmentInput.user?.treatments.map((item) => (
             <button
               key={item.id}
-              onClick={() => handleChange(item)}
+              onClick={() => changeTreatments(item)}
               className={`${
                 font.className
               } px-4 py-2  border-2 transition-all border-black ease-in-out duration-300 hover:bg-orange-500 font-medium ${
@@ -94,7 +120,6 @@ function StepThree({
     try {
       const res = await axios.post("api/appointments", {
         ...appointmentInput,
-        userId: userData.userId,
         customerId: appointmentInput.customer?.id,
       });
       console.log(res.data);

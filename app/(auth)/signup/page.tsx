@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { User } from "@prisma/client";
 import { Button } from "@ui/Button";
+import axios from "axios";
 
 type formData = {
   name: string;
@@ -24,6 +25,8 @@ function SignUpForm() {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    console.log(formData);
+
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
@@ -36,35 +39,20 @@ function SignUpForm() {
     // Use formData for API call
     try {
       setIsLoading(true);
-      const res = await fetch("/api/user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+      console.log({ ...formData });
+
+      const res = await axios.post("/api/user", { ...formData });
+
+      const user = res.data;
+      console.log(user);
+      // reset formData
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        businessName: "",
       });
-
-      if (res.ok) {
-        const user = (await res.json()) as User;
-        console.log(user);
-        // reset formData
-        setFormData({
-          name: "",
-          email: "",
-          password: "",
-          businessName: "",
-        });
-        setIsLoading(false);
-        signIn("credentials", {
-          email: formData.email,
-          password: formData.password,
-          redirect: true,
-          callbackUrl: `/home/${user.businessName}`,
-        });
-      } else {
-        const error = await res.json();
-        console.log(error);
-
-        setError(error);
-      }
+      setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
       console.log(err);
@@ -92,6 +80,7 @@ function SignUpForm() {
                   : "text"
               }
               name={item}
+              className="w-full py-3 rounded-xl border border-gray-500 focus:outline-none focus:border-2 dark:focus:border-white/80 focus:border-black/80 transition duration-300 transform scale-95 hover:scale-100"
               required
               value={formData[item]}
               onChange={handleChange}
@@ -103,10 +92,13 @@ function SignUpForm() {
   };
 
   return (
-    <form className="flex flex-col items-center gap-3 " onSubmit={handleSubmit}>
+    <form
+      className="flex flex-col items-center gap-3 w-1/3 py-4 rounded-lg bg-white/20"
+      onSubmit={handleSubmit}
+    >
       {displayInput()}
       <p className="test-red-500">{error ? error : ""}</p>
-      <Button isLoading={isLodaing}>Submit</Button>
+      <button type="submit">Submit</button>
     </form>
   );
 }

@@ -18,7 +18,7 @@ export default function AvailableListCalendar({
   appointmentInput,
   setAppointmentInput,
 }: {
-  userData: UserData;
+  userData: UserData[];
   appointmentInput: AppointmentInput;
   setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
 }) {
@@ -63,7 +63,7 @@ function AvailableQueues({
   setAppointmentInput,
 }: {
   date: Dayjs;
-  userData: UserData;
+  userData: UserData[];
   appointmentInput: AppointmentInput;
   setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
 }) {
@@ -76,7 +76,7 @@ function AvailableQueues({
     const getQueues = async (date: Dayjs) => {
       try {
         let res = await axios.get(
-          `/api/slots/slot?chosenDate=${date}&userId=${userData.userId}&duration=${appointmentInput?.treatment?.duration}`
+          `/api/slots/slot?chosenDate=${date}&userId=${appointmentInput?.user?.userId}&duration=${appointmentInput?.treatment?.duration}`
         );
         console.log(res.data);
 

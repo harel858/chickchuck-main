@@ -7,9 +7,9 @@ import {
   getByBusinessName,
   getById,
   signIn,
-} from "../../../lib/prisma/users";
+} from "../../lib/prisma/users";
 import bcrypt from "bcrypt";
-import validateUser from "../../../lib/validation/userValidation";
+import validateUser from "../../lib/validation/userValidation";
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,6 +28,7 @@ export default async function handler(
   if (req.method == "POST") {
     try {
       const { name, email, password, businessName } = req.body;
+      console.log(req.body);
 
       //validate user
       const { error } = validateUser({

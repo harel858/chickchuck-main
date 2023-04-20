@@ -13,25 +13,34 @@ model User {
   email            String            @unique
   password         String
   phone            String?
-  businessName     String            @unique
-  openingTime      String?
   profileSrc       String?
-  closingTime      String?
-  activityDays     Int[]
   appointments     Appointment[]
   availableSlots   AvailableSlot[]
   appointmentSlots AppointmentSlot[]
-  Address          Address[]
   Treatment        Treatment[]
+  isAdmin          Boolean
+  PremiumKit       PremiumKits       @default(Light)
+  Business         Business[]
+}
+
+model Business {
+  id            String    @id @default(uuid())
+  businessName  String    @unique
+  openingTime   String?
+  closingTime   String?
+  businessImage String?
+  user          User[]
+  activityDays  Int[]
+  Address       Address[]
 }
 
 model Address {
-  id      String @id @default(uuid())
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String
-  city    String
-  street  String
-  zipcode String
+  id         String    @id @default(uuid())
+  city       String
+  street     String
+  zipcode    String
+  Business   Business? @relation(fields: [businessId], references: [id])
+  businessId String?
 }
 
 model Appointment {
@@ -70,8 +79,8 @@ model AvailableSlot {
   id              String            @id @default(uuid())
   start           String
   end             String
-  business        User              @relation(fields: [businessId], references: [id])
-  businessId      String
+  user            User              @relation(fields: [userId], references: [id])
+  userId          String
   AppointmentSlot AppointmentSlot[]
 }
 
@@ -90,4 +99,10 @@ enum AppointmentStatus {
   SCHEDULED
   CANCELLED
   COMPLETED
+}
+
+enum PremiumKits {
+  Light
+  Pro
+  ProPlus
 }

@@ -6,11 +6,35 @@ export async function getAllUsers() {
   return { users };
 }
 
-export async function createUser(data: any) {
+export async function createUser({
+  name,
+  email,
+  password: hashedPassword,
+  businessName,
+}: {
+  name: string;
+  email: string;
+  password: string;
+  businessName: string;
+}) {
   try {
     const newUser = await prisma?.user.create({
-      data: { ...data, activityDays: [0, 1, 2, 3, 4, 5] },
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        isAdmin: true,
+      },
     });
+
+    const newBusiness = await prisma.business.create({
+      data: {
+        businessName,
+        activityDays: [0, 1, 2, 3, 4, 5],
+        user: { connect: { id: newUser.id } },
+      },
+    });
+
     return { newUser };
   } catch (err) {
     console.log(err);
@@ -37,7 +61,7 @@ export async function updateActivityTime(
   duration: number
 ) {
   try {
-    const updated = await prisma.user.update({
+    const updated = await prisma.business.update({
       where: {
         id,
       },
@@ -58,7 +82,7 @@ export async function updateActivityTime(
 }
 export async function updateActivityDays(id: string, activityDays: number[]) {
   try {
-    const updateDaysSuccess = await prisma.user.update({
+    const updateDaysSuccess = await prisma.business.update({
       where: {
         id,
       },
@@ -76,7 +100,7 @@ export async function updateActivityDays(id: string, activityDays: number[]) {
 
 export async function getByBusinessName(businessName: any) {
   try {
-    const userExist = await prisma?.user.findUnique({
+    const userExist = await prisma?.business.findUnique({
       where: { businessName: businessName },
     });
     console.log(userExist);

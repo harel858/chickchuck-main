@@ -23,9 +23,13 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials, req) {
         try {
+          console.log(credentials);
+
           const { email, password } = credentials as any;
 
           const { user, error } = await signIn(email, password);
+          console.log(user);
+
           if (error) throw new Error(error.message);
 
           return user;

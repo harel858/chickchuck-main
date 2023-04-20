@@ -6,7 +6,10 @@ import UniqueLink from "./UniqueLink";
 async function fetchUser(email: string | null | undefined) {
   try {
     if (!email) return null;
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { Business: true },
+    });
     return user;
   } catch (error) {
     console.log(error);
@@ -18,7 +21,7 @@ async function Page() {
   const session = await getServerSession();
 
   const user = await fetchUser(session?.user?.email);
-  const value = user?.businessName.replace(/ /g, "-");
+  const value = user?.Business[0].businessName.replace(/ /g, "-");
 
   return <UniqueLink link={`http://localhost:3000/${value}`} />;
 }
