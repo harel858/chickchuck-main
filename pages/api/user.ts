@@ -28,6 +28,8 @@ export default async function handler(
   if (req.method == "POST") {
     try {
       const { name, email, password, businessName } = req.body;
+      console.log(req.method);
+
       console.log(req.body);
 
       //validate user

@@ -24,7 +24,9 @@ async function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <VerticalNav user={user} lobster={lobster.className} />
-      <section>{children}</section>
+      <section className="h-screen w-full flex justify-center items-center">
+        {children}
+      </section>
     </>
   );
 }

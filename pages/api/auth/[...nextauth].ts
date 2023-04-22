@@ -8,7 +8,7 @@ export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
 
   adapter: PrismaAdapter(prisma),
-  pages: { signIn: "/signIn" },
+  pages: { signIn: "/signin" },
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
@@ -53,10 +53,6 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
 
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      return true;
-    },
-
     async session({ session, token, user }: any) {
       if (token) {
         session.user.id = token.id;

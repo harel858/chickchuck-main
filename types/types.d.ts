@@ -82,3 +82,15 @@ export type AppointmentInput = {
   availableSlot: AvailableSlot[];
   date: Dayjs;
 };
+
+export type NavBarProps = {
+  Business: Business | undefined;
+  id?: string | undefined;
+  name?: string | undefined;
+  email?: string | undefined;
+  password?: string | undefined;
+  phone?: string | null | undefined;
+  profileSrc?: string | undefined;
+  isAdmin?: boolean | undefined;
+  PremiumKit?: PremiumKits | undefined;
+};

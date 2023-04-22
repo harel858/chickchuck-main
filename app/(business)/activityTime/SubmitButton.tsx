@@ -82,7 +82,7 @@ export default function SubmitButton({
 
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Box sx={{ m: 1, position: "relative" }}>
+      <Box sx={{ m: 1, zIndex: 0 }}>
         <Fab
           aria-label="save"
           color="warning"
@@ -100,7 +100,6 @@ export default function SubmitButton({
               position: "absolute",
               top: -6,
               left: -6,
-              zIndex: 1,
             }}
           />
         )}
@@ -112,6 +111,7 @@ export default function SubmitButton({
           sx={buttonSx}
           disabled={loading || hasChanges}
           onClick={handleButtonClick}
+          className="z-0"
         >
           Accept terms
         </Button>
@@ -126,6 +126,7 @@ export default function SubmitButton({
               marginTop: "-12px",
               marginLeft: "-12px",
             }}
+            className="z-0"
           />
         )}
       </Box>

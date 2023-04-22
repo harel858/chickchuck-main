@@ -8,8 +8,6 @@ import { ServerThemeProvider } from "next-themes";
 
 const inter = Roboto({ weight: ["300", "400"], subsets: ["latin"] });
 
-console.log(inter.className);
-
 export default function RootLayout({
   children,
 }: {

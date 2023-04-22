@@ -5,12 +5,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import {
   createAvailableSlots,
   getQueuesByDate,
-} from "../../../lib/prisma/ActivitySlots";
+} from "@lib/prisma/ActivitySlots";
 import {
   getById,
   updateActivityDays,
   updateActivityTime,
-} from "../../../lib/prisma/users";
+} from "@lib/prisma/users";
 
 type SlotBody = {
   activityDays: number[];
@@ -35,13 +35,14 @@ export default async function handler(
         endActivity,
         duration,
       } = req.body as SlotBody;
+      console.log(req.body);
 
       const { userExist, err } = await getById(id);
       if (err || !userExist) return res.status(500).json(`user not found`);
 
       const activityDaysChanged =
         JSON.stringify(activityDays.sort()) !==
-        JSON.stringify(userExist.activityDays.sort());
+        JSON.stringify(userExist.Business[0].activityDays.sort());
 
       if (activityDaysChanged) {
         const { updateDaysFailed, updateDaysSuccess } =

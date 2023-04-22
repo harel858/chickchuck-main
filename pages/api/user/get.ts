@@ -1,13 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import {
-  createUser,
-  getAllUsers,
-  getByEmail,
-  getByBusinessName,
-  getById,
-  signIn,
-} from "../../../lib/prisma/users";
+import { getById, signIn } from "../../../lib/prisma/users";
 import bcrypt from "bcrypt";
 import validateUser from "../../../lib/validation/userValidation";
 

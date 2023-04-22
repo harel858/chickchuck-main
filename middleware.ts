@@ -65,6 +65,5 @@ export const config = {
     "/schedule/:path*",
     "/treatments/:path*",
     "/activityTime/:path*",
-    "/api/:path*",
   ],
 };

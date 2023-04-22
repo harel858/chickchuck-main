@@ -7,7 +7,7 @@ import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { motion } from "framer-motion";
 import { MenuItem } from "./MenuItem";
-import { User } from "@prisma/client";
+import { NavBarProps } from "../../../../types/types";
 
 const variants = {
   open: {
@@ -39,26 +39,25 @@ export const Navigation = ({
   toggle,
   isOpen,
 }: {
-  user: User;
+  user: NavBarProps;
   toggle: any;
   isOpen: boolean;
 }) => {
-  const value = user.businessName.replace(/ /g, "-");
   const itemIds = [
-    { title: "Home", link: `/home/${value}`, icon: <HomeIcon /> },
+    { title: "Home", link: `/home`, icon: <HomeIcon /> },
     {
       title: "Schedule",
-      link: `/schedule/${value}`,
+      link: `/schedule`,
       icon: <CalendarMonthIcon />,
     },
     {
       title: "Treatments",
-      link: `/treatments/${value}`,
+      link: `/treatments`,
       icon: <AppRegistrationIcon />,
     },
     {
       title: "Activity Time",
-      link: `/activityTime/${value}`,
+      link: `/activityTime`,
       icon: <AccessTimeOutlinedIcon />,
     },
   ];
@@ -66,7 +65,7 @@ export const Navigation = ({
     <motion.ul
       className={` ${
         !isOpen ? `hidden` : `flex`
-      } relative  flex-col w-full pt-20 gap-1 justify-start items-center align-start text-black text-md max-sm:text-sm `}
+      } relative flex-col w-full pt-20 gap-1 justify-start items-center align-start text-black text-md max-sm:text-sm `}
       variants={variants}
     >
       <motion.h2

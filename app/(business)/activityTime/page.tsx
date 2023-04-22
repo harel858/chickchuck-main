@@ -7,7 +7,10 @@ import Form from "./Form";
 async function fetchUser(email: string | null | undefined) {
   try {
     if (!email) return null;
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { Business: true },
+    });
     return user;
   } catch (error) {
     console.log(error);

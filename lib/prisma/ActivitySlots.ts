@@ -1,13 +1,13 @@
 import prisma from ".";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { AppointmentSlot, AvailableSlot, User } from "@prisma/client";
+import { AppointmentSlot, AvailableSlot, Business, User } from "@prisma/client";
 
 dayjs.extend(customParseFormat);
 
 export async function createAvailableSlots(
   availableSlots: AvailableSlot[],
-  businessId: string
+  userId: string
 ) {
   console.log(dayjs(availableSlots[0].start).format("hh:mm A"));
 
@@ -16,20 +16,21 @@ export async function createAvailableSlots(
       return {
         start: slot.start,
         end: slot.end,
-        businessId,
+        BusinessId: slot.businessId,
+        userId: userId,
       };
     });
 
     const existingSlots = await prisma.availableSlot.findMany({
       where: {
-        businessId,
+        userId: userId,
       },
     });
     console.log(existingSlots);
     if (existingSlots.length > 0) {
       await prisma.availableSlot.deleteMany({
         where: {
-          businessId,
+          userId: userId,
         },
       });
     }
@@ -45,12 +46,12 @@ export async function createAvailableSlots(
 
 export async function updateAvailableSlots(
   availableSlots: AvailableSlot[],
-  businessId: string
+  userId: string
 ) {
   // Check if there are any existing slots for the given business ID
   const existingSlots = await prisma.availableSlot.findMany({
     where: {
-      businessId,
+      userId: userId,
     },
   });
 
@@ -58,19 +59,21 @@ export async function updateAvailableSlots(
   if (existingSlots.length > 0) {
     await prisma.availableSlot.deleteMany({
       where: {
-        businessId,
+        userId,
       },
     });
   }
 
   // Create new available slots with the updated array of slots
-  await createAvailableSlots(availableSlots, businessId);
+  await createAvailableSlots(availableSlots, userId);
 }
 export async function getQueuesByDate(
   userId: string,
   chosenDate: string,
   duration: number,
-  user: User
+  user: User & {
+    Business: Business[];
+  }
 ) {
   const slotDuration = 5;
   console.log(`slotDuration: ${slotDuration}`);
@@ -82,7 +85,7 @@ export async function getQueuesByDate(
     const availableSlots = await prisma.availableSlot.findMany({
       where: {
         AND: [
-          { businessId: userId },
+          { userId: userId },
           { start: { gte: "00:00" } },
           { end: { lte: "23:59" } },
           { business: { activityDays: { has: dayjs(chosenDate).day() } } },

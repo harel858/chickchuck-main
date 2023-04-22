@@ -1,23 +1,29 @@
 "use client";
 import * as React from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { User } from "@prisma/client";
+import { Business, User } from "@prisma/client";
 import SubmitButton from "./SubmitButton";
 import ActivityDays from "./ActivityDays";
 import ActivityTimePicker from "./ActivityTimePicker";
 import { Slots } from "../../../types/types";
 
-export default function Form({ user }: { user: User }) {
+export default function Form({
+  user,
+}: {
+  user: User & {
+    Business: Business[];
+  };
+}) {
   const [startActivity, setStartActivity] = React.useState<Dayjs>(
-    dayjs(user.openingTime)
+    dayjs(user.Business[0].openingTime)
   );
   const [endActivity, setEndActivity] = React.useState<Dayjs>(
-    dayjs(user.closingTime)
+    dayjs(user.Business[0].closingTime)
   );
   const [duration, setDuration] = React.useState<number>(5);
   const [hasChanges, setHasChanges] = React.useState<boolean>(true);
   const [activityDays, setActivityDays] = React.useState<any[]>(
-    user.activityDays
+    user.Business[0].activityDays
   );
   const [availableSlots, setAvailableSlots] = React.useState<Slots[]>([]);
 

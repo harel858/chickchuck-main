@@ -6,7 +6,7 @@ import { motion, sync, useCycle } from "framer-motion";
 import { useDimensions } from "./use-dimensions";
 import { MenuToggle } from "./MenuToggle";
 import { Navigation } from "./Navigation";
-import { User } from "@prisma/client";
+import { NavBarProps } from "../../../../types/types";
 
 const sidebar = {
   open: (height = 1000) => ({
@@ -28,7 +28,7 @@ const sidebar = {
   },
 };
 
-export const Hamburger = ({ user }: { user: User }) => {
+export const Hamburger = ({ user }: { user: NavBarProps }) => {
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
   const [isOpen, toggleOpen] = useCycle(false, true);
@@ -37,7 +37,7 @@ export const Hamburger = ({ user }: { user: User }) => {
     <motion.nav
       className={`${
         !isOpen ? `hidden pointer-events-none` : `flex`
-      } fixed z-50 top-0 left-0 h-screen w-3/5 max-sm:flex pt-12 gap-12 hidden flex-col align-center items-center justify-start`}
+      } fixed z-40 top-0 left-0 h-screen w-3/5 max-sm:flex pt-12 gap-12 hidden flex-col align-center items-center justify-start`}
       initial={true}
       animate={isOpen ? "open" : "closed"}
       custom={height}

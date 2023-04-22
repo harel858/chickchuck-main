@@ -4,13 +4,17 @@ import { Button, buttonVariants } from "@ui/Button";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { NavBarProps } from "../../../types/types";
 import { Hamburger } from "./(responsiveNav)/Hamburger";
 
 async function fetchUser(email: string | null | undefined) {
   try {
     if (!email) return null;
-    const user = await prisma.user.findUnique({ where: { email } });
-    return user;
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { Business: true },
+    });
+    return { ...user, Business: user?.Business[0] } as NavBarProps;
   } catch (error) {
     console.log(error);
     return null;

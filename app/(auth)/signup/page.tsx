@@ -3,21 +3,24 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { User } from "@prisma/client";
 import { Button } from "@ui/Button";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { TextField } from "@mui/material";
 
-type formData = {
+type registerFormData = {
   name: string;
   email: string;
   password: string;
+  repeatPassword: string;
   businessName: string;
 };
 
 function SignUpForm() {
   const [isLodaing, setIsLoading] = useState<boolean>(false);
-  const [formData, setFormData] = useState<formData>({
+  const [formData, setFormData] = useState<registerFormData>({
     name: "",
     email: "",
     password: "",
+    repeatPassword: "",
     businessName: "",
   });
   const [error, setError] = useState("");
@@ -39,23 +42,30 @@ function SignUpForm() {
     // Use formData for API call
     try {
       setIsLoading(true);
-      console.log({ ...formData });
-
-      const res = await axios.post("/api/user", { ...formData });
-
-      const user = res.data;
-      console.log(user);
+      const res = await axios.post("/api/createUser", { ...formData });
+      const user = res.data as User;
+      signIn("credentials", {
+        email: user.email,
+        password: formData.password,
+        redirect: true,
+        callbackUrl: `/home`,
+      });
+      setIsLoading(false);
       // reset formData
       setFormData({
         name: "",
         email: "",
         password: "",
+        repeatPassword: "",
         businessName: "",
       });
-      setIsLoading(false);
-    } catch (err) {
-      setIsLoading(false);
+    } catch (err: any) {
       console.log(err);
+      setIsLoading(false);
+      if (err instanceof AxiosError) {
+        setError(err.response?.data);
+      }
+
       /* toast({
         title: "Error Signing In",
         message: "Please try again later",
@@ -65,40 +75,71 @@ function SignUpForm() {
   };
 
   const displayInput = () => {
-    const data: any = ["name", "email", "password", "businessName"];
+    const data: any = [
+      "name",
+      "email",
+      "password",
+      "repeatPassword",
+      "businessName",
+    ];
     return (
       <>
-        {data?.map((item: keyof formData, _index: number, _array: string[]) => (
-          <label key={_index}>
-            {item == "password" ? "New Password" : item}:
-            <input
+        {data?.map(
+          (item: keyof registerFormData, i: number, _array: string[]) => (
+            <TextField
+              key={item}
+              id="outlined-basic"
+              label={`${item}`}
+              name={item}
               type={
                 item === "email"
                   ? "email"
-                  : item === "password"
+                  : item === "password" || item === "repeatPassword"
                   ? "password"
                   : "text"
               }
-              name={item}
-              className="w-full py-3 rounded-xl border border-gray-500 focus:outline-none focus:border-2 dark:focus:border-white/80 focus:border-black/80 transition duration-300 transform scale-95 hover:scale-100"
-              required
-              value={formData[item]}
               onChange={handleChange}
+              error={error ? true : false}
+              variant="filled"
+              InputProps={{
+                style: {
+                  color: `white`,
+                  fontWeight: "lighter",
+                  fontSize: `1.2em`,
+                },
+              }}
+              InputLabelProps={{
+                style: {
+                  fontSize: "1.2em",
+                  fontWeight: "bolder",
+                  transition: "all 200ms ease-in",
+                },
+              }}
+              sx={{
+                bgcolor: "rgba(0, 0, 0,.5)",
+                borderRadius: "8px",
+                transition: "all 200ms ease-in",
+                ":after": { border: `4px solid white ` },
+              }}
             />
-          </label>
-        ))}
+          )
+        )}
       </>
     );
   };
 
   return (
     <form
-      className="flex flex-col items-center gap-3 w-1/3 py-4 rounded-lg bg-white/20"
+      className="flex flex-col items-center gap-3 w-5/12 py-4 rounded-lg dark:bg-white/50 bg-gray-600"
       onSubmit={handleSubmit}
     >
-      {displayInput()}
+      <div className="flex flex-row flex-wrap items-center justify-center content-center gap-4">
+        {displayInput()}
+      </div>
       <p className="test-red-500">{error ? error : ""}</p>
-      <button type="submit">Submit</button>
+      <Button type="submit" isLoading={isLodaing}>
+        Submit
+      </Button>
     </form>
   );
 }

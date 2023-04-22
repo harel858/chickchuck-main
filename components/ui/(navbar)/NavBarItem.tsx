@@ -22,7 +22,7 @@ function NavBarItem({ title, link, icon }: NavItemProps) {
       onClick={() => router.push(link)}
     >
       <div
-        className={`text-black self-center transition-all ease-in duration-200 group-hover:scale-125 ${
+        className={`self-center transition-all ease-in duration-200 group-hover:scale-125 ${
           isActive && `scale-125`
         } text-xl`}
       >
