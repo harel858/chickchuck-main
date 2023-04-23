@@ -15,10 +15,9 @@ import {
 type SlotBody = {
   activityDays: number[];
   availableSlots: AvailableSlot[];
-  id: string;
+  userId: string;
   startActivity: string;
   endActivity: string;
-  duration: number;
 };
 
 export default async function handler(
@@ -30,23 +29,23 @@ export default async function handler(
       const {
         activityDays,
         availableSlots,
-        id,
+        userId,
         startActivity,
         endActivity,
-        duration,
       } = req.body as SlotBody;
       console.log(req.body);
 
-      const { userExist, err } = await getById(id);
+      const { userExist, err } = await getById(userId);
       if (err || !userExist) return res.status(500).json(`user not found`);
+      const business = userExist.Business[0];
 
       const activityDaysChanged =
         JSON.stringify(activityDays.sort()) !==
-        JSON.stringify(userExist.Business[0].activityDays.sort());
+        JSON.stringify(business.activityDays.sort());
 
       if (activityDaysChanged) {
         const { updateDaysFailed, updateDaysSuccess } =
-          await updateActivityDays(id, activityDays);
+          await updateActivityDays(business.id, activityDays);
 
         if (updateDaysFailed || !updateDaysSuccess)
           return res.status(500).json(`update Days Failed`);
@@ -54,17 +53,17 @@ export default async function handler(
 
       const { availableSlot, slotFailed } = await createAvailableSlots(
         availableSlots,
-        id
+        userId,
+        business.id
       );
       console.log(availableSlot);
       if (slotFailed || !availableSlot)
         return res.status(500).json(`Create Available Slots Failed`);
 
       const { response, error } = await updateActivityTime(
-        id,
+        userId,
         startActivity,
-        endActivity,
-        duration
+        endActivity
       );
       if (error || !response) return res.status(500).json(`update Time Failed`);
 

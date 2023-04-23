@@ -2,16 +2,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createAppointment } from "../../lib/prisma/appointments";
 
-import { AvailableSlot, Customer, Treatment } from "@prisma/client";
+import { AvailableSlot, Customer, Treatment, User } from "@prisma/client";
 import validateAppointment from "../../lib/validation/appointmentValidation";
 import { getById } from "../../lib/prisma/users";
+import { UserData } from "../../types/types";
 
 interface ReqBody {
   availableSlot: AvailableSlot[];
-  customerId: string;
+  customer: Customer;
   date: string;
   treatment: Treatment;
-  userId: string;
+  user: UserData;
 }
 
 export default async function handler(
@@ -20,15 +21,16 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const { availableSlot, customerId, date, treatment, userId } =
-        req.body as ReqBody;
+      const { availableSlot, customer, date, treatment, user }: ReqBody =
+        req.body;
+      console.log(customer?.id);
 
       const { error } = validateAppointment({
         availableSlot,
-        customerId,
+        customerId: customer?.id,
         date,
         treatment,
-        userId,
+        userId: user.userId,
       });
 
       if (error) {
@@ -37,13 +39,13 @@ export default async function handler(
         return res.status(400).json(validationError);
       }
 
-      const { userExist, err } = await getById(userId);
+      const { userExist, err } = await getById(user.userId);
       if (!userExist || err) return res.status(500).json("user not found");
 
       const { existingAppointment, appointment, createErr } =
         await createAppointment(
           userExist.id,
-          customerId,
+          customer.id,
           availableSlot,
           treatment.id,
           null,

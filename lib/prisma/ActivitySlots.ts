@@ -7,7 +7,8 @@ dayjs.extend(customParseFormat);
 
 export async function createAvailableSlots(
   availableSlots: AvailableSlot[],
-  userId: string
+  userId: string,
+  businessId: string
 ) {
   console.log(dayjs(availableSlots[0].start).format("hh:mm A"));
 
@@ -16,7 +17,7 @@ export async function createAvailableSlots(
       return {
         start: slot.start,
         end: slot.end,
-        BusinessId: slot.businessId,
+        businessId,
         userId: userId,
       };
     });
@@ -46,7 +47,8 @@ export async function createAvailableSlots(
 
 export async function updateAvailableSlots(
   availableSlots: AvailableSlot[],
-  userId: string
+  userId: string,
+  businessId: string
 ) {
   // Check if there are any existing slots for the given business ID
   const existingSlots = await prisma.availableSlot.findMany({
@@ -65,7 +67,7 @@ export async function updateAvailableSlots(
   }
 
   // Create new available slots with the updated array of slots
-  await createAvailableSlots(availableSlots, userId);
+  await createAvailableSlots(availableSlots, userId, businessId);
 }
 export async function getQueuesByDate(
   userId: string,

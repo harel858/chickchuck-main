@@ -15,6 +15,7 @@ const ReqBodySchema = Joi.object({
         id: Joi.string().required(),
         start: Joi.string().required(),
         end: Joi.string().required(),
+        userId: Joi.string().required(),
         businessId: Joi.string(),
         // add more properties here if needed
       })

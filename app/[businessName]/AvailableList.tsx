@@ -75,6 +75,8 @@ function AvailableQueues({
 
     const getQueues = async (date: Dayjs) => {
       try {
+        console.log(appointmentInput?.user?.userId);
+
         let res = await axios.get(
           `/api/slots/slot?chosenDate=${date}&userId=${appointmentInput?.user?.userId}&duration=${appointmentInput?.treatment?.duration}`
         );

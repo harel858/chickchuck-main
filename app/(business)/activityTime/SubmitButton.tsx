@@ -66,7 +66,7 @@ export default function SubmitButton({
           endActivity: endActivity.toISOString(),
           activityDays,
           availableSlots,
-          id: user.id,
+          userId: user.id,
           duration: duration,
         }),
       });

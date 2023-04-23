@@ -57,17 +57,16 @@ export async function getByEmail(email: string) {
 export async function updateActivityTime(
   id: string,
   startActivity: string,
-  endActivity: string,
-  duration: number
+  endActivity: string
 ) {
   try {
-    const updated = await prisma.business.update({
+    const updated = await prisma.user.update({
       where: {
         id,
       },
       data: {
-        openingTime: startActivity,
-        closingTime: endActivity,
+        startActivity,
+        endActivity,
       },
     });
     const response = await prisma.user.findUnique({

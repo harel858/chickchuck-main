@@ -14,6 +14,8 @@ model User {
   password         String
   phone            String?
   profileSrc       String?
+  startActivity    String?
+  endActivity      String?
   appointments     Appointment[]
   availableSlots   AvailableSlot[]
   appointmentSlots AppointmentSlot[]
