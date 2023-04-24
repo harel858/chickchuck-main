@@ -1,4 +1,5 @@
 import {
+  User,
   AppointmentSlot,
   AvailableSlot,
   Treatment,
@@ -28,6 +29,12 @@ export type AppointmentEvent = {
   status: AppointmentStatus;
   color: string;
 };
+export type ScheduleData = {
+  events: AppointmentEvent[];
+  user: User;
+};
+
+export type ScheduleProps = { scheduleData: ScheduleData[]; user: User };
 
 export type ActivityDay = {
   value: number;

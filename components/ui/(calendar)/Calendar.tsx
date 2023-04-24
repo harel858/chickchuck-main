@@ -3,21 +3,31 @@ import classes from "./style.module.css";
 import React from "react";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { AppointmentEvent } from "../../../types/types";
+import { AppointmentEvent, ScheduleProps } from "../../../types/types";
 import MemoizedAppointmentList from "./AppointmentList";
 import ListNav from "./ListNav";
 dayjs.extend(customParseFormat);
 
-function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
+function CalendarComponent({
+  scheduleProps,
+}: {
+  scheduleProps: ScheduleProps;
+}) {
   const [value, setValue] = React.useState(() => dayjs());
   const [selectedValue, setSelectedValue] = React.useState(() => dayjs());
   const [eventsByDate, setEventsByDate] = React.useState<AppointmentEvent[]>(
     []
   );
+
   React.useMemo(() => {
-    const filteredEvents: AppointmentEvent[] = events.filter(
-      (event) => event.date === selectedValue.format("DD/MM/YYYY")
-    );
+    let filteredEvents: AppointmentEvent[] = [];
+
+    scheduleProps.scheduleData.forEach((item) => {
+      const result: AppointmentEvent[] = item.events.filter(
+        (event) => event.date === selectedValue.format("DD/MM/YYYY")
+      );
+      filteredEvents.push(...result);
+    });
 
     const sortedEvents = filteredEvents.slice().sort((a, b) => {
       const startTimeA = dayjs(a.start).valueOf();
@@ -26,7 +36,7 @@ function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
     });
 
     setEventsByDate(sortedEvents);
-  }, [selectedValue, events]);
+  }, [selectedValue, scheduleProps]);
 
   const onSelect = React.useCallback((newValue: Dayjs) => {
     setValue(newValue);
@@ -39,7 +49,11 @@ function CalendarComponent({ events }: { events: AppointmentEvent[] }) {
         <div
           className={`flex-1 bg-white/60 rounded-3xl ${classes.openSans} overflow-hidden max-h-full shadow-2xl shadow-black/50 p-0`}
         >
-          <ListNav selectedValue={selectedValue} onSelect={onSelect} />
+          <ListNav
+            scheduleProps={scheduleProps}
+            selectedValue={selectedValue}
+            onSelect={onSelect}
+          />
           <MemoizedAppointmentList
             value={value}
             onSelect={onSelect}

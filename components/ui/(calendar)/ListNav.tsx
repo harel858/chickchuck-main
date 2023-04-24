@@ -3,6 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import dayjs, { Dayjs } from "dayjs";
 import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
+import { ScheduleProps } from "../../../types/types";
 
 const scaleSpringTransition = {
   type: "spring",
@@ -10,9 +11,11 @@ const scaleSpringTransition = {
   damping: 10,
 };
 function ListNav({
+  scheduleProps,
   selectedValue,
   onSelect,
 }: {
+  scheduleProps: ScheduleProps;
   selectedValue: dayjs.Dayjs;
   onSelect: (newValue: Dayjs) => void;
 }) {
@@ -20,7 +23,7 @@ function ListNav({
 
   return (
     <nav
-      className={`flex justify-around ${classes.primaryColor} font-semibold rounded-tr-3xl w-full relative top-0 py-3`}
+      className={`flex flex-col justify-around ${classes.primaryColor} font-semibold rounded-tr-3xl w-full relative top-0 py-3`}
     >
       <div className="flex justify-center items-center gap-5">
         <motion.div
