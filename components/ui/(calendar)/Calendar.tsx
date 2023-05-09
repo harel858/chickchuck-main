@@ -6,6 +6,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentEvent, ScheduleProps } from "../../../types/types";
 import MemoizedAppointmentList from "./AppointmentList";
 import ListNav from "./ListNav";
+import CalendarPagination from "./CalendarPagination";
 dayjs.extend(customParseFormat);
 
 function CalendarComponent({
@@ -45,9 +46,10 @@ function CalendarComponent({
 
   return (
     <div className="flex justify-center h-full">
-      <div className="flex justify-center flex-grow content-center h-max rounded-3xl w-9/12">
+      <div className="flex flex-col gap-5 justify-center flex-grow content-center h-max rounded-3xl w-9/12">
+        <CalendarPagination scheduleProps={scheduleProps} />
         <div
-          className={`flex-1 bg-white/60 rounded-3xl ${classes.openSans} overflow-hidden max-h-full shadow-2xl shadow-black/50 p-0`}
+          className={`flex-1 bg-white/40 rounded-3xl ${classes.openSans} overflow-hidden max-h-full shadow-2xl shadow-black/50 dark:shadow-white/10 p-0`}
         >
           <ListNav
             scheduleProps={scheduleProps}
