@@ -7,7 +7,7 @@ import { FaRegCalendarTimes } from "react-icons/fa";
 
 function NoAppointments() {
   return (
-    <div className="flex flex-1 flex-col border-t border-gray-500 max-xl:border-0 gap-10 justify-center content-center items-center py-10">
+    <div className="flex flex-1 flex-col border-t border-gray-500 max-xl:border-0 gap-10 justify-center content-center items-center py-10 text-black">
       <Fade
         delay={250}
         cascade

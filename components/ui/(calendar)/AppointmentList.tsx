@@ -38,10 +38,11 @@ function AppointmentList({
                 displayStaticWrapperAs="desktop"
                 onChange={(e) => e && onSelect(e)}
                 sx={{
-                  background: `#ff9955`,
                   borderRight: `1px solid rgb(107 114 128)`,
                   borderBottomLeftRadius: `1.5rem`,
+                  background: "rgb(253 186 116)",
                 }}
+                className="dark:bg-orange-300/75 !important"
                 defaultValue={dayjs()}
               />
             </div>
@@ -64,7 +65,7 @@ function AppointmentList({
           <NoAppointments />
         ) : (
           <ul
-            className={`${classes.ul} flex flex-1 w-full flex-col justify-start content-center items-start overflow-y-auto overflow-x-hidden border-t border-gray-500 rounded-br-3xl max-h-[27.5rem]`}
+            className={`${classes.ul} flex flex-1 w-full flex-col justify-start content-center items-start overflow-y-auto overflow-x-hidden border-t border-gray-500 rounded-br-3xl max-h-[27.5rem] `}
           >
             {eventsByDate.map((event, i) => (
               <Event key={event.id} event={event} />

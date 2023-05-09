@@ -33,12 +33,11 @@ function SignInForm() {
     // Use formData for API call
     try {
       setIsLoading(true);
-      const result = await signIn("credentials", {
+      await signIn("credentials", {
         ...formData,
         redirect: true,
         callbackUrl: "/home",
       });
-      if (result?.error) setIsLoading(false);
 
       // reset formData
     } catch (err) {

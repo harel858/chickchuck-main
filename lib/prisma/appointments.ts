@@ -8,6 +8,7 @@ export async function createAppointment(
   customerId: string,
   slots: AvailableSlot[],
   treatmentId: string,
+  businessId: string,
   notes: string | null,
   date: string
 ) {
@@ -26,7 +27,7 @@ export async function createAppointment(
             status: AppointmentStatus.CANCELLED,
           },
         },
-        business: {
+        user: {
           // Connect to the user who owns the appointment slots
           id: userId,
         },
@@ -46,7 +47,8 @@ export async function createAppointment(
         end: slots[slots.length - 1].end,
         date: dayjs(date).format("DD/MM/YYYY"),
         availableSlots: { connect: slots.map((slot) => ({ id: slot.id })) },
-        business: { connect: { id: userId } },
+        business: { connect: { id: businessId } },
+        user: { connect: { id: userId } },
       },
     });
 
@@ -57,6 +59,7 @@ export async function createAppointment(
         customer: { connect: { id: customerId } },
         appointmentSlot: { connect: { id: appointmentSlot.id } },
         treatment: { connect: { id: treatmentId } },
+        Business: { connect: { id: businessId } },
         status: AppointmentStatus.SCHEDULED,
       },
       include: { appointmentSlot: true },

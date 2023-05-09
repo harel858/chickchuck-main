@@ -6,7 +6,10 @@ import { cn } from "@lib/utils";
 import Navbar from "@ui/(navbar)/Navbar";
 import { ServerThemeProvider } from "next-themes";
 
-const inter = Roboto({ weight: ["300", "400"], subsets: ["latin"] });
+const inter = Roboto({
+  weight: ["100", "500", "300", "400"],
+  subsets: ["latin"],
+});
 
 export default function RootLayout({
   children,
@@ -17,9 +20,9 @@ export default function RootLayout({
     <ServerThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <html
         lang="en"
-        className={cn("bg-white text-slate-900 antialiased", inter.className)}
+        className={cn(" text-slate-900 antialiased", inter.className)}
       >
-        <body className="min-h-screen bg-slate-50 dark:bg-slate-900 antialiased">
+        <body className="min-h-screen bg-sky-300 dark:bg-slate-900 antialiased">
           <Providers>
             {/* @ts-expect-error Server Component */}
             <Navbar />

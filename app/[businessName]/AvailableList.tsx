@@ -95,6 +95,7 @@ function AvailableQueues({
   const handleChange = (availableSlot: AvailableSlot[]) => {
     setAppointmentInput({ ...appointmentInput, availableSlot });
   };
+  console.log(queues);
 
   return (
     <div className="py-12 gap-2 flex justify-start align-center items-center flex-wrap align-center">

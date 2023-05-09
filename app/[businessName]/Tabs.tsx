@@ -67,7 +67,7 @@ function Tabs({ userData }: { userData: UserData[] }) {
   ];
   return (
     <div className="flex flex-col justify-between rounded-2xl h-full w-full">
-      <div className="flex justify-between p-2 bg-gray-900 rounded-t-2xl">
+      <div className="flex justify-between p-2 bg-gray-600 rounded-t-2xl">
         {tabs.map((tab, index) => (
           <button
             disabled={activeTab >= index ? false : true}
@@ -83,7 +83,7 @@ function Tabs({ userData }: { userData: UserData[] }) {
           </button>
         ))}
       </div>
-      <div className="h-full rounded-2xl rounded-t-none bg-gray-900 pb-12">
+      <div className="h-full rounded-2xl rounded-t-none bg-gray-600">
         {tabs.map((tab, index) => (
           <Tab active={activeTab === index} key={tab.label} userData={userData}>
             {activeTab === index && tab.content}

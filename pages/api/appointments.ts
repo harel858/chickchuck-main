@@ -48,6 +48,7 @@ export default async function handler(
           customer.id,
           availableSlot,
           treatment.id,
+          userExist.Business[0].id,
           null,
           date
         );

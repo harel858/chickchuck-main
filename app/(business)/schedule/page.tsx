@@ -33,9 +33,11 @@ const fetchEvents = async (email: string | null | undefined) => {
 
     //update appointments status
     const appointmentSlots = await prisma.appointmentSlot.findMany({
-      where: { businessId: user?.id },
+      where: { businessId: business.id },
       include: { appointments: true },
     });
+    console.log(appointmentSlots);
+
     if (user && appointmentSlots) {
       for (let i = 0; i < appointmentSlots.length; i++) {
         const slotEnd = dayjs(appointmentSlots[i].date, "DD/MM/YYYY")
@@ -71,6 +73,7 @@ const fetchEvents = async (email: string | null | undefined) => {
       });
       appointments.push(...result);
     }
+    console.log(appointments);
 
     //return the events of the user
     const events = appointments.map((appointment) => {
@@ -106,11 +109,17 @@ const fetchEvents = async (email: string | null | undefined) => {
         color, // set a default color for all events
       };
     });
+    console.log(events);
 
-    const scheduleData: ScheduleData[] = business.user.map((user) => ({
-      user,
-      events: events.filter((event) => user.id !== event.userId),
-    }));
+    const scheduleData: ScheduleData[] = business.user.map((user) => {
+      console.log(user.id);
+
+      return {
+        user,
+        events: events.filter((event) => user.id == event.userId),
+      };
+    });
+
     return { scheduleData, user } as ScheduleProps;
   } catch (err) {
     console.log(err);
@@ -121,6 +130,8 @@ async function ScheduleListPage() {
   const session = await getServerSession();
   if (!session) return notFound();
   const scheduleProps = await fetchEvents(session?.user?.email);
+  console.log(scheduleProps);
+
   if (!scheduleProps) return notFound();
 
   return <CalendarComponent scheduleProps={scheduleProps} />;

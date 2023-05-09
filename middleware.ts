@@ -11,7 +11,7 @@ const redis = new Redis({
 
 const rateLimit = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(5, `1 h`),
+  limiter: Ratelimit.slidingWindow(30, `1 h`),
 });
 
 export default withAuth(
@@ -33,16 +33,18 @@ export default withAuth(
 
     const token = await getToken({ req });
     const isAuth = !!token;
+
     const isAuthPage = pathName.startsWith("/signin");
     const sensetiveRoutes = [
-      "/home/:path*",
-      "/schedule/:path*",
-      "/treatments/:path*",
-      "/activityTime/:path*",
+      "/home",
+      "/schedule",
+      "/treatments",
+      "/activityTime",
     ];
+
     if (isAuthPage) {
       if (isAuth) {
-        return NextResponse.redirect(new URL("/", req.url));
+        return NextResponse.redirect(new URL("/home", req.url));
       }
       return null;
     }
@@ -59,11 +61,12 @@ export default withAuth(
 );
 export const config = {
   matcher: [
-    "/home/:path*",
-    "/schedule/:path*",
-    "/treatments/:path*",
-    "/activityTime/:path*",
+    "/home",
+    "/schedule",
+    "/treatments",
+    "/activityTime",
     "/signin",
     "/signup",
+    "/api/:path*",
   ],
 };

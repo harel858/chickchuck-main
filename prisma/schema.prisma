@@ -26,16 +26,17 @@ model User {
 }
 
 model Business {
-  id            String          @id @default(uuid())
-  businessName  String          @unique
-  openingTime   String?
-  closingTime   String?
-  businessImage String?
-  user          User[]
-  activityDays  Int[]
-  Address       Address[]
-  AvailableSlot AvailableSlot[]
-  Appointment   Appointment[]
+  id              String            @id @default(uuid())
+  businessName    String            @unique
+  openingTime     String?
+  closingTime     String?
+  businessImage   String?
+  user            User[]
+  activityDays    Int[]
+  Address         Address[]
+  AvailableSlot   AvailableSlot[]
+  Appointment     Appointment[]
+  AppointmentSlot AppointmentSlot[]
 }
 
 model Address {
@@ -97,10 +98,12 @@ model AppointmentSlot {
   start          String
   end            String
   date           String
-  business       User            @relation(fields: [businessId], references: [id])
-  businessId     String
+  business       Business        @relation(fields: [businessId], references: [id])
+  user           User            @relation(fields: [userId], references: [id])
   availableSlots AvailableSlot[]
   appointments   Appointment[]
+  userId         String
+  businessId     String
 }
 
 enum AppointmentStatus {

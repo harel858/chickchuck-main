@@ -1,9 +1,10 @@
-import { AvailableSlot, Treatment } from "@prisma/client";
 import { notFound } from "next/navigation";
 import React from "react";
 import prisma from "../../lib/prisma";
 import { UserData } from "../../types/types";
 import Tabs from "./Tabs";
+import Stepper from "@ui/Stepper";
+import LargeHeading from "@ui/LargeHeading";
 export const dynamic = "force-static";
 
 type LandingPageProps = {
@@ -51,12 +52,12 @@ export default async function LandingPage({
   console.log(userData);
 
   if (!userData) return notFound();
-
   return (
-    <div className="flex flex-col items-center justify-center h-screen w-full text-white ">
-      <div className="w-10/12  sm:w-8/12 md:w-6/12 lg:w-4/12 bg-gray-900 rounded-2xl border border-gray-800  harel-box ">
-        <Tabs userData={userData} />
-      </div>
+    <div className="flex flex-col items-center justify-center gap-20 h-screen w-full text-white">
+      <LargeHeading className="opacity-6" size={"sm"}>
+        Queue Booking
+      </LargeHeading>
+      <Stepper userData={userData} />
     </div>
   );
 }
