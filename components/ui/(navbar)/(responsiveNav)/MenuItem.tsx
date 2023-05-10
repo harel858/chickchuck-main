@@ -37,17 +37,20 @@ export const MenuItem = ({
   const isActive = pathname === link;
   return (
     <motion.li
-      className={`flex z-30 justify-around gap-8 w-11/12 group hover:bg-opacity-10 hover:bg-black ${
+      className={`flex z-30 justify-around gap-8 w-full group hover:bg-opacity-10 hover:bg-black ${
         isActive && `bg-opacity-10 bg-black`
       } cursor-pointer py-4 px-1 my-0`}
       variants={variants}
-      whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       onClick={() => {
         router.push(link);
       }}
     >
-      <div className={`text-black self-center  ${isActive && `scale-125`} `}>
+      <div
+        className={`text-black self-center transition-all ease-in duration-200 scale-125 group-hover:scale-150 ${
+          isActive && `scale-150`
+        } `}
+      >
         {icon}
       </div>
       <Link

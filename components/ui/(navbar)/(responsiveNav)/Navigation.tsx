@@ -1,13 +1,15 @@
 "use client";
 import classes from "./style.module.css";
 import * as React from "react";
-import HomeIcon from "@mui/icons-material/Home";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import NavItemWithLinks from "../NavItemWithLinks";
+import { CgProfile } from "react-icons/cg";
+import { AiOutlineSchedule } from "react-icons/ai";
+import { GiFeather } from "react-icons/gi";
 import { motion } from "framer-motion";
 import { MenuItem } from "./MenuItem";
 import { NavBarProps } from "../../../../types/types";
+import ProfileImage from "../ProfileImage";
+import { Avatar } from "@mui/material";
 
 const variants = {
   open: {
@@ -17,65 +19,36 @@ const variants = {
     transition: { staggerChildren: 0.05, staggerDirection: -1 },
   },
 };
-const variantHeader = {
-  open: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      y: { stiffness: 1000, velocity: -100 },
-    },
-  },
-  closed: {
-    y: 50,
-    opacity: 0,
-    transition: {
-      y: { stiffness: 1000 },
-    },
-  },
-};
 
 export const Navigation = ({
   user,
-  toggle,
+  lobster,
   isOpen,
 }: {
   user: NavBarProps;
-  toggle: any;
+  lobster: string;
   isOpen: boolean;
 }) => {
   const itemIds = [
-    { title: "Home", link: `/home`, icon: <HomeIcon /> },
+    { title: "profile", link: `/profile`, icon: <CgProfile /> },
     {
       title: "Schedule",
       link: `/schedule`,
-      icon: <CalendarMonthIcon />,
+      icon: <AiOutlineSchedule />,
     },
     {
-      title: "Treatments",
+      title: "Services",
       link: `/treatments`,
-      icon: <AppRegistrationIcon />,
-    },
-    {
-      title: "Activity Time",
-      link: `/activityTime`,
-      icon: <AccessTimeOutlinedIcon />,
+      icon: <GiFeather />,
     },
   ];
   return (
     <motion.ul
       className={` ${
         !isOpen ? `hidden` : `flex`
-      } relative flex-col w-full pt-20 gap-1 justify-start items-center align-start text-black text-md max-sm:text-sm `}
+      } relative flex-col w-full  gap-1 justify-start items-center align-start text-black text-md max-sm:text-sm `}
       variants={variants}
     >
-      <motion.h2
-        variants={variantHeader}
-        className={`${classes.h2} ${
-          !isOpen ? `hidden` : `block`
-        }  text-black absolute top-5  left-2 text-2xl min:text-xl  w-max `}
-      >
-        Hello {user.name}
-      </motion.h2>
       {itemIds.map(
         (
           {
@@ -92,6 +65,7 @@ export const Navigation = ({
           <MenuItem i={i} icon={icon} link={link} title={title} key={i} />
         )
       )}
+      <NavItemWithLinks responsive={true} />
     </motion.ul>
   );
 };

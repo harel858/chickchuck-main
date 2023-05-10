@@ -5,8 +5,9 @@ import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { NavBarProps } from "../../../types/types";
 import { Hamburger } from "./(responsiveNav)/Hamburger";
-import { authOptions } from "../../../pages/api/auth/[...nextauth]";
 import SignOutBtn from "@ui/SignOutBtn";
+import { Lobster_Two } from "@next/font/google";
+const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 async function fetchUser(email: string | null | undefined) {
   try {
@@ -29,7 +30,7 @@ const Navbar = async () => {
   return (
     <div className="fixed backdrop-blur-sm bg-sky-600/75 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-sky-300 dark:border-slate-800 shadow-sm flex items-center justify-between">
       <div className="container max-w-7xl mx-auto w-full flex justify-end items-center">
-        {user && <Hamburger user={user} />}
+        {user && <Hamburger lobster={lobster.className} user={user} />}
         {!user && (
           <Link href="/" className={buttonVariants({ variant: "link" })}>
             Queue
@@ -52,7 +53,7 @@ const Navbar = async () => {
             <>
               <Link
                 className={buttonVariants({ variant: "ghost" })}
-                href="/home"
+                href="/profile"
               >
                 Dashboard
               </Link>

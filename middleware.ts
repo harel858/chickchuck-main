@@ -61,7 +61,7 @@ export default withAuth(
 );
 export const config = {
   matcher: [
-    "/home",
+    "/profile",
     "/schedule",
     "/treatments",
     "/activityTime",

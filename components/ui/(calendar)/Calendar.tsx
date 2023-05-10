@@ -7,6 +7,7 @@ import { AppointmentEvent, ScheduleProps } from "../../../types/types";
 import MemoizedAppointmentList from "./AppointmentList";
 import ListNav from "./ListNav";
 import CalendarPagination from "./CalendarPagination";
+import { getSession } from "next-auth/react";
 dayjs.extend(customParseFormat);
 
 function CalendarComponent({
@@ -14,6 +15,7 @@ function CalendarComponent({
 }: {
   scheduleProps: ScheduleProps;
 }) {
+  const [calendar, setCalendar] = React.useState(scheduleProps.user.id);
   const [value, setValue] = React.useState(() => dayjs());
   const [selectedValue, setSelectedValue] = React.useState(() => dayjs());
   const [eventsByDate, setEventsByDate] = React.useState<AppointmentEvent[]>(
@@ -25,7 +27,9 @@ function CalendarComponent({
 
     scheduleProps.scheduleData.forEach((item) => {
       const result: AppointmentEvent[] = item.events.filter(
-        (event) => event.date === selectedValue.format("DD/MM/YYYY")
+        (event) =>
+          event.date === selectedValue.format("DD/MM/YYYY") &&
+          event.appointmentSlot.userId == calendar
       );
       filteredEvents.push(...result);
     });

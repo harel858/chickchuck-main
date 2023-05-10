@@ -1,6 +1,6 @@
 import React from "react";
 import prisma from "@lib/prisma";
-import { getServerSession } from "next-auth";
+import { getServerSession, Session } from "next-auth";
 import UniqueLink from "./UniqueLink";
 
 async function fetchUser(email: string | null | undefined) {
