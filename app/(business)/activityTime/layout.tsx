@@ -23,7 +23,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
   if (!user) return notFound();
   return (
     <>
-      <VerticalNav user={user} lobster={lobster.className} />
+      <VerticalNav user={user} />
       <section className="h-screen w-full flex justify-center items-center">
         {children}
       </section>

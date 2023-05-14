@@ -34,7 +34,15 @@ export type ScheduleData = {
   user: User;
 };
 
-export type ScheduleProps = { scheduleData: ScheduleData[]; user: User };
+export type ScheduleProps = {
+  scheduleData: ScheduleData[];
+  user: User;
+  business: {
+    openingTime: string;
+    closingTime: string;
+    activityDays: number[];
+  };
+};
 
 export type ActivityDay = {
   value: number;

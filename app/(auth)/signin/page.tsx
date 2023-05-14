@@ -36,7 +36,7 @@ function SignInForm() {
       await signIn("credentials", {
         ...formData,
         redirect: true,
-        callbackUrl: "/home",
+        callbackUrl: "/profile",
       });
 
       // reset formData

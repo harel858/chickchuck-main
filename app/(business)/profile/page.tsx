@@ -2,6 +2,7 @@ import React from "react";
 import prisma from "@lib/prisma";
 import { getServerSession, Session } from "next-auth";
 import UniqueLink from "./UniqueLink";
+import { notFound } from "next/navigation";
 
 async function fetchUser(email: string | null | undefined) {
   try {
@@ -10,7 +11,8 @@ async function fetchUser(email: string | null | undefined) {
       where: { email },
       include: { Business: true },
     });
-    return user;
+    if (!user || !user.Business) return null;
+    return { name: user.Business[0].businessName };
   } catch (error) {
     console.log(error);
     return null;
@@ -19,9 +21,9 @@ async function fetchUser(email: string | null | undefined) {
 
 async function Page() {
   const session = await getServerSession();
-
-  const user = await fetchUser(session?.user?.email);
-  const value = user?.Business[0].businessName.replace(/ /g, "-");
+  const business = await fetchUser(session?.user?.email);
+  if (!business) return notFound();
+  const value = business.name.replace(/ /g, "-");
 
   return <UniqueLink link={`http://localhost:3000/${value}`} />;
 }

@@ -3,8 +3,6 @@ import VerticalNav from "@ui/(navbar)/VerticalNav";
 import prisma from "@lib/prisma";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
-import { Lobster_Two } from "@next/font/google";
-const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 async function fetchUser(email: string | null | undefined) {
   try {
@@ -23,7 +21,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
   if (!user) return notFound();
   return (
     <>
-      <VerticalNav user={user} lobster={lobster.className} />
+      <VerticalNav user={user} />
       <section className="flex justify-center items-center h-screen overflow-hidden pl-40 max-sm:p-0">
         <div className="w-5/6 h-5/6 mt-24">{children}</div>
       </section>

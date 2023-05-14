@@ -60,7 +60,12 @@ const Navbar = async () => {
               <SignOutBtn />
             </>
           ) : (
-            <Button variant="default">Sign In</Button>
+            <Link
+              className={buttonVariants({ variant: "default" })}
+              href="/signin"
+            >
+              Sign In
+            </Link>
           )}
         </div>
       </div>

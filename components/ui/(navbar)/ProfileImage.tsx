@@ -3,10 +3,19 @@ import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 import { User } from "@prisma/client";
+import imageCompression from "browser-image-compression";
 
-function ProfileImage({ user }: { user: User }) {
+function ProfileImage({
+  user,
+}: {
+  user: {
+    id: string;
+    name: string | undefined;
+    image: string | null | undefined;
+  };
+}) {
   const [avatarSrc, setAvatarSrc] = useState<string | undefined>(
-    user?.profileSrc ?? undefined
+    user?.image ?? undefined
   );
 
   const postData = async (imageSrc: string) => {
@@ -29,15 +38,21 @@ function ProfileImage({ user }: { user: User }) {
   ) => {
     try {
       const file = event.target.files?.[0];
-
+      const options = {
+        maxSizeMB: 0.0001,
+        maxWidthOrHeight: 500,
+      };
       if (file) {
+        const compressedFile = await imageCompression(file, options);
+        console.log(compressedFile);
+
         const reader = new FileReader();
         reader.onload = async () => {
           const imageSrc = reader.result as string;
           setAvatarSrc(imageSrc);
           await postData(imageSrc);
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(compressedFile);
       }
     } catch (err) {
       console.log(err);

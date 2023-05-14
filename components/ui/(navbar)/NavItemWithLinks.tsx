@@ -41,7 +41,7 @@ export default function NavItemWithLink({
           responsive ? "border-black/50" : "border-white/50"
         } overflow-hidden ${
           isDisplayed && ` dark:bg-white/10`
-        } cursor-pointer p-4 my-0  after:absolute after:top-6 after:right-0 after:bottom-0 after:left-36 after:rounded-3xl after:rotate-45 after:h-1.5 after:w-5/12 after:content after:bg-light-gold after:ease-in after:duration-200 after:scale-x-30`}
+        } cursor-pointer p-4 my-0  after:absolute after:top-6 after:right-0 after:bottom-0 after:left-36 after:rounded-3xl after:rotate-45 after:h-2 after:w-5/12 after:content after:bg-sky-600 after:ease-in after:duration-200 after:scale-x-100`}
       >
         <BiCaretDown
           className={`${

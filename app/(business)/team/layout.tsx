@@ -3,13 +3,14 @@ import VerticalNav from "@ui/(navbar)/VerticalNav";
 import prisma from "@lib/prisma";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
+import { Lobster_Two } from "@next/font/google";
+const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 async function fetchUser(email: string | null | undefined) {
   try {
     if (!email) return null;
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return null;
-    return { id: user.id, name: user.name };
+    return user;
   } catch (error) {
     console.log(error);
     return null;
@@ -22,7 +23,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
   if (!user) return notFound();
   return (
     <>
-      <VerticalNav user={user} />
+      <VerticalNav user={user} lobster={lobster.className} />
       <section className="h-screen w-full flex justify-center items-center">
         {children}
       </section>

@@ -34,7 +34,7 @@ function CalendarPagination({
     },
   });
   return (
-    <div className="flex justify-center items-center content-center self-start gap-5">
+    <div className="flex justify-center items-center content-center gap-5">
       <ul className="flex justify-center items-center gap-2">
         {scheduleProps.scheduleData.map((item) => (
           <motion.div

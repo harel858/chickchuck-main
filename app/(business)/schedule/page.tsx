@@ -36,7 +36,6 @@ const fetchEvents = async (email: string | null | undefined) => {
       where: { businessId: business.id },
       include: { appointments: true },
     });
-    console.log(appointmentSlots);
 
     if (user && appointmentSlots) {
       for (let i = 0; i < appointmentSlots.length; i++) {
@@ -63,7 +62,7 @@ const fetchEvents = async (email: string | null | undefined) => {
     })[] = [];
     for (let i = 0; i < business?.user.length!; i++) {
       const result = await prisma.appointment.findMany({
-        where: { userId: business?.user[0]?.id },
+        where: { userId: business?.user[i]?.id },
         include: {
           User: true,
           appointmentSlot: true,
@@ -71,9 +70,9 @@ const fetchEvents = async (email: string | null | undefined) => {
           customer: true,
         },
       });
+
       appointments.push(...result);
     }
-    console.log(appointments);
 
     //return the events of the user
     const events = appointments.map((appointment) => {
@@ -109,18 +108,23 @@ const fetchEvents = async (email: string | null | undefined) => {
         color, // set a default color for all events
       };
     });
-    console.log(events);
 
     const scheduleData: ScheduleData[] = business.user.map((user) => {
-      console.log(user.id);
-
       return {
-        user,
+        user: { ...user, profileSrc: null },
         events: events.filter((event) => user.id == event.userId),
       };
     });
 
-    return { scheduleData, user } as ScheduleProps;
+    return {
+      scheduleData,
+      user,
+      business: {
+        openingTime: business.openingTime,
+        closingTime: business.closingTime,
+        activityDays: business.activityDays,
+      },
+    } as ScheduleProps;
   } catch (err) {
     console.log(err);
   }
@@ -130,7 +134,6 @@ async function ScheduleListPage() {
   const session = await getServerSession();
   if (!session) return notFound();
   const scheduleProps = await fetchEvents(session?.user?.email);
-  console.log(scheduleProps);
 
   if (!scheduleProps) return notFound();
 

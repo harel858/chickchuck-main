@@ -3,8 +3,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import dayjs, { Dayjs } from "dayjs";
 import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
-import { ScheduleProps } from "../../../types/types";
+import { AppointmentEvent, ScheduleProps } from "../../../types/types";
 import CalendarPagination from "./CalendarPagination";
+import ToggleView from "./ToggleView";
+import { Button } from "@ui/Button";
 
 const scaleSpringTransition = {
   type: "spring",
@@ -15,18 +17,26 @@ function ListNav({
   scheduleProps,
   selectedValue,
   onSelect,
+  setCurrentView,
+  currentView,
 }: {
   scheduleProps: ScheduleProps;
   selectedValue: dayjs.Dayjs;
   onSelect: (newValue: Dayjs) => void;
+  currentView: "list" | "calendar";
+  setCurrentView: React.Dispatch<React.SetStateAction<"list" | "calendar">>;
 }) {
+  const [eventsByDate, setEventsByDate] = React.useState<AppointmentEvent[]>(
+    []
+  );
   const currentDate = dayjs(selectedValue).format("MMMM D, YYYY");
 
   return (
     <nav
-      className={`flex flex-col justify-around bg-orange-300 dark:bg-orange-300/75 font-extralight rounded-tr-3xl w-full relative top-0 py-3 gap-2`}
+      className={`flex flex-row-reverse content-center justify-center items-center bg-orange-200 dark:bg-orange-300/75 font-extralight rounded-tr-3xl rounded-tl-3xl  w-full relative top-0 py-3 gap-5`}
     >
-      <div className="flex justify-center items-center gap-5">
+      <ToggleView setCurrentView={setCurrentView} currentView={currentView} />
+      <div className="flex justify-center self-center items-center gap-1">
         <motion.div
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.9 }}
@@ -37,7 +47,17 @@ function ListNav({
             onClick={() => onSelect(selectedValue.subtract(1, "day"))}
           />
         </motion.div>
-        <h2 className={`w-max font-extralight text-4xl`}>{currentDate}</h2>
+        {currentView === "list" ? (
+          <h2 className={`w-max font-light text-4xl`}>{currentDate}</h2>
+        ) : (
+          <Button
+            variant={"ghost"}
+            className="rounded-3xl"
+            onClick={() => onSelect(dayjs())}
+          >
+            Today
+          </Button>
+        )}
         <motion.div
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.9 }}
@@ -49,6 +69,8 @@ function ListNav({
           />
         </motion.div>
       </div>
+      {/*       <CalendarPagination scheduleProps={scheduleProps} />
+       */}
     </nav>
   );
 }

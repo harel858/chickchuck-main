@@ -26,7 +26,7 @@ function AppointmentList({
 
   return (
     <>
-      <div className="flex w-full items-stretch max-xl:items-center justify-center max-h-full max-xl:flex-col">
+      <div className="flex w-full items-stretch max-xl:items-center justify-center max-h-max max-xl:flex-col">
         <div className="max-xl:w-full flex justify-center">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div className="max-xl:hidden">
@@ -40,7 +40,7 @@ function AppointmentList({
                 sx={{
                   borderRight: `1px solid rgb(107 114 128)`,
                   borderBottomLeftRadius: `1.5rem`,
-                  background: "rgb(253 186 116)",
+                  background: "rgb(254 215 170)",
                 }}
                 className="dark:bg-orange-300/75 !important"
                 defaultValue={dayjs()}
