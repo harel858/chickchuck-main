@@ -5,17 +5,17 @@ import { AppointmentEvent } from "../../../types/types";
 import dayjs from "dayjs";
 
 function ToolTip({ event }: { event: AppointmentEvent }) {
-  const start = dayjs(event.start).format("h:mm A");
-  const end = dayjs(event.end).format("h:mm A");
+  const start = dayjs(event.start).format("HH:mm");
+  const end = dayjs(event.end).format("HH:mm");
   return (
     <div
-      className={`flex flex-col gap-5 rounded-2xl  ${classes.ToolTip} w-max border border-black  `}
+      className={`flex flex-col gap-5 rounded-2xl  ${classes.ToolTip} w-max border border-black m-0 p-0 absolute`}
     >
       <nav
-        className={`flex justify-around gap-5 ${event.color} text-white rounded-t-2xl w-full px-5 relative top-0 py-3`}
+        className={`flex justify-around gap-5 ${event.color} bg-opacity-60 text-black rounded-t-2xl w-full px-5 relative top-0 py-3`}
       >
         <p className="font-normal text-lg w-max">{event.customer.name}</p>
-        <p className="font-normal text-lg w-max">
+        <p className="font-normal  text-lg w-max">
           {start} - {end}
         </p>
       </nav>

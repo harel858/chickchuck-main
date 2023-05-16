@@ -1,10 +1,8 @@
-import classes from "./style.module.css";
 import React from "react";
 import { motion } from "framer-motion";
 import dayjs, { Dayjs } from "dayjs";
 import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
 import { AppointmentEvent, ScheduleProps } from "../../../types/types";
-import CalendarPagination from "./CalendarPagination";
 import ToggleView from "./ToggleView";
 import { Button } from "@ui/Button";
 

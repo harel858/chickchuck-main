@@ -5,6 +5,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentEvent, ScheduleProps } from "../../../types/types";
 import MemoizedAppointmentList from "./AppointmentList";
 import ListNav from "./ListNav";
+import { motion } from "framer-motion";
 
 import SlotCalendar from "./SlotCalendar";
 dayjs.extend(customParseFormat);
@@ -24,14 +25,25 @@ export default function CalendarComponent({
     "list"
   );
   console.log(scheduleProps);
-
   React.useMemo(() => {
     let filteredEvents: AppointmentEvent[] = [];
 
     scheduleProps.scheduleData.forEach((item) => {
       const result: AppointmentEvent[] = item.events.filter((event) => {
-        if (currentView === "list")
+        if (currentView === "list") {
           return event.date === selectedValue.format("DD/MM/YYYY");
+        } else if (currentView === "calendar") {
+          // Filter events for the current week
+          const startOfWeek = selectedValue.startOf("week");
+          const endOfWeek = selectedValue.endOf("week");
+          const eventDate = dayjs(event.date, "DD/MM/YYYY");
+          return (
+            (eventDate.isAfter(startOfWeek) && eventDate.isBefore(endOfWeek)) ||
+            eventDate.isSame(startOfWeek) ||
+            eventDate.isSame(endOfWeek)
+          );
+        }
+        return false;
       });
       filteredEvents.push(...result);
     });
@@ -43,7 +55,7 @@ export default function CalendarComponent({
     });
 
     setEventsByDate(sortedEvents);
-  }, [selectedValue, scheduleProps]);
+  }, [selectedValue, scheduleProps, currentView]);
 
   const onSelect = React.useCallback(
     (newValue: Dayjs) => {
@@ -83,14 +95,22 @@ export default function CalendarComponent({
                 setCurrentView={setCurrentView}
                 currentView={currentView}
               />
-              <div className="max-h-full overflow-y-scroll">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.4,
+                  easeInOut: [0, 0.71, 0.2, 1.01],
+                }}
+                className="max-h-full overflow-hidden rounded-b-3xl"
+              >
                 <SlotCalendar
                   scheduleProps={scheduleProps}
                   selectedValue={selectedValue}
                   onSelect={onSelect}
                   eventsByDate={eventsByDate}
                 />
-              </div>
+              </motion.div>
             </React.Fragment>
           )}
         </div>
