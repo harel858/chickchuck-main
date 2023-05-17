@@ -1,11 +1,21 @@
-import * as React from "react";
-import ViewListIcon from "@mui/icons-material/ViewList";
-import ViewModuleIcon from "@mui/icons-material/ViewModule";
-import ViewQuiltIcon from "@mui/icons-material/ViewQuilt";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { CalendarPickerSkeleton } from "@mui/lab";
-import { Calendar } from "lucide-react";
+import React from "react";
+import { BsFillCalendarWeekFill, BsCardList } from "react-icons/bs";
+import { motion } from "framer-motion";
+import { IconType } from "react-icons/lib";
+
+const scaleSpringTransition = {
+  type: "spring",
+  stiffness: 750,
+  damping: 30,
+  duration: 300,
+};
+
+const spring = {
+  type: "spring",
+  stiffness: 700,
+  damping: 30,
+  duration: 300,
+};
 
 export default function ToggleView({
   currentView,
@@ -14,28 +24,33 @@ export default function ToggleView({
   currentView: "list" | "calendar";
   setCurrentView: React.Dispatch<React.SetStateAction<"list" | "calendar">>;
 }) {
-  const handleChange = (
-    event: React.MouseEvent<HTMLElement>,
-    nextView: "list" | "calendar"
-  ) => {
-    console.log(nextView);
+  const handleChange = React.useCallback(() => {
+    setCurrentView((prevView) => (prevView === "list" ? "calendar" : "list"));
+  }, [setCurrentView]);
 
-    setCurrentView(nextView);
-  };
+  const renderIcon = (IconComponent: IconType) => (
+    <motion.div
+      whileHover={{ scale: 1.2 }}
+      transition={scaleSpringTransition}
+      onClick={handleChange}
+      className="text-2xl"
+    >
+      <IconComponent />
+    </motion.div>
+  );
 
   return (
-    <ToggleButtonGroup
-      orientation="horizontal"
-      value={currentView}
-      exclusive
-      onChange={handleChange}
+    <motion.div
+      data-currentview={currentView}
+      className="relative right-0 border-2 border-blue-700 cursor-pointer flex flex-row items-center justify-start gap-7 bg-white/40 rounded-full py-2 data-[currentview=calendar]:justify-end"
     >
-      <ToggleButton value="list" aria-label="list">
-        <ViewListIcon />
-      </ToggleButton>
-      <ToggleButton value="calendar" aria-label="calendar">
-        <Calendar />
-      </ToggleButton>
-    </ToggleButtonGroup>
+      <div className="ml-2">{renderIcon(BsCardList)}</div>
+      <div className="mr-2">{renderIcon(BsFillCalendarWeekFill)}</div>
+      <motion.div
+        className="absolute p-5 bg-blue-500 rounded-full"
+        layout
+        transition={spring}
+      />
+    </motion.div>
   );
 }

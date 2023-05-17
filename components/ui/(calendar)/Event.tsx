@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { AppointmentEvent } from "../../../types/types";
 import ToolTip from "./ToolTip";
@@ -35,7 +34,7 @@ function Event({ event, i }: { event: AppointmentEvent; i: number }) {
         animate={{ opacity: 1, scale: 1 }}
         whileHover={{ scale: 1.03 }}
         transition={{
-          duration: 0.5,
+          duration: 0.4,
           easeInOut: [0, 0.71, 0.2, 1.01],
           delay,
         }}

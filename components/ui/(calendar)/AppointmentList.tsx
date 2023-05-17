@@ -1,3 +1,4 @@
+"use client";
 import classes from "./style.module.css";
 import React from "react";
 import NoAppointments from "./NoAppointments";
@@ -49,9 +50,8 @@ function AppointmentList({
                 sx={{
                   borderRight: `1px solid rgb(107 114 128)`,
                   borderBottomLeftRadius: `1.5rem`,
-                  background: "rgb(254 215 170)",
+                  background: `rgb(253 186 116 / 0.75)`,
                 }}
-                className="dark:bg-orange-300/75"
                 defaultValue={dayjs()}
               />
             </div>
