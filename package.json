@@ -21,7 +21,7 @@
         "@mobiscroll/react": "https://npm.mobiscroll.com/@mobiscroll/react-trial/-/react-trial-5.22.3.tgz",
         "@mui/icons-material": "^5.11.9",
         "@mui/lab": "^5.0.0-alpha.120",
-        "@mui/x-date-pickers": "^6.0.3",
+        "@mui/x-date-pickers": "^6.4.0",
         "@next-auth/prisma-adapter": "^0.4.4-canary.81",
         "@next/font": "^13.1.6",
         "@radix-ui/react-dropdown-menu": "^2.0.4",

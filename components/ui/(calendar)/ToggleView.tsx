@@ -32,7 +32,6 @@ export default function ToggleView({
     <motion.div
       whileHover={{ scale: 1.2 }}
       transition={scaleSpringTransition}
-      onClick={handleChange}
       className="text-2xl"
     >
       <IconComponent />
@@ -43,6 +42,7 @@ export default function ToggleView({
     <motion.div
       data-currentview={currentView}
       className="relative right-0 border-2 border-blue-700 cursor-pointer flex flex-row items-center justify-start gap-7 bg-white/40 rounded-full py-2 data-[currentview=calendar]:justify-end"
+      onClick={handleChange}
     >
       <div className="ml-2">{renderIcon(BsCardList)}</div>
       <div className="mr-2">{renderIcon(BsFillCalendarWeekFill)}</div>

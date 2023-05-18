@@ -36,15 +36,17 @@ function ListNav({
   };
 
   return (
-    <nav className="flex flex-row content-center justify-between items-center bg-orange-300/75 font-extralight rounded-tr-3xl rounded-tl-3xl w-full relative top-0 p-3 px-5 gap-5">
+    <nav className="flex flex-row-reverse content-center justify-between items-center bg-orange-300/75 font-extralight rounded-tr-3xl rounded-tl-3xl w-full relative top-0 p-3 px-5 gap-5">
       <ToggleView setCurrentView={setCurrentView} currentView={currentView} />
 
-      <input
+      <motion.input
+        transition={{ type: "spring", stiffness: 750, damping: 10 }}
+        whileHover={{ scale: 1.2 }}
         type="text"
         placeholder="Search clients"
         value={searchQuery}
         onChange={onSearchChange}
-        className=" px-2 py-1 text-sm rounded-md outline-none focus:ring focus:ring-blue-300"
+        className="dark:text-white px-2 py-1 text-xl rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
       />
 
       <div className="flex justify-center items-center gap-1">

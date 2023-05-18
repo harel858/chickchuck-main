@@ -1,13 +1,14 @@
 "use client";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentEvent, ScheduleProps } from "../../../types/types";
 import MemoizedAppointmentList from "./AppointmentList";
 import ListNav from "./ListNav";
-import SlotCalendar from "./SlotCalendar";
+const LazySlotCalendar = lazy(() => import("./SlotCalendar"));
 import SearchResults from "./SearchResults";
+import { Table } from "antd";
 dayjs.extend(customParseFormat);
 
 export default function CalendarComponent({
@@ -19,9 +20,7 @@ export default function CalendarComponent({
   const [value, setValue] = useState(() => dayjs());
   const [selectedValue, setSelectedValue] = useState(() => dayjs());
   const [eventsByDate, setEventsByDate] = useState<AppointmentEvent[]>([]);
-  const [currentView, setCurrentView] = useState<"list" | "calendar">(
-    "calendar"
-  );
+  const [currentView, setCurrentView] = useState<"list" | "calendar">("list");
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -51,25 +50,23 @@ export default function CalendarComponent({
       const sortedEvents = [...filteredEvents].sort((a, b) => {
         return dayjs(a.start).valueOf() - dayjs(b.start).valueOf();
       });
+      const handleSearch = () => {
+        const allEvents: AppointmentEvent[] = [];
+        scheduleProps.scheduleData.map((item) =>
+          allEvents.push(...item.events)
+        );
+        const filteredEvents = allEvents.filter((event) =>
+          event.customer.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setEventsByDate(filteredEvents);
+      };
 
-      setEventsByDate(sortedEvents);
+      if (!searchQuery) return setEventsByDate(sortedEvents);
+      return handleSearch();
     };
 
     handleEventsByDate();
-  }, [selectedValue, scheduleProps, currentView]);
-
-  useEffect(() => {
-    const allEvents: AppointmentEvent[] = [];
-    scheduleProps.scheduleData.map((item) => allEvents.push(...item.events));
-    const handleSearch = () => {
-      const filteredEvents = allEvents.filter((event) =>
-        event.customer.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setEventsByDate(filteredEvents);
-    };
-
-    handleSearch();
-  }, [searchQuery, setSearchQuery]);
+  }, [selectedValue, scheduleProps, currentView, searchQuery, setSearchQuery]);
 
   const onSelect = useCallback(
     (newValue: Dayjs) => {
@@ -93,25 +90,30 @@ export default function CalendarComponent({
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
       />
-      {currentView === "list" ? (
+      {currentView === "list" && !searchQuery ? (
         <MemoizedAppointmentList
           value={value}
           onSelect={onSelect}
           eventsByDate={eventsByDate}
         />
       ) : currentView === "calendar" && !searchQuery ? (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.2 }}
+        <Suspense
+          fallback={
+            <Table
+              size="large"
+              loading
+              pagination={false}
+              bordered
+              scroll={{ y: 1000 }}
+            />
+          }
         >
-          <SlotCalendar
+          <LazySlotCalendar
             eventsByDate={eventsByDate}
             scheduleProps={scheduleProps}
             selectedDate={value}
           />
-        </motion.div>
+        </Suspense>
       ) : (
         <SearchResults searchQuery={searchQuery} events={eventsByDate} />
       )}

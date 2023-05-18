@@ -1,6 +1,6 @@
 import React from "react";
 import { Table } from "antd";
-import { Appointment } from "@prisma/client";
+import { motion } from "framer-motion";
 import { ScheduleProps, AppointmentEvent } from "../../../types/types";
 import dayjs, { Dayjs } from "dayjs";
 import CalendarEvent from "./CalendarEvent";
@@ -163,7 +163,13 @@ const SlotCalendar = ({
   }, [weekDates, hours, eventsByDate]);
 
   return (
-    <div className="overflow-x-auto">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+      className="overflow-x-auto"
+    >
       <Table
         dataSource={hours}
         columns={columns}
@@ -174,7 +180,7 @@ const SlotCalendar = ({
         scroll={{ y: 450 }}
         className="relative top-0 rounded-t-none overflow-hidden bg-orange-300/75"
       />
-    </div>
+    </motion.div>
   );
 };
 

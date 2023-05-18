@@ -37,26 +37,20 @@ function Event({ event }: { event: AppointmentEvent }) {
           duration: 0.3,
           easeInOut: [0, 0.71, 0.2, 1.01],
         }}
-        className={`flex flex-col w-full h-full hover:bg-gray-500 pl-2  bg-blue-500/50 text-black cursor-pointer hover:text-white relative border-b border-black/50  rounded-xl`}
+        className={`flex flex-col w-full h-full dark:bg-white/50 dark:hover:bg-white hover:bg-gray-700 pl-2  bg-slate-500  cursor-pointer text-white relative border-b border-black/50  rounded-xl`}
       >
         <span
           className={`absolute h-5/6 w-1 bottom-2 left-1 ${event.color}  font-extrabold rounded-full`}
         ></span>
         <div className="flex flex-col justify-center items-start pt-2 pl-2 gap-1 ">
-          <p className="font-medium text-md">{event.treatment.title}</p>
-          <p className="font-medium text-md">{event.customer.name}</p>
-          <p className="font-normal text-md">
+          <p className="font-medium text-lg text-left">
+            {event.treatment.title}
+          </p>
+          <p className="font-medium text-lg">{event.customer.name}</p>
+          <p className="font-normal text-lg">
             {start} - {end}
           </p>
         </div>
-        {/* <div className="flex flex-col gap-1 justify-center items-center">
-          <p className="font-normal text-xl">
-            {dayjs(event.start).format("h:mm A")}
-          </p>
-          <p className="font-extralight text-lg">
-            {dayjs(event.end).format("h:mm A")}
-          </p>
-        </div> */}
       </motion.div>
     </HtmlTooltip>
   );
