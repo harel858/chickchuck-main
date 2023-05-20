@@ -16,7 +16,11 @@ async function fetchUser(email: string | null | undefined) {
       where: { email },
       include: { Business: true },
     });
-    return { ...user, Business: user?.Business[0] } as NavBarProps;
+    return {
+      ...user,
+      Business: user?.Business[0],
+      profileSrc: undefined,
+    } as NavBarProps;
   } catch (error) {
     console.log(error);
     return null;

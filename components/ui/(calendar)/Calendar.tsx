@@ -81,8 +81,9 @@ export default function CalendarComponent({
   };
 
   return (
-    <div className="bg-white/40 rounded-3xl shadow-2xl dark:shadow-white/10 p-0">
+    <div className="bg-white/40 overflow-hidden rounded-3xl shadow-2xl dark:shadow-white/10 p-0 w-full">
       <ListNav
+        setSearchQuery={setSearchQuery}
         selectedValue={selectedValue}
         setCurrentView={setCurrentView}
         currentView={currentView}

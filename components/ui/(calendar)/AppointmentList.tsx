@@ -1,7 +1,7 @@
 "use client";
+import "./AppointmentList.css";
 import React from "react";
 import NoAppointments from "./NoAppointments";
-
 import { Calendar } from "antd";
 import Event from "./Event";
 import dayjs, { Dayjs } from "dayjs";
@@ -29,12 +29,12 @@ function AppointmentList({
         duration: 0.4,
         easeInOut: [0, 0.71, 0.2, 1.01],
       }}
-      className="flex w-full items-stretch max-xl:items-center justify-center max-h-max max-xl:flex-col"
+      className="flex w-full items-stretch max-xl:items-center justify-center h-full max-xl:flex-col"
     >
-      <div className="max-xl:w-full block w-1/4 border-r border-gray-500 ">
+      <div className="max-xl:w-full block w-1/4 ">
         <div className="max-xl:hidden rounded-3xl">
           <Calendar
-            className={`rounded-none text-md bg-orange-300/75`}
+            className={`rounded-none text-md  bg-orange-300/75`}
             fullscreen={false}
             value={value}
             onChange={(e) => e && onSelect(e)}

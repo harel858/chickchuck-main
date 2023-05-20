@@ -14,6 +14,7 @@ const scaleSpringTransition = {
 };
 
 function ListNav({
+  setSearchQuery,
   selectedValue,
   onSelect,
   setCurrentView,
@@ -21,6 +22,7 @@ function ListNav({
   searchQuery,
   onSearchChange,
 }: {
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   selectedValue: Dayjs;
   onSelect: (newValue: Dayjs) => void;
   currentView: "list" | "calendar";
@@ -37,7 +39,11 @@ function ListNav({
 
   return (
     <nav className="flex flex-row-reverse content-center justify-between items-center bg-orange-300/75 font-extralight rounded-tr-3xl rounded-tl-3xl w-full relative top-0 p-3 px-5 gap-5">
-      <ToggleView setCurrentView={setCurrentView} currentView={currentView} />
+      <ToggleView
+        setSearchQuery={setSearchQuery}
+        setCurrentView={setCurrentView}
+        currentView={currentView}
+      />
 
       <motion.input
         transition={{ type: "spring", stiffness: 750, damping: 10 }}
@@ -57,14 +63,20 @@ function ListNav({
         >
           <BsArrowLeftCircle
             className="text-4xl rounded-full hover:bg-white/70 cursor-pointer"
-            onClick={() => handleDateChange(currentView === "list" ? -1 : -7)}
+            onClick={() => {
+              handleDateChange(currentView === "list" ? -1 : -7);
+              setSearchQuery("");
+            }}
           />
         </motion.div>
 
         <Button
           variant="ghost"
           className="rounded-3xl dark:text-white"
-          onClick={() => onSelect(dayjs())}
+          onClick={() => {
+            onSelect(dayjs());
+            setSearchQuery("");
+          }}
         >
           Today
         </Button>
@@ -76,7 +88,10 @@ function ListNav({
         >
           <BsArrowRightCircle
             className="text-4xl rounded-full hover:bg-white/70 cursor-pointer"
-            onClick={() => handleDateChange(currentView === "list" ? 1 : 7)}
+            onClick={() => {
+              handleDateChange(currentView === "list" ? 1 : 7);
+              setSearchQuery("");
+            }}
           />
         </motion.div>
       </div>

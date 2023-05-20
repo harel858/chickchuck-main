@@ -94,7 +94,7 @@ const SlotCalendar = ({
         title: "Time",
         dataIndex: "time",
         key: "time",
-        className: `absolute text-xl font-md pt-0 m-0 border-x border-black/20 dark:border-orange-500 bg-white dark:text-white dark:bg-black/80
+        className: `text-center w-max text-xl font-md pt-0 m-0 border-x border-black/20 dark:border-orange-500 bg-white dark:text-white dark:bg-black/80
         `,
       },
       ...weekDates.map((date, index) => ({
@@ -126,7 +126,7 @@ const SlotCalendar = ({
           return (
             <div
               className="p-0 m-0 absolute top-0 left-0 right-0 w-full h-full z-40 overflow-visible"
-              style={{ height: `${eventRowSpan * 49.5}px` }}
+              style={{ height: `${eventRowSpan * 55.5}px` }}
             >
               {hours.map((slot, slotIndex) => {
                 if (slotIndex >= startSlotIndex && slotIndex <= endSlotIndex) {
@@ -150,13 +150,13 @@ const SlotCalendar = ({
             </div>
           );
         },
-        className: `absolute pt-0 m-0 border-x border-black/20 dark:border-orange-500 ${
+        className: `w-max text-center pt-0 m-0 border-x border-black/20 dark:border-orange-500 ${
           isToday(date)
             ? "bg-gray-500/20 dark:bg-black/50"
             : "bg-white dark:bg-black/80"
         }`,
         onHeaderCell: () => ({
-          className: `absolute text-xl font-md pt-0 m-0 border-x border-black/20 dark:border-orange-500 bg-black dark:text-white dark:bg-black/80 !important`,
+          className: `text-center  w-max text-xl font-md pt-0 m-0 border-x border-black/20 dark:border-orange-500 bg-black dark:text-white dark:bg-black/80 !important`,
         }),
       })),
     ];

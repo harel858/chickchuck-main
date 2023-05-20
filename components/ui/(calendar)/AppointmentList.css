@@ -1,0 +1,17 @@
+.ant-picker-panel {
+  border-radius: 0 0 0 24px !important;
+  background-color: rgb(253, 186, 116, 0.75) !important;
+  padding: 1rem !important;
+}
+.ant-picker-calendar {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: start !important;
+  justify-content: start !important;
+  background-color: transparent !important;
+  overflow: hidden !important;
+}
+.ant-picker-calendar-header {
+  width: 100% !important;
+  background-color: rgb(253, 186, 116, 0.75) !important;
+}

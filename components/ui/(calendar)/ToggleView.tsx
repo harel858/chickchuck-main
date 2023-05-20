@@ -18,14 +18,17 @@ const spring = {
 };
 
 export default function ToggleView({
+  setSearchQuery,
   currentView,
   setCurrentView,
 }: {
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   currentView: "list" | "calendar";
   setCurrentView: React.Dispatch<React.SetStateAction<"list" | "calendar">>;
 }) {
   const handleChange = React.useCallback(() => {
     setCurrentView((prevView) => (prevView === "list" ? "calendar" : "list"));
+    setSearchQuery("");
   }, [setCurrentView]);
 
   const renderIcon = (IconComponent: IconType) => (
