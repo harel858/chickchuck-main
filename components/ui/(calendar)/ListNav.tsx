@@ -38,7 +38,7 @@ function ListNav({
   };
 
   return (
-    <nav className="flex flex-row-reverse content-center justify-between items-center bg-orange-300/75 font-extralight rounded-tr-3xl rounded-tl-3xl w-full relative top-0 p-3 px-5 gap-5">
+    <nav className="flex flex-row-reverse max-lg:flex-col flex-wrap content-center justify-between items-center bg-orange-300/75 font-extralight rounded-tr-3xl rounded-tl-3xl w-full relative top-0 p-3 px-5 gap-5">
       <ToggleView
         setSearchQuery={setSearchQuery}
         setCurrentView={setCurrentView}

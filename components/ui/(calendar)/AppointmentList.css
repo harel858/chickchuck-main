@@ -15,3 +15,23 @@
   width: 100% !important;
   background-color: rgb(253, 186, 116, 0.75) !important;
 }
+.slotCalendar table td{
+  text-align: center !important;
+  padding-right: 5em !important;
+  padding-left: 5em !important;
+}
+.slotCalendar table tbody tr:first-child {
+    width: fit-content !important;
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+    
+}
+.slotCalendar table thead tr:nth-child(0) {
+  width: fit-content !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+
+}
+.slotCalendar th{
+  text-align: center !important;
+}

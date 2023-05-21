@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useCallback, useEffect, lazy, Suspense } from "react";
-import { motion } from "framer-motion";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentEvent, ScheduleProps } from "../../../types/types";
@@ -16,7 +15,6 @@ export default function CalendarComponent({
 }: {
   scheduleProps: ScheduleProps;
 }) {
-  const [calendar, setCalendar] = useState(scheduleProps.user.id);
   const [value, setValue] = useState(() => dayjs());
   const [selectedValue, setSelectedValue] = useState(() => dayjs());
   const [eventsByDate, setEventsByDate] = useState<AppointmentEvent[]>([]);

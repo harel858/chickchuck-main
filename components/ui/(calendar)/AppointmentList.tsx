@@ -34,7 +34,7 @@ function AppointmentList({
       <div className="max-xl:w-full block w-1/4 ">
         <div className="max-xl:hidden rounded-3xl">
           <Calendar
-            className={`rounded-none text-md  bg-orange-300/75`}
+            className={`rounded-none text-md bg-orange-300/75`}
             fullscreen={false}
             value={value}
             onChange={(e) => e && onSelect(e)}

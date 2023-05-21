@@ -1,10 +1,12 @@
-import React from "react";
-import { Table } from "antd";
+import "./AppointmentList.css";
+import React, { useState } from "react";
+import { Table, Button } from "antd";
 import { motion } from "framer-motion";
 import { ScheduleProps, AppointmentEvent } from "../../../types/types";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import CalendarEvent from "./CalendarEvent";
-
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 const SlotCalendar = ({
   scheduleProps,
   eventsByDate,
@@ -21,6 +23,8 @@ const SlotCalendar = ({
   const weekDates = [...Array(7)].map((_, i) =>
     startOfWeek.add(i, "day").toDate()
   );
+
+  const [viewMode, setViewMode] = useState("weekly"); // State variable to track the view mode
 
   const slotsByDay = React.useMemo(() => {
     return weekDates.map((date) => {
@@ -89,14 +93,18 @@ const SlotCalendar = ({
   ]);
 
   const columns = React.useMemo(() => {
+    const timeColumn = {
+      title: "Time",
+      dataIndex: "time",
+      key: "time",
+      className: `text-center !important text-xl font-md p-0 !important m-0 border-x border-black/20 dark:border-orange-500 bg-white dark:text-white dark:bg-black/80`,
+      sticky: true,
+      onHeaderCell: () => ({
+        className: `text-center text-xl font-md pt-0 m-0 border-x border-black/20 dark:border-orange-500 bg-black dark:text-white dark:bg-black/80 !important`,
+      }),
+    };
     return [
-      {
-        title: "Time",
-        dataIndex: "time",
-        key: "time",
-        className: `text-center w-max text-xl font-md pt-0 m-0 border-x border-black/20 dark:border-orange-500 bg-white dark:text-white dark:bg-black/80
-        `,
-      },
+      timeColumn,
       ...weekDates.map((date, index) => ({
         title: dayjs(date).format("MMMM D"),
         dataIndex: dayjs(date).format("DD/MM/YYYY"),
@@ -150,17 +158,21 @@ const SlotCalendar = ({
             </div>
           );
         },
-        className: `w-max text-center pt-0 m-0 border-x border-black/20 dark:border-orange-500 ${
+        className: ` text-center pt-0 m-0 border-x border-black/20 dark:border-gray-500 ${
           isToday(date)
             ? "bg-gray-500/20 dark:bg-black/50"
             : "bg-white dark:bg-black/80"
         }`,
         onHeaderCell: () => ({
-          className: `text-center  w-max text-xl font-md pt-0 m-0 border-x border-black/20 dark:border-orange-500 bg-black dark:text-white dark:bg-black/80 !important`,
+          className: `text-center text-xl font-md pt-0 m-0 border-x border-black/20 dark:border-gray-500 bg-black dark:text-white dark:bg-black/80 !important`,
         }),
       })),
     ];
   }, [weekDates, hours, eventsByDate]);
+
+  const toggleViewMode = () => {
+    setViewMode((prevMode) => (prevMode === "weekly" ? "daily" : "weekly"));
+  };
 
   return (
     <motion.div
@@ -170,16 +182,36 @@ const SlotCalendar = ({
       transition={{ duration: 0.2 }}
       className="overflow-x-auto"
     >
-      <Table
-        dataSource={hours}
-        columns={columns}
-        pagination={false}
-        bordered
-        size="large"
-        rowKey={(record) => record.key || ""}
-        scroll={{ y: 450 }}
-        className="relative top-0 rounded-t-none overflow-hidden bg-orange-300/75"
-      />
+      <Button onClick={toggleViewMode}>
+        {viewMode === "weekly" ? "Switch to Daily" : "Switch to Weekly"}
+      </Button>
+      {viewMode === "weekly" ? (
+        <Table
+          tableLayout="auto"
+          dataSource={hours}
+          columns={columns}
+          pagination={false}
+          bordered
+          size="large"
+          rowKey={(record) => record.key || ""}
+          scroll={{ y: 450, x: true }}
+          className=" slotCalendar relative top-0 rounded-t-none overflow-hidden bg-orange-300/75"
+        />
+      ) : (
+        <Table
+          tableLayout="auto"
+          dataSource={hours}
+          columns={columns.filter((item) => {
+            return item.dataIndex === selectedDate.format("DD/MM/YYYY");
+          })}
+          pagination={false}
+          bordered
+          size="large"
+          rowKey={(record) => record.key || ""}
+          scroll={{ y: 450, x: true }}
+          className=" slotCalendar relative top-0 rounded-t-none overflow-hidden bg-orange-300/75"
+        />
+      )}
     </motion.div>
   );
 };
