@@ -1,3 +1,4 @@
+"use client";
 import "./AppointmentList.css";
 import React, { useState } from "react";
 import { Table, Button } from "antd";
@@ -11,10 +12,14 @@ const SlotCalendar = ({
   scheduleProps,
   eventsByDate,
   selectedDate,
+  setViewMode,
+  viewMode,
 }: {
   scheduleProps: ScheduleProps;
   eventsByDate: AppointmentEvent[];
   selectedDate: dayjs.Dayjs;
+  setViewMode: React.Dispatch<React.SetStateAction<"weekly" | "daily">>;
+  viewMode: "weekly" | "daily";
 }) => {
   const { scheduleData, business, user } = scheduleProps;
   const today = dayjs().startOf("day").toDate();
@@ -23,8 +28,6 @@ const SlotCalendar = ({
   const weekDates = [...Array(7)].map((_, i) =>
     startOfWeek.add(i, "day").toDate()
   );
-
-  const [viewMode, setViewMode] = useState("weekly"); // State variable to track the view mode
 
   const slotsByDay = React.useMemo(() => {
     return weekDates.map((date) => {
@@ -92,17 +95,18 @@ const SlotCalendar = ({
     slotsByDay,
   ]);
 
+  const timeColumn = {
+    title: "Time",
+    dataIndex: "time",
+    key: "time",
+    className: `text-center !important text-xl font-md p-0 !important m-0 border-x border-black/20 dark:border-orange-500 bg-white dark:text-white dark:bg-black/80`,
+    sticky: true,
+    width: 50, // Adjust the width value as needed
+    onHeaderCell: () => ({
+      className: `text-center text-xl font-md pt-0 m-0 border-x border-black/20 dark:border-orange-500 bg-black dark:text-white dark:bg-black/80 !important`,
+    }),
+  };
   const columns = React.useMemo(() => {
-    const timeColumn = {
-      title: "Time",
-      dataIndex: "time",
-      key: "time",
-      className: `text-center !important text-xl font-md p-0 !important m-0 border-x border-black/20 dark:border-orange-500 bg-white dark:text-white dark:bg-black/80`,
-      sticky: true,
-      onHeaderCell: () => ({
-        className: `text-center text-xl font-md pt-0 m-0 border-x border-black/20 dark:border-orange-500 bg-black dark:text-white dark:bg-black/80 !important`,
-      }),
-    };
     return [
       timeColumn,
       ...weekDates.map((date, index) => ({
@@ -158,7 +162,7 @@ const SlotCalendar = ({
             </div>
           );
         },
-        className: ` text-center pt-0 m-0 border-x border-black/20 dark:border-gray-500 ${
+        className: `text-center pt-0 m-0 border-x border-black/20 dark:border-gray-500 ${
           isToday(date)
             ? "bg-gray-500/20 dark:bg-black/50"
             : "bg-white dark:bg-black/80"
@@ -173,6 +177,12 @@ const SlotCalendar = ({
   const toggleViewMode = () => {
     setViewMode((prevMode) => (prevMode === "weekly" ? "daily" : "weekly"));
   };
+  const dailyColumns = [
+    timeColumn,
+    ...columns.filter(
+      (item) => item.dataIndex === selectedDate.format("DD/MM/YYYY")
+    ),
+  ];
 
   return (
     <motion.div
@@ -180,11 +190,8 @@ const SlotCalendar = ({
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
-      className="overflow-x-auto"
+      className="overflow-x-auto rounded-b-3xl"
     >
-      <Button onClick={toggleViewMode}>
-        {viewMode === "weekly" ? "Switch to Daily" : "Switch to Weekly"}
-      </Button>
       {viewMode === "weekly" ? (
         <Table
           tableLayout="auto"
@@ -201,15 +208,13 @@ const SlotCalendar = ({
         <Table
           tableLayout="auto"
           dataSource={hours}
-          columns={columns.filter((item) => {
-            return item.dataIndex === selectedDate.format("DD/MM/YYYY");
-          })}
+          columns={dailyColumns}
           pagination={false}
           bordered
           size="large"
           rowKey={(record) => record.key || ""}
           scroll={{ y: 450, x: true }}
-          className=" slotCalendar relative top-0 rounded-t-none overflow-hidden bg-orange-300/75"
+          className=" slotCalendar relative top-0 overflow-hidden bg-orange-300/75"
         />
       )}
     </motion.div>

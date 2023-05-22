@@ -22,8 +22,8 @@ async function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <VerticalNav user={user} />
-      <section className="flex justify-center items-center h-screen overflow-hidden pl-40 max-sm:p-0">
-        <div className="w-5/6 h-5/6 mt-24 ">{children}</div>
+      <section className="flex justify-center items-center h-screen overflow-hidden pl-40 max-md:p-0">
+        <div className="w-5/6 h-5/6 mt-16 ">{children}</div>
       </section>
     </>
   );

@@ -15,6 +15,10 @@
   width: 100% !important;
   background-color: rgb(253, 186, 116, 0.75) !important;
 }
+.slotCalendar table{
+  border-bottom-right-radius: 1.5rem !important;
+    border-bottom-left-radius: 1.5rem !important;
+}
 .slotCalendar table td{
   text-align: center !important;
   padding-right: 5em !important;

@@ -3,9 +3,9 @@ import React, { useState, useCallback, useEffect, lazy, Suspense } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentEvent, ScheduleProps } from "../../../types/types";
-import MemoizedAppointmentList from "./AppointmentList";
 import ListNav from "./ListNav";
 const LazySlotCalendar = lazy(() => import("./SlotCalendar"));
+const MemoizedAppointmentList = lazy(() => import("./AppointmentList"));
 import SearchResults from "./SearchResults";
 import { Table } from "antd";
 dayjs.extend(customParseFormat);
@@ -20,6 +20,7 @@ export default function CalendarComponent({
   const [eventsByDate, setEventsByDate] = useState<AppointmentEvent[]>([]);
   const [currentView, setCurrentView] = useState<"list" | "calendar">("list");
   const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<"daily" | "weekly">("weekly");
 
   useEffect(() => {
     const handleEventsByDate = () => {
@@ -79,8 +80,10 @@ export default function CalendarComponent({
   };
 
   return (
-    <div className="bg-white/40 overflow-hidden rounded-3xl shadow-2xl dark:shadow-white/10 p-0 w-full">
+    <div className="bg-white/40  rounded-3xl shadow-2xl dark:shadow-white/10 p-0 w-full">
       <ListNav
+        setViewMode={setViewMode}
+        viewMode={viewMode}
         setSearchQuery={setSearchQuery}
         selectedValue={selectedValue}
         setCurrentView={setCurrentView}
@@ -90,11 +93,23 @@ export default function CalendarComponent({
         onSearchChange={handleSearchChange}
       />
       {currentView === "list" && !searchQuery ? (
-        <MemoizedAppointmentList
-          value={value}
-          onSelect={onSelect}
-          eventsByDate={eventsByDate}
-        />
+        <Suspense
+          fallback={
+            <Table
+              size="large"
+              loading
+              pagination={false}
+              bordered
+              scroll={{ y: 1000 }}
+            />
+          }
+        >
+          <MemoizedAppointmentList
+            value={value}
+            onSelect={onSelect}
+            eventsByDate={eventsByDate}
+          />
+        </Suspense>
       ) : currentView === "calendar" && !searchQuery ? (
         <Suspense
           fallback={
@@ -108,6 +123,8 @@ export default function CalendarComponent({
           }
         >
           <LazySlotCalendar
+            setViewMode={setViewMode}
+            viewMode={viewMode}
             eventsByDate={eventsByDate}
             scheduleProps={scheduleProps}
             selectedDate={value}

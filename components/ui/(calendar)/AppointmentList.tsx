@@ -44,7 +44,7 @@ function AppointmentList({
         <div className="hidden relative max-xl:flex border border-gray-500 cursor-pointer justify-center items-center content-center w-full"></div>
       </div>
       {noAppointmens ? (
-        <NoAppointments title="No Appointments For Today" />
+        <NoAppointments title={"No Appointments For Today"} />
       ) : (
         <ul
           className={`flex flex-1 w-full flex-col justify-start content-center items-start overflow-y-auto overflow-x-hidden border-t border-gray-500 rounded-bl-3xl rounded-br-3xl max-h-[27.5rem] `}

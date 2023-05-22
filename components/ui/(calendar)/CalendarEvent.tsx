@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { AppointmentEvent } from "../../../types/types";
 import ToolTip from "./ToolTip";
@@ -37,12 +38,12 @@ function Event({ event }: { event: AppointmentEvent }) {
           duration: 0.3,
           easeInOut: [0, 0.71, 0.2, 1.01],
         }}
-        className={`flex flex-col w-full h-full dark:bg-white/50 dark:hover:bg-white hover:bg-gray-700 pl-2  bg-slate-500  cursor-pointer text-white relative border-b border-black/50  rounded-xl`}
+        className={`flex flex-col w-full h-full dark:bg-white/50 dark:hover:bg-white hover:bg-gray-700 pl-2  bg-sky-800/90  cursor-pointer text-white relative border-b border-black/50  rounded-xl`}
       >
         <span
           className={`absolute h-5/6 w-1 bottom-2 left-1 ${event.color}  font-extrabold rounded-full`}
         ></span>
-        <div className="flex flex-col justify-center items-start pt-2 pl-2 gap-1 ">
+        <div className="flex flex-col justify-center items-start pt-2 pl-2 gap-1">
           <p className="font-medium text-lg text-left">
             {event.treatment.title}
           </p>

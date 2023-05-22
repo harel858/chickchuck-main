@@ -51,6 +51,14 @@ function ToolTip({ event }: { event: AppointmentEvent }) {
           </p>
         </div>
       </div>
+      <div
+        className={`flex justify-around gap-5 bg-gray-900 text-black rounded-b-2xl w-full px-5 relative top-0 py-3`}
+      >
+        <p className="font-normal text-lg w-max">{event.customer.name}</p>
+        <p className="font-normal  text-lg w-max">
+          {start} - {end}
+        </p>
+      </div>
     </div>
   );
 }

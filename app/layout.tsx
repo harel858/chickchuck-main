@@ -31,7 +31,7 @@ export default function RootLayout({
           </Providers>
 
           {/*Allow more height for mobile menu on mobile*/}
-          <div className="h-40 md:hidden" />
+          <div className="max-md:h-10 hidden" />
         </body>
       </html>
     </ServerThemeProvider>

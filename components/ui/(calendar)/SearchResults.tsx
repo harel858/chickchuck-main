@@ -23,7 +23,7 @@ function SearchResults({
       className="flex w-full items-stretch max-xl:items-center justify-center max-h-max max-xl:flex-col"
     >
       {events.length <= 0 ? (
-        <NoAppointments title="Client not found in the system" />
+        <NoAppointments title={"Client not found in the system"} />
       ) : (
         <ul
           className={`${classes.ul} flex flex-1 w-full flex-col justify-start content-center items-start overflow-y-auto overflow-x-hidden border-t border-gray-500 rounded-bl-3xl rounded-br-3xl max-h-[27.5rem] `}
