@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, useCallback, useEffect, lazy, Suspense } from "react";
+import MemoizedAppointmentList from "./AppointmentList";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentEvent, ScheduleProps } from "../../../types/types";
 import ListNav from "./ListNav";
 const LazySlotCalendar = lazy(() => import("./SlotCalendar"));
-const MemoizedAppointmentList = lazy(() => import("./AppointmentList"));
-import SearchResults from "./SearchResults";
+const SearchResults = lazy(() => import("./SearchResults"));
 import { Table } from "antd";
 dayjs.extend(customParseFormat);
 
@@ -93,23 +93,11 @@ export default function CalendarComponent({
         onSearchChange={handleSearchChange}
       />
       {currentView === "list" && !searchQuery ? (
-        <Suspense
-          fallback={
-            <Table
-              size="large"
-              loading
-              pagination={false}
-              bordered
-              scroll={{ y: 1000 }}
-            />
-          }
-        >
-          <MemoizedAppointmentList
-            value={value}
-            onSelect={onSelect}
-            eventsByDate={eventsByDate}
-          />
-        </Suspense>
+        <MemoizedAppointmentList
+          value={value}
+          onSelect={onSelect}
+          eventsByDate={eventsByDate}
+        />
       ) : currentView === "calendar" && !searchQuery ? (
         <Suspense
           fallback={
@@ -131,7 +119,19 @@ export default function CalendarComponent({
           />
         </Suspense>
       ) : (
-        <SearchResults searchQuery={searchQuery} events={eventsByDate} />
+        <Suspense
+          fallback={
+            <Table
+              size="large"
+              loading
+              pagination={false}
+              bordered
+              scroll={{ y: 1000 }}
+            />
+          }
+        >
+          <SearchResults searchQuery={searchQuery} events={eventsByDate} />
+        </Suspense>
       )}
     </div>
   );

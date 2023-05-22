@@ -194,7 +194,7 @@ const SlotCalendar = ({
     >
       {viewMode === "weekly" ? (
         <Table
-          tableLayout="auto"
+          tableLayout="fixed"
           dataSource={hours}
           columns={columns}
           pagination={false}
@@ -206,7 +206,7 @@ const SlotCalendar = ({
         />
       ) : (
         <Table
-          tableLayout="auto"
+          tableLayout="fixed"
           dataSource={hours}
           columns={dailyColumns}
           pagination={false}
