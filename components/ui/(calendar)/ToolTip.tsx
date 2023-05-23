@@ -1,6 +1,7 @@
 "use client";
 import classes from "./style.module.css";
 import React from "react";
+import WhatsappButtons from "./WhatsappButtons";
 import { motion } from "framer-motion";
 import { AppointmentEvent } from "../../../types/types";
 import dayjs from "dayjs";
@@ -27,15 +28,16 @@ function ToolTip({ event }: { event: AppointmentEvent }) {
               Status:
               <span className="font-light text-lg"> {event.status}</span>
             </p>
-            <motion.button
-              className="p-2 text-sm rounded-2xl border hover:border-black hover:text-white bg-white border-red-600  text-red-600 hover:bg-red-600"
-              whileHover={{ scale: 1.2 }}
-              disabled={event.status !== "SCHEDULED"}
-              whileTap={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >
-              Cancel Appointment
-            </motion.button>
+            {event.status === "SCHEDULED" && (
+              <motion.button
+                className="p-2 text-sm rounded-xl border hover:border-black hover:text-white bg-white border-red-600  text-red-600 hover:bg-red-600"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                Cancel Appointment
+              </motion.button>
+            )}
           </div>
           <p className="font-semibold text-xl">
             Type of Service:
@@ -51,14 +53,7 @@ function ToolTip({ event }: { event: AppointmentEvent }) {
           </p>
         </div>
       </div>
-      <div
-        className={`flex justify-around gap-5 bg-gray-900 text-black rounded-b-2xl w-full px-5 relative top-0 py-3`}
-      >
-        <p className="font-normal text-lg w-max">{event.customer.name}</p>
-        <p className="font-normal  text-lg w-max">
-          {start} - {end}
-        </p>
-      </div>
+      {event.status === "SCHEDULED" && <WhatsappButtons event={event} />}
     </div>
   );
 }

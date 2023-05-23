@@ -29,6 +29,7 @@
       "@ui/*":["./components/ui/*"],
       "@components/*":["./components/*"],
       "@navbar/*":["./app/(navbar)/*"],
+      "@actions":["./actions"]
     }
   },
   

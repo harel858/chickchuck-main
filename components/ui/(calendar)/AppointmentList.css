@@ -1,6 +1,6 @@
 .ant-picker-panel {
   border-radius: 0 0 0 24px !important;
-  background-color: rgb(253, 186, 116, 0.75) !important;
+ background-color: rgb(251 146 60 / 0.8) !important;
   padding: 1rem !important;
 }
 .ant-picker-calendar {
@@ -13,7 +13,7 @@
 }
 .ant-picker-calendar-header {
   width: 100% !important;
-  background-color: rgb(253, 186, 116, 0.75) !important;
+  background-color: rgb(251 146 60 / 0.8) !important;
 }
 .slotCalendar table{
   border-bottom-right-radius: 1.5rem !important;

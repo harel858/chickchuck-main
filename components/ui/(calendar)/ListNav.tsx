@@ -48,7 +48,7 @@ function ListNav({
   };
 
   return (
-    <nav className="flex flex-row-reverse max-md:flex-col flex-wrap content-center justify-between items-center bg-orange-300/75 font-extralight rounded-tr-3xl rounded-tl-3xl w-full relative top-0 p-3 px-5 gap-2">
+    <nav className="flex flex-row-reverse max-md:flex-col flex-wrap content-center justify-between items-center bg-orange-400/80 font-extralight rounded-tr-3xl rounded-tl-3xl w-full relative top-0 p-3 px-5 gap-2">
       <div className="flex justify-center items-center content-center gap-5">
         {currentView === "calendar" && (
           <ToggleViewMode
