@@ -11,7 +11,6 @@ export async function createAvailableSlots(
   businessId: string
 ) {
   console.log(dayjs(availableSlots[0].start).format("hh:mm A"));
-
   try {
     const slotsToSave = availableSlots.map((slot) => {
       return {
@@ -27,7 +26,6 @@ export async function createAvailableSlots(
         userId: userId,
       },
     });
-    console.log(existingSlots);
     if (existingSlots.length > 0) {
       await prisma.availableSlot.deleteMany({
         where: {

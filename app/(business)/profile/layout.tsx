@@ -3,6 +3,7 @@ import VerticalNav from "@ui/(navbar)/VerticalNav";
 import prisma from "@lib/prisma";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
+import { authOptions } from "@lib/auth";
 
 async function fetchUser(email: string | null | undefined) {
   try {
@@ -17,9 +18,9 @@ async function fetchUser(email: string | null | undefined) {
 }
 
 async function Layout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   const user = await fetchUser(session?.user?.email);
-  if (!user) return notFound();
+  if (!user || session?.user.UserRole != "RECIPIENT") return notFound();
   return (
     <>
       <VerticalNav user={user} />

@@ -2,9 +2,10 @@ import { notFound } from "next/navigation";
 import React from "react";
 import prisma from "../../lib/prisma";
 import { UserData } from "../../types/types";
-import Tabs from "./Tabs";
 import Stepper from "@ui/Stepper";
-import LargeHeading from "@ui/LargeHeading";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@lib/auth";
+import Verification from "@components/Verification";
 export const dynamic = "force-static";
 
 type LandingPageProps = {
@@ -16,7 +17,6 @@ type LandingPageProps = {
 const fetchAppointmentSlots = async (businessName: string) => {
   try {
     const value = businessName.replace(/-/g, " ").replace(/%60/g, "`");
-    console.log(value);
 
     const business = await prisma.business.findUnique({
       where: { businessName: value },
@@ -48,16 +48,21 @@ const fetchAppointmentSlots = async (businessName: string) => {
 export default async function LandingPage({
   params: { businessName },
 }: LandingPageProps) {
+  const session = await getServerSession(authOptions);
+  console.log(session);
   const userData = await fetchAppointmentSlots(businessName);
-  console.log(userData);
 
   if (!userData) return notFound();
+
   return (
     <div className="flex flex-col items-center justify-center gap-20 h-screen w-full text-white">
-      <LargeHeading className="opacity-6" size={"sm"}>
-        Queue Booking
-      </LargeHeading>
-      <Stepper userData={userData} />
+      <div className="w-1/2 max-md:w-11/12 flex justify-center content-center items-center dark:bg-orange-400/70 bg-orange-400/80 p-10 rounded-3xl shadow-2xl dark:shadow-white/10 ">
+        {!session || session?.user.UserRole != "RECIPIENT" ? (
+          <Verification userData={userData} />
+        ) : (
+          <Stepper userData={userData} />
+        )}
+      </div>
     </div>
   );
 }

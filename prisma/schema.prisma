@@ -16,6 +16,7 @@ model User {
   profileSrc       String?
   startActivity    String?
   endActivity      String?
+  UserRole         UserRole          @default(RECIPIENT)
   appointments     Appointment[]
   availableSlots   AvailableSlot[]
   appointmentSlots AppointmentSlot[]
@@ -69,6 +70,7 @@ model Customer {
   id           String        @id @default(uuid())
   name         String
   phoneNumber  String        @unique
+  UserRole     UserRole      @default(CUSTOMER)
   appointments Appointment[]
 }
 
@@ -110,6 +112,11 @@ enum AppointmentStatus {
   SCHEDULED
   CANCELLED
   COMPLETED
+}
+
+enum UserRole {
+  CUSTOMER
+  RECIPIENT
 }
 
 enum PremiumKits {

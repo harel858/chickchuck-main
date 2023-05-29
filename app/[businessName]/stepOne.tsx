@@ -1,61 +1,49 @@
 "use client";
-import React, { useEffect } from "react";
-import axios, { AxiosError } from "axios";
-import { Button, CircularProgress, TextField } from "@mui/material";
-import { Poppins } from "@next/font/google";
-import { JackInTheBox } from "react-awesome-reveal";
-import { LoadingButton } from "@mui/lab";
-import { formData } from "../../types/types";
+import React, { useState } from "react";
+import axios from "axios";
+import { TextField } from "@mui/material";
+import { Button } from "@ui/Button";
 
-const font = Poppins({
-  subsets: ["latin"],
-  weight: "400",
-});
-type StepOneProps = {
-  handleNext: () => void;
-  customerInput: formData;
-  setCustomerInput: React.Dispatch<React.SetStateAction<formData>>;
-};
-interface StepOneRes {
-  phoneNumber: string;
-  request_id: string;
-}
+const StepOne = React.memo(({ handleNext }: { handleNext: () => void }) => {
+  const [input, setInput] = useState({
+    name: "",
+    phoneNumber: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-function StepOne({
-  handleNext,
-  customerInput,
-  setCustomerInput,
-}: StepOneProps) {
-  const [error, setError] = React.useState("");
-  const [animate, setAnimate] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const handleChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const { name, value } = event.target;
 
-  useEffect(() => {
-    setAnimate(true);
-  }, []);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerInput({
-      ...customerInput,
-      [event.target.name]: event.target.value,
-    });
+    if (name === "phoneNumber") {
+      const onlyDigits = value.replace(/\D/g, "");
+      setInput((prevInput) => ({
+        ...prevInput,
+        [name]: onlyDigits,
+      }));
+    } else {
+      setInput((prevInput) => ({
+        ...prevInput,
+        [name]: value,
+      }));
+    }
   };
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setError("");
     setLoading(true);
-    e.preventDefault();
-    console.log(customerInput.name);
 
     try {
-      const res = await axios.post(`/api/verification/stepone`, customerInput);
-      const data = res.data as StepOneRes;
-      console.log(data);
-      setCustomerInput({
-        ...customerInput,
+      const res = await axios.post("/api/verification/stepone", input);
+      const data = res.data;
+      setInput((prevInput) => ({
+        ...prevInput,
         request_id: data.request_id,
         phoneNumber: data.phoneNumber,
-      });
+      }));
 
       if (res.status === 200) {
         setLoading(false);
@@ -63,100 +51,77 @@ function StepOne({
       }
     } catch (err: any) {
       setLoading(false);
-      err.response.data && setError(err.response.data);
+      setError(err.response?.data || err.message);
     }
   };
 
   return (
-    <>
-      {animate ? (
-        <JackInTheBox duration={500}>
-          <form
-            onSubmit={submitForm}
-            className="flex flex-col items-center gap-12 mt-4"
-          >
-            <div className="flex flex-col items-center gap-8 mt-4">
-              <TextField
-                id="outlined-basic"
-                label="Enter Name"
-                name="name"
-                onChange={handleChange}
-                error={error ? true : false}
-                variant="outlined"
-                InputProps={{
-                  style: { color: `white`, fontSize: `1.2em` },
-                }}
-                InputLabelProps={{
-                  style: {
-                    fontSize: "1.1em",
-                    fontWeight: "500",
-                    color: `rgba(245,245,220,.6)`,
-                  },
-                }}
-                sx={{
-                  bgcolor: "rgba(255, 255, 225,.2)",
-                  borderRadius: "8px",
-                  ":after": { border: `4px solid white ` },
-                }}
-              />
+    <form
+      onSubmit={submitForm}
+      className="flex flex-col items-center gap-12 mt-4 w-full"
+    >
+      <div className="flex flex-col items-center gap-8 mt-4">
+        <TextField
+          id="outlined-basic"
+          label="Enter Name"
+          name="name"
+          onChange={handleChange}
+          error={Boolean(error)}
+          variant="filled"
+          InputProps={{
+            style: { color: "white", fontSize: "1.2em" },
+            inputMode: "numeric",
+          }}
+          InputLabelProps={{
+            style: {
+              fontSize: "1.1em",
+              fontWeight: "500",
+              color: "rgba(245, 245, 220, 0.6)",
+            },
+          }}
+          sx={{
+            bgcolor: "rgba(0, 0, 0, 0.5)",
+            borderRadius: "8px",
+            ":after": { border: "4px solid white" },
+            ...(error && { boxShadow: "0px 0px 0px 2px red" }),
+          }}
+        />
 
-              <TextField
-                id="outlined-basic"
-                label="Phone Number"
-                name="phoneNumber"
-                variant="outlined"
-                onChange={handleChange}
-                error={error ? true : false}
-                InputProps={{
-                  style: { color: `white`, fontSize: `1.2em` },
-                }}
-                InputLabelProps={{
-                  style: {
-                    fontSize: "1.1em",
-                    fontWeight: "500",
-                    color: `rgba(245,245,220,.6)`,
-                  },
-                }}
-                sx={{
-                  bgcolor: "rgba(255, 255, 225,.2)",
-                  borderRadius: "8px",
-                  borderColor: "#e0e0e0",
-                }}
-              />
-            </div>
-            <LoadingButton
-              variant="contained"
-              className={`bg-orange-400 ${font.className} tracking-widest`}
-              style={
-                loading ? { backgroundColor: `#fb923c !important` } : undefined
-              }
-              color="warning"
-              type="submit"
-              loading={loading}
-              sx={
-                loading
-                  ? {
-                      fontSize: `1.1em`,
-                      fontFamily: `sans-serif`,
-                      borderRadius: `15px`,
-                      backgroundColor: `#fb923c !important`,
-                    }
-                  : {
-                      fontSize: `1.1em`,
-                      fontFamily: `sans-serif`,
-                      borderRadius: `15px`,
-                    }
-              }
-            >
-              Send SMS
-            </LoadingButton>
-          </form>
-        </JackInTheBox>
-      ) : (
-        <CircularProgress size={80} color="warning" />
-      )}
-    </>
+        <TextField
+          id="outlined-basic"
+          label="Phone Number"
+          name="phoneNumber"
+          variant="filled"
+          onChange={handleChange}
+          error={Boolean(error)}
+          InputProps={{
+            style: { color: "white", fontSize: "1.2em" },
+          }}
+          InputLabelProps={{
+            style: {
+              fontSize: "1.1em",
+              fontWeight: "500",
+              color: "rgba(245, 245, 220, 0.6)",
+            },
+          }}
+          sx={{
+            bgcolor: "rgba(0, 0, 0, 0.5)",
+            borderRadius: "8px",
+            borderColor: "#e0e0e0",
+            ...(error && { boxShadow: "0px 0px 0px 2px red" }),
+          }}
+        />
+      </div>
+
+      <Button
+        variant="default"
+        className="bg-sky-600 dark:bg-sky-800 text-xl rounded-xl tracking-widest"
+        isLoading={loading}
+      >
+        Send SMS
+      </Button>
+    </form>
   );
-}
+});
 
 export default StepOne;

@@ -1,6 +1,7 @@
 import React from "react";
 import prisma from "@lib/prisma";
-import { getServerSession, Session } from "next-auth";
+import { authOptions } from "@lib/auth";
+import { getServerSession } from "next-auth";
 import UniqueLink from "./UniqueLink";
 import { notFound } from "next/navigation";
 
@@ -20,7 +21,9 @@ async function fetchUser(email: string | null | undefined) {
 }
 
 async function Page() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
+  console.log(session);
+
   const business = await fetchUser(session?.user?.email);
   if (!business) return notFound();
   const value = business.name.replace(/ /g, "-");

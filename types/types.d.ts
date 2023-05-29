@@ -92,7 +92,6 @@ export type UserProps = {
 
 export type AppointmentInput = {
   treatment: Treatment | null;
-  customer: Customer | null;
   user: UserData | null;
   availableSlot: AvailableSlot[];
   date: Dayjs;
@@ -109,3 +108,8 @@ export type NavBarProps = {
   isAdmin?: boolean | undefined;
   PremiumKit?: PremiumKits | undefined;
 };
+
+export default interface StepOne {
+  name: string;
+  phoneNumber: string;
+}

@@ -30,12 +30,10 @@ async function Page() {
 
   return (
     <div className="flex flex-col justify-center align-center content-center items-center ">
-      <ProfileImage user={user} />
       <div>
         <TreatmentsForm user={user} />
         <ul>
           {user?.Treatment?.map((item) => {
-            console.log(item);
             return <Treatment key={item.id} item={item} />;
           })}
         </ul>

@@ -20,7 +20,6 @@ function Tabs({ userData }: { userData: UserData[] }) {
   const [appointmentInput, setAppointmentInput] =
     React.useState<AppointmentInput>({
       treatment: null,
-      customer: null,
       availableSlot: [],
       user: null,
       date: dayjs(),
@@ -34,25 +33,13 @@ function Tabs({ userData }: { userData: UserData[] }) {
       label: "Tab 1",
       content: (
         <React.Suspense fallback={<Loading />}>
-          <StepOne
-            handleNext={handleNext}
-            customerInput={customerInput}
-            setCustomerInput={setCustomerInput}
-          />
+          <StepOne handleNext={handleNext} />
         </React.Suspense>
       ),
     },
     {
       label: "Tab 2",
-      content: (
-        <StepTwo
-          handleNext={handleNext}
-          customerInput={customerInput}
-          appointmentInput={appointmentInput}
-          setAppointmentInput={setAppointmentInput}
-          setCustomerInput={setCustomerInput}
-        />
-      ),
+      content: <StepTwo handleNext={handleNext} />,
     },
     {
       label: "Tab 3",

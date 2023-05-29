@@ -40,13 +40,11 @@ export default function Form({
     duration: number
   ) => {
     const slots: Slots[] = [];
-    console.log(startActivity.startOf("day").hour());
 
     // Create slots with specified duration
     let currentSlotStart = start;
     while (currentSlotStart.isBefore(end)) {
       const currentSlotEnd = currentSlotStart.add(duration, "minute");
-      console.log(currentSlotStart.format("HH:mm"));
 
       slots.push({
         start: currentSlotStart.format("HH:mm"),
@@ -54,7 +52,6 @@ export default function Form({
       });
       currentSlotStart = currentSlotEnd;
     }
-    console.log(slots);
 
     setAvailableSlots(slots);
   };

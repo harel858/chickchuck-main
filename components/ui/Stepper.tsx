@@ -1,10 +1,8 @@
 "use client";
-import * as React from "react";
-import Box from "@mui/material/Box";
+import React from "react";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepButton from "@mui/material/StepButton";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import StepOne from "../../app/[businessName]/stepOne";
 import Loading from "../../app/[businessName]/loading";
@@ -12,16 +10,22 @@ import StepTwo from "../../app/[businessName]/stepTwo";
 import StepThree from "../../app/[businessName]/StepThree";
 import { AppointmentInput, formData, UserData } from "../../types/types";
 import dayjs from "dayjs";
+import { useSession } from "next-auth/react";
 
 export default function HorizontalNonLinearStepper({
   userData,
 }: {
   userData: UserData[];
 }) {
-  const [activeStep, setActiveStep] = React.useState(0);
+  const session = useSession();
+
+  const userId = session.data?.user.id;
+
+  const [activeStep, setActiveStep] = React.useState(userId ? 2 : 0);
   const [completed, setCompleted] = React.useState<{
     [k: number]: boolean;
   }>({});
+
   const [customerInput, setCustomerInput] = React.useState<formData>({
     name: "",
     request_id: "",
@@ -31,7 +35,6 @@ export default function HorizontalNonLinearStepper({
   const [appointmentInput, setAppointmentInput] =
     React.useState<AppointmentInput>({
       treatment: null,
-      customer: null,
       availableSlot: [],
       user: null,
       date: dayjs(),
@@ -39,28 +42,16 @@ export default function HorizontalNonLinearStepper({
 
   const steps = [
     {
-      label: "Tab 1",
+      label: <h4></h4>,
       content: (
         <React.Suspense fallback={<Loading />}>
-          <StepOne
-            handleNext={handleNext}
-            customerInput={customerInput}
-            setCustomerInput={setCustomerInput}
-          />
+          <StepOne handleNext={handleNext} />
         </React.Suspense>
       ),
     },
     {
       label: "Tab 2",
-      content: (
-        <StepTwo
-          handleNext={handleNext}
-          customerInput={customerInput}
-          appointmentInput={appointmentInput}
-          setAppointmentInput={setAppointmentInput}
-          setCustomerInput={setCustomerInput}
-        />
-      ),
+      content: <StepTwo handleNext={handleNext} />,
     },
     {
       label: "Tab 3",
@@ -121,8 +112,8 @@ export default function HorizontalNonLinearStepper({
   };
 
   return (
-    <Box sx={{ width: "80%" }}>
-      <Stepper nonLinear activeStep={activeStep}>
+    <div className="w-full">
+      <Stepper activeStep={activeStep}>
         {steps.map((step, index) => (
           <Step key={index} completed={completed[index]}>
             <StepButton color="inherit" onClick={handleStep(index)}>
@@ -142,6 +133,6 @@ export default function HorizontalNonLinearStepper({
           <React.Fragment>{steps[activeStep].content}</React.Fragment>
         )}
       </div>
-    </Box>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
-import * as React from "react";
-import { AvailableSlot, Customer, Treatment } from "@prisma/client";
+import React from "react";
+import { Treatment } from "@prisma/client";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -120,9 +120,8 @@ function StepThree({
     try {
       const res = await axios.post("api/appointments", {
         ...appointmentInput,
-        customerId: appointmentInput.customer?.id,
+        customerId: "vdds",
       });
-      console.log(res.data);
     } catch (err: any) {
       console.log(err);
     }

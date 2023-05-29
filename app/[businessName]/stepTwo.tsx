@@ -1,40 +1,23 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Zoom } from "react-awesome-reveal";
-import { TextField, Button } from "@mui/material";
-import { Poppins } from "@next/font/google";
-import { AppointmentInput, formData } from "../../types/types";
-import { LoadingButton } from "@mui/lab";
-import { Appointment, Customer } from "@prisma/client";
+import { TextField } from "@mui/material";
+import { Button } from "@mui/material";
 
-interface StepTwoProps {
-  handleNext: () => void;
-  customerInput: formData;
-  appointmentInput: AppointmentInput;
-  setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
-  setCustomerInput: React.Dispatch<React.SetStateAction<formData>>;
-}
-const font = Poppins({
-  subsets: ["latin"],
-  weight: "400",
-});
+const StepTwo = React.memo(({ handleNext }: { handleNext: () => void }) => {
+  const [input, setInput] = useState({
+    request_id: "",
+    code: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-function StepTwo({
-  handleNext,
-  customerInput,
-  appointmentInput,
-  setCustomerInput,
-  setAppointmentInput,
-}: StepTwoProps) {
-  console.log(customerInput.request_id);
-
-  const [error, setError] = React.useState("");
-  const [loading, setLoading] = React.useState(false);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerInput({
-      ...customerInput,
+  const handleChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    setInput({
+      ...input,
       [event.target.name]: event.target.value,
     });
   };
@@ -45,11 +28,9 @@ function StepTwo({
     e.preventDefault();
 
     try {
-      const res = await axios.post(`/api/verification/steptwo`, customerInput);
+      const res = await axios.post("/api/verification/steptwo", input);
       if (res.status === 200) {
-        const customer = res.data as Customer;
-        setAppointmentInput({ ...appointmentInput, customer });
-
+        const customer = res.data;
         setLoading(false);
         handleNext();
       }
@@ -89,15 +70,15 @@ function StepTwo({
           }}
         />
         <Zoom duration={350} damping={10000} delay={150}>
-          <LoadingButton
+          <Button
             variant="contained"
-            className={`bg-orange-400 ${font.className} tracking-widest`}
+            className={`bg-orange-400`}
             style={
               loading ? { backgroundColor: `#fb923c !important` } : undefined
             }
             color="warning"
             type="submit"
-            loading={loading}
+            disabled={loading}
             sx={
               loading
                 ? {
@@ -113,12 +94,19 @@ function StepTwo({
                   }
             }
           >
-            Send SMS
-          </LoadingButton>
+            {loading ? (
+              <>
+                <i className="fa fa-spinner fa-spin mr-2" />
+                Loading
+              </>
+            ) : (
+              "Verify"
+            )}
+          </Button>
         </Zoom>
       </form>
     </Zoom>
   );
-}
+});
 
 export default StepTwo;

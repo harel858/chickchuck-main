@@ -27,7 +27,6 @@ function TreatmentsForm({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
 
     try {
       const res = await fetch(`/api/treatment`, {

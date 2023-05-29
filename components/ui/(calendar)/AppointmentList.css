@@ -21,8 +21,8 @@
 }
 .slotCalendar table td{
   text-align: center !important;
-  padding-right: 5em !important;
-  padding-left: 5em !important;
+  
+
 }
 .slotCalendar table tbody tr:first-child {
     width: fit-content !important;
@@ -38,4 +38,13 @@
 }
 .slotCalendar th{
   text-align: center !important;
+}
+
+@media screen and (max-width:1200px) {
+  .slotCalendar table td {
+    text-align: center !important;
+    padding-right: 5em !important;
+    padding-left: 5em !important;
+  }
+  
 }

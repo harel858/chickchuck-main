@@ -29,6 +29,8 @@ async function fetchUser(email: string | null | undefined) {
 
 const Navbar = async () => {
   const session = await getServerSession();
+  console.log(session);
+
   const user = await fetchUser(session?.user?.email);
 
   return (

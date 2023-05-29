@@ -19,8 +19,6 @@ function SignInForm() {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    console.log(event.target.value);
-
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
@@ -33,7 +31,7 @@ function SignInForm() {
     // Use formData for API call
     try {
       setIsLoading(true);
-      await signIn("credentials", {
+      await signIn("User Login", {
         ...formData,
         redirect: true,
         callbackUrl: "/profile",

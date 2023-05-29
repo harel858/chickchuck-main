@@ -71,16 +71,11 @@ function AvailableQueues({
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    console.log(date.format());
-
     const getQueues = async (date: Dayjs) => {
       try {
-        console.log(appointmentInput?.user?.userId);
-
         let res = await axios.get(
           `/api/slots/slot?chosenDate=${date}&userId=${appointmentInput?.user?.userId}&duration=${appointmentInput?.treatment?.duration}`
         );
-        console.log(res.data);
 
         setQueues(res.data);
       } catch (err) {
@@ -95,7 +90,6 @@ function AvailableQueues({
   const handleChange = (availableSlot: AvailableSlot[]) => {
     setAppointmentInput({ ...appointmentInput, availableSlot });
   };
-  console.log(queues);
 
   return (
     <div className="py-12 gap-2 flex justify-start align-center items-center flex-wrap align-center">

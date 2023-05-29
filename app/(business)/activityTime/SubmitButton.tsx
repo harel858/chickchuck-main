@@ -45,16 +45,12 @@ export default function SubmitButton({
   };
 
   React.useEffect(() => {
-    console.log(hasChanges);
-
     return () => {
       clearTimeout(timer.current);
     };
   }, [hasChanges]);
 
   const handleButtonClick = async () => {
-    console.log(activityDays);
-
     setSuccess(false);
     setLoading(true);
     try {
@@ -71,7 +67,6 @@ export default function SubmitButton({
         }),
       });
       const response = await res.json();
-      console.log(response);
       setSuccess(true);
       setLoading(false);
     } catch (err) {

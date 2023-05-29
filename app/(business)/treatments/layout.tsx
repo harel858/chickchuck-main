@@ -20,10 +20,10 @@ async function fetchUser(email: string | null | undefined) {
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession();
   const user = await fetchUser(session?.user?.email);
-  if (!user) return notFound();
+  if (!user || session?.user.UserRole != "RECIPIENT") return notFound();
   return (
     <>
-      <VerticalNav user={user} lobster={lobster.className} />
+      <VerticalNav user={user} />
       <section className="h-screen w-full flex justify-center items-center">
         {children}
       </section>

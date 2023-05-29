@@ -28,8 +28,6 @@ function SignUpForm() {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    console.log(formData);
-
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,

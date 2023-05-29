@@ -137,20 +137,30 @@ const SlotCalendar = ({
 
           return (
             <div
-              className="p-0 m-0 absolute top-0 left-0 right-0 w-full h-full z-40 overflow-visible"
+              className="flex justify-center items-center p-0 m-0 absolute top-0 left-0 right-0 w-full h-full z-40 overflow-visible"
               style={{ height: `${eventRowSpan * 55.5}px` }}
             >
               {hours.map((slot, slotIndex) => {
                 if (slotIndex >= startSlotIndex && slotIndex <= endSlotIndex) {
                   if (typeof eventId === "string" && slot.id === eventId) {
-                    return <CalendarEvent key={event.id} event={event} />;
+                    return (
+                      <CalendarEvent
+                        key={event.id}
+                        viewMode={viewMode}
+                        event={event}
+                      />
+                    );
                   } else if (
                     typeof slot.event !== "string" &&
                     slot.event &&
                     slot.event.id === event.id
                   ) {
                     return (
-                      <CalendarEvent key={slot.event.id} event={slot.event} />
+                      <CalendarEvent
+                        key={slot.event.id}
+                        viewMode={viewMode}
+                        event={slot.event}
+                      />
                     );
                   } else {
                     return null;
@@ -202,7 +212,7 @@ const SlotCalendar = ({
           size="large"
           rowKey={(record) => record.key || ""}
           scroll={{ y: 450, x: true }}
-          className=" slotCalendar relative top-0 rounded-t-none overflow-hidden bg-orange-300/75"
+          className="slotCalendar relative top-0 rounded-t-none overflow-hidden bg-orange-300/75"
         />
       ) : (
         <Table
@@ -214,7 +224,7 @@ const SlotCalendar = ({
           size="large"
           rowKey={(record) => record.key || ""}
           scroll={{ y: 450, x: true }}
-          className=" slotCalendar relative top-0 overflow-hidden bg-orange-300/75"
+          className="slotCalendar relative top-0 overflow-hidden bg-orange-300/75"
         />
       )}
     </motion.div>

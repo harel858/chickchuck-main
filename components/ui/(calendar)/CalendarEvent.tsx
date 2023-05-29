@@ -19,7 +19,13 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
-function Event({ event }: { event: AppointmentEvent }) {
+function Event({
+  event,
+  viewMode,
+}: {
+  event: AppointmentEvent;
+  viewMode: "weekly" | "daily";
+}) {
   const start = dayjs(event.start).format("HH:mm");
   const end = dayjs(event.end).format("HH:mm");
   return (
@@ -38,7 +44,9 @@ function Event({ event }: { event: AppointmentEvent }) {
           duration: 0.3,
           easeInOut: [0, 0.71, 0.2, 1.01],
         }}
-        className={`flex flex-col w-full h-full dark:bg-white/50 dark:hover:bg-white hover:bg-gray-700 pl-2  bg-sky-800/90  cursor-pointer text-white relative border-b border-black/50  rounded-xl`}
+        className={`flex flex-col ${
+          viewMode === "weekly" ? `w-full` : `w-max pr-5`
+        } h-full dark:bg-white/50 dark:hover:bg-white hover:bg-gray-700 pl-2  bg-sky-800/90  cursor-pointer text-white relative border-b border-black/50  rounded-xl`}
       >
         <span
           className={`absolute h-5/6 w-1 bottom-2 left-1 ${event.color}  font-extrabold rounded-full`}
