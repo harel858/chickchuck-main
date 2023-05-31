@@ -1,43 +1,24 @@
+"use client";
 import { ThemeToggle } from "@components/ThemeToggle";
-import prisma from "@lib/prisma";
-import { Button, buttonVariants } from "@ui/Button";
-import { getServerSession } from "next-auth";
+import { buttonVariants } from "@ui/Button";
 import Link from "next/link";
-import { NavBarProps } from "../../../types/types";
 import { Hamburger } from "./(responsiveNav)/Hamburger";
 import SignOutBtn from "@ui/SignOutBtn";
 import { Lobster_Two } from "@next/font/google";
+import { useSession } from "next-auth/react";
+
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
-async function fetchUser(email: string | null | undefined) {
-  try {
-    if (!email) return null;
-    const user = await prisma.user.findUnique({
-      where: { email },
-      include: { Business: true },
-    });
-    return {
-      ...user,
-      Business: user?.Business[0],
-      profileSrc: undefined,
-    } as NavBarProps;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-}
-
-const Navbar = async () => {
-  const session = await getServerSession();
-  console.log(session);
-
-  const user = await fetchUser(session?.user?.email);
+function Navbar() {
+  const session = useSession();
 
   return (
     <div className="fixed backdrop-blur-sm bg-sky-600/75 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-sky-300 dark:border-slate-800 shadow-sm flex items-center justify-between">
       <div className="container max-w-7xl mx-auto w-full flex justify-end items-center">
-        {user && <Hamburger lobster={lobster.className} user={user} />}
-        {!user && (
+        {session?.data?.user.UserRole === "RECIPIENT" && (
+          <Hamburger lobster={lobster.className} user={session.data.user} />
+        )}
+        {session?.data?.user.UserRole !== "RECIPIENT" && (
           <Link href="/" className={buttonVariants({ variant: "link" })}>
             Queue
           </Link>
@@ -55,7 +36,7 @@ const Navbar = async () => {
           >
             Documentation
           </Link>
-          {session ? (
+          {session?.data?.user.UserRole === "RECIPIENT" ? (
             <>
               <Link
                 className={buttonVariants({ variant: "ghost" })}
@@ -77,6 +58,6 @@ const Navbar = async () => {
       </div>
     </div>
   );
-};
+}
 
 export default Navbar;

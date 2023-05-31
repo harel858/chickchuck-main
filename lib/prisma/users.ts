@@ -121,8 +121,8 @@ export async function getById(id: any) {
   }
 }
 
-export async function signIn(email: any, password: any) {
-  if (!email || !password)
+export async function signIn(email: any, pass: any) {
+  if (!email || !pass)
     return {
       error: { message: `Check the details you provided are correct.` },
     };
@@ -133,13 +133,13 @@ export async function signIn(email: any, password: any) {
       return {
         error: { message: `Check the details you provided are correct.` },
       };
-    console.log(userExist);
-    let pass = await bcrypt.compare(password, userExist.password);
-    if (!pass)
+    let Verify = await bcrypt.compare(pass, userExist.password);
+    if (!Verify)
       return {
         error: { message: `Check the details you provided are correct.` },
       };
-    return { user: { ...userExist } };
+    const { password, ...rest } = userExist;
+    return { user: rest };
   } catch (err) {
     console.log(err);
     return {

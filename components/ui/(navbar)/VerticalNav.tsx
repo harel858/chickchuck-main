@@ -6,13 +6,14 @@ import { CgProfile } from "react-icons/cg";
 import { GiFeather } from "react-icons/gi";
 import NavItemWithLinks from "./NavItemWithLinks";
 import NavHead from "./NavHead";
+import { User } from "next-auth";
 
 function VerticalNav({
   user,
 }: {
-  user: {
+  user: User & {
     id: string;
-    name: string;
+    UserRole: "RECIPIENT" | "CUSTOMER";
   };
 }) {
   return (

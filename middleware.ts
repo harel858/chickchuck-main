@@ -32,11 +32,11 @@ export default withAuth(
     } //Manage route protection
 
     const token = await getToken({ req });
-    const isAuth = !!token;
+    const isAuth = token?.UserRole === "RECIPIENT";
 
     const isAuthPage = pathName.startsWith("/signin");
     const sensetiveRoutes = [
-      "/home",
+      "/profile",
       "/schedule",
       "/treatments",
       "/activityTime",
@@ -61,6 +61,7 @@ export default withAuth(
 );
 export const config = {
   matcher: [
+    "/:path*",
     "/profile",
     "/schedule",
     "/treatments",

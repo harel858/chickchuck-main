@@ -6,50 +6,19 @@ import StepTwo from "./stepTwo";
 import StepThree from "./StepThree";
 import Tab from "./Tab";
 import Loading from "./loading";
-import { AppointmentInput, formData, UserData } from "../../types/types";
+import { AppointmentInput, UserData } from "../../types/types";
 const StepOne = React.lazy(() => import("./stepOne"));
 
 function Tabs({ userData }: { userData: UserData[] }) {
   const [activeTab, setActiveTab] = useState(0);
-  const [customerInput, setCustomerInput] = React.useState<formData>({
-    name: "",
-    request_id: "",
-    phoneNumber: "",
-    code: "",
-  });
-  const [appointmentInput, setAppointmentInput] =
-    React.useState<AppointmentInput>({
-      treatment: null,
-      availableSlot: [],
-      user: null,
-      date: dayjs(),
-    });
 
   const handleNext = () => {
     setActiveTab((activeTab) => activeTab + 1);
   };
   const tabs = [
     {
-      label: "Tab 1",
-      content: (
-        <React.Suspense fallback={<Loading />}>
-          <StepOne handleNext={handleNext} />
-        </React.Suspense>
-      ),
-    },
-    {
-      label: "Tab 2",
-      content: <StepTwo handleNext={handleNext} />,
-    },
-    {
       label: "Tab 3",
-      content: (
-        <StepThree
-          appointmentInput={appointmentInput}
-          setAppointmentInput={setAppointmentInput}
-          userData={userData}
-        />
-      ),
+      content: <StepThree userData={userData} />,
     },
   ];
   return (

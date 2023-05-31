@@ -5,6 +5,8 @@ import Providers from "@ui/Providers";
 import { cn } from "@lib/utils";
 import Navbar from "@ui/(navbar)/Navbar";
 import { ServerThemeProvider } from "next-themes";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@lib/auth";
 
 const inter = Roboto({
   weight: ["100", "500", "300", "400"],
@@ -24,7 +26,6 @@ export default function RootLayout({
       >
         <body className="min-h-screen bg-sky-300 dark:bg-slate-900 antialiased">
           <Providers>
-            {/* @ts-expect-error Server Component */}
             <Navbar />
 
             <main>{children}</main>

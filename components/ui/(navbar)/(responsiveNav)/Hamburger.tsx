@@ -1,13 +1,13 @@
 "use client";
 import classes from "./style.module.css";
-import * as React from "react";
+import React from "react";
 import { useRef } from "react";
-import { motion, sync, useCycle } from "framer-motion";
+import { motion, useCycle } from "framer-motion";
 import { useDimensions } from "./use-dimensions";
 import { MenuToggle } from "./MenuToggle";
 import { Navigation } from "./Navigation";
-import { NavBarProps } from "../../../../types/types";
 import { Avatar } from "@mui/material";
+import { User } from "next-auth";
 
 const sidebar = {
   open: (height = 1000) => ({
@@ -50,7 +50,10 @@ export const Hamburger = ({
   user,
   lobster,
 }: {
-  user: NavBarProps;
+  user: User & {
+    id: string;
+    UserRole: "CUSTOMER" | "RECIPIENT";
+  };
   lobster: string;
 }) => {
   const containerRef = useRef(null);
@@ -72,7 +75,7 @@ export const Hamburger = ({
         className=" flex justify-center content-center items-center gap-5 flex-col z-50 text-white"
       >
         <h2 className={` ${lobster} text-black  text-3xl w-max`}>Queue</h2>
-        <Avatar alt="Profile Img" src={user.profileSrc || undefined} />
+        <Avatar alt="Profile Img" src={user.image || undefined} />
         <motion.h3
           className={`${
             !isOpen ? `hidden` : `block`
@@ -85,7 +88,7 @@ export const Hamburger = ({
         className={`${classes.background} border-r border-gray-800 shadow-[0_35px_60px_10px_rgba(0,0,0,0.3)]`}
         variants={sidebar}
       />
-      <Navigation lobster={lobster} isOpen={isOpen} user={user} />
+      <Navigation isOpen={isOpen} />
       <MenuToggle toggle={() => toggleOpen()} />
     </motion.nav>
   );

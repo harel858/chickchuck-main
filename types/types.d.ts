@@ -49,7 +49,7 @@ export type ActivityDay = {
   label: string;
 };
 
-export type formData = {
+export type VerificationData = {
   name: string;
   request_id: string;
   phoneNumber: string;

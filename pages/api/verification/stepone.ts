@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Vonage } from "@vonage/server-sdk";
+import { VerificationData } from "../../../types/types";
 
 const vonage = new (Vonage as any)({
   apiKey: `${process.env.API_KEY}`,
@@ -13,7 +14,8 @@ export default async function handler(
 ) {
   if (req.method == "POST") {
     try {
-      const { name, phoneNumber } = req.body;
+      const { name, phoneNumber, code, request_id } =
+        req.body as VerificationData;
       if (!phoneNumber && !name) return res.status(400).json(`missing values`);
       console.log(phoneNumber);
       return res.status(200).json({ request_id: "1234", phoneNumber });

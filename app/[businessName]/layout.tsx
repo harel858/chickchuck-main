@@ -1,6 +1,3 @@
-import { authOptions } from "@lib/auth";
-import { Stepper } from "@mui/material";
-import { getServerSession } from "next-auth";
 import React, { ReactNode } from "react";
 
 async function Layout({ children }: { children: ReactNode }) {

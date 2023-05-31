@@ -8,6 +8,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: UserId;
     UserRole: "CUSTOMER" | "RECIPIENT";
+    phoneNumber: string | null;
   }
 }
 

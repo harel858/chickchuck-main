@@ -6,6 +6,7 @@ import {
   getCustomer,
   updateCustomer,
 } from "../../../lib/prisma/customer";
+import { VerificationData } from "../../../types/types";
 
 const vonage = new (Vonage as any)({
   apiKey: `${process.env.API_KEY}`,
@@ -20,12 +21,8 @@ export default async function handler(
     try {
       console.log(req.body);
 
-      const { request_id, code, phoneNumber, name } = req.body as {
-        request_id: string;
-        code: string;
-        phoneNumber: string;
-        name: string;
-      };
+      const { request_id, code, phoneNumber, name } =
+        req.body as VerificationData;
       console.log(req.body);
 
       const { customer, getCustomerErr } = await getCustomer(phoneNumber);

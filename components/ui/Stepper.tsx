@@ -8,7 +8,7 @@ import StepOne from "../../app/[businessName]/stepOne";
 import Loading from "../../app/[businessName]/loading";
 import StepTwo from "../../app/[businessName]/stepTwo";
 import StepThree from "../../app/[businessName]/StepThree";
-import { AppointmentInput, formData, UserData } from "../../types/types";
+import { AppointmentInput, UserData } from "../../types/types";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 
@@ -26,42 +26,17 @@ export default function HorizontalNonLinearStepper({
     [k: number]: boolean;
   }>({});
 
-  const [customerInput, setCustomerInput] = React.useState<formData>({
-    name: "",
-    request_id: "",
-    phoneNumber: "",
-    code: "",
-  });
-  const [appointmentInput, setAppointmentInput] =
-    React.useState<AppointmentInput>({
-      treatment: null,
-      availableSlot: [],
-      user: null,
-      date: dayjs(),
-    });
-
   const steps = [
     {
       label: <h4></h4>,
-      content: (
-        <React.Suspense fallback={<Loading />}>
-          <StepOne handleNext={handleNext} />
-        </React.Suspense>
-      ),
+      content: <React.Suspense fallback={<Loading />}></React.Suspense>,
     },
     {
       label: "Tab 2",
-      content: <StepTwo handleNext={handleNext} />,
     },
     {
       label: "Tab 3",
-      content: (
-        <StepThree
-          appointmentInput={appointmentInput}
-          setAppointmentInput={setAppointmentInput}
-          userData={userData}
-        />
-      ),
+      content: <StepThree userData={userData} />,
     },
   ];
 

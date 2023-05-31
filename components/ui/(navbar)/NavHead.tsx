@@ -3,14 +3,15 @@ import React from "react";
 
 import { Lobster_Two } from "@next/font/google";
 import { Avatar } from "@mui/material";
+import { User } from "next-auth";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 function NavHead({
   user,
 }: {
-  user: {
+  user: User & {
     id: string;
-    name: string;
+    UserRole: "RECIPIENT" | "CUSTOMER";
   };
 }) {
   return (

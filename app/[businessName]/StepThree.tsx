@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Treatment } from "@prisma/client";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
@@ -14,11 +15,10 @@ import Loading from "./loading";
 import AvailableList from "./AvailableList";
 import { AppointmentInput, UserData } from "../../types/types";
 import axios from "axios";
+import dayjs from "dayjs";
 
 type StepThreeProps = {
   userData: UserData[];
-  appointmentInput: AppointmentInput;
-  setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
 };
 
 const font = Poppins({
@@ -26,11 +26,13 @@ const font = Poppins({
   weight: "400",
 });
 
-function StepThree({
-  userData,
-  appointmentInput,
-  setAppointmentInput,
-}: StepThreeProps) {
+function StepThree({ userData }: StepThreeProps) {
+  const [appointmentInput, setAppointmentInput] = useState<AppointmentInput>({
+    treatment: null,
+    availableSlot: [],
+    user: null,
+    date: dayjs(),
+  });
   const [activeStep, setActiveStep] = React.useState(0);
   const [animate, setAnimate] = React.useState(false);
 
@@ -128,7 +130,7 @@ function StepThree({
   };
 
   return (
-    <>
+    <div className="w-1/2 max-md:w-11/12 flex justify-center content-center items-center dark:bg-orange-400/70 bg-orange-400/80 p-10 rounded-3xl shadow-2xl dark:shadow-white/10 ">
       {animate ? (
         <Zoom duration={350} damping={10000}>
           <Box sx={{ maxWidth: 400 }}>
@@ -197,7 +199,7 @@ function StepThree({
       ) : (
         <Loading />
       )}
-    </>
+    </div>
   );
 }
 export default StepThree;

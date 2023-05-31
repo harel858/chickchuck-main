@@ -10,6 +10,7 @@ import { MenuItem } from "./MenuItem";
 import { NavBarProps } from "../../../../types/types";
 import ProfileImage from "../ProfileImage";
 import { Avatar } from "@mui/material";
+import { User } from "next-auth";
 
 const variants = {
   open: {
@@ -20,15 +21,7 @@ const variants = {
   },
 };
 
-export const Navigation = ({
-  user,
-  lobster,
-  isOpen,
-}: {
-  user: NavBarProps;
-  lobster: string;
-  isOpen: boolean;
-}) => {
+export const Navigation = ({ isOpen }: { isOpen: boolean }) => {
   const itemIds = [
     { title: "profile", link: `/profile`, icon: <CgProfile /> },
     {

@@ -13,14 +13,15 @@ import {
   Treatment,
   User,
 } from "@prisma/client";
+import { authOptions } from "@lib/auth";
 dayjs.extend(customParseFormat);
 export const revalidate = 60;
 
-const fetchEvents = async (email: string | null | undefined) => {
+const fetchEvents = async (id: string | null | undefined) => {
   try {
-    if (!email) return null;
+    if (!id) return null;
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { id },
       include: { Business: true },
     });
     const business = await prisma.business.findUnique({
@@ -131,9 +132,9 @@ const fetchEvents = async (email: string | null | undefined) => {
 };
 
 async function ScheduleListPage() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   if (!session) return notFound();
-  const scheduleProps = await fetchEvents(session?.user?.email);
+  const scheduleProps = await fetchEvents(session?.user?.id);
 
   if (!scheduleProps) return notFound();
 
