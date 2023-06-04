@@ -1,5 +1,4 @@
 import prisma from "@lib/prisma";
-import ProfileImage from "@ui/(navbar)/ProfileImage";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import React from "react";

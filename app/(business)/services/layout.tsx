@@ -4,26 +4,17 @@ import prisma from "@lib/prisma";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import { Lobster_Two } from "@next/font/google";
+import { authOptions } from "@lib/auth";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
-async function fetchUser(email: string | null | undefined) {
-  try {
-    if (!email) return null;
-    const user = await prisma.user.findUnique({ where: { email } });
-    return user;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-}
-
 async function Layout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession();
-  const user = await fetchUser(session?.user?.email);
-  if (!user || session?.user.UserRole != "RECIPIENT") return notFound();
+  const session = await getServerSession(authOptions);
+  console.log(session);
+
+  if (session?.user.UserRole != "RECIPIENT") return notFound();
   return (
     <>
-      <VerticalNav user={user} />
+      <VerticalNav user={session.user} />
       <section className="h-screen w-full flex justify-center items-center">
         {children}
       </section>

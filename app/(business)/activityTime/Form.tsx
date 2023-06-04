@@ -52,6 +52,7 @@ export default function Form({
       });
       currentSlotStart = currentSlotEnd;
     }
+    console.log(slots);
 
     setAvailableSlots(slots);
   };

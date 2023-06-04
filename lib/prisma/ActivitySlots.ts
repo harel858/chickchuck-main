@@ -67,19 +67,59 @@ export async function updateAvailableSlots(
   // Create new available slots with the updated array of slots
   await createAvailableSlots(availableSlots, userId, businessId);
 }
+
+export async function getQueuesByMonth(
+  userId: string,
+  chosenDate: dayjs.Dayjs,
+  duration: number
+) {
+  try {
+    const slotDuration = 5;
+
+    const endDate = chosenDate.endOf("month");
+
+    let allAvailableSlots: {
+      id: string;
+      start: string;
+      end: string;
+      date: string;
+      userId: string;
+      businessId: string;
+    }[][] = [];
+
+    for (
+      let date = chosenDate;
+      date.isBefore(endDate) || date.isSame(endDate);
+      date = date.add(1, "day")
+    ) {
+      const chosenDate = date.format("YYYY-MM-DD");
+      console.log(chosenDate);
+
+      const { availableSlots, slotsErr } = await getQueuesByDate(
+        userId,
+        chosenDate,
+        duration
+      );
+      if (availableSlots) {
+        allAvailableSlots.push(...availableSlots);
+      }
+    }
+
+    return { availableSlots: allAvailableSlots };
+  } catch (availableSlotsErr) {
+    console.log(availableSlotsErr);
+    return { availableSlotsErr };
+  }
+}
 export async function getQueuesByDate(
   userId: string,
   chosenDate: string,
-  duration: number,
-  user: User & {
-    Business: Business[];
-  }
+  duration: number
 ) {
+  const formatedDate = dayjs(chosenDate).format("DD/MM/YYYY");
   const slotDuration = 5;
-  console.log(`slotDuration: ${slotDuration}`);
 
   const slotsNeeded = Math.ceil(duration / slotDuration);
-  console.log(`slotsNeeded: ${slotsNeeded}`);
 
   try {
     const availableSlots = await prisma.availableSlot.findMany({
@@ -105,12 +145,22 @@ export async function getQueuesByDate(
     });
     console.log(availableSlots);
 
-    let consecutiveSlots: AvailableSlot[] = [];
+    let consecutiveSlots: {
+      id: string;
+      start: string;
+      end: string;
+      date: string;
+      userId: string;
+      businessId: string;
+    }[] = [];
     let result = [];
 
     for (let i = 0; i < availableSlots.length; i++) {
       if (consecutiveSlots.length === 0) {
-        consecutiveSlots.push(availableSlots[i]);
+        consecutiveSlots.push({
+          ...availableSlots[i],
+          date: formatedDate,
+        });
       } else {
         const prevSlotStart = dayjs(
           consecutiveSlots[consecutiveSlots.length - 1].start,
@@ -129,20 +179,17 @@ export async function getQueuesByDate(
           "minute"
         );
 
-        console.log(`minutesBetweenSlots:${minutesBetweenSlots}`);
-        console.log(`minutesToCurrentSlot:${minutesToCurrentSlot}`);
-
         if (
           minutesBetweenSlots >= slotDuration &&
           minutesToCurrentSlot === slotDuration
         ) {
-          consecutiveSlots.push(availableSlots[i]);
+          consecutiveSlots.push({ ...availableSlots[i], date: formatedDate });
           if (consecutiveSlots.length == slotsNeeded) {
             result.push(consecutiveSlots);
             consecutiveSlots = [];
           }
         } else {
-          consecutiveSlots = [availableSlots[i]];
+          consecutiveSlots = [{ ...availableSlots[i], date: formatedDate }];
         }
       }
     }

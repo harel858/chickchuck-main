@@ -131,19 +131,19 @@ export async function signIn(email: any, pass: any) {
 
     if (!userExist || err)
       return {
-        error: { message: `Check the details you provided are correct.` },
+        error: { message: `User not found` },
       };
-    let Verify = await bcrypt.compare(pass, userExist.password);
-    if (!Verify)
+    let verify = await bcrypt.compare(pass, userExist.password);
+    if (!verify)
       return {
-        error: { message: `Check the details you provided are correct.` },
+        error: { message: `password not verified` },
       };
     const { password, ...rest } = userExist;
     return { user: rest };
   } catch (err) {
     console.log(err);
     return {
-      error: { message: `Check the details you provided are correct.` },
+      error: { message: `error with the function` },
     };
   }
 }

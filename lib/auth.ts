@@ -98,13 +98,13 @@ export const authOptions: NextAuthOptions = {
         };
       }
 
+      token.id = user!.id;
       return token;
     },
     async session({ session, token, user }) {
       if (token && token.id) {
         session.user = token;
       }
-      console.log(`session:${JSON.stringify(session)}`);
 
       return session;
     },

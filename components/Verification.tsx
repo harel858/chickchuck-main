@@ -5,8 +5,8 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepButton from "@mui/material/StepButton";
 import Typography from "@mui/material/Typography";
-import StepOne from "../app/[businessName]/stepOne";
-import StepTwo from "../app/[businessName]/stepTwo";
+import StepOne from "./landingPage/verification/stepOne";
+import StepTwo from "./landingPage/verification/stepTwo";
 import { UserData, VerificationData } from "../types/types";
 
 export default function Verification({ userData }: { userData: UserData[] }) {
@@ -73,14 +73,6 @@ export default function Verification({ userData }: { userData: UserData[] }) {
     [input]
   );
 
-  const totalSteps = steps.length;
-
-  const completedSteps = Object.keys(completed).length;
-
-  const isLastStep = activeStep === totalSteps - 1;
-
-  const allStepsCompleted = completedSteps === totalSteps;
-
   function handleNext() {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   }
@@ -91,19 +83,6 @@ export default function Verification({ userData }: { userData: UserData[] }) {
 
   const handleStep = (step: number) => () => {
     setActiveStep(step);
-  };
-
-  const handleComplete = () => {
-    setCompleted((prevCompleted) => ({
-      ...prevCompleted,
-      [activeStep]: true,
-    }));
-    handleNext();
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-    setCompleted({});
   };
 
   return (

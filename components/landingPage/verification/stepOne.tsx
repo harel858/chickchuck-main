@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { TextField } from "@mui/material";
 import { Button } from "@ui/Button";
-import { VerificationData } from "../../types/types";
+import { VerificationData } from "../../../types/types";
 
 const StepOne = React.memo(
   ({

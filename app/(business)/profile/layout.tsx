@@ -1,6 +1,5 @@
 import React from "react";
 import VerticalNav from "@ui/(navbar)/VerticalNav";
-import prisma from "@lib/prisma";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import { authOptions } from "@lib/auth";

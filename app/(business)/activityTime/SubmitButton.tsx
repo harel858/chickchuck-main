@@ -53,6 +53,9 @@ export default function SubmitButton({
   const handleButtonClick = async () => {
     setSuccess(false);
     setLoading(true);
+    console.log(startActivity.format("HH:mm"));
+    console.log(endActivity.format("HH:mm"));
+
     try {
       const res = await fetch(`/api/slots/slot`, {
         method: "POST",
@@ -67,6 +70,8 @@ export default function SubmitButton({
         }),
       });
       const response = await res.json();
+      console.log(response);
+
       setSuccess(true);
       setLoading(false);
     } catch (err) {

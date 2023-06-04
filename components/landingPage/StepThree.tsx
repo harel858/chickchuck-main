@@ -11,11 +11,12 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { Poppins } from "@next/font/google";
 import { Zoom } from "react-awesome-reveal";
-import Loading from "./loading";
+import Loading from "../../app/[businessName]/loading";
 import AvailableList from "./AvailableList";
 import { AppointmentInput, UserData } from "../../types/types";
 import axios from "axios";
 import dayjs from "dayjs";
+import { useSession } from "next-auth/react";
 
 type StepThreeProps = {
   userData: UserData[];
@@ -27,6 +28,7 @@ const font = Poppins({
 });
 
 function StepThree({ userData }: StepThreeProps) {
+  const session = useSession();
   const [appointmentInput, setAppointmentInput] = useState<AppointmentInput>({
     treatment: null,
     availableSlot: [],
@@ -122,18 +124,19 @@ function StepThree({ userData }: StepThreeProps) {
     try {
       const res = await axios.post("api/appointments", {
         ...appointmentInput,
-        customerId: "vdds",
+        customerId: session.data?.user.id,
       });
+      console.log(res.data);
     } catch (err: any) {
       console.log(err);
     }
   };
 
   return (
-    <div className="w-1/2 max-md:w-11/12 flex justify-center content-center items-center dark:bg-orange-400/70 bg-orange-400/80 p-10 rounded-3xl shadow-2xl dark:shadow-white/10 ">
+    <div className="w-fit max-md:w-11/12 flex justify-start content-center items-center dark:bg-orange-400/70 bg-orange-400/80 p-10 rounded-3xl shadow-2xl dark:shadow-white/10 ">
       {animate ? (
         <Zoom duration={350} damping={10000}>
-          <Box sx={{ maxWidth: 400 }}>
+          <Box sx={{ width: "100%" }}>
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps.map((step, index) => (
                 <Step key={step.label}>

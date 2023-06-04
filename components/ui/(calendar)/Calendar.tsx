@@ -15,6 +15,13 @@ export default function CalendarComponent({
 }: {
   scheduleProps: ScheduleProps;
 }) {
+  const openingTime = dayjs(scheduleProps.user.startActivity);
+  const closingTime = dayjs(scheduleProps.user.endActivity);
+  const totalSlots = closingTime.diff(openingTime, "minute") / 5;
+  console.log(openingTime.format("HH:mm A"));
+  console.log(closingTime.format("HH:mm A"));
+  console.log(totalSlots);
+
   const [value, setValue] = useState(() => dayjs());
   const [selectedValue, setSelectedValue] = useState(() => dayjs());
   const [eventsByDate, setEventsByDate] = useState<AppointmentEvent[]>([]);

@@ -28,7 +28,7 @@ function VerticalNav({
         />
         <NavBarItem
           title={"Services"}
-          link={`/treatments`}
+          link={`/services`}
           icon={<GiFeather />}
         />
 

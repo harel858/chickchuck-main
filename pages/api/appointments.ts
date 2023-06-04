@@ -8,11 +8,18 @@ import { getById } from "../../lib/prisma/users";
 import { UserData } from "../../types/types";
 
 interface ReqBody {
-  availableSlot: AvailableSlot[];
-  customer: Customer;
-  date: string;
   treatment: Treatment;
   user: UserData;
+  availableSlot: {
+    id: string;
+    start: string;
+    end: string;
+    date: string;
+    userId: string;
+    businessId: string;
+  }[];
+  date: string;
+  customerId: string;
 }
 
 export default async function handler(
@@ -21,13 +28,12 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const { availableSlot, customer, date, treatment, user }: ReqBody =
+      const { availableSlot, treatment, user, customerId, date }: ReqBody =
         req.body;
-      console.log(customer?.id);
 
       const { error } = validateAppointment({
         availableSlot,
-        customerId: customer?.id,
+        customerId: customerId,
         date,
         treatment,
         userId: user.userId,
@@ -45,7 +51,7 @@ export default async function handler(
       const { existingAppointment, appointment, createErr } =
         await createAppointment(
           userExist.id,
-          customer.id,
+          customerId,
           availableSlot,
           treatment.id,
           userExist.Business[0].id,

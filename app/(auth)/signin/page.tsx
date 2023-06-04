@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { Button } from "@ui/Button";
+import { AxiosError } from "axios";
 
 type signInData = {
   email: string;
@@ -40,7 +41,11 @@ function SignInForm() {
       // reset formData
     } catch (err) {
       setIsLoading(false);
-      console.log(err);
+      if (err instanceof AxiosError) {
+        console.log(err.message);
+      } else {
+        console.log(err);
+      }
 
       /* toast({
         title: "Error Signing In",

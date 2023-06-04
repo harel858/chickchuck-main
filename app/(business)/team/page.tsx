@@ -1,6 +1,4 @@
 import prisma from "@lib/prisma";
-import { Avatar } from "@mui/material";
-import ProfileImage from "@ui/(navbar)/ProfileImage";
 import TeamForm from "@ui/teamForm";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";

@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import axios, { AxiosError } from "axios";
 import { Zoom } from "react-awesome-reveal";
 import { TextField } from "@mui/material";
-import { VerificationData } from "../../types/types";
+import { VerificationData } from "../../../types/types";
 import { useRouter } from "next/navigation";
 import { Button } from "@ui/Button";
 
