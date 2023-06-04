@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
   createAvailableSlots,
-  getQueuesByDate,
+  getQueuesByMonth,
 } from "@lib/prisma/ActivitySlots";
 import {
   getById,
@@ -33,7 +33,8 @@ export default async function handler(
         startActivity,
         endActivity,
       } = req.body as SlotBody;
-      console.log(req.body);
+      console.log(dayjs(startActivity).format("HH:mm"));
+      console.log(dayjs(endActivity).format("HH:mm"));
 
       const { userExist, err } = await getById(userId);
       if (err || !userExist) return res.status(500).json(`user not found`);
@@ -79,19 +80,20 @@ export default async function handler(
         userId: string;
         duration: string;
       };
-      if (dayjs(chosenDate).isBefore(dayjs()))
-        return res.status(400).json("The date has passed");
+      console.log(req.query);
+
+      const date = dayjs(chosenDate);
+
       const { userExist, err } = await getById(userId);
       if (!userExist || err) return res.status(400).json("no existing user");
-      const { availableSlots, slotsErr } = await getQueuesByDate(
+      console.log(chosenDate);
+      const { availableSlots, availableSlotsErr } = await getQueuesByMonth(
         userId,
-        chosenDate,
-        JSON.parse(duration),
-        userExist
+        date,
+        JSON.parse(duration)
       );
-      console.log(availableSlots);
-
-      if (slotsErr || !availableSlots) return res.status(500).json(err);
+      if (availableSlotsErr || !availableSlots)
+        return res.status(500).json(err);
 
       return res.status(200).json(availableSlots);
     } catch (err) {
