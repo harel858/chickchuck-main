@@ -143,7 +143,6 @@ export async function getQueuesByDate(
 
       orderBy: { start: "asc" },
     });
-    console.log(availableSlots);
 
     let consecutiveSlots: {
       id: string;

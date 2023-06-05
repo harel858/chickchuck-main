@@ -33,8 +33,6 @@ export default async function handler(
         startActivity,
         endActivity,
       } = req.body as SlotBody;
-      console.log(dayjs(startActivity).format("HH:mm"));
-      console.log(dayjs(endActivity).format("HH:mm"));
 
       const { userExist, err } = await getById(userId);
       if (err || !userExist) return res.status(500).json(`user not found`);
@@ -80,7 +78,6 @@ export default async function handler(
         userId: string;
         duration: string;
       };
-      console.log(req.query);
 
       const date = dayjs(chosenDate);
 

@@ -24,7 +24,7 @@ export default function RootLayout({
         lang="en"
         className={cn(" text-slate-900 antialiased", inter.className)}
       >
-        <body className="min-h-screen bg-sky-300 dark:bg-slate-900 antialiased">
+        <body className="min-h-screen bg-sky-400/70 dark:bg-slate-900 antialiased">
           <Providers>
             <Navbar />
 

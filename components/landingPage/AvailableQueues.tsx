@@ -67,6 +67,21 @@ export default function AvailableQueues({
 
           chosenDateQueues.push(queuesWithoutDate);
         }
+        if (dayjs().format("DD/MM/YYYY") === chosenDate) {
+          chosenDateQueues.forEach((queue, index) => {
+            // Get the start time of the last slot in the current item
+            const lastSlotStartTime = queue[queue.length - 1]?.start;
+
+            // Check if the last slot's start time is after the current time
+            const isSlotValid = dayjs(lastSlotStartTime, "HH:mm").isAfter(
+              dayjs()
+            );
+
+            if (!isSlotValid) {
+              chosenDateQueues.splice(index, 1); // Remove the queue from the array if its time has passed
+            }
+          });
+        }
       }
     }
     setLoading(false);
@@ -82,6 +97,8 @@ export default function AvailableQueues({
         let res = await axios.get(
           `/api/slots/slot?chosenDate=${date}&userId=${appointmentInput?.user?.userId}&duration=${appointmentInput?.treatment?.duration}`
         );
+        console.log(res.data);
+
         setAllQueues(res.data);
       } catch (err) {
         setLoading(false);

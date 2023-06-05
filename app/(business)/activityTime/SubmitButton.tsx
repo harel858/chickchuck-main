@@ -9,6 +9,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import SaveIcon from "@mui/icons-material/Save";
 import { AvailableSlot, User } from "@prisma/client";
 import { Slots } from "../../../types/types";
+import axios from "axios";
 
 type SubmitProps = {
   user: User;
@@ -53,24 +54,18 @@ export default function SubmitButton({
   const handleButtonClick = async () => {
     setSuccess(false);
     setLoading(true);
-    console.log(startActivity.format("HH:mm"));
-    console.log(endActivity.format("HH:mm"));
+    console.log(startActivity.toISOString());
 
     try {
-      const res = await fetch(`/api/slots/slot`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          startActivity: startActivity.toISOString(),
-          endActivity: endActivity.toISOString(),
-          activityDays,
-          availableSlots,
-          userId: user.id,
-          duration: duration,
-        }),
+      const res = await axios.post(`/api/slots/slot`, {
+        startActivity: startActivity.toISOString(),
+        endActivity: endActivity.toISOString(),
+        activityDays,
+        availableSlots,
+        userId: user.id,
+        duration: duration,
       });
-      const response = await res.json();
-      console.log(response);
+      console.log(res.data);
 
       setSuccess(true);
       setLoading(false);

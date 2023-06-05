@@ -14,11 +14,13 @@ export default function Form({
     Business: Business[];
   };
 }) {
+  console.log(user.startActivity);
+
   const [startActivity, setStartActivity] = React.useState<Dayjs>(
-    dayjs(user.Business[0].openingTime)
+    dayjs(dayjs(user.startActivity))
   );
   const [endActivity, setEndActivity] = React.useState<Dayjs>(
-    dayjs(user.Business[0].closingTime)
+    dayjs(user.endActivity)
   );
   const [duration, setDuration] = React.useState<number>(5);
   const [hasChanges, setHasChanges] = React.useState<boolean>(true);
