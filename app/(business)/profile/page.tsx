@@ -28,7 +28,11 @@ async function Page() {
   if (!business) return notFound();
   const value = business.name.replace(/ /g, "-");
 
-  return <UniqueLink link={`http://localhost:3000/${value}`} />;
+  return (
+    <div>
+      <UniqueLink link={`http://localhost:3000/${value}`} />;
+    </div>
+  );
 }
 
 export default Page;

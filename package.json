@@ -7,6 +7,8 @@
     },
     "dependencies": {
         "@ant-design/icons": "^5.0.1",
+        "@aws-sdk/client-s3": "^3.350.0",
+        "@aws-sdk/s3-request-presigner": "^3.350.0",
         "@emotion/react": "^11.10.6",
         "@emotion/server": "^11.10.0",
         "@emotion/styled": "^11.10.6",
@@ -42,6 +44,7 @@
         "date-fns": "^2.29.3",
         "dayjs": "^1.11.7",
         "embla-carousel-react": "^7.1.0",
+        "formidable": "^2.1.1",
         "framer-motion": "^10.0.0",
         "joi": "^17.7.0",
         "lucide-react": "^0.161.0",
@@ -57,8 +60,9 @@
         "uuid": "^9.0.0"
     },
     "devDependencies": {
-        "@prisma/client": "^4.13.0",
+        "@prisma/client": "^4.15.0",
         "@types/bcrypt": "^5.0.0",
+        "@types/formidable": "^2.0.6",
         "@types/node": "18.11.3",
         "@types/react": "^18.2.7",
         "@types/react-datetime-picker": "^3.4.1",
@@ -66,7 +70,7 @@
         "autoprefixer": "^10.4.14",
         "eslint-config-next": "^13.4.3",
         "postcss": "^8.4.22",
-        "prisma": "^4.13.0",
+        "prisma": "^4.15.0",
         "tailwindcss": "^3.3.1",
         "typescript": "4.9.4"
     }

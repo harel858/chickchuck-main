@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useCallback, useEffect, lazy, Suspense } from "react";
-import MemoizedAppointmentList from "./AppointmentList";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentEvent, ScheduleProps } from "../../../types/types";
 import ListNav from "./ListNav";
+const MemoizedAppointmentList = lazy(() => import("./AppointmentList"));
 const LazySlotCalendar = lazy(() => import("./SlotCalendar"));
 const SearchResults = lazy(() => import("./SearchResults"));
 import { Table } from "antd";
@@ -15,21 +15,17 @@ export default function CalendarComponent({
 }: {
   scheduleProps: ScheduleProps;
 }) {
-  const openingTime = dayjs(scheduleProps.user.startActivity);
-  const closingTime = dayjs(scheduleProps.user.endActivity);
-  const totalSlots = closingTime.diff(openingTime, "minute") / 5;
-  console.log(openingTime.format("HH:mm A"));
-  console.log(closingTime.format("HH:mm A"));
-  console.log(totalSlots);
-
   const [value, setValue] = useState(() => dayjs());
   const [selectedValue, setSelectedValue] = useState(() => dayjs());
   const [eventsByDate, setEventsByDate] = useState<AppointmentEvent[]>([]);
   const [currentView, setCurrentView] = useState<"list" | "calendar">("list");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"daily" | "weekly">("weekly");
+  const [isLoading, setIsLoading] = useState(false); // Add isLoading state
 
   useEffect(() => {
+    setIsLoading(true);
+
     const handleEventsByDate = () => {
       let filteredEvents: AppointmentEvent[] = [];
 
@@ -67,7 +63,10 @@ export default function CalendarComponent({
         setEventsByDate(filteredEvents);
       };
 
-      if (!searchQuery) return setEventsByDate(sortedEvents);
+      if (!searchQuery) {
+        setEventsByDate(sortedEvents);
+        return setIsLoading(false); // Set isLoading to false after fetching data
+      }
       return handleSearch();
     };
 
@@ -86,26 +85,58 @@ export default function CalendarComponent({
     setSearchQuery(event.target.value);
   };
 
-  return (
+  return isLoading ? (
+    <Table
+      size="large"
+      loading
+      pagination={false}
+      bordered
+      scroll={{ y: 1000 }}
+    />
+  ) : (
     <div className="bg-white/40  rounded-3xl shadow-2xl dark:shadow-white/10 p-0 w-full">
-      <ListNav
-        setViewMode={setViewMode}
-        viewMode={viewMode}
-        setSearchQuery={setSearchQuery}
-        selectedValue={selectedValue}
-        setCurrentView={setCurrentView}
-        currentView={currentView}
-        onSelect={onSelect}
-        searchQuery={searchQuery}
-        onSearchChange={handleSearchChange}
-      />
-      {currentView === "list" && !searchQuery ? (
-        <MemoizedAppointmentList
-          value={value}
+      <Suspense
+        fallback={
+          <Table
+            size="large"
+            loading
+            pagination={false}
+            bordered
+            scroll={{ y: 1000 }}
+          />
+        }
+      >
+        <ListNav
+          setViewMode={setViewMode}
+          viewMode={viewMode}
+          setSearchQuery={setSearchQuery}
+          selectedValue={selectedValue}
+          setCurrentView={setCurrentView}
+          currentView={currentView}
           onSelect={onSelect}
-          eventsByDate={eventsByDate}
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
         />
-      ) : currentView === "calendar" && !searchQuery ? (
+      </Suspense>
+      {currentView === "list" && !searchQuery && !isLoading ? (
+        <Suspense
+          fallback={
+            <Table
+              size="large"
+              loading
+              pagination={false}
+              bordered
+              scroll={{ y: 1000 }}
+            />
+          }
+        >
+          <MemoizedAppointmentList
+            value={value}
+            onSelect={onSelect}
+            eventsByDate={eventsByDate}
+          />
+        </Suspense>
+      ) : currentView === "calendar" && !searchQuery && !isLoading ? (
         <Suspense
           fallback={
             <Table

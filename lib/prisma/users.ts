@@ -113,7 +113,7 @@ export async function getById(id: any) {
   try {
     const userExist = await prisma?.user.findUnique({
       where: { id },
-      include: { Business: true },
+      include: { Business: true, Images: true },
     });
     return { userExist };
   } catch (err) {

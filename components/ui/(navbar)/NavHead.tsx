@@ -4,6 +4,7 @@ import React from "react";
 import { Lobster_Two } from "@next/font/google";
 import { Avatar } from "@mui/material";
 import { User } from "next-auth";
+import ProfileImage from "./ProfileImage";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 function NavHead({
@@ -21,7 +22,7 @@ function NavHead({
       >
         Queue
       </h2>
-      <Avatar alt="Remy Sharp" src={undefined} />
+      <ProfileImage user={user} />
       <h3
         className={`dark:text-white text-white font-medium  xl:text-xl md:text-lg sm:text-md w-max `}
       >

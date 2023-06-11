@@ -13,7 +13,6 @@ model User {
   email            String            @unique
   password         String
   phone            String?
-  profileSrc       String?
   startActivity    String?
   endActivity      String?
   UserRole         UserRole          @default(RECIPIENT)
@@ -24,6 +23,21 @@ model User {
   isAdmin          Boolean
   PremiumKit       PremiumKits       @default(Light)
   Business         Business[]
+  Images           Images[]
+}
+
+model Images {
+  id             String @id @default(uuid())
+  user           User   @relation(fields: [userId], references: [id])
+  userId         String
+  profileImgName String
+}
+
+model BusinessImages {
+  id                 String   @id @default(uuid())
+  bussiness          Business @relation(fields: [businessId], references: [id])
+  businessImagesName String
+  businessId         String
 }
 
 model Business {
@@ -38,6 +52,7 @@ model Business {
   AvailableSlot   AvailableSlot[]
   Appointment     Appointment[]
   AppointmentSlot AppointmentSlot[]
+  BusinessImages  BusinessImages[]
 }
 
 model Address {

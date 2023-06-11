@@ -50,6 +50,15 @@ function ListNav({
   return (
     <nav className="flex flex-row-reverse max-md:flex-col flex-wrap content-center justify-between items-center bg-orange-400/80 font-extralight rounded-tr-3xl rounded-tl-3xl w-full relative top-0 p-3 px-5 gap-2">
       <div className="flex justify-center items-center content-center gap-5">
+        <motion.input
+          transition={{ type: "spring", stiffness: 750, damping: 10 }}
+          whileHover={{ scale: 1.1 }}
+          type="text"
+          placeholder="Search clients"
+          value={searchQuery}
+          onChange={onSearchChange}
+          className="dark:text-white px-2 py-1 text-xl rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+        />
         {currentView === "calendar" && (
           <ToggleViewMode
             setSearchQuery={setSearchQuery}
@@ -63,15 +72,11 @@ function ListNav({
           currentView={currentView}
         />
       </div>
-      <motion.input
-        transition={{ type: "spring", stiffness: 750, damping: 10 }}
-        whileHover={{ scale: 1.2 }}
-        type="text"
-        placeholder="Search clients"
-        value={searchQuery}
-        onChange={onSearchChange}
-        className="dark:text-white px-2 py-1 text-xl rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-      />
+      {currentView === "list" && (
+        <h2 className="text-4xl font-normal">
+          {selectedValue.format("MMMM D, YYYY")}
+        </h2>
+      )}
       <div className="flex justify-center items-center gap-1">
         <motion.div
           whileHover={{ scale: 1.2 }}

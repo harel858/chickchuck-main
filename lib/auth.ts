@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "./prisma";
 import { signIn as userSignIn } from "./prisma/users";
 import { getCustomer } from "./prisma/customer";
+import { getImage } from "./aws/s3";
 
 interface UserCredentials {
   email: string;
@@ -13,6 +14,7 @@ interface UserCredentials {
 interface CustomerCredentials {
   phoneNumber: string;
 }
+const bucketName = process.env.BUCKET_NAME!;
 
 const authorizeUserLogin = async (credentials: any, req: any) => {
   try {
@@ -76,13 +78,20 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account, profile, isNewUser }) {
       const dbUser = await prisma.user.findUnique({
         where: { id: token.sub },
+        include: { Images: true },
       });
       const dbCustomer = await prisma.customer.findUnique({
         where: { id: token.sub },
       });
       if (dbUser) {
+        const params = {
+          Bucket: bucketName,
+          Key: dbUser.Images[0].profileImgName,
+        };
+        const url = await getImage(params);
         return {
           ...token,
+          image: url,
           id: dbUser.id,
           name: dbUser.name,
           email: dbUser.email,
