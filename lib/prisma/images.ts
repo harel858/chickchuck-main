@@ -15,3 +15,20 @@ export const createProfileImage = async (fileName: string, userId: string) => {
     return null;
   }
 };
+export const createBackGroundImage = async (
+  fileName: string,
+  userId: string
+) => {
+  try {
+    const created = await prisma.images.create({
+      data: {
+        user: { connect: { id: userId } },
+        backgroundImgName: fileName,
+      },
+    });
+    return created;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};

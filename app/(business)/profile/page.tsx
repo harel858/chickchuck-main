@@ -26,11 +26,14 @@ async function Page() {
 
   const business = await fetchUser(session?.user?.email);
   if (!business) return notFound();
-  const value = business.name.replace(/ /g, "-");
+  console.log(business.name);
+
+  const value = business.name.replace(/(\s)(?!\s*$)/g, "-");
+  console.log(value);
 
   return (
     <div>
-      <UniqueLink link={`http://localhost:3000/${value}`} />;
+      <UniqueLink link={`http://localhost:3000/${value}`} />
     </div>
   );
 }

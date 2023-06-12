@@ -14,7 +14,7 @@ interface UploadParams {
 }
 interface getParams {
   Bucket: string;
-  Key: string;
+  Key: { profileImgName: string | null; backgroundImgName: string | null };
 }
 const bucketName = process.env.BUCKET_NAME!;
 const bucketRegion = process.env.BUCKET_REGION!;
@@ -38,10 +38,29 @@ export const uploadImage = async (params: UploadParams) => {
 };
 
 export const getImage = async (params: getParams) => {
+  if (!params.Key.backgroundImgName && !params.Key.profileImgName) return null;
   try {
-    const command = new GetObjectCommand(params);
-    const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-    return url;
+    const urls = {
+      backgroundImage: "",
+      profileImage: "",
+    };
+    if (params.Key.backgroundImgName) {
+      const command = new GetObjectCommand({
+        ...params,
+        Key: params.Key.backgroundImgName,
+      });
+      const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+      urls.backgroundImage = url;
+    }
+    if (params.Key.profileImgName) {
+      const command = new GetObjectCommand({
+        ...params,
+        Key: params.Key.profileImgName,
+      });
+      const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+      urls.profileImage = url;
+    }
+    return { ...urls };
   } catch (err) {
     console.log(err);
     return null;

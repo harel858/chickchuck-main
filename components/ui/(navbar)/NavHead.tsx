@@ -13,6 +13,10 @@ function NavHead({
   user: User & {
     id: string;
     UserRole: "RECIPIENT" | "CUSTOMER";
+    urls: {
+      backgroundImage: string;
+      profileImage: string;
+    } | null;
   };
 }) {
   return (

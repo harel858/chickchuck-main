@@ -19,6 +19,8 @@ const bucketName = process.env.BUCKET_NAME!;
 const authorizeUserLogin = async (credentials: any, req: any) => {
   try {
     const { email, password } = credentials as UserCredentials;
+    console.log(credentials);
+
     const { user, error } = await userSignIn(email, password);
 
     if (error) throw new Error(error.message);
@@ -84,14 +86,24 @@ export const authOptions: NextAuthOptions = {
         where: { id: token.sub },
       });
       if (dbUser) {
-        const params = {
-          Bucket: bucketName,
-          Key: dbUser.Images[0].profileImgName,
-        };
-        const url = await getImage(params);
+        let urls: {
+          backgroundImage: string;
+          profileImage: string;
+        } | null = null;
+        if (dbUser.Images.length > 0) {
+          const params = {
+            Bucket: bucketName,
+            Key: {
+              profileImgName: dbUser.Images[0].profileImgName,
+              backgroundImgName: dbUser.Images[0].backgroundImgName,
+            },
+          };
+          const res = await getImage(params);
+          urls = res;
+        }
         return {
           ...token,
-          image: url,
+          urls: urls,
           id: dbUser.id,
           name: dbUser.name,
           email: dbUser.email,
@@ -104,6 +116,7 @@ export const authOptions: NextAuthOptions = {
           name: dbCustomer.name,
           phoneNumber: dbCustomer.phoneNumber,
           UserRole: dbCustomer.UserRole,
+          urls: null,
         };
       }
 

@@ -14,6 +14,7 @@ export default async function LandingPage({
   params: { businessName },
 }: LandingPageProps) {
   const userData = await fetchAppointmentSlots(businessName);
+  console.log(userData);
 
   if (!userData) return notFound();
 

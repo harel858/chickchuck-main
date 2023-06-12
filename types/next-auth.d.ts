@@ -9,6 +9,10 @@ declare module "next-auth/jwt" {
     id: UserId;
     UserRole: "CUSTOMER" | "RECIPIENT";
     phoneNumber: string | null;
+    urls: {
+      backgroundImage: string;
+      profileImage: string;
+    } | null;
   }
 }
 
@@ -17,6 +21,10 @@ declare module "next-auth" {
     user: User & {
       id: UserId;
       UserRole: "CUSTOMER" | "RECIPIENT";
+      urls: {
+        backgroundImage: string;
+        profileImage: string;
+      } | null;
     };
   }
 }

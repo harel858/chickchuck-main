@@ -29,6 +29,7 @@ export default async function handler(
         }
         const imageSrc = files.imageSrc as formidable.File;
         const userId = fields.userId as string;
+        const type = fields.type as string;
 
         const { userExist, err } = await getById(userId);
         if (!userExist || err) return res.status(500).json("user not found");
@@ -44,29 +45,27 @@ export default async function handler(
           ContentType: imageSrc.mimetype!,
         };
         // ...
-        const upload = await uploadImage(params);
-        if (!upload) return res.status(500).json("s3 bucket err");
-        const result = await createProfileImage(imageSrc.newFilename, userId);
-        if (!result) return res.status(500).json("prisma err");
-        // Send the response
-        return res.status(201).json({ message: result });
+        if (type == "PROFILE") {
+          const upload = await uploadImage(params);
+          if (!upload) return res.status(500).json("s3 bucket err");
+          const result = await createProfileImage(imageSrc.newFilename, userId);
+          if (!result) return res.status(500).json("prisma err");
+          // Send the response
+          return res.status(201).json({ message: result });
+        }
+        if (type == "BACKGROUND") {
+          const upload = await uploadImage(params);
+          if (!upload) return res.status(500).json("s3 bucket err");
+          const result = await createProfileImage(imageSrc.newFilename, userId);
+          if (!result) return res.status(500).json("prisma err");
+          // Send the response
+          return res.status(201).json({ message: result });
+        }
       });
     } catch (err) {
       console.log(err);
       return res.status(500).json({ err });
     }
-  }
-  if (req.method === "GET" && req.query.userId) {
-    const userId = req.query.userId as string;
-    const { userExist, err } = await getById(userId);
-    if (!userExist || err) return res.status(500).json("user not found");
-    const params = {
-      Bucket: bucketName,
-      Key: userExist.Images[0].profileImgName,
-    };
-    const url = await getImage(params);
-    if (!url) return res.status(500).json("s3 bucket err");
-    return res.status(200).json({ url });
   } else {
     res.setHeader("Allow", ["GET", "POST"]);
     return res.status(405).end(`Method ${req.method} is not allowed.`);
