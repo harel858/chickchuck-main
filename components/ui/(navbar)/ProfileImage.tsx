@@ -1,6 +1,5 @@
 "use client";
-import React, { useState, useCallback } from "react";
-import { useSession } from "next-auth/react";
+import React, { useCallback } from "react";
 import axios from "axios";
 import { Avatar } from "@mui/material";
 import { User } from "next-auth";
@@ -18,12 +17,19 @@ const ProfileImage = ({
   user: User & {
     id: string;
     UserRole: "RECIPIENT" | "CUSTOMER";
+    urls: {
+      backgroundImage: string;
+      profileImage: string;
+    } | null;
   };
 }) => {
+  const profileImage = user.urls?.profileImage;
+
   const postData = async (imageSrc: File) => {
     console.log(imageSrc);
     const formData = new FormData();
     formData.append("imageSrc", imageSrc);
+    formData.append("type", "PROFILE");
     formData.append("userId", user.id);
 
     try {
@@ -61,7 +67,7 @@ const ProfileImage = ({
         <Avatar
           alt="Profile Img"
           className="scale-125 hover:scale-150 duration-300 ease-out cursor-pointer"
-          src={user.image || undefined}
+          src={profileImage || undefined}
         />
       </label>
       <input
