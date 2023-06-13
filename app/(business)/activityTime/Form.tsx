@@ -42,11 +42,12 @@ export default function Form({
     duration: number
   ) => {
     const slots: Slots[] = [];
+    console.log(start);
 
     // Create slots with specified duration
     let currentSlotStart = start;
     while (currentSlotStart.isBefore(end)) {
-      const currentSlotEnd = currentSlotStart.add(duration, "minute");
+      const currentSlotEnd = currentSlotStart.add(5, "minute");
 
       slots.push({
         start: currentSlotStart.format("HH:mm"),

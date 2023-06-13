@@ -24,12 +24,12 @@ export default function RootLayout({
         <body className="min-h-screen bg-sky-400/70 dark:bg-slate-900 antialiased relative">
           <Providers>
             <Navbar />
-            <main>{children}</main>
+            <main className="relative m-0 p-0">{children}</main>
           </Providers>
 
           {/* Add the inset box shadow */}
           <div className="fixed inset-0 pointer-events-none -z-10">
-            <div className="h-1/2 bg-gradient-to-t from-transparent to-sky-600 -z-10" />
+            <div className="h-1/2 bg-gradient-to-t from-transparent dark:to-slate-700/80 to-sky-800 -z-10" />
           </div>
 
           {/* Allow more height for mobile menu on mobile */}

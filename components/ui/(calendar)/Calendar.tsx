@@ -61,6 +61,7 @@ export default function CalendarComponent({
           event.customer.name.toLowerCase().includes(searchQuery.toLowerCase())
         );
         setEventsByDate(filteredEvents);
+        return setIsLoading(false); // Set isLoading to false after fetching data
       };
 
       if (!searchQuery) {

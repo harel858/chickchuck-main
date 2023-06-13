@@ -19,6 +19,8 @@ function NavHead({
     } | null;
   };
 }) {
+  const profileImage = user.urls?.profileImage;
+
   return (
     <div className="relative top-0 left-0 flex justify-center content-center items-center gap-5 flex-col z-50 text-white">
       <h2
@@ -26,7 +28,11 @@ function NavHead({
       >
         Queue
       </h2>
-      <ProfileImage user={user} />
+      <Avatar
+        alt="Profile Img"
+        sx={{ width: 70, height: 70 }}
+        src={profileImage || undefined}
+      />
       <h3
         className={`dark:text-white text-white font-medium  xl:text-xl md:text-lg sm:text-md w-max `}
       >

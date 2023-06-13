@@ -3,14 +3,7 @@ import React, { useCallback } from "react";
 import axios from "axios";
 import { Avatar } from "@mui/material";
 import { User } from "next-auth";
-import imageCompression from "browser-image-compression";
-
-// Move dependencies outside the component
-const imageCompressionOptions = {
-  maxSizeMB: 0.0001,
-  maxWidthOrHeight: 500,
-};
-
+import { useRouter } from "next/navigation";
 const ProfileImage = ({
   user,
 }: {
@@ -23,6 +16,7 @@ const ProfileImage = ({
     } | null;
   };
 }) => {
+  const router = useRouter();
   const profileImage = user.urls?.profileImage;
 
   const postData = async (imageSrc: File) => {
@@ -33,10 +27,10 @@ const ProfileImage = ({
     formData.append("userId", user.id);
 
     try {
-      const response = await axios.post("/api/user/profileImage", formData, {
+      const response = await axios.post("/api/user/image-route", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log(response);
+      if (response.status === 201) return router.refresh();
     } catch (error) {
       console.error(error);
     }
@@ -48,11 +42,7 @@ const ProfileImage = ({
         const file = event.target.files?.[0];
 
         if (file) {
-          const compressedFile = await imageCompression(
-            file,
-            imageCompressionOptions
-          );
-          await postData(compressedFile);
+          await postData(file);
         }
       } catch (err) {
         console.log(err);
@@ -66,7 +56,8 @@ const ProfileImage = ({
       <label htmlFor="avatar-input">
         <Avatar
           alt="Profile Img"
-          className="scale-125 hover:scale-150 duration-300 ease-out cursor-pointer"
+          sx={{ width: 100, height: 100 }}
+          className="border-white border-2 scale-125 hover:scale-150 duration-300 ease-out cursor-pointer"
           src={profileImage || undefined}
         />
       </label>

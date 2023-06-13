@@ -8,7 +8,7 @@ import { AppointmentEvent } from "../../../types/types";
 function WhatsappButtons({ event }: { event: AppointmentEvent }) {
   return (
     <form
-      className={`flex justify-around gap-5 bg-gray-900 text-black rounded-b-2xl w-full px-5 relative top-0 py-3`}
+      className={`flex justify-around gap-5 bg-gray-900 dark:bg-gray-300 text-black rounded-b-2xl w-full px-5 relative top-0 py-3`}
     >
       <Button variant={"subtle"} onClick={() => queueReminder("sh")}>
         Queue Reminder

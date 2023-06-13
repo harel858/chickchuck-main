@@ -48,11 +48,11 @@ const SlotCalendar = ({
 
   const openingTime = dayjs(user.startActivity);
   const closingTime = dayjs(user.endActivity);
-  const totalSlots = closingTime.diff(openingTime, "minute") / 5;
+  const totalSlots = (closingTime.diff(openingTime, "minute") + 1) / 15;
 
   const hours = React.useMemo(() => {
     return [...Array(totalSlots)].map((_, i) => {
-      const minutes = i * 5;
+      const minutes = i * 15;
       const time = openingTime.add(minutes, "minute").format("HH:mm");
 
       const row: {
@@ -103,7 +103,7 @@ const SlotCalendar = ({
     sticky: true,
     width: 50, // Adjust the width value as needed
     onHeaderCell: () => ({
-      className: `text-center text-xl font-md pt-0 m-0 border-x border-black/20 dark:border-orange-500 bg-black dark:text-white dark:bg-black/80 !important`,
+      className: `text-center text-xl font-md pt-0 m-0 border- dark:border-orange-500 bg-black dark:text-white dark:bg-black/80 !important`,
     }),
   };
   const columns = React.useMemo(() => {

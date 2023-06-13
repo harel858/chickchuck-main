@@ -21,7 +21,7 @@ export async function createUser({
     const newUser = await prisma?.user.create({
       data: {
         name,
-        email,
+        email: email.toLocaleLowerCase(),
         password: hashedPassword,
         isAdmin: true,
       },
@@ -46,7 +46,7 @@ export async function createUser({
 export async function getByEmail(email: string) {
   try {
     const userExist = await prisma?.user.findUnique({
-      where: { email },
+      where: { email: email.toLowerCase() },
     });
     return { userExist };
   } catch (err) {
@@ -121,7 +121,7 @@ export async function getById(id: any) {
   }
 }
 
-export async function signIn(email: any, pass: any) {
+export async function signIn(email: string, pass: string) {
   if (!email || !pass)
     return {
       error: { message: `Check the details you provided are correct.` },
@@ -134,6 +134,7 @@ export async function signIn(email: any, pass: any) {
         error: { message: `User not found` },
       };
     let verify = await bcrypt.compare(pass, userExist.password);
+
     if (!verify)
       return {
         error: { message: `password not verified` },

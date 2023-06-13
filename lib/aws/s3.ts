@@ -60,7 +60,7 @@ export const getImage = async (params: getParams) => {
       const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
       urls.profileImage = url;
     }
-    return { ...urls };
+    return urls;
   } catch (err) {
     console.log(err);
     return null;

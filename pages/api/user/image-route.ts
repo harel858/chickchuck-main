@@ -3,7 +3,7 @@ import formidable from "formidable";
 import fs from "fs";
 import prisma from "@lib/prisma";
 import { getImage, uploadImage } from "@lib/aws/s3";
-import { createProfileImage } from "@lib/prisma/images";
+import { createProfileImages, updateProfileImages } from "@lib/prisma/images";
 import { getById } from "@lib/prisma/users";
 export const config = {
   api: {
@@ -29,13 +29,10 @@ export default async function handler(
         }
         const imageSrc = files.imageSrc as formidable.File;
         const userId = fields.userId as string;
-        const type = fields.type as string;
+        const type = fields.type as "PROFILE" | "BACKGROUND";
 
         const { userExist, err } = await getById(userId);
         if (!userExist || err) return res.status(500).json("user not found");
-
-        console.log("fields", fields.userId);
-        console.log("files", imageSrc.originalFilename);
 
         // Process form data
         const params = {
@@ -44,19 +41,39 @@ export default async function handler(
           Body: fs.createReadStream(imageSrc.filepath),
           ContentType: imageSrc.mimetype!,
         };
+        if (userExist.Images.length <= 0) {
+          const { created, err } = await createProfileImages({
+            fileName: imageSrc.newFilename,
+            userId,
+            type,
+          });
+          if (!created || err) return res.status(500).json("creation error");
+          if (created) return res.status(201).json(created);
+        }
+
         // ...
         if (type == "PROFILE") {
           const upload = await uploadImage(params);
           if (!upload) return res.status(500).json("s3 bucket err");
-          const result = await createProfileImage(imageSrc.newFilename, userId);
+          const result = await updateProfileImages({
+            fileName: imageSrc.newFilename,
+            userId,
+            type,
+          });
           if (!result) return res.status(500).json("prisma err");
           // Send the response
           return res.status(201).json({ message: result });
         }
         if (type == "BACKGROUND") {
+          console.log(type);
+
           const upload = await uploadImage(params);
           if (!upload) return res.status(500).json("s3 bucket err");
-          const result = await createProfileImage(imageSrc.newFilename, userId);
+          const result = await updateProfileImages({
+            fileName: imageSrc.newFilename,
+            userId,
+            type,
+          });
           if (!result) return res.status(500).json("prisma err");
           // Send the response
           return res.status(201).json({ message: result });

@@ -28,10 +28,21 @@ function SignUpForm() {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
+    if (event.target.name === "businessName") {
+      // Remove hyphens from the input value
+      const newValue = event.target.value.replace(/-/g, "");
+
+      // Update the formData state with the modified value
+      setFormData({
+        ...formData,
+        [event.target.name]: newValue,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [event.target.name]: event.target.value,
+      });
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -40,7 +51,10 @@ function SignUpForm() {
     // Use formData for API call
     try {
       setIsLoading(true);
-      const res = await axios.post("/api/createUser", { ...formData });
+      const res = await axios.post("/api/createUser", {
+        ...formData,
+        email: formData.email.toLowerCase(),
+      });
       const user = res.data as User;
       signIn("credentials", {
         email: user.email,

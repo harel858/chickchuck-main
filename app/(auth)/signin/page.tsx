@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { Button } from "@ui/Button";
 import { AxiosError } from "axios";
-
+import { useRouter } from "next/navigation";
 type signInData = {
   email: string;
   password: string;
 };
 
 function SignInForm() {
+  const router = useRouter();
   const [error, setError] = useState("");
   const [isLodaing, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<signInData>({
@@ -34,10 +35,10 @@ function SignInForm() {
       setIsLoading(true);
       const res = await signIn("User Login", {
         ...formData,
-        redirect: true,
-        callbackUrl: "/profile",
+        redirect: false,
       });
-      console.log(res);
+      if (res?.ok) return router.push("/profile");
+      if (res?.error) return setError("User Not Found");
 
       // reset formData
     } catch (err) {

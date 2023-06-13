@@ -32,7 +32,7 @@ async function Page() {
   console.log(value);
 
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center ml-52 max-2xl:m-0">
       <UniqueLink link={`http://localhost:3000/${value}`} />
     </div>
   );
