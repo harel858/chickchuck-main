@@ -1,9 +1,9 @@
-"use client";
 import React from "react";
 import { Avatar } from "@mui/material";
 import { User } from "next-auth";
 import { Lobster_Two } from "next/font/google";
-const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
+import ProfileImage from "./ProfileImage";
+const lobster = Lobster_Two({ weight: ["400"], subsets: ["latin"] });
 
 function NavHead({
   user,
@@ -21,16 +21,12 @@ function NavHead({
 
   return (
     <div className="relative top-0 left-0 flex justify-center content-center items-center gap-5 flex-col z-50 text-white">
-      <h2
+      <h1
         className={` ${lobster.className}  dark:text-white text-white xl:text-4xl md:text-3xl sm:text-2xl w-max`}
       >
         Queue.
-      </h2>
-      <Avatar
-        alt="Profile Img"
-        sx={{ width: 70, height: 70 }}
-        src={profileImage || undefined}
-      />
+      </h1>
+      <ProfileImage user={user} />
       <h3
         className={`dark:text-white text-white font-medium  xl:text-xl md:text-lg sm:text-md w-max `}
       >

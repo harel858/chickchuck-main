@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import NavBarItem from "./NavBarItem";
 import { AiOutlineSchedule } from "react-icons/ai";

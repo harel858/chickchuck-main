@@ -6,11 +6,10 @@ import ProfileImage from "./(navbar)/ProfileImage";
 import { Button } from "./Button";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { Lobster_Two } from "next/font/google";
-const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 function Images({
   user,
+  lobster,
 }: {
   user: User & {
     id: string;
@@ -20,6 +19,7 @@ function Images({
       profileImage: string;
     } | null;
   };
+  lobster: string;
 }) {
   const router = useRouter();
   const backgroundImageUrl =
@@ -76,18 +76,17 @@ function Images({
     >
       <div className=" flex justify-center items-center absolute top-5 left-0 right-0 w-full">
         <h1
-          className={`text-white text-5xl shadow-2xl shadow-black ${lobster.className}`}
+          className={`text-white text-5xl shadow-2xl shadow-black ${lobster} `}
         >
           Queue.
         </h1>
       </div>
-      <Button
-        variant="default"
+      <button
         className="shadow-lg shadow-black hover:bg-slate-200 hover:text-black bg-slate-900/90 text-white absolute z-20 top-1/3 right-4  text-base"
         onClick={handleButtonClick}
       >
         Edit Business Image <BsImage className="mx-2" />
-      </Button>
+      </button>
       <input
         ref={fileInputRef}
         className="opacity-0 hidden"
