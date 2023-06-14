@@ -9,7 +9,7 @@ import StepContent from "@mui/material/StepContent";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { Poppins } from "@next/font/google";
+import { Poppins } from "next/font/google";
 import { Zoom } from "react-awesome-reveal";
 import Loading from "../../app/[businessName]/loading";
 import AvailableList from "./AvailableList";

@@ -46,7 +46,7 @@ function Event({
         }}
         className={`flex flex-col ${
           viewMode === "weekly" ? `w-full` : `w-max pr-5`
-        } h-full dark:bg-white/50 dark:hover:bg-white hover:bg-gray-700 pl-2  bg-sky-800/90  cursor-pointer text-white relative border-b border-black/50  rounded-xl`}
+        } h-full dark:bg-slate-200 dark:text-black dark:hover:text-white dark:hover:bg-slate-900 hover:bg-gray-700 pl-2  bg-sky-800/90  cursor-pointer text-white relative border-b border-black/50  rounded-xl`}
       >
         <span
           className={`absolute h-5/6 w-1 bottom-2 left-1 ${event.color}  font-extrabold rounded-full`}

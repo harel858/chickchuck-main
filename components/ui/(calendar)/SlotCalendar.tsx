@@ -99,11 +99,11 @@ const SlotCalendar = ({
     title: "Time",
     dataIndex: "time",
     key: "time",
-    className: `text-center !important text-xl font-md p-0 !important m-0 border-x border-black/20 dark:border-orange-500 bg-white dark:text-white dark:bg-black/80`,
+    className: `text-center !important text-xl font-md p-0 !important m-0 border-x border-black/20 dark:border-orange-500 bg-white dark:text-white dark:bg-slate-700`,
     sticky: true,
     width: 50, // Adjust the width value as needed
     onHeaderCell: () => ({
-      className: `text-center text-xl font-md pt-0 m-0 border- dark:border-orange-500 bg-black dark:text-white dark:bg-black/80 !important`,
+      className: `text-center text-xl font-md pt-0 m-0 border- dark:border-orange-500 bg-black dark:text-white dark:bg-slate-700 !important`,
     }),
   };
   const columns = React.useMemo(() => {
@@ -138,7 +138,7 @@ const SlotCalendar = ({
           return (
             <div
               className="flex justify-center items-center p-0 m-0 absolute top-0 left-0 right-0 w-full h-full z-40 overflow-visible"
-              style={{ height: `${eventRowSpan * 55.5}px` }}
+              style={{ height: `${(eventRowSpan - 1) * 60}px` }}
             >
               {hours.map((slot, slotIndex) => {
                 if (slotIndex >= startSlotIndex && slotIndex <= endSlotIndex) {
@@ -172,21 +172,18 @@ const SlotCalendar = ({
             </div>
           );
         },
-        className: `text-center pt-0 m-0 border-x border-black/20 dark:border-gray-500 ${
+        className: `text-center pt-0 m-0 ${
           isToday(date)
             ? "bg-gray-500/20 dark:bg-black/50"
-            : "bg-white dark:bg-black/80"
+            : "bg-white dark:bg-slate-700"
         }`,
         onHeaderCell: () => ({
-          className: `text-center text-xl font-md pt-0 m-0 border-x border-black/20 dark:border-gray-500 bg-black dark:text-white dark:bg-black/80 !important`,
+          className: `text-center text-xl font-md pt-0 m-0 bg-black dark:text-white dark:bg-slate-700 !important`,
         }),
       })),
     ];
   }, [weekDates, hours, eventsByDate]);
 
-  const toggleViewMode = () => {
-    setViewMode((prevMode) => (prevMode === "weekly" ? "daily" : "weekly"));
-  };
   const dailyColumns = [
     timeColumn,
     ...columns.filter(

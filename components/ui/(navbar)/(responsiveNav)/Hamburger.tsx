@@ -8,6 +8,8 @@ import { MenuToggle } from "./MenuToggle";
 import { Navigation } from "./Navigation";
 import { Avatar } from "@mui/material";
 import { User } from "next-auth";
+import { Lobster_Two } from "@next/font/google";
+const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 const sidebar = {
   open: (height = 1000) => ({
@@ -46,15 +48,17 @@ const variantHeader = {
   },
 };
 
-export const Hamburger = ({
+const Hamburger = ({
   user,
-  lobster,
 }: {
   user: User & {
     id: string;
     UserRole: "CUSTOMER" | "RECIPIENT";
+    urls: {
+      backgroundImage: string;
+      profileImage: string;
+    } | null;
   };
-  lobster: string;
 }) => {
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
@@ -65,7 +69,7 @@ export const Hamburger = ({
       className={`${
         !isOpen ? `hidden pointer-events-none` : `flex`
       } fixed z-40 top-0 left-0 h-screen w-52 max-2xl:flex pt-16 gap-10 hidden flex-col align-center items-center justify-start`}
-      initial={true}
+      initial={false}
       animate={isOpen ? "open" : "closed"}
       custom={height}
       ref={containerRef}
@@ -74,8 +78,10 @@ export const Hamburger = ({
         variants={variantHeader}
         className=" flex justify-center content-center items-center gap-5 flex-col z-50 text-white"
       >
-        <h2 className={` ${lobster} text-black  text-3xl w-max`}>Queue</h2>
-        <Avatar alt="Profile Img" src={user.image || undefined} />
+        <h2 className={`${lobster.className} text-black  text-3xl w-max`}>
+          Queue
+        </h2>
+        <Avatar alt="Profile Img" src={user.urls?.profileImage || undefined} />
         <motion.h3
           className={`${
             !isOpen ? `hidden` : `block`
@@ -93,3 +99,4 @@ export const Hamburger = ({
     </motion.nav>
   );
 };
+export default Hamburger;

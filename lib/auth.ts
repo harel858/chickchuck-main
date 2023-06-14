@@ -19,7 +19,6 @@ const bucketName = process.env.BUCKET_NAME!;
 const authorizeUserLogin = async (credentials: any, req: any) => {
   try {
     const { email, password } = credentials as UserCredentials;
-    console.log(credentials);
 
     const { user, error } = await userSignIn(email, password);
 

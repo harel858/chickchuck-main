@@ -6,6 +6,8 @@ import ProfileImage from "./(navbar)/ProfileImage";
 import { Button } from "./Button";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { Lobster_Two } from "@next/font/google";
+const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 function Images({
   user,
@@ -66,15 +68,22 @@ function Images({
 
   return (
     <div
-      className="relative mt-20 inset-y-0 top-0 left-0 right-0 w-10/12 h-1/3 bg-cover bg-center z-0 ml-52 max-2xl:w-full max-2xl:rounded-t-none max-2xl:ml-auto shadow-2xl rounded-2xl dark:shadow-white/10"
+      className="relative  max-2xl:p-32 max-2xl:m-0 max-2xl:top-20  mt-20 inset-y-0 top-0 left-0 right-0 w-10/12 h-1/3 bg-cover bg-center z-0 ml-52 max-2xl:w-full max-2xl:rounded-t-none max-2xl:ml-auto shadow-2xl rounded-2xl dark:shadow-white/10"
       style={{
         backgroundImage: `url(${backgroundImageUrl})`,
-        boxShadow: "inset 0 -15vh 50px rgba(0, 0, 0, 0.5)",
+        boxShadow: "inset -20px 10em 50px rgba(0, 0, 0, 0.5)",
       }}
     >
+      <div className=" flex justify-center items-center absolute top-5 left-0 right-0 w-full">
+        <h1
+          className={`text-white text-5xl shadow-2xl shadow-black ${lobster.className}`}
+        >
+          Queue.
+        </h1>
+      </div>
       <Button
         variant="default"
-        className="shadow-lg hover:bg-slate-200 hover:text-black bg-slate-900/70 text-white absolute z-20 bottom-4 max-md:top-4 max-md:right-4 right-4 text-base"
+        className="shadow-lg shadow-black hover:bg-slate-200 hover:text-black bg-slate-900/90 text-white absolute z-20 top-1/3 right-4  text-base"
         onClick={handleButtonClick}
       >
         Edit Business Image <BsImage className="mx-2" />
@@ -86,7 +95,7 @@ function Images({
         type="file"
         onChange={handleChange}
       />
-      <div className="absolute -bottom-3 right-0 left-0">
+      <div className="absolute -bottom-3 left-1/2 right-1/2 transform -translate-x-1/2">
         <ProfileImage user={user} />
       </div>
     </div>

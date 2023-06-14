@@ -1,6 +1,6 @@
 import "@styles/globals.css";
 import React from "react";
-import { Roboto } from "@next/font/google";
+import { Roboto } from "next/font/google";
 import Providers from "@ui/Providers";
 import { cn } from "@lib/utils";
 import Navbar from "@ui/(navbar)/Navbar";
@@ -19,7 +19,10 @@ export default function RootLayout({
     <ServerThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <html
         lang="en"
-        className={cn(" text-slate-900 antialiased", inter.className)}
+        className={cn(
+          " text-slate-900 antialiased overflow-x-hidden ",
+          inter.className
+        )}
       >
         <body className="min-h-screen bg-sky-400/70 dark:bg-slate-900 antialiased relative">
           <Providers>
@@ -29,7 +32,7 @@ export default function RootLayout({
 
           {/* Add the inset box shadow */}
           <div className="fixed inset-0 pointer-events-none -z-10">
-            <div className="h-1/2 bg-gradient-to-t from-transparent dark:to-slate-700/80 to-sky-800 -z-10" />
+            <div className="h-1/2 bg-gradient-to-t from-transparent dark:to-slate-700/80 to-sky-900 -z-10" />
           </div>
 
           {/* Allow more height for mobile menu on mobile */}

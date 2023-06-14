@@ -1,13 +1,12 @@
 "use client";
+import classes from "./style.module.css";
+import { lazy, Suspense } from "react";
 import { ThemeToggle } from "@components/ThemeToggle";
 import { buttonVariants } from "@ui/Button";
 import Link from "next/link";
-import { Hamburger } from "./(responsiveNav)/Hamburger";
 import SignOutBtn from "@ui/SignOutBtn";
-import { Lobster_Two } from "@next/font/google";
 import { useSession } from "next-auth/react";
-
-const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
+const Hamburger = lazy(() => import("./(responsiveNav)/Hamburger"));
 
 function Navbar() {
   const session = useSession();
@@ -16,7 +15,15 @@ function Navbar() {
     <div className="fixed backdrop-blur-sm bg-sky-600/75 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-sky-300 dark:border-slate-800 shadow-sm flex items-center justify-between">
       <div className="container max-w-7xl mx-auto w-full flex justify-end items-center">
         {session?.data?.user.UserRole === "RECIPIENT" && (
-          <Hamburger lobster={lobster.className} user={session.data.user} />
+          <Suspense
+            fallback={
+              <div
+                className={`${classes.background} border-r border-gray-800 shadow-[0_35px_60px_10px_rgba(0,0,0,0.3)]`}
+              />
+            }
+          >
+            <Hamburger user={session.data.user} />
+          </Suspense>
         )}
         {session?.data?.user.UserRole !== "RECIPIENT" && (
           <Link href="/" className={buttonVariants({ variant: "link" })}>

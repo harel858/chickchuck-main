@@ -1,15 +1,9 @@
-import * as React from "react";
-import dayjs, { Dayjs } from "dayjs";
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import { green } from "@mui/material/colors";
-import Button from "@mui/material/Button";
-import Fab from "@mui/material/Fab";
-import CheckIcon from "@mui/icons-material/Check";
-import SaveIcon from "@mui/icons-material/Save";
-import { AvailableSlot, User } from "@prisma/client";
+import React from "react";
+import { User } from "@prisma/client";
 import { Slots } from "../../../types/types";
 import axios from "axios";
+import { Button } from "@ui/Button";
+import { Dayjs } from "dayjs";
 
 type SubmitProps = {
   user: User;
@@ -19,7 +13,6 @@ type SubmitProps = {
   setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
   activityDays: any[];
   availableSlots: Slots[];
-  duration: number;
 };
 
 export default function SubmitButton({
@@ -27,32 +20,12 @@ export default function SubmitButton({
   hasChanges,
   startActivity,
   endActivity,
-  setHasChanges,
   activityDays,
   availableSlots,
-  duration,
 }: SubmitProps) {
   const [loading, setLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
-  const timer = React.useRef<number>();
-
-  const buttonSx = {
-    ...(success && {
-      bgcolor: green[500],
-      "&:hover": {
-        bgcolor: green[700],
-      },
-    }),
-  };
-
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(timer.current);
-    };
-  }, [hasChanges]);
 
   const handleButtonClick = async () => {
-    setSuccess(false);
     setLoading(true);
     console.log(startActivity.toISOString());
 
@@ -63,11 +36,10 @@ export default function SubmitButton({
         activityDays,
         availableSlots,
         userId: user.id,
-        duration: duration,
+        duration: 5,
       });
       console.log(res.data);
 
-      setSuccess(true);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -76,55 +48,12 @@ export default function SubmitButton({
   };
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Box sx={{ m: 1, zIndex: 0 }}>
-        <Fab
-          aria-label="save"
-          color="warning"
-          sx={buttonSx}
-          disabled={hasChanges}
-          onClick={handleButtonClick}
-        >
-          {success ? <CheckIcon /> : <SaveIcon />}
-        </Fab>
-        {loading && (
-          <CircularProgress
-            size={68}
-            sx={{
-              color: green[500],
-              position: "absolute",
-              top: -6,
-              left: -6,
-            }}
-          />
-        )}
-      </Box>
-      <Box sx={{ m: 1, position: "relative" }}>
-        <Button
-          variant="contained"
-          color="warning"
-          sx={buttonSx}
-          disabled={loading || hasChanges}
-          onClick={handleButtonClick}
-          className="z-0"
-        >
-          Accept terms
-        </Button>
-        {loading && (
-          <CircularProgress
-            size={24}
-            sx={{
-              color: green[500],
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              marginTop: "-12px",
-              marginLeft: "-12px",
-            }}
-            className="z-0"
-          />
-        )}
-      </Box>
-    </Box>
+    <Button
+      disabled={hasChanges}
+      onClick={handleButtonClick}
+      isLoading={loading}
+    >
+      Save Changes
+    </Button>
   );
 }

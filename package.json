@@ -9,6 +9,7 @@
         "@ant-design/icons": "^5.0.1",
         "@aws-sdk/client-s3": "^3.350.0",
         "@aws-sdk/s3-request-presigner": "^3.350.0",
+        "@aws-sdk/signature-v4-crt": "^3.347.0",
         "@emotion/react": "^11.10.6",
         "@emotion/server": "^11.10.0",
         "@emotion/styled": "^11.10.6",

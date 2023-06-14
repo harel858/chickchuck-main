@@ -1,10 +1,8 @@
 "use client";
 import React from "react";
-
-import { Lobster_Two } from "@next/font/google";
 import { Avatar } from "@mui/material";
 import { User } from "next-auth";
-import ProfileImage from "./ProfileImage";
+import { Lobster_Two } from "@next/font/google";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 function NavHead({
@@ -26,7 +24,7 @@ function NavHead({
       <h2
         className={` ${lobster.className}  dark:text-white text-white xl:text-4xl md:text-3xl sm:text-2xl w-max`}
       >
-        Queue
+        Queue.
       </h2>
       <Avatar
         alt="Profile Img"

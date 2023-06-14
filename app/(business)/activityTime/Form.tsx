@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import React from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { Business, User } from "@prisma/client";
 import SubmitButton from "./SubmitButton";
@@ -14,15 +14,12 @@ export default function Form({
     Business: Business[];
   };
 }) {
-  console.log(user.startActivity);
-
   const [startActivity, setStartActivity] = React.useState<Dayjs>(
     dayjs(dayjs(user.startActivity))
   );
   const [endActivity, setEndActivity] = React.useState<Dayjs>(
     dayjs(user.endActivity)
   );
-  const [duration, setDuration] = React.useState<number>(5);
   const [hasChanges, setHasChanges] = React.useState<boolean>(true);
   const [activityDays, setActivityDays] = React.useState<any[]>(
     user.Business[0].activityDays
@@ -30,17 +27,13 @@ export default function Form({
   const [availableSlots, setAvailableSlots] = React.useState<Slots[]>([]);
 
   React.useEffect(() => {
-    generateAvailableSlots(startActivity, endActivity, duration);
+    generateAvailableSlots(startActivity, endActivity);
 
     setHasChanges(false);
-  }, [startActivity, setStartActivity, endActivity, setEndActivity, duration]);
+  }, [startActivity, setStartActivity, endActivity, setEndActivity]);
 
   // This function will generate a list of available slots based on the start and end time of the activity
-  const generateAvailableSlots = (
-    start: Dayjs,
-    end: Dayjs,
-    duration: number
-  ) => {
+  const generateAvailableSlots = (start: Dayjs, end: Dayjs) => {
     const slots: Slots[] = [];
     console.log(start);
 
@@ -60,14 +53,9 @@ export default function Form({
     setAvailableSlots(slots);
   };
 
-  const handleSlotDurationChange = (duration: any) => {
-    // Handle selected duration here
-    setDuration(duration);
-    generateAvailableSlots(startActivity, endActivity, duration);
-  };
-
   return (
-    <div className="flex flex-col items-center justify-center w-full relative">
+    <div className="flex flex-col items-center justify-center relative w-fit bg-orange-300 p-5 rounded-2xl gap-5">
+      <h2 className="text-black text-2xl">Bussiness Activity</h2>
       <ActivityDays
         activityDays={activityDays}
         setActivityDays={setActivityDays}
@@ -88,7 +76,6 @@ export default function Form({
         setHasChanges={setHasChanges}
         activityDays={activityDays}
         availableSlots={availableSlots}
-        duration={duration}
       />
     </div>
   );

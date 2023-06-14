@@ -19,9 +19,10 @@ function ActivityTimePicker({
   setEndActivity,
 }: ActivityTimePickerProps) {
   return (
-    <div className="rounded-full flex gap-2">
+    <div className="rounded-full flex flex-col gap-2">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <MobileTimePicker
+          label="Start"
           orientation="portrait"
           views={["hours", "minutes"]}
           value={startActivity}
@@ -30,6 +31,7 @@ function ActivityTimePicker({
           }}
         />
         <MobileTimePicker
+          label="End"
           orientation="portrait"
           value={endActivity}
           onChange={(newValue) => {

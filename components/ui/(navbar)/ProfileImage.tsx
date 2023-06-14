@@ -4,6 +4,20 @@ import axios from "axios";
 import { Avatar } from "@mui/material";
 import { User } from "next-auth";
 import { useRouter } from "next/navigation";
+import { styled } from "@mui/material/styles";
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
+const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: theme.palette.common.white,
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.white,
+    color: "rgba(0, 0, 0, 0.87)",
+  },
+}));
+
 const ProfileImage = ({
   user,
 }: {
@@ -52,23 +66,25 @@ const ProfileImage = ({
   );
 
   return (
-    <div className="flex justify-center">
-      <label htmlFor="avatar-input">
-        <Avatar
-          alt="Profile Img"
-          sx={{ width: 100, height: 100 }}
-          className="border-white border-2 scale-125 hover:scale-150 duration-300 ease-out cursor-pointer"
-          src={profileImage || undefined}
+    <BootstrapTooltip title="Change Business Logo">
+      <div className="flex justify-center ">
+        <label htmlFor="avatar-input">
+          <Avatar
+            alt="Profile Img"
+            sx={{ width: 100, height: 100 }}
+            className="border-white border-2 scale-125 hover:scale-150 duration-300 ease-out cursor-pointer"
+            src={profileImage || undefined}
+          />
+        </label>
+        <input
+          id="avatar-input"
+          className="opacity-0 hidden"
+          accept="image/*"
+          type="file"
+          onChange={handleAvatarChange}
         />
-      </label>
-      <input
-        id="avatar-input"
-        className="opacity-0 hidden"
-        accept="image/*"
-        type="file"
-        onChange={handleAvatarChange}
-      />
-    </div>
+      </div>
+    </BootstrapTooltip>
   );
 };
 
