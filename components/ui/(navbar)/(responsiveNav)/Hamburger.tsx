@@ -8,7 +8,7 @@ import { MenuToggle } from "./MenuToggle";
 import { Navigation } from "./Navigation";
 import { Avatar } from "@mui/material";
 import { User } from "next-auth";
-import { Lobster_Two } from "@next/font/google";
+import { Lobster_Two } from "next/font/google";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 const sidebar = {

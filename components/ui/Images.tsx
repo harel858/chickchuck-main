@@ -6,7 +6,7 @@ import ProfileImage from "./(navbar)/ProfileImage";
 import { Button } from "./Button";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { Lobster_Two } from "@next/font/google";
+import { Lobster_Two } from "next/font/google";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 function Images({
