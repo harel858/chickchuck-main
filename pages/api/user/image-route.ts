@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import fs from "fs";
-import prisma from "@lib/prisma";
+import { prisma } from "@lib/prisma";
 import { getImage, uploadImage } from "@lib/aws/s3";
 import { createProfileImages, updateProfileImages } from "@lib/prisma/images";
 import { getById } from "@lib/prisma/users";

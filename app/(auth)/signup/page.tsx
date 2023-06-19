@@ -51,7 +51,7 @@ function SignUpForm() {
     // Use formData for API call
     try {
       setIsLoading(true);
-      const res = await axios.post("/api/createUser", {
+      const res = await axios.post("/api/user/createUser", {
         ...formData,
         email: formData.email.toLowerCase(),
       });

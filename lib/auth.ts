@@ -1,7 +1,7 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "./prisma";
+import { prisma } from "./prisma";
 import { signIn as userSignIn } from "./prisma/users";
 import { getCustomer } from "./prisma/customer";
 import { getImage } from "./aws/s3";

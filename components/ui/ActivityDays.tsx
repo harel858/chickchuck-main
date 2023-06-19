@@ -6,8 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
-import { User } from "@prisma/client";
-import { ActivityDay } from "../../../types/types";
+import { ActivityDay } from "../../types/types";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -46,7 +45,6 @@ export default function ActivityDays({
     console.log(value);
 
     setActivityDays(typeof value === "string" ? value.split(",") : value);
-    // On autofill we get a stringified value.
     setHasChanges(false);
   };
 

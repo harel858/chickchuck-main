@@ -1,4 +1,4 @@
-import prisma from ".";
+import { prisma } from ".";
 
 // Create Profile Image
 export const createProfileImages = async (params: {

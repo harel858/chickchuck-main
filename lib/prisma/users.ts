@@ -1,5 +1,5 @@
-import prisma from ".";
 import bcrypt from "bcrypt";
+import { prisma } from ".";
 
 export async function getAllUsers() {
   const users = await prisma?.user.findMany({});

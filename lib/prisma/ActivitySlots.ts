@@ -1,4 +1,4 @@
-import prisma from ".";
+import { prisma } from ".";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentSlot, AvailableSlot, Business, User } from "@prisma/client";

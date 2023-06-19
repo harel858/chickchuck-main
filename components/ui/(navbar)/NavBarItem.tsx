@@ -17,7 +17,7 @@ function NavBarItem({ title, link, icon }: NavItemProps) {
   return (
     <li
       className={`flex justify-start gap-8 w-full group hover:bg-opacity-10 hover:bg-black/10 dark:hover:bg-white/10 ${
-        isActive && `bg-black/10 dark:bg-white/10`
+        isActive && `bg-black/50 dark:bg-white/50`
       } cursor-pointer p-4 my-0 transition-all ease-in duration-200`}
       onClick={() => router.push(link)}
     >
@@ -32,7 +32,7 @@ function NavBarItem({ title, link, icon }: NavItemProps) {
         href={link}
         className={`text-white relative ${
           isActive ? `font-medium ` : `font-light`
-        } after:absolute after:bottom-0 after:mt-1 after:left-0 after:h-0.5 after:w-full after:bg-blue-500 after:translate-y-1 after:scale-x-0 after:ease-in after:duration-200 ease-in duration-200 group-hover:after:scale-x-100 text-xl`}
+        } w-max after:absolute after:bottom-0 after:mt-1 after:left-0 after:h-0.5 after:w-full after:bg-blue-500 after:translate-y-1 after:scale-x-0 after:ease-in after:duration-200 ease-in duration-200 group-hover:after:scale-x-100 text-xl`}
       >
         {title}
       </Link>

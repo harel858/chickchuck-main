@@ -81,12 +81,12 @@ function Images({
           Queue.
         </h1>
       </div>
-      <button
+      <Button
         className="shadow-lg shadow-black hover:bg-slate-200 hover:text-black bg-slate-900/90 text-white absolute z-20 top-1/3 right-4  text-base"
         onClick={handleButtonClick}
       >
         Edit Business Image <BsImage className="mx-2" />
-      </button>
+      </Button>
       <input
         ref={fileInputRef}
         className="opacity-0 hidden"
@@ -95,7 +95,7 @@ function Images({
         onChange={handleChange}
       />
       <div className="absolute -bottom-3 left-1/2 right-1/2 transform -translate-x-1/2">
-        <ProfileImage user={user} />
+        <ProfileImage enable={true} user={user} />
       </div>
     </div>
   );

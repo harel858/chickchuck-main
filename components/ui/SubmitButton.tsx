@@ -1,6 +1,6 @@
 import React from "react";
 import { User } from "@prisma/client";
-import { Slots } from "../../../types/types";
+import { Slots } from "../../types/types";
 import axios from "axios";
 import { Button } from "@ui/Button";
 import { Dayjs } from "dayjs";
@@ -10,9 +10,9 @@ type SubmitProps = {
   hasChanges: boolean;
   startActivity: Dayjs;
   endActivity: Dayjs;
-  setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
   activityDays: any[];
   availableSlots: Slots[];
+  setError: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default function SubmitButton({
@@ -22,12 +22,15 @@ export default function SubmitButton({
   endActivity,
   activityDays,
   availableSlots,
+  setError,
 }: SubmitProps) {
+  console.log(hasChanges);
+
   const [loading, setLoading] = React.useState(false);
 
   const handleButtonClick = async () => {
     setLoading(true);
-    console.log(startActivity.toISOString());
+    setError("");
 
     try {
       const res = await axios.post(`/api/slots/slot`, {
@@ -49,7 +52,7 @@ export default function SubmitButton({
 
   return (
     <Button
-      disabled={hasChanges}
+      disabled={hasChanges || endActivity?.hour() < startActivity.hour()}
       onClick={handleButtonClick}
       isLoading={loading}
     >

@@ -2,7 +2,7 @@ import React from "react";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { notFound } from "next/navigation";
-import prisma from "@lib/prisma";
+import { prisma } from "@lib/prisma";
 import { ScheduleData, ScheduleProps } from "../../../types/types";
 import { getServerSession } from "next-auth";
 import CalendarComponent from "@ui/(calendar)/Calendar";

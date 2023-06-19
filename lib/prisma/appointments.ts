@@ -1,4 +1,4 @@
-import prisma from ".";
+import { prisma } from ".";
 import dayjs, { Dayjs } from "dayjs";
 
 import { AppointmentStatus, AvailableSlot } from "@prisma/client";

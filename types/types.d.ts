@@ -45,7 +45,7 @@ export type ScheduleProps = {
 };
 
 export type ActivityDay = {
-  value: number;
+  value: any;
   label: string;
 };
 
@@ -112,4 +112,10 @@ export type NavBarProps = {
 export default interface StepOne {
   name: string;
   phoneNumber: string;
+}
+
+export interface ActivityForm {
+  startActivity: Dayjs;
+  endActivity: Dayjs;
+  activityDays: any[];
 }

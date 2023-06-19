@@ -11,31 +11,47 @@ type ActivityTimePickerProps = {
   setStartActivity: React.Dispatch<React.SetStateAction<dayjs.Dayjs>>;
   endActivity: Dayjs;
   setEndActivity: React.Dispatch<React.SetStateAction<dayjs.Dayjs>>;
+  setError: React.Dispatch<React.SetStateAction<string>>;
+  setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
 };
 function ActivityTimePicker({
   startActivity,
   setStartActivity,
   endActivity,
   setEndActivity,
+  setError,
+  setHasChanges,
 }: ActivityTimePickerProps) {
   return (
     <div className="rounded-full flex flex-col gap-2">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <MobileTimePicker
           label="Start"
-          orientation="portrait"
+          orientation="landscape"
           views={["hours", "minutes"]}
           value={startActivity}
           onChange={(newValue) => {
-            newValue && setStartActivity(newValue);
+            if (newValue && newValue?.hour() < endActivity.hour()) {
+              setStartActivity(newValue);
+              setHasChanges(false);
+            } else {
+              setError("Activity time Is Not Valid");
+              setHasChanges(true);
+            }
           }}
         />
         <MobileTimePicker
           label="End"
-          orientation="portrait"
+          orientation="landscape"
           value={endActivity}
           onChange={(newValue) => {
-            newValue && setEndActivity(newValue);
+            if (newValue && newValue?.hour() > startActivity.hour()) {
+              setEndActivity(newValue);
+              setHasChanges(false);
+            } else {
+              setError("Activity time Is Not Valid");
+              setHasChanges(true);
+            }
           }}
         />
       </LocalizationProvider>

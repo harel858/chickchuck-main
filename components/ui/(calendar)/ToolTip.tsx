@@ -5,6 +5,7 @@ import WhatsappButtons from "./WhatsappButtons";
 import { motion } from "framer-motion";
 import { AppointmentEvent } from "../../../types/types";
 import dayjs from "dayjs";
+import DownloadPDF from "@components/InovicePDF";
 
 function ToolTip({ event }: { event: AppointmentEvent }) {
   const start = dayjs(event.start).format("HH:mm");
@@ -54,6 +55,7 @@ function ToolTip({ event }: { event: AppointmentEvent }) {
         </div>
       </div>
       {event.status === "SCHEDULED" && <WhatsappButtons event={event} />}
+      {event.status === "COMPLETED" && <DownloadPDF event={event} />}
     </div>
   );
 }

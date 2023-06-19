@@ -20,6 +20,7 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 const ProfileImage = ({
   user,
+  enable,
 }: {
   user: User & {
     id: string;
@@ -29,6 +30,7 @@ const ProfileImage = ({
       profileImage: string;
     } | null;
   };
+  enable: boolean;
 }) => {
   const router = useRouter();
   const profileImage = user.urls?.profileImage;
@@ -67,18 +69,26 @@ const ProfileImage = ({
 
   return (
     <BootstrapTooltip title="Change Business Logo">
-      <div className="flex justify-center ">
+      <div
+        className={`flex justify-center ${
+          !enable ? "pointer-events-none" : "pointer-events-auto"
+        }`}
+      >
         <label htmlFor="avatar-input">
           <Avatar
             alt="Profile Img"
-            sx={{ width: 100, height: 100 }}
-            className="border-white border-2 scale-125 hover:scale-150 duration-300 ease-out cursor-pointer"
+            sx={
+              enable ? { width: 110, height: 110 } : { width: 60, height: 60 }
+            }
+            className={`border-white border-2 ${
+              enable && "hover:scale-125 cursor-pointer duration-300 ease-out"
+            } `}
             src={profileImage || undefined}
           />
         </label>
         <input
           id="avatar-input"
-          className="opacity-0 hidden"
+          className={`opacity-0 hidden`}
           accept="image/*"
           type="file"
           onChange={handleAvatarChange}

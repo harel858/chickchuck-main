@@ -1,4 +1,4 @@
-import prisma from ".";
+import { prisma } from ".";
 
 type CreateData = {
   title: string;

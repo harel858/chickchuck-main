@@ -11,11 +11,9 @@ export default async function handler(
   if (req.method == "POST") {
     try {
       const { name, email, password, businessName } = req.body;
-      console.log(req.method);
-      console.log(req.body);
 
       //validate user
-      const { error } = validateUser({
+      const { error, value } = validateUser({
         name,
         email,
         password,
@@ -26,6 +24,7 @@ export default async function handler(
         console.log({ err });
         return res.status(400).send(err);
       }
+      console.log(value);
 
       //hash password
       if (!password) {

@@ -1,4 +1,4 @@
-import prisma from ".";
+import { prisma } from ".";
 import { UserData } from "../../types/types";
 
 export const fetchAppointmentSlots = async (businessName: string) => {

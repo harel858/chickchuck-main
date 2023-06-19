@@ -32,8 +32,9 @@ function Event({
     <HtmlTooltip
       key={event.id}
       title={<ToolTip event={event} key={event.id} />}
-      enterDelay={500}
-      leaveDelay={500}
+      enterDelay={1000}
+      enterTouchDelay={1000}
+      leaveDelay={1000}
     >
       <motion.div
         key={event.id}

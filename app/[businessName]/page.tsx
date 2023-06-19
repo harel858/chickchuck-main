@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 import React from "react";
-import prisma from "@lib/prisma";
+import { prisma } from "@lib/prisma";
 import Booking from "../../components/landingPage/Booking";
-
 import { fetchAppointmentSlots } from "@lib/prisma/fetchAppointmentSlots";
 type LandingPageProps = {
   params: {

@@ -26,7 +26,7 @@ function NavHead({
       >
         Queue.
       </h1>
-      <ProfileImage user={user} />
+      <ProfileImage enable={false} user={user} />
       <h3
         className={`dark:text-white text-white font-medium  xl:text-xl md:text-lg sm:text-md w-max `}
       >
