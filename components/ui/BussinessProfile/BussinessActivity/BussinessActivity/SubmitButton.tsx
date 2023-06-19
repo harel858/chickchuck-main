@@ -1,6 +1,6 @@
 import React from "react";
 import { User } from "@prisma/client";
-import { Slots } from "../../types/types";
+import { Slots } from "../../../../../types/types";
 import axios from "axios";
 import { Button } from "@ui/Button";
 import { Dayjs } from "dayjs";
@@ -33,7 +33,7 @@ export default function SubmitButton({
     setError("");
 
     try {
-      const res = await axios.post(`/api/slots/slot`, {
+      const res = await axios.post(`/api/bussiness/activity`, {
         startActivity: startActivity.toISOString(),
         endActivity: endActivity.toISOString(),
         activityDays,

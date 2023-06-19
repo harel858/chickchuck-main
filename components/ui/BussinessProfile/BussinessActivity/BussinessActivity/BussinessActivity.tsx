@@ -1,19 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { Business, User } from "@prisma/client";
-import { Slots } from "../../types/types";
+import { ProfilePageData, Slots } from "../../../../../types/types";
 import ActivityDays from "./ActivityDays";
 import ActivityTimePicker from "./ActivityTimePicker";
 import SubmitButton from "./SubmitButton";
 
-export default function BussinessActivity({
-  user,
-}: {
-  user: User & {
-    Business: Business[];
-  };
-}) {
+export default function BussinessActivity({ user }: { user: ProfilePageData }) {
   const [error, setError] = useState<string>("");
   const [startActivity, setStartActivity] = useState<Dayjs>(
     dayjs(dayjs(user.startActivity))
@@ -23,7 +16,7 @@ export default function BussinessActivity({
   );
   const [hasChanges, setHasChanges] = useState<boolean>(true);
   const [activityDays, setActivityDays] = useState<any[]>(
-    user.Business[0].activityDays
+    user.bussiness.activityDays
   );
   const [availableSlots, setAvailableSlots] = useState<Slots[]>([]);
 

@@ -11,15 +11,15 @@ function UniqueLink({ link }: { link: string }) {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-5">
-      <div className="bg-white dark:bg-slate-300 w-fit rounded-xl p-2 border-2 border-black">
+    <div className="flex flex-col items-center justify-center gap-5 w-max">
+      <div className="bg-white dark:bg-slate-300 w-max rounded-xl p-2 border-2 border-black">
         <Tooltip title="Copy link" arrow>
           <IconButton aria-label="copy link" onClick={copyToClipboard}>
             <FileCopyIcon />
           </IconButton>
         </Tooltip>
         <Link
-          className="font-medium hover:underline hover:decoration-1	text-black text-lg"
+          className="font-medium hover:underline w-max hover:decoration-1	text-black text-lg"
           href={link}
           target="_blank"
         >

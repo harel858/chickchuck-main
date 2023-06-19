@@ -58,12 +58,12 @@ model Business {
 }
 
 model Address {
-  id         String    @id @default(uuid())
+  id         String   @id @default(uuid())
   city       String
   street     String
-  zipcode    String
-  Business   Business? @relation(fields: [businessId], references: [id])
-  businessId String?
+  zipcode    String?
+  Business   Business @relation(fields: [businessId], references: [id])
+  businessId String
 }
 
 model Appointment {

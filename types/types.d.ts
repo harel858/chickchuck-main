@@ -5,6 +5,8 @@ import {
   Treatment,
   Customer,
   AppointmentStatus,
+  Business,
+  Address,
 } from "@prisma/client";
 import { Dayjs } from "dayjs";
 
@@ -118,4 +120,20 @@ export interface ActivityForm {
   startActivity: Dayjs;
   endActivity: Dayjs;
   activityDays: any[];
+}
+
+export interface ProfilePageData {
+  bussiness: Business & {
+    Address: Address[];
+  };
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  phone: string | null;
+  startActivity: string | null;
+  endActivity: string | null;
+  UserRole: UserRole;
+  isAdmin: boolean;
+  PremiumKit: PremiumKits;
 }

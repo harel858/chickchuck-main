@@ -2,10 +2,10 @@ import React from "react";
 import { prisma } from "@lib/prisma";
 import { authOptions } from "@lib/auth";
 import { getServerSession } from "next-auth";
-import UniqueLink from "./UniqueLink";
+import UniqueLink from "../../../components/ui/UniqueLink";
 import { notFound } from "next/navigation";
-import BussinessActivity from "@ui/BussinessActivity";
-import LargeHeading from "@ui/LargeHeading";
+import BussinessAddress from "@ui/BussinessProfile/bussinessAddresses/bussinessAddress";
+import BussinessActivity from "@ui/BussinessProfile/BussinessActivity/BussinessActivity/BussinessActivity";
 
 async function fetchUser(email: string | null | undefined) {
   try {
@@ -14,7 +14,16 @@ async function fetchUser(email: string | null | undefined) {
       where: { email },
       include: { Business: true },
     });
-    return user;
+    if (!user) return null;
+
+    const bussiness = await prisma.business.findUnique({
+      where: { id: user?.Business[0].id },
+      include: { Address: true },
+    });
+    if (!user || !bussiness) return null;
+
+    const { Business, ...rest } = user;
+    return { ...rest, bussiness };
   } catch (error) {
     console.log(error);
     return null;
@@ -27,13 +36,16 @@ async function Page() {
   const user = await fetchUser(session?.user?.email);
   if (!user) return notFound();
 
-  const value = user.Business[0].businessName.replace(/(\s)(?!\s*$)/g, "-");
+  const value = user.bussiness.businessName.replace(/(\s)(?!\s*$)/g, "-");
 
   return (
-    <div className="flex justify-center flex-wrap items-center ml-52 max-2xl:m-0 w-11/12">
-      <div className="relative flex flex-nowrap items-start gap-20 max-2xl:gap-5 max-2xl:flex-col max-2xl:mt-36 max-2xl:items-center">
-        <UniqueLink link={`http://localhost:3000/${value}`} />
-        <BussinessActivity user={user} />
+    <div className="flex justify-center flex-wrap items-center ml-52 max-2xl:m-0 w-full">
+      <div className="relative flex flex-row flex-nowrap justify-center items-start gap-5 w-full max-2xl:gap-5 max-2xl:flex-col max-2xl:mt-36 max-2xl:items-center">
+        <div className="flex justify-center items-center gap-5 max-2xl:flex-col-reverse max-2xl:items-center">
+          <BussinessActivity user={user} />
+          <UniqueLink link={`http://localhost:3000/${value}`} />
+        </div>
+        <BussinessAddress user={user} />
       </div>
     </div>
   );

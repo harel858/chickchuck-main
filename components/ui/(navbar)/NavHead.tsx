@@ -1,8 +1,8 @@
 import React from "react";
 import { Avatar } from "@mui/material";
 import { User } from "next-auth";
-import { Lobster_Two } from "next/font/google";
 import ProfileImage from "./ProfileImage";
+import { Lobster_Two } from "next/font/google";
 const lobster = Lobster_Two({ weight: ["400"], subsets: ["latin"] });
 
 function NavHead({
@@ -22,7 +22,7 @@ function NavHead({
   return (
     <div className="relative top-0 left-0 flex justify-center content-center items-center gap-5 flex-col z-50 text-white">
       <h1
-        className={` ${lobster.className}  dark:text-white text-white xl:text-4xl md:text-3xl sm:text-2xl w-max`}
+        className={` ${lobster.className}  dark:text-white text-white text-4xl w-max`}
       >
         Queue.
       </h1>

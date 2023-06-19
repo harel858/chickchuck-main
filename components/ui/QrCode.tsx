@@ -20,8 +20,11 @@ const downloadQRCode = () => {
 };
 
 const QrCode = ({ link }: { link: string }) => (
-  <div id="myqrcode">
-    <QRCode value={link} style={{ marginBottom: 10 }} />
+  <div
+    id="myqrcode"
+    className="flex flex-col justify-center items-center gap-2"
+  >
+    <QRCode value={link} />
     <Button variant={"ghost"} onClick={downloadQRCode} className="text-base">
       Download <AiOutlineDownload className="m-2 text-3xl" />
     </Button>
