@@ -16,14 +16,14 @@ async function fetchUser(email: string | null | undefined) {
     });
     if (!user) return null;
 
-    const bussiness = await prisma.business.findUnique({
+    const business = await prisma.business.findUnique({
       where: { id: user?.Business[0].id },
       include: { Address: true },
     });
-    if (!user || !bussiness) return null;
+    if (!user || !business) return null;
 
     const { Business, ...rest } = user;
-    return { ...rest, bussiness };
+    return { ...rest, business };
   } catch (error) {
     console.log(error);
     return null;
@@ -36,7 +36,7 @@ async function Page() {
   const user = await fetchUser(session?.user?.email);
   if (!user) return notFound();
 
-  const value = user.bussiness.businessName.replace(/(\s)(?!\s*$)/g, "-");
+  const value = user.business.businessName.replace(/(\s)(?!\s*$)/g, "-");
 
   return (
     <div className="flex justify-center flex-wrap items-center ml-52 max-2xl:m-0 w-full">

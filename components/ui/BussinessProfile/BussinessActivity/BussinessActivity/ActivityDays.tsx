@@ -1,25 +1,10 @@
-import * as React from "react";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import ListItemText from "@mui/material/ListItemText";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Checkbox from "@mui/material/Checkbox";
+"use client";
+import React from "react";
+import { Select, Tag } from "antd";
+import type { CustomTagProps } from "rc-select/lib/BaseSelect";
 import { ActivityDay } from "../../../../../types/types";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const days: ActivityDay[] = [
+const options: ActivityDay[] = [
   { value: 0, label: "Sunday" },
   { value: 1, label: "Monday" },
   { value: 2, label: "Tuesday" },
@@ -29,52 +14,54 @@ const days: ActivityDay[] = [
   { value: 6, label: "Saturday" },
 ];
 
-export default function ActivityDays({
-  setHasChanges,
+const tagRender = (props: CustomTagProps) => {
+  const { label, value, closable, onClose } = props;
+  const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+  return (
+    <Tag
+      color={"default"}
+      onMouseDown={onPreventMouseDown}
+      closable={closable}
+      onClose={onClose}
+      className="text-base"
+    >
+      {label}
+    </Tag>
+  );
+};
+
+const ActivityDays = ({
   activityDays,
   setActivityDays,
+  setHasChanges,
 }: {
   setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
   activityDays: any[];
   setActivityDays: React.Dispatch<React.SetStateAction<ActivityDay[]>>;
-}) {
-  const handleChange = (event: SelectChangeEvent<typeof activityDays>) => {
-    const {
-      target: { value },
-    } = event;
-    console.log(value);
-
-    setActivityDays(typeof value === "string" ? value.split(",") : value);
-    setHasChanges(false);
-  };
+}) => {
+  console.log(activityDays);
 
   return (
-    <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Activity Days</InputLabel>
-        <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          multiple
-          value={activityDays}
-          onChange={handleChange}
-          input={<OutlinedInput label="Activity Days" />}
-          renderValue={(selected) =>
-            days
-              .filter((day) => selected.includes(day.value))
-              .map((day) => day.label)
-              .join(", ")
-          }
-          MenuProps={MenuProps}
-        >
-          {days.map((day, i) => (
-            <MenuItem key={day.value} value={day.value}>
-              <Checkbox checked={activityDays.includes(i)} />
-              <ListItemText primary={day.label} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
+    <Select
+      mode="multiple"
+      showArrow
+      tagRender={tagRender}
+      defaultValue={[...activityDays]}
+      style={{
+        width: "100%",
+        height: "5em",
+        display: "flex",
+        gap: "2em",
+        justifyContent: "center",
+        alignItems: "center",
+        overflowY: "scroll",
+      }}
+      options={options}
+    />
   );
-}
+};
+
+export default ActivityDays;

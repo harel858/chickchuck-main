@@ -5,6 +5,7 @@ import { ProfilePageData, Slots } from "../../../../../types/types";
 import ActivityDays from "./ActivityDays";
 import ActivityTimePicker from "./ActivityTimePicker";
 import SubmitButton from "./SubmitButton";
+import { SelectChangeEvent } from "@mui/material/Select";
 
 export default function BussinessActivity({ user }: { user: ProfilePageData }) {
   const [error, setError] = useState<string>("");
@@ -16,7 +17,7 @@ export default function BussinessActivity({ user }: { user: ProfilePageData }) {
   );
   const [hasChanges, setHasChanges] = useState<boolean>(true);
   const [activityDays, setActivityDays] = useState<any[]>(
-    user.bussiness.activityDays
+    user.business.activityDays
   );
   const [availableSlots, setAvailableSlots] = useState<Slots[]>([]);
 
@@ -55,8 +56,10 @@ export default function BussinessActivity({ user }: { user: ProfilePageData }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center relative w-fit bg-white/70 p-5 rounded-2xl gap-5">
-      <h2 className="text-black text-2xl">Bussiness Activity</h2>
+    <div className="flex flex-col items-center justify-center relative max-2xl:w-11/12 w-52 bg-white/70 shadow-md shadow-black p-5 rounded-2xl gap-2">
+      <h2 className="text-black text-2xl text-center w-max">
+        Bussiness Activity
+      </h2>
       <ActivityDays
         activityDays={activityDays}
         setActivityDays={setActivityDays}

@@ -123,7 +123,7 @@ export interface ActivityForm {
 }
 
 export interface ProfilePageData {
-  bussiness: Business & {
+  business: Business & {
     Address: Address[];
   };
   id: string;
@@ -136,4 +136,11 @@ export interface ProfilePageData {
   UserRole: UserRole;
   isAdmin: boolean;
   PremiumKit: PremiumKits;
+}
+export interface BusinessAddress {
+  city: string;
+  street: string;
+  zipcode: string;
+  businessId: string;
+  userId: string;
 }

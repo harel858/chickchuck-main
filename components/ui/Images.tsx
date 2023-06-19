@@ -70,13 +70,13 @@ function Images({
 
   return (
     <div
-      className="relative p-32 max-2xl:m-0 max-2xl:top-20  mt-20 inset-y-0 top-0 left-0 right-0 w-10/12 h-1/5 bg-cover bg-center z-0 ml-52 max-2xl:w-full max-2xl:rounded-t-none max-2xl:ml-auto shadow-2xl rounded-2xl dark:shadow-white/10"
+      className="relative p-32 max-2xl:m-0 max-2xl:top-20 mt-20 inset-y-0 top-0 left-0 right-0 w-10/12 h-1/5 bg-cover bg-center z-0 ml-52 max-2xl:w-full max-2xl:rounded-t-none max-2xl:ml-auto shadow-2xl rounded-2xl dark:shadow-white/10"
       style={{
         backgroundImage: `url(${backgroundImageUrl})`,
-        boxShadow: "inset -20px 100vh 50px rgba(0, 0, 0, 0.3)",
+        boxShadow: "inset 20px 22vh 30px rgba(0, 0, 0, 0.6)",
       }}
     >
-      <div className=" flex flex-col justify-center items-center gap-5 absolute top-5 left-0 right-0 w-full">
+      <div className="flex flex-col justify-center items-center gap-2 absolute top-0 left-0 right-0 w-full">
         <h1
           className={`text-white text-4xl shadow-2xl shadow-black ${lobster} `}
         >
@@ -87,7 +87,7 @@ function Images({
         </LargeHeading>
       </div>
       <Button
-        className="shadow-md shadow-black/50 hover:bg-slate-200 hover:text-black bg-slate-900/90 text-white absolute z-20 top-1/3 right-4  text-base"
+        className="shadow-md shadow-black/50 hover:bg-slate-200 hover:text-black bg-slate-900/90 text-white absolute z-20 top-24 right-4  text-base"
         onClick={handleButtonClick}
       >
         Edit Business Image <BsImage className="mx-2" />
