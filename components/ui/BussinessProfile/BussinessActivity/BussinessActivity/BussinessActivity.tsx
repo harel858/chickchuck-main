@@ -5,7 +5,6 @@ import { ProfilePageData, Slots } from "../../../../../types/types";
 import ActivityDays from "./ActivityDays";
 import ActivityTimePicker from "./ActivityTimePicker";
 import SubmitButton from "./SubmitButton";
-import { SelectChangeEvent } from "@mui/material/Select";
 
 export default function BussinessActivity({ user }: { user: ProfilePageData }) {
   const [error, setError] = useState<string>("");
@@ -16,22 +15,13 @@ export default function BussinessActivity({ user }: { user: ProfilePageData }) {
     dayjs(user.endActivity)
   );
   const [hasChanges, setHasChanges] = useState<boolean>(true);
-  const [activityDays, setActivityDays] = useState<any[]>(
+  const [activityDays, setActivityDays] = useState<number[]>(
     user.business.activityDays
   );
   const [availableSlots, setAvailableSlots] = useState<Slots[]>([]);
 
   useEffect(() => {
-    // Skip the first render
-    let skipFirstRender = true;
-
-    if (skipFirstRender) {
-      skipFirstRender = false;
-      return;
-    }
     generateAvailableSlots(startActivity, endActivity);
-
-    setHasChanges(false);
   }, [startActivity, setStartActivity, endActivity, setEndActivity]);
 
   // This function will generate a list of available slots based on the start and end time of the activity
@@ -56,10 +46,8 @@ export default function BussinessActivity({ user }: { user: ProfilePageData }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center relative max-2xl:w-11/12 w-52 bg-white/70 shadow-md shadow-black p-5 rounded-2xl gap-2">
-      <h2 className="text-black text-2xl text-center w-max">
-        Bussiness Activity
-      </h2>
+    <div className="flex flex-col items-center justify-center relative max-2xl:w-11/12 w-52 bg-white/70 shadow-sm shadow-black p-5 rounded-2xl gap-2 hover:bg-orange-300/10 transition-all duration-300 ease-in-out">
+      <h2 className=" text-2xl text-center w-max">Bussiness Activity</h2>
       <ActivityDays
         activityDays={activityDays}
         setActivityDays={setActivityDays}
@@ -83,6 +71,7 @@ export default function BussinessActivity({ user }: { user: ProfilePageData }) {
           activityDays={activityDays}
           availableSlots={availableSlots}
           setError={setError}
+          setHasChanges={setHasChanges}
         />
       </div>
     </div>

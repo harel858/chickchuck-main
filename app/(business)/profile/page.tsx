@@ -40,7 +40,7 @@ async function Page() {
 
   return (
     <div className="flex justify-center flex-wrap items-center ml-52 max-2xl:m-0 w-full">
-      <div className="relative flex flex-row flex-nowrap justify-center items-start gap-5 w-full max-2xl:gap-5 max-2xl:flex-col max-2xl:mt-36 max-2xl:items-center">
+      <div className="relative flex flex-row flex-nowrap justify-center items-center gap-5 w-full max-2xl:gap-5 max-2xl:flex-col max-2xl:mt-36 max-2xl:items-center">
         <div className="flex justify-center items-center gap-5 max-2xl:flex-col-reverse max-2xl:items-center">
           <BussinessActivity user={user} />
           <UniqueLink link={`http://localhost:3000/${value}`} />

@@ -11,7 +11,7 @@ function UniqueLink({ link }: { link: string }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-5  max-2xl:w-11/12">
+    <div className="flex flex-col items-center justify-center gap-5 max-2xl:w-11/12">
       <div className="bg-white dark:bg-slate-300 max-2xl:w-full rounded-xl p-2 border-2 border-black">
         <Tooltip title="Copy link" arrow>
           <IconButton aria-label="copy link" onClick={copyToClipboard}>

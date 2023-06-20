@@ -39,7 +39,7 @@ function BusinessAddress({ user }: { user: ProfilePageData }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center relative w-fit bg-white/70 p-5 rounded-2xl gap-2 shadow-md shadow-black">
+    <div className="flex flex-col items-center justify-center relative w-fit bg-white/70 p-5 rounded-2xl gap-2 shadow-sm shadow-black">
       <h2 className="text-black text-2xl w-max">business Address</h2>
       <TextField
         id="filled-basic"

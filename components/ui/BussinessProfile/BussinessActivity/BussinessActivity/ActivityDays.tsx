@@ -39,11 +39,19 @@ const ActivityDays = ({
   setHasChanges,
 }: {
   setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
-  activityDays: any[];
-  setActivityDays: React.Dispatch<React.SetStateAction<ActivityDay[]>>;
+  activityDays: number[];
+  setActivityDays: React.Dispatch<React.SetStateAction<number[]>>;
 }) => {
-  console.log(activityDays);
+  const handleSelectChange = (selectedValues: number[]) => {
+    const selectedDays: number[] = [];
+    for (let i = 0; i < options.length; i++) {
+      const value = options[i].value;
+      if (selectedValues.includes(value)) selectedDays.push(value);
+    }
 
+    setActivityDays(selectedDays);
+    setHasChanges(false);
+  };
   return (
     <Select
       mode="multiple"
@@ -59,6 +67,7 @@ const ActivityDays = ({
         alignItems: "center",
         overflowY: "scroll",
       }}
+      onChange={handleSelectChange}
       options={options}
     />
   );
