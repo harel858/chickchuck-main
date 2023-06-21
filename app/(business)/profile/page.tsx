@@ -17,7 +17,7 @@ async function fetchUser(email: string | null | undefined) {
     if (!user) return null;
 
     const business = await prisma.business.findUnique({
-      where: { id: user?.Business[0].id },
+      where: { id: user?.Business?.id },
       include: { Address: true },
     });
     if (!user || !business) return null;

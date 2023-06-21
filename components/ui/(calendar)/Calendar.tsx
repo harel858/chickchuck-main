@@ -135,6 +135,7 @@ export default function CalendarComponent({
             value={value}
             onSelect={onSelect}
             eventsByDate={eventsByDate}
+            business={scheduleProps.business}
           />
         </Suspense>
       ) : currentView === "calendar" && !searchQuery && !isLoading ? (

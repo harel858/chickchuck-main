@@ -1,15 +1,26 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import { AppointmentEvent } from "../../../types/types";
 import ToolTip from "./ToolTip";
 import { styled } from "@mui/material/styles";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { motion } from "framer-motion";
 import dayjs, { Dayjs } from "dayjs";
-
-const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
+import { Address } from "@prisma/client";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+const HtmlTooltip = styled(
+  ({
+    handleTooltipClose,
+    className,
+    ...props
+  }: TooltipProps & {
+    handleTooltipClose: (e: MouseEvent | TouchEvent) => void;
+  }) => (
+    <ClickAwayListener onClickAway={handleTooltipClose}>
+      <Tooltip {...props} classes={{ popper: className }} />
+    </ClickAwayListener>
+  )
+)(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     margin: "0",
     padding: "0",
@@ -18,16 +29,48 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
-function Event({ event, i }: { event: AppointmentEvent; i: number }) {
+function Event({
+  event,
+  business,
+  i,
+}: {
+  event: AppointmentEvent;
+  business: {
+    openingTime: string;
+    closingTime: string;
+    activityDays: number[];
+    address: Address;
+  };
+  i: number;
+}) {
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = React.useState(false);
+  const handleTooltipClose = (e: MouseEvent | TouchEvent) => {
+    if (tooltipRef.current && tooltipRef.current.contains(e.target as Node)) {
+      return; // Don't close if the click is inside the tooltip content
+    }
+    setOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setOpen(true);
+  };
+
   const delay = i * 0.1; // Adjust the delay duration as needed
   const start = dayjs(event.start).format("HH:mm");
   const end = dayjs(event.end).format("HH:mm");
-  console.log(event);
   return (
     <HtmlTooltip
       key={event.id}
-      title={<ToolTip event={event} />}
-      leaveDelay={500}
+      PopperProps={{
+        disablePortal: true,
+      }}
+      title={<ToolTip ref={tooltipRef} business={business} event={event} />}
+      open={open}
+      handleTooltipClose={handleTooltipClose}
+      disableFocusListener
+      disableHoverListener
+      disableTouchListener
     >
       <motion.li
         key={event.id}
@@ -39,6 +82,7 @@ function Event({ event, i }: { event: AppointmentEvent; i: number }) {
           easeInOut: [0, 0.71, 0.2, 1.01],
           delay,
         }}
+        onClick={handleTooltipOpen}
         className={`w-full hover:bg-gray-900 bg-rose-50/80 text-black cursor-pointer hover:text-white relative px-16 py-7 border-b border-black/50 flex justify-between max-md:flex-col gap-10 items-center`}
       >
         <span

@@ -1,10 +1,9 @@
 import React from "react";
 import dayjs, { Dayjs } from "dayjs";
-import TextField from "@mui/material/TextField";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker";
-import { MobileTimePicker } from "@mui/x-date-pickers";
+import { TimePicker } from "antd";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
 
 type ActivityTimePickerProps = {
   startActivity: Dayjs;
@@ -24,13 +23,9 @@ function ActivityTimePicker({
 }: ActivityTimePickerProps) {
   return (
     <div className="rounded-full flex flex-col gap-2">
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <MobileTimePicker
-          label="Start"
-          orientation="landscape"
-          views={["hours", "minutes"]}
-          value={startActivity}
-          onChange={(newValue) => {
+      <TimePicker
+        onChange={(newValue) => {
+          {
             if (newValue && newValue?.hour() < endActivity.hour()) {
               setStartActivity(newValue);
               setHasChanges(false);
@@ -38,23 +33,24 @@ function ActivityTimePicker({
               setError("Activity time Is Not Valid");
               setHasChanges(true);
             }
-          }}
-        />
-        <MobileTimePicker
-          label="End"
-          orientation="landscape"
-          value={endActivity}
-          onChange={(newValue) => {
-            if (newValue && newValue?.hour() > startActivity.hour()) {
-              setEndActivity(newValue);
-              setHasChanges(false);
-            } else {
-              setError("Activity time Is Not Valid");
-              setHasChanges(true);
-            }
-          }}
-        />
-      </LocalizationProvider>
+          }
+        }}
+      />
+      <TimePicker
+        onChange={(value) => {
+          if (!value) console.log("null");
+
+          if (value && value?.hour() > startActivity.hour()) {
+            setEndActivity(value);
+            setHasChanges(false);
+          } else {
+            setError("Activity time Is Not Valid");
+            setHasChanges(true);
+          }
+        }}
+        format={"HH:mm A"}
+        minuteStep={5}
+      />
     </div>
   );
 }

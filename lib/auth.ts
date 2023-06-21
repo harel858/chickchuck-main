@@ -79,22 +79,26 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account, profile, isNewUser }) {
       const dbUser = await prisma.user.findUnique({
         where: { id: token.sub },
-        include: { Images: true },
+        include: { Business: true },
       });
       const dbCustomer = await prisma.customer.findUnique({
         where: { id: token.sub },
       });
       if (dbUser) {
+        const business = await prisma.business.findUnique({
+          where: { id: dbUser?.Business?.id },
+          include: { Images: true },
+        });
         let urls: {
           backgroundImage: string;
           profileImage: string;
         } | null = null;
-        if (dbUser.Images.length > 0) {
+        if (business?.Images) {
           const params = {
             Bucket: bucketName,
             Key: {
-              profileImgName: dbUser.Images[0].profileImgName,
-              backgroundImgName: dbUser.Images[0].backgroundImgName,
+              profileImgName: business.Images.profileImgName,
+              backgroundImgName: business.Images.backgroundImgName,
             },
           };
           const res = await getImage(params);

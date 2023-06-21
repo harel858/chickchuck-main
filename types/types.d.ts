@@ -43,6 +43,7 @@ export type ScheduleProps = {
     openingTime: string;
     closingTime: string;
     activityDays: number[];
+    address: Address;
   };
 };
 

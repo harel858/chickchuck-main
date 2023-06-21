@@ -7,15 +7,23 @@ import Event from "./Event";
 import dayjs, { Dayjs } from "dayjs";
 import { AppointmentEvent } from "../../../types/types";
 import { motion } from "framer-motion";
+import { Address } from "@prisma/client";
 
 function AppointmentList({
   value,
   onSelect,
   eventsByDate,
+  business,
 }: {
   value: dayjs.Dayjs;
   onSelect: (newValue: Dayjs) => void;
   eventsByDate: AppointmentEvent[];
+  business: {
+    openingTime: string;
+    closingTime: string;
+    activityDays: number[];
+    address: Address;
+  };
 }) {
   console.log(eventsByDate);
 
@@ -50,7 +58,7 @@ function AppointmentList({
           className={`flex flex-1 w-full flex-col justify-start content-center items-start overflow-y-auto overflow-x-hidden border-t border-gray-500 rounded-bl-3xl rounded-br-3xl max-h-[27.5rem] `}
         >
           {eventsByDate.map((event, i) => (
-            <Event key={event.id} i={i} event={event} />
+            <Event key={event.id} i={i} event={event} business={business} />
           ))}
         </ul>
       )}

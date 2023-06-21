@@ -26,7 +26,7 @@ const fetchEvents = async (id: string | null | undefined) => {
     });
     const business = await prisma.business.findUnique({
       where: { id: user?.Business[0].id },
-      include: { user: true },
+      include: { user: true, Address: true },
     });
     if (!business) return null;
 
@@ -124,6 +124,7 @@ const fetchEvents = async (id: string | null | undefined) => {
         openingTime: business.openingTime,
         closingTime: business.closingTime,
         activityDays: business.activityDays,
+        address: business.Address[0],
       },
     } as ScheduleProps;
   } catch (err) {

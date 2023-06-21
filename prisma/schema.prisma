@@ -23,23 +23,16 @@ model User {
   Treatment        Treatment[]
   isAdmin          Boolean
   PremiumKit       PremiumKits       @default(Light)
-  Business         Business[]
-  Images           Images[]
+  Business         Business?         @relation(fields: [businessId], references: [id])
+  businessId       String?
 }
 
 model Images {
-  id                String  @id @default(uuid())
-  userId            String  @unique
+  id                String   @id @default(uuid())
   profileImgName    String?
   backgroundImgName String?
-  User              User    @relation(fields: [userId], references: [id])
-}
-
-model BusinessImages {
-  id                 String   @id @default(uuid())
-  bussiness          Business @relation(fields: [businessId], references: [id])
-  businessImagesName String
-  businessId         String
+  Business          Business @relation(fields: [businessId], references: [id])
+  businessId        String   @unique
 }
 
 model Business {
@@ -54,7 +47,7 @@ model Business {
   AvailableSlot   AvailableSlot[]
   Appointment     Appointment[]
   AppointmentSlot AppointmentSlot[]
-  BusinessImages  BusinessImages[]
+  Images          Images?
 }
 
 model Address {
