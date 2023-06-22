@@ -32,7 +32,8 @@ export default async function handler(
         const type = fields.type as "PROFILE" | "BACKGROUND";
 
         const { userExist, err } = await getById(userId);
-        if (!userExist || err) return res.status(500).json("user not found");
+        if (!userExist?.Business || err)
+          return res.status(500).json("user not found");
         const business = await bussinessById(userExist.Business.id);
         if (!business) return res.status(500).json("business not found");
 
@@ -43,7 +44,11 @@ export default async function handler(
           Body: fs.createReadStream(imageSrc.filepath),
           ContentType: imageSrc.mimetype!,
         };
+        console.log("!business.Images", !business.Images);
+
         if (!business.Images) {
+          console.log("business.Images not exist");
+
           const { created, err } = await createProfileImages({
             fileName: imageSrc.newFilename,
             businessId: business.id,

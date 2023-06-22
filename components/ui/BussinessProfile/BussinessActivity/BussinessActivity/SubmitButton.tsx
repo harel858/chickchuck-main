@@ -1,12 +1,11 @@
 import React from "react";
-import { User } from "@prisma/client";
-import { Slots } from "../../../../../types/types";
+import { ProfilePageData, Slots } from "../../../../../types/types";
 import axios, { AxiosError } from "axios";
 import { Button } from "@ui/Button";
 import { Dayjs } from "dayjs";
 
 type SubmitProps = {
-  user: User;
+  user: ProfilePageData;
   hasChanges: boolean;
   startActivity: Dayjs;
   endActivity: Dayjs;
@@ -26,8 +25,6 @@ export default function SubmitButton({
   setError,
   setHasChanges,
 }: SubmitProps) {
-  console.log(hasChanges);
-
   const [loading, setLoading] = React.useState(false);
 
   const handleButtonClick = async () => {

@@ -23,33 +23,24 @@ function ActivityTimePicker({
 }: ActivityTimePickerProps) {
   return (
     <div className="rounded-full flex flex-col gap-2">
-      <TimePicker
-        onChange={(newValue) => {
-          {
-            if (newValue && newValue?.hour() < endActivity.hour()) {
-              setStartActivity(newValue);
-              setHasChanges(false);
-            } else {
-              setError("Activity time Is Not Valid");
-              setHasChanges(true);
-            }
-          }
-        }}
-      />
-      <TimePicker
-        onChange={(value) => {
-          if (!value) console.log("null");
-
-          if (value && value?.hour() > startActivity.hour()) {
-            setEndActivity(value);
+      <TimePicker.RangePicker
+        onChange={(e) => {
+          if (
+            Array.isArray(e) &&
+            e[0]?.hour() &&
+            e[1]?.hour() &&
+            e[0]?.hour() < e[1]?.hour()
+          ) {
+            setStartActivity(e[0]);
+            setEndActivity(e[1]);
+            setError("");
             setHasChanges(false);
           } else {
             setError("Activity time Is Not Valid");
             setHasChanges(true);
           }
         }}
-        format={"HH:mm A"}
-        minuteStep={5}
+        status="warning"
       />
     </div>
   );

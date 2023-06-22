@@ -35,16 +35,17 @@ export default async function handler(
       } = req.body as SlotBody;
 
       const { userExist, err } = await getById(userId);
-      if (err || !userExist) return res.status(500).json(`user not found`);
-      const business = userExist.Business[0];
+      if (err || !userExist?.Business)
+        return res.status(500).json(`user not found`);
+      const { Business } = userExist;
 
       const activityDaysChanged =
         JSON.stringify(activityDays.sort()) !==
-        JSON.stringify(business.activityDays.sort());
+        JSON.stringify(Business.activityDays.sort());
 
       if (activityDaysChanged) {
         const { updateDaysFailed, updateDaysSuccess } =
-          await updateActivityDays(business.id, activityDays);
+          await updateActivityDays(Business.id, activityDays);
 
         if (updateDaysFailed || !updateDaysSuccess)
           return res.status(500).json(`update Days Failed`);
@@ -53,7 +54,7 @@ export default async function handler(
       const { availableSlot, slotFailed } = await createAvailableSlots(
         availableSlots,
         userId,
-        business.id
+        Business.id
       );
       console.log(availableSlot);
       if (slotFailed || !availableSlot)
