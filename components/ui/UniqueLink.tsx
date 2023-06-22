@@ -1,10 +1,9 @@
 "use client";
 import React from "react";
-import Tooltip from "@mui/material/Tooltip";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import IconButton from "@mui/material/IconButton";
 import Link from "next/link";
 import QrCode from "@ui/QrCode";
+import { AiFillCopy } from "react-icons/ai";
+import { Tooltip } from "antd";
 function UniqueLink({ link }: { link: string }) {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(link);
@@ -12,11 +11,11 @@ function UniqueLink({ link }: { link: string }) {
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 max-2xl:w-11/12">
-      <div className="bg-white dark:bg-slate-300 max-2xl:w-full rounded-xl p-2 border-2 border-black">
-        <Tooltip title="Copy link" arrow>
-          <IconButton aria-label="copy link" onClick={copyToClipboard}>
-            <FileCopyIcon />
-          </IconButton>
+      <div className="flex items-center justify-center gap-2 bg-white dark:bg-slate-300 max-2xl:w-fit rounded-xl p-2 border-2 border-black">
+        <Tooltip title="Copy Link">
+          <button onClick={copyToClipboard}>
+            <AiFillCopy className="text-2xl hover:scale-125 ease-out duration-300 cursor-pointer" />
+          </button>
         </Tooltip>
         <Link
           className="font-medium hover:underline max-2xl:w-max hover:decoration-1	text-black text-lg"
