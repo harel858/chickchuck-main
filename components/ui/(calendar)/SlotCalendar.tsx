@@ -1,7 +1,7 @@
 "use client";
 import "./AppointmentList.css";
-import React, { useState } from "react";
-import { Table, Button } from "antd";
+import React from "react";
+import { Table } from "antd";
 import { motion } from "framer-motion";
 import { ScheduleProps, AppointmentEvent } from "../../../types/types";
 import dayjs from "dayjs";
@@ -12,7 +12,6 @@ const SlotCalendar = ({
   scheduleProps,
   eventsByDate,
   selectedDate,
-  setViewMode,
   viewMode,
 }: {
   scheduleProps: ScheduleProps;
@@ -48,11 +47,11 @@ const SlotCalendar = ({
 
   const openingTime = dayjs(user.startActivity);
   const closingTime = dayjs(user.endActivity);
-  const totalSlots = (closingTime.diff(openingTime, "minute") + 1) / 15;
+  const totalSlots = closingTime.diff(openingTime, "minute") / 5;
 
   const hours = React.useMemo(() => {
     return [...Array(totalSlots)].map((_, i) => {
-      const minutes = i * 15;
+      const minutes = i * 5;
       const time = openingTime.add(minutes, "minute").format("HH:mm");
 
       const row: {
@@ -61,13 +60,18 @@ const SlotCalendar = ({
         [date: string]: string | AppointmentEvent | null;
       } = { key: time, time };
 
-      const slotEvent = eventsByDate.find(
-        (event) =>
+      const slotEvent = eventsByDate.find((event) => {
+        console.log(dayjs(event.start).format("HH:mm"));
+        console.log(time);
+
+        return (
           dayjs(event.start).format("HH:mm") === time &&
           weekDates.some(
             (date) => dayjs(date).format("DD/MM/YYYY") === event.date
           )
-      );
+        );
+      });
+      console.log(eventsByDate);
 
       if (slotEvent) {
         row.event = slotEvent;
@@ -148,6 +152,7 @@ const SlotCalendar = ({
                         key={event.id}
                         viewMode={viewMode}
                         event={event}
+                        business={scheduleProps.business}
                       />
                     );
                   } else if (
@@ -160,6 +165,7 @@ const SlotCalendar = ({
                         key={slot.event.id}
                         viewMode={viewMode}
                         event={slot.event}
+                        business={scheduleProps.business}
                       />
                     );
                   } else {

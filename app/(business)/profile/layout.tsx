@@ -14,7 +14,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <VerticalNav user={session.user} />
+      <VerticalNav lobsterFont={lobster.className} user={session.user} />
       <section className=" h-screen w-full flex flex-col justify-start items-center relative px-52 max-2xl:px-0 gap-5 ">
         <Images lobster={lobster.className} user={session.user} />
         {children}

@@ -8,7 +8,7 @@ export const createCustomer = async (name: string, phoneNumber: string) => {
         phoneNumber,
       },
     });
-    console.log(newCustomer);
+    console.log("newCustomer", newCustomer);
 
     return { newCustomer };
   } catch (createCustomerErr) {

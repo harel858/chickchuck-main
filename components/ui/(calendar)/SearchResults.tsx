@@ -4,13 +4,15 @@ import React from "react";
 import { motion } from "framer-motion";
 import Event from "./Event";
 import NoAppointments from "./NoAppointments";
-import { AppointmentEvent } from "../../../types/types";
+import { AppointmentEvent, BusinessProps } from "../../../types/types";
 function SearchResults({
   searchQuery,
   events,
+  business,
 }: {
   searchQuery: string;
   events: AppointmentEvent[];
+  business: BusinessProps;
 }) {
   return (
     <motion.div
@@ -29,7 +31,7 @@ function SearchResults({
           className={`${classes.ul} flex flex-1 w-full flex-col justify-start content-center items-start overflow-y-auto overflow-x-hidden border-t border-gray-500 rounded-bl-3xl rounded-br-3xl max-h-[27.5rem] `}
         >
           {events.map((event, i) => (
-            <Event key={event.id} i={i} event={event} />
+            <Event business={business} key={event.id} i={i} event={event} />
           ))}
         </ul>
       )}

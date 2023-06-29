@@ -170,7 +170,11 @@ export default function CalendarComponent({
             />
           }
         >
-          <SearchResults searchQuery={searchQuery} events={eventsByDate} />
+          <SearchResults
+            business={scheduleProps.business}
+            searchQuery={searchQuery}
+            events={eventsByDate}
+          />
         </Suspense>
       )}
     </div>

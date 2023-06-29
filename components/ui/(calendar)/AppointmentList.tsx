@@ -1,5 +1,4 @@
 "use client";
-import "./AppointmentList.css";
 import React from "react";
 import NoAppointments from "./NoAppointments";
 import { Calendar } from "antd";

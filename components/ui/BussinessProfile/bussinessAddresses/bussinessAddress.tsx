@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import TextField from "@mui/material/TextField";
+import { Input } from "antd";
 import { Button } from "@ui/Button";
 import axios from "axios";
 import { BusinessAddress, ProfilePageData } from "../../../../types/types";
@@ -41,27 +41,24 @@ function BusinessAddress({ user }: { user: ProfilePageData }) {
   return (
     <div className="flex flex-col items-center justify-center relative w-fit bg-white/70 p-5 rounded-2xl gap-2 shadow-sm shadow-black">
       <h2 className="text-black text-2xl w-max">business Address</h2>
-      <TextField
+      <Input
         id="filled-basic"
-        label={`City`}
+        placeholder={`City`}
         value={formData.city}
-        variant="filled"
         name="city"
         onChange={handleChange}
       />
-      <TextField
+      <Input
         id="filled-basic"
-        label={`Street`}
+        placeholder={`Street`}
         value={formData.street}
-        variant="filled"
         name="street"
         onChange={handleChange}
       />
-      <TextField
+      <Input
         id="filled-basic"
-        label={`Zip Code`}
+        placeholder={`Zip Code`}
         value={formData.zipcode}
-        variant="filled"
         name="zipcode"
         onChange={handleChange}
       />

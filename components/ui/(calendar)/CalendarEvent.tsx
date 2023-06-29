@@ -1,19 +1,29 @@
 "use client";
-import React from "react";
-import { AppointmentEvent } from "../../../types/types";
+import React, { useRef } from "react";
+import { AppointmentEvent, BusinessProps } from "../../../types/types";
 import ToolTip from "./ToolTip";
 import { styled } from "@mui/material/styles";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { motion } from "framer-motion";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 
-const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
+const HtmlTooltip = styled(
+  ({
+    handleTooltipClose,
+    className,
+    ...props
+  }: TooltipProps & {
+    handleTooltipClose: (e: MouseEvent | TouchEvent) => void;
+  }) => (
+    <ClickAwayListener onClickAway={handleTooltipClose}>
+      <Tooltip {...props} classes={{ popper: className }} />
+    </ClickAwayListener>
+  )
+)(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     margin: "0",
     padding: "0",
-    position: "absolute",
     borderRadius: "1.5rem",
     backgroundColor: "beige",
   },
@@ -22,19 +32,39 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 function Event({
   event,
   viewMode,
+  business,
 }: {
   event: AppointmentEvent;
   viewMode: "weekly" | "daily";
+  business: BusinessProps;
 }) {
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = React.useState(false);
+  const handleTooltipClose = (e: MouseEvent | TouchEvent) => {
+    if (tooltipRef.current && tooltipRef.current.contains(e.target as Node)) {
+      return; // Don't close if the click is inside the tooltip content
+    }
+    setOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setOpen(true);
+  };
+
   const start = dayjs(event.start).format("HH:mm");
   const end = dayjs(event.end).format("HH:mm");
   return (
     <HtmlTooltip
       key={event.id}
-      title={<ToolTip event={event} key={event.id} />}
-      enterDelay={1000}
-      enterTouchDelay={1000}
-      leaveDelay={1000}
+      PopperProps={{
+        disablePortal: true,
+      }}
+      title={<ToolTip ref={tooltipRef} business={business} event={event} />}
+      open={open}
+      handleTooltipClose={handleTooltipClose}
+      disableFocusListener
+      disableHoverListener
+      disableTouchListener
     >
       <motion.div
         key={event.id}
@@ -45,6 +75,7 @@ function Event({
           duration: 0.3,
           easeInOut: [0, 0.71, 0.2, 1.01],
         }}
+        onClick={handleTooltipOpen}
         className={`flex flex-col ${
           viewMode === "weekly" ? `w-full` : `w-max pr-5`
         } h-full dark:bg-slate-200 dark:text-black dark:hover:text-white dark:hover:bg-slate-900 hover:bg-gray-700 pl-2  bg-sky-800/90  cursor-pointer text-white relative border-b border-black/50  rounded-xl`}

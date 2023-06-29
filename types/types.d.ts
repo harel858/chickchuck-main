@@ -145,3 +145,34 @@ export interface BusinessAddress {
   businessId: string;
   userId: string;
 }
+export interface BusinessProps {
+  openingTime: string;
+  closingTime: string;
+  activityDays: number[];
+  address: Address;
+}
+
+export interface Inovice {
+  id: string;
+  invoice_no: string;
+  balance: string;
+  company: string;
+  email: string;
+  phone: string;
+  address: string;
+  trans_date: string;
+  due_date: string;
+  items: {
+    sno: number;
+    desc: string;
+    qty: number;
+    rate: number;
+  }[];
+}
+
+export interface InoviceItems {
+  sno: number;
+  desc: string;
+  qty: number;
+  rate: number;
+}

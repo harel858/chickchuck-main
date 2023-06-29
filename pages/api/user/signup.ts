@@ -11,7 +11,6 @@ export default async function handler(
   if (req.method == "POST") {
     try {
       const { name, email, password, businessName } = req.body;
-
       //validate user
       const { error, value } = validateUser({
         name,
@@ -22,21 +21,20 @@ export default async function handler(
       if (error) {
         const err = error.details[0].message;
         console.log({ err });
-        return res.status(400).send(err);
+        return res.status(400).json(err);
       }
-      console.log(value);
 
       //hash password
       if (!password) {
-        return res.status(400).send(`password is required`);
+        return res.status(400).json(`password is required`);
       }
       const hashedPassword = await bcrypt.hash(password, 10);
 
       //check if user exist
       const { userExist } = await getByEmail(email);
-      console.log(`userExist: ${userExist}`);
+      console.log(`userExist: ${JSON.stringify(userExist)}`);
 
-      if (userExist) return res.status(400).send(`user already exist`);
+      if (userExist) return res.status(400).json(`user already exist`);
 
       //create the user
       const { newUser, err } = await createUser({
@@ -46,12 +44,12 @@ export default async function handler(
         businessName,
       });
 
-      if (err) return res.status(500).send(err);
+      if (err) return res.status(500).json(err);
 
-      return res.status(201).send(newUser);
+      return res.status(201).json(newUser);
     } catch (err) {
       console.log(err);
-      return res.status(500).send(err);
+      return res.status(500).json(err);
     }
   }
 

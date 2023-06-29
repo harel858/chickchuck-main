@@ -46,7 +46,8 @@ export default async function handler(
       }
 
       const { userExist, err } = await getById(user.userId);
-      if (!userExist || err) return res.status(500).json("user not found");
+      if (!userExist?.Business || err)
+        return res.status(500).json("user not found");
 
       const { existingAppointment, appointment, createErr } =
         await createAppointment(
@@ -54,7 +55,7 @@ export default async function handler(
           customerId,
           availableSlot,
           treatment.id,
-          userExist.Business[0].id,
+          userExist.Business.id,
           null,
           date
         );

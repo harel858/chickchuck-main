@@ -24,8 +24,10 @@ const fetchEvents = async (id: string | null | undefined) => {
       where: { id },
       include: { Business: true },
     });
+    if (!user?.Business) return null;
+
     const business = await prisma.business.findUnique({
-      where: { id: user?.Business[0].id },
+      where: { id: user?.Business.id },
       include: { user: true, Address: true },
     });
     if (!business) return null;

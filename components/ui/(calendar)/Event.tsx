@@ -1,12 +1,11 @@
 "use client";
 import React, { useRef } from "react";
-import { AppointmentEvent } from "../../../types/types";
+import { AppointmentEvent, BusinessProps } from "../../../types/types";
 import ToolTip from "./ToolTip";
 import { styled } from "@mui/material/styles";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { motion } from "framer-motion";
-import dayjs, { Dayjs } from "dayjs";
-import { Address } from "@prisma/client";
+import dayjs from "dayjs";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 const HtmlTooltip = styled(
   ({
@@ -35,12 +34,7 @@ function Event({
   i,
 }: {
   event: AppointmentEvent;
-  business: {
-    openingTime: string;
-    closingTime: string;
-    activityDays: number[];
-    address: Address;
-  };
+  business: BusinessProps;
   i: number;
 }) {
   const tooltipRef = useRef<HTMLDivElement>(null);

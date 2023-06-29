@@ -25,7 +25,7 @@ const ToolTip = forwardRef<
   return (
     <div
       ref={ref}
-      className={`flex flex-col gap-5 rounded-2xl  ${classes.ToolTip} w-max border border-black m-0 p-0 absolute top-0`}
+      className={` z-40 flex flex-col gap-5 rounded-2xl  ${classes.ToolTip} w-max border border-black m-0 p-0 absolute top-0`}
     >
       <div
         className={`flex justify-around gap-5 ${event.color} bg-opacity-60 text-black rounded-t-2xl w-full px-5 relative top-0 py-3`}
