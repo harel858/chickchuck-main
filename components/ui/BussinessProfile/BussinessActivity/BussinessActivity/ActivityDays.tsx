@@ -59,13 +59,12 @@ const ActivityDays = ({
       tagRender={tagRender}
       defaultValue={[...activityDays]}
       style={{
-        width: "100%",
-        height: "5em",
+        maxWidth: "100%",
         display: "flex",
-        gap: "2em",
+        flexWrap: "wrap",
         justifyContent: "center",
         alignItems: "center",
-        overflowY: "scroll",
+        overflowY: "hidden", // Hide the scrollbar
       }}
       onChange={handleSelectChange}
       options={options}

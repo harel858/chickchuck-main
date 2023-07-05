@@ -51,16 +51,18 @@ function SignUpForm() {
     // Use formData for API call
     try {
       setIsLoading(true);
-      const res = await axios.post("/api/user/createUser", {
+      const res = await axios.post("/api/user/signup", {
         ...formData,
         email: formData.email.toLowerCase(),
       });
       const user = res.data as User;
-      signIn("credentials", {
+      console.log(user);
+
+      signIn("User Login", {
         email: user.email,
         password: formData.password,
         redirect: true,
-        callbackUrl: `/home`,
+        callbackUrl: `/profile`,
       });
       setIsLoading(false);
       // reset formData

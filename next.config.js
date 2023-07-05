@@ -1,8 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
-  reactStrictMode: true,
   experimental: {
     appDir: true,
-    serverActions:true,
+    forceSwcTransforms:true
   },
 };

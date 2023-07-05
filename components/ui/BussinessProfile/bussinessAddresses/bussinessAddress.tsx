@@ -13,17 +13,16 @@ function BusinessAddress({ user }: { user: ProfilePageData }) {
     userId: user.id,
     businessId: user.business.id,
   });
+  const [hasChanges, setHasChanges] = useState(false);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = React.useState(false);
 
   const handleButtonClick = async () => {
     setLoading(true);
     setError("");
-
     try {
       const res = await axios.post(`/api/business/addresses`, formData);
-      console.log(res.data);
-
+      setHasChanges(false);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -33,14 +32,16 @@ function BusinessAddress({ user }: { user: ProfilePageData }) {
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    console.log(formData);
+    setHasChanges(true);
 
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
-    <div className="flex flex-col items-center justify-center relative w-fit bg-white/70 p-5 rounded-2xl gap-2 shadow-sm shadow-black">
-      <h2 className="text-black text-2xl w-max">business Address</h2>
+    <div className="h-80 flex flex-col items-center justify-end relative w-fit dark:bg-orange-400/70 bg-orange-300 p-5 rounded-2xl gap-5 shadow-sm shadow-black">
+      <h2 className="absolute text-black text-2xl w-max top-7">
+        Business Address
+      </h2>
       <Input
         id="filled-basic"
         placeholder={`City`}
@@ -64,7 +65,11 @@ function BusinessAddress({ user }: { user: ProfilePageData }) {
       />
       <div className="flex flex-col justify-center items-center gap-1">
         <p className="font-serif text-red-500">{error}</p>
-        <Button onClick={handleButtonClick} isLoading={loading}>
+        <Button
+          disabled={!hasChanges}
+          onClick={handleButtonClick}
+          isLoading={loading}
+        >
           Save Changes
         </Button>
       </div>

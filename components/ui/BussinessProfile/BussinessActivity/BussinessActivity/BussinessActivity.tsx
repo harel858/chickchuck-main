@@ -46,14 +46,15 @@ export default function BussinessActivity({ user }: { user: ProfilePageData }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center relative max-2xl:w-11/12 w-52 bg-white/70 shadow-sm shadow-black p-5 rounded-2xl gap-2 hover:bg-orange-300/10 transition-all duration-300 ease-in-out">
-      <h2 className=" text-2xl text-center w-max">Bussiness Activity</h2>
+    <div className="flex flex-col items-center justify-center relative max-2xl:w-11/12  w-min dark:bg-orange-400/70 bg-orange-300 shadow-sm shadow-black p-5 rounded-2xl gap-2 transition-all duration-300 ease-in-out">
+      <h2 className="text-2xl text-center w-max">Bussiness Activity</h2>
       <ActivityDays
         activityDays={activityDays}
         setActivityDays={setActivityDays}
         setHasChanges={setHasChanges}
       />
       <ActivityTimePicker
+        error={error}
         setHasChanges={setHasChanges}
         startActivity={startActivity}
         setStartActivity={setStartActivity}

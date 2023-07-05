@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import { CreateUser } from "types/types";
 import { prisma } from ".";
 
 export async function getAllUsers() {
@@ -9,20 +10,15 @@ export async function getAllUsers() {
 export async function createUser({
   name,
   email,
-  password: hashedPassword,
+  password,
   businessName,
-}: {
-  name: string;
-  email: string;
-  password: string;
-  businessName: string;
-}) {
+}: CreateUser) {
   try {
     const newUser = await prisma?.user.create({
       data: {
         name,
         email: email.toLocaleLowerCase(),
-        password: hashedPassword,
+        password,
         isAdmin: true,
       },
     });
@@ -35,22 +31,34 @@ export async function createUser({
       },
     });
 
-    return { newUser };
+    return newUser.id;
   } catch (err) {
     console.log(err);
-
-    return { err };
+    return null;
   }
 }
 
-export async function getByEmail(email: string) {
+export async function getUserByEmail(email: string) {
   try {
     const userExist = await prisma?.user.findUnique({
       where: { email: email.toLowerCase() },
     });
-    return { userExist };
+    return userExist;
   } catch (err) {
-    return { err };
+    console.log(null);
+
+    return null;
+  }
+}
+
+export async function getIdByEmail(email: string) {
+  try {
+    const userExist = await prisma?.user.findUnique({
+      where: { email: email.toLowerCase() },
+    });
+    return userExist?.id;
+  } catch (err) {
+    return null;
   }
 }
 
@@ -127,9 +135,9 @@ export async function signIn(email: string, pass: string) {
       error: { message: `Check the details you provided are correct.` },
     };
   try {
-    const { userExist, err } = await getByEmail(email);
+    const userExist = await getUserByEmail(email);
 
-    if (!userExist || err)
+    if (!userExist)
       return {
         error: { message: `User not found` },
       };
@@ -148,3 +156,14 @@ export async function signIn(email: string, pass: string) {
     };
   }
 }
+const userOperations = {
+  createUser,
+  getUserByEmail,
+  getAllUsers,
+  updateActivityTime,
+  updateActivityDays,
+  getByBusinessName,
+  getById,
+  signIn,
+};
+export default userOperations;

@@ -33,12 +33,17 @@ function SignInForm() {
     // Use formData for API call
     try {
       setIsLoading(true);
+      setError("");
       const res = await signIn("User Login", {
         ...formData,
         redirect: false,
       });
       if (res?.ok) return router.push("/profile");
-      if (res?.error) return setError("User Not Found");
+      if (res?.error) {
+        setIsLoading(false);
+        setError("User Not Found");
+        return;
+      }
 
       // reset formData
     } catch (err) {

@@ -22,9 +22,12 @@ const downloadQRCode = () => {
 const QrCode = ({ link }: { link: string }) => (
   <div
     id="myqrcode"
-    className="flex flex-col justify-center items-center gap-2"
+    className="flex flex-col justify-center items-center gap-2 "
   >
-    <QRCode className="border border-black rounded-xl" value={link} />
+    <QRCode
+      className="border border-black rounded-xl bg-orange-50"
+      value={link}
+    />
     <Button variant={"ghost"} onClick={downloadQRCode} className="text-base">
       Download QR Code <AiOutlineDownload className="m-2 text-3xl" />
     </Button>

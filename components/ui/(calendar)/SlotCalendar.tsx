@@ -1,5 +1,4 @@
 "use client";
-import "./AppointmentList.css";
 import React from "react";
 import { Table } from "antd";
 import { motion } from "framer-motion";
@@ -141,7 +140,7 @@ const SlotCalendar = ({
 
           return (
             <div
-              className="flex justify-center items-center p-0 m-0 absolute top-0 left-0 right-0 w-full h-full z-40 overflow-visible"
+              className={`flex justify-center items-center p-0 m-0 absolute top-0 left-0 right-0 w-full h-full z-40 overflow-visible `}
               style={{ height: `${(eventRowSpan - 1) * 60}px` }}
             >
               {hours.map((slot, slotIndex) => {

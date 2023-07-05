@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import classes from "./style.module.css";
 import { motion } from "framer-motion";
 import { Fade } from "react-awesome-reveal";
 import { FaRegCalendarTimes } from "react-icons/fa";
@@ -12,7 +11,7 @@ function NoAppointments({ title }: { title: string }) {
         delay={250}
         cascade
         damping={0.02}
-        className={`text-3xl max-sm:text-lg ${classes.robotoBold}`}
+        className={`text-3xl max-sm:text-lg `}
       >
         {title}
       </Fade>

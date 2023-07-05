@@ -1,16 +1,11 @@
 "use client";
-import classes from "./style.module.css";
-import * as React from "react";
+import React from "react";
 import NavItemWithLinks from "../NavItemWithLinks";
 import { CgProfile } from "react-icons/cg";
 import { AiOutlineSchedule } from "react-icons/ai";
 import { GiFeather } from "react-icons/gi";
 import { motion } from "framer-motion";
 import { MenuItem } from "./MenuItem";
-import { NavBarProps } from "../../../../types/types";
-import ProfileImage from "../ProfileImage";
-import { Avatar } from "@mui/material";
-import { User } from "next-auth";
 
 const variants = {
   open: {

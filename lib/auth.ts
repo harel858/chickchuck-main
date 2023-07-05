@@ -1,8 +1,8 @@
+import { prisma } from "./prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { prisma } from "./prisma";
-import { signIn as userSignIn } from "./prisma/users";
+import axios, { AxiosError } from "axios";
 import { getCustomer } from "./prisma/customer";
 import { getImage } from "./aws/s3";
 
@@ -19,14 +19,21 @@ const bucketName = process.env.BUCKET_NAME!;
 const authorizeUserLogin = async (credentials: any, req: any) => {
   try {
     const { email, password } = credentials as UserCredentials;
+    const result = await axios.post("http://localhost:3000/api/user/signin", {
+      email,
+      password,
+    });
+    const user = result.data;
+    console.log(user);
 
-    const { user, error } = await userSignIn(email, password);
-
-    if (error) throw new Error(error.message);
+    if (result.status !== 200) throw new Error(result.data);
 
     return user;
   } catch (err) {
-    console.log(err);
+    if (err instanceof AxiosError) {
+      console.log(err.message);
+      throw new Error(err.message);
+    }
     return null;
   }
 };
@@ -76,7 +83,9 @@ export const authOptions: NextAuthOptions = {
   providers: [configureUserLoginProvider(), configureCustomerLoginProvider()],
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   callbacks: {
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token, user }) {
+      console.log(token.sub);
+
       const dbUser = await prisma.user.findUnique({
         where: { id: token.sub },
         include: { Business: true },

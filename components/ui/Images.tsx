@@ -78,7 +78,7 @@ function Images({
     >
       <div className="flex flex-col justify-center items-center gap-2 absolute top-0 left-0 right-0 w-full">
         <h1
-          className={`text-white text-4xl shadow-2xl shadow-black ${lobster} `}
+          className={`text-white text-4xl shadow-2xl shadow-black ${lobster}`}
         >
           Queue.
         </h1>

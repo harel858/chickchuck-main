@@ -176,3 +176,21 @@ export interface InoviceItems {
   qty: number;
   rate: number;
 }
+export interface CreateUser {
+  name: string;
+  email: string;
+  password: string;
+  businessName: string;
+}
+
+export interface LandingPageData {
+  Images: {
+    backgroundImage: string;
+    profileImage: string;
+  } | null;
+  businessName: string;
+  openingTime: string | null;
+  closingTime: string | null;
+  businessImage: string | null;
+  activityDays: number[];
+}

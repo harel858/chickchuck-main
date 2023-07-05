@@ -12,8 +12,10 @@ type ActivityTimePickerProps = {
   setEndActivity: React.Dispatch<React.SetStateAction<dayjs.Dayjs>>;
   setError: React.Dispatch<React.SetStateAction<string>>;
   setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
+  error: string;
 };
 function ActivityTimePicker({
+  error,
   startActivity,
   setStartActivity,
   endActivity,
@@ -40,7 +42,11 @@ function ActivityTimePicker({
             setHasChanges(true);
           }
         }}
-        status="warning"
+        defaultValue={
+          startActivity && endActivity ? [startActivity, endActivity] : null
+        }
+        status={error ? "error" : "warning"}
+        format={"HH:mm A"}
       />
     </div>
   );
