@@ -10,7 +10,6 @@ export async function createAvailableSlots(
   userId: string,
   businessId: string
 ) {
-  console.log(dayjs(availableSlots[0].start).format("hh:mm A"));
   try {
     const slotsToSave = availableSlots.map((slot) => {
       return {
@@ -93,7 +92,6 @@ export async function getQueuesByMonth(
       date = date.add(1, "day")
     ) {
       const chosenDate = date.format("YYYY-MM-DD");
-      console.log(chosenDate);
 
       const { availableSlots, slotsErr } = await getQueuesByDate(
         userId,
@@ -158,16 +156,22 @@ export async function getQueuesByDate(
       if (consecutiveSlots.length === 0) {
         consecutiveSlots.push({
           ...availableSlots[i],
+          id: availableSlots[i]?.id ?? "",
+          start: availableSlots[i]?.start ?? "",
+          end: availableSlots[i]?.end ?? "",
+          userId: availableSlots[i]?.userId ?? "",
+          businessId: availableSlots[i]?.businessId ?? "",
+
           date: formatedDate,
         });
       } else {
         const prevSlotStart = dayjs(
-          consecutiveSlots[consecutiveSlots.length - 1].start,
+          consecutiveSlots[consecutiveSlots.length - 1]?.start,
           "HH:mm"
         );
 
-        const currentSlotEnd = dayjs(availableSlots[i - 1].end, "HH:mm");
-        const currentSlotStart = dayjs(availableSlots[i].start, "HH:mm");
+        const currentSlotEnd = dayjs(availableSlots[i - 1]?.end, "HH:mm");
+        const currentSlotStart = dayjs(availableSlots[i]?.start, "HH:mm");
 
         const minutesBetweenSlots = currentSlotEnd.diff(
           prevSlotStart,
@@ -182,13 +186,29 @@ export async function getQueuesByDate(
           minutesBetweenSlots >= slotDuration &&
           minutesToCurrentSlot === slotDuration
         ) {
-          consecutiveSlots.push({ ...availableSlots[i], date: formatedDate });
+          consecutiveSlots.push({
+            id: availableSlots[i]?.id ?? "",
+            start: availableSlots[i]?.start ?? "",
+            end: availableSlots[i]?.end ?? "",
+            userId: availableSlots[i]?.userId ?? "",
+            businessId: availableSlots[i]?.businessId ?? "",
+            date: formatedDate,
+          });
           if (consecutiveSlots.length == slotsNeeded) {
             result.push(consecutiveSlots);
             consecutiveSlots = [];
           }
         } else {
-          consecutiveSlots = [{ ...availableSlots[i], date: formatedDate }];
+          consecutiveSlots = [
+            {
+              id: availableSlots[i]?.id ?? "",
+              start: availableSlots[i]?.start ?? "",
+              end: availableSlots[i]?.end ?? "",
+              userId: availableSlots[i]?.userId ?? "",
+              businessId: availableSlots[i]?.businessId ?? "",
+              date: formatedDate,
+            },
+          ];
         }
       }
     }
