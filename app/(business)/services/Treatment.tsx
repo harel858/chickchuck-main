@@ -24,7 +24,6 @@ const Treatment = React.memo(({ item }: treatmentProps) => {
         });
         if (res.ok) {
           const deleteSucceed = await res.json();
-          console.log(deleteSucceed);
           router.refresh();
         }
       } catch (err) {

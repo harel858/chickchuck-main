@@ -29,7 +29,6 @@ function TeamForm({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
 
     try {
       const res = await fetch(`/api/team/post`, {
@@ -44,7 +43,6 @@ function TeamForm({
       const result = await res.json();
 
       if (res.ok) {
-        console.log(result);
         router.refresh();
       }
       console.log(result);
@@ -68,7 +66,6 @@ function TeamForm({
       <>
         {data?.map((item: keyof formData, _index: number, _array: string[]) => {
           const label = item === "confirmPassword" ? "confirm password" : item;
-          console.log(formData);
 
           return (
             <label key={_index}>

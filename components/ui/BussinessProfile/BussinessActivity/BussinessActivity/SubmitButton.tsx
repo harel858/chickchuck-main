@@ -38,11 +38,9 @@ export default function SubmitButton({
       userId: user.id,
       duration: 5,
     };
-    console.log(params);
 
     try {
       const res = await axios.post(`/api/business/activity`, params);
-      console.log(res.data);
 
       setLoading(false);
       setHasChanges(true);
@@ -59,6 +57,7 @@ export default function SubmitButton({
 
   return (
     <Button
+      variant={"destructive"}
       disabled={hasChanges || endActivity?.hour() < startActivity.hour()}
       onClick={handleButtonClick}
       isLoading={loading}

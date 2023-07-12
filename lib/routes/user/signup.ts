@@ -40,7 +40,6 @@ async function signUp(
 
       //check if user exist
       const userId = await database.getIdByEmail(email);
-      console.log(`userId: ${JSON.stringify(userId)}`);
 
       if (userId) return res.status(400).json(`user already exist`);
 

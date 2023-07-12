@@ -24,7 +24,8 @@ function ActivityTimePicker({
   setHasChanges,
 }: ActivityTimePickerProps) {
   return (
-    <div className="rounded-full flex flex-col gap-2">
+    <div className="flex flex-col justify-start items-start gap-1">
+      <p className="text-white/90  font-normal text-lg">Activity Time</p>
       <TimePicker.RangePicker
         onChange={(e) => {
           if (

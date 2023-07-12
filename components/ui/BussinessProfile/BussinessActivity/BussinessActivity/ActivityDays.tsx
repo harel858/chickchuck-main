@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Select, Tag } from "antd";
 import type { CustomTagProps } from "rc-select/lib/BaseSelect";
 import { ActivityDay } from "../../../../../types/types";
@@ -16,19 +16,22 @@ const options: ActivityDay[] = [
 
 const tagRender = (props: CustomTagProps) => {
   const { label, value, closable, onClose } = props;
+
   const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
     event.preventDefault();
     event.stopPropagation();
   };
+  const shortenedLabel = JSON.stringify(label).substring(0, 4); // Extract the first three characters
+
   return (
     <Tag
-      color={"default"}
+      color={"blue"}
       onMouseDown={onPreventMouseDown}
       closable={closable}
       onClose={onClose}
       className="text-base"
     >
-      {label}
+      {shortenedLabel}
     </Tag>
   );
 };
@@ -45,7 +48,7 @@ const ActivityDays = ({
   const handleSelectChange = (selectedValues: number[]) => {
     const selectedDays: number[] = [];
     for (let i = 0; i < options.length; i++) {
-      const value = options[i].value;
+      const value = options[i]?.value;
       if (selectedValues.includes(value)) selectedDays.push(value);
     }
 
@@ -53,22 +56,27 @@ const ActivityDays = ({
     setHasChanges(false);
   };
   return (
-    <Select
-      mode="multiple"
-      showArrow
-      tagRender={tagRender}
-      defaultValue={[...activityDays]}
-      style={{
-        maxWidth: "100%",
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        alignItems: "center",
-        overflowY: "hidden", // Hide the scrollbar
-      }}
-      onChange={handleSelectChange}
-      options={options}
-    />
+    <div className="flex flex-col justify-start items-start gap-1">
+      <p className="text-white/90 font-normal text-lg">Activity Days</p>
+      <Select
+        mode="multiple"
+        showArrow
+        size="large"
+        tagRender={tagRender}
+        defaultValue={[...activityDays]}
+        style={{
+          color: "black",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          gap: "1em",
+          alignItems: "center",
+          overflowY: "hidden", // Hide the scrollbar
+        }}
+        onChange={handleSelectChange}
+        options={options}
+      />
+    </div>
   );
 };
 

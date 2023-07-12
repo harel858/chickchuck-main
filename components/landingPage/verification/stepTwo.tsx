@@ -30,7 +30,6 @@ const StepTwo = React.memo(
       setError("");
       setLoading(true);
       e.preventDefault();
-      console.log(input);
 
       try {
         const res = await axios.post("/api/verification/steptwo", input);
@@ -62,7 +61,7 @@ const StepTwo = React.memo(
       <Zoom duration={350} damping={10000}>
         <form
           onSubmit={submitForm}
-          className="flex flex-col items-center justify-center gap-12 "
+          className="flex flex-col items-center gap-8 mt-4 w-full p-5 "
         >
           <TextField
             id="outlined-basic"
@@ -72,24 +71,30 @@ const StepTwo = React.memo(
             name="code"
             onChange={handleChange}
             InputProps={{
-              style: { color: `white`, fontSize: `1.2em` },
+              style: {
+                color: "white",
+                fontSize: "1.2em",
+              },
             }}
             InputLabelProps={{
               style: {
                 fontSize: "1.1em",
                 fontWeight: "500",
-                color: `rgba(245,245,220,.6)`,
+                color: "rgba(245, 245, 220, 0.8)",
               },
             }}
             sx={{
-              bgcolor: "rgba(255, 255, 225,.2)",
+              width: "100%",
+              bgcolor: "rgba(0, 0, 0, 0.5)",
               borderRadius: "8px",
+              borderColor: "#e0e0e0",
+              ...(error && { boxShadow: "0px 0px 0px 2px red" }),
             }}
           />
           <Zoom duration={350} damping={10000} delay={150}>
             <Button
               variant="default"
-              className="bg-sky-600 dark:bg-sky-800 text-xl rounded-xl tracking-widest"
+              className="bg-sky-600 dark:bg-sky-800 text-xl rounded-xl min-w-max max-2xl:w-8/12 tracking-widest"
               isLoading={loading}
             >
               Verify

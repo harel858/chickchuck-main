@@ -12,7 +12,7 @@ function Navbar() {
   const session = useSession();
 
   return (
-    <div className="fixed backdrop-blur-sm bg-sky-600/75 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-sky-300 dark:border-slate-800 shadow-sm flex items-center justify-between">
+    <div className="fixed backdrop-blur-sm bg-sky-500 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-gray-900 dark:border-slate-800 shadow-sm flex items-center justify-between">
       <div className="container max-w-7xl mx-auto w-full flex justify-end items-center">
         {session?.data?.user.UserRole === "RECIPIENT" && (
           <Suspense
@@ -49,7 +49,7 @@ function Navbar() {
                 className={buttonVariants({ variant: "ghost" })}
                 href="/profile"
               >
-                Dashboard
+                Profile
               </Link>
               <SignOutBtn />
             </>

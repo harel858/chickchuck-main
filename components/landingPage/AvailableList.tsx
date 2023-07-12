@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import AvailableQueues from "./AvailableQueues";
 import { AppointmentInput, UserData } from "../../types/types";
+import { DatePicker } from "antd";
 
 export default function AvailableListCalendar({
   userData,
@@ -29,14 +29,19 @@ export default function AvailableListCalendar({
   };
 
   return (
-    <div>
+    <div className="w-full">
       <button onClick={handlePreviousDay}>&lt;</button>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          value={selectedDate}
-          onChange={(newDate) => newDate && handleDateChange(newDate)}
-        />
-      </LocalizationProvider>
+
+      <DatePicker
+        presets={[
+          { label: "Yesterday", value: dayjs().add(-1, "d") },
+          { label: "Last Week", value: dayjs().add(-7, "d") },
+          { label: "Last Month", value: dayjs().add(-1, "month") },
+        ]}
+        onChange={(newDate) => newDate && handleDateChange(newDate)}
+        value={selectedDate}
+        className="w-full cursor-pointer p-5"
+      />
       <button onClick={handleNextDay}>&gt;</button>
       <AvailableQueues
         date={selectedDate}

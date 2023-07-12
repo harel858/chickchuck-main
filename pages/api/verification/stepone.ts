@@ -17,7 +17,6 @@ export default async function handler(
       const { name, phoneNumber, code, request_id } =
         req.body as VerificationData;
       if (!phoneNumber && !name) return res.status(400).json(`missing values`);
-      console.log(phoneNumber);
       return res.status(200).json({ request_id: "1234", phoneNumber });
       /*  const sendSms = await vonage.verify.start({
         number: phoneNumber,

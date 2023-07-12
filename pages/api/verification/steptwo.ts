@@ -19,11 +19,8 @@ export default async function handler(
 ) {
   if (req.method == "POST") {
     try {
-      console.log(req.body);
-
       const { request_id, code, phoneNumber, name } =
         req.body as VerificationData;
-      console.log(req.body);
 
       const { customer, getCustomerErr } = await getCustomer(phoneNumber);
 

@@ -16,7 +16,6 @@ interface getParams {
   Bucket: string;
   Key: { profileImgName: string | null; backgroundImgName: string | null };
 }
-const bucketName = process.env.BUCKET_NAME!;
 const bucketRegion = process.env.BUCKET_REGION!;
 const accessKey = process.env.ACCESS_KEY!;
 const secretAccessKey = process.env.SECRET_ACCESS_KEY!;
@@ -60,6 +59,7 @@ export const getImage = async (params: getParams) => {
       const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
       urls.profileImage = url;
     }
+
     return urls;
   } catch (err) {
     console.log(err);

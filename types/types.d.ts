@@ -194,3 +194,7 @@ export interface LandingPageData {
   businessImage: string | null;
   activityDays: number[];
 }
+
+type StepThreeProps = {
+  userData: UserData[];
+};

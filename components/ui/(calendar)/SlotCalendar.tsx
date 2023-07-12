@@ -1,4 +1,5 @@
 "use client";
+import "./AppointmentList.css";
 import React from "react";
 import { Table } from "antd";
 import { motion } from "framer-motion";
@@ -60,9 +61,6 @@ const SlotCalendar = ({
       } = { key: time, time };
 
       const slotEvent = eventsByDate.find((event) => {
-        console.log(dayjs(event.start).format("HH:mm"));
-        console.log(time);
-
         return (
           dayjs(event.start).format("HH:mm") === time &&
           weekDates.some(
@@ -70,7 +68,6 @@ const SlotCalendar = ({
           )
         );
       });
-      console.log(eventsByDate);
 
       if (slotEvent) {
         row.event = slotEvent;
@@ -102,11 +99,11 @@ const SlotCalendar = ({
     title: "Time",
     dataIndex: "time",
     key: "time",
-    className: `text-center !important text-xl font-md p-0 !important m-0 border-x border-black/20 dark:border-orange-500 bg-white dark:text-white dark:bg-slate-700`,
+    className: `text-center !important text-xl font-md p-0 !important m-0 border-x border-black/20 dark:border-orange-500 bg-orange-200 dark:text-white dark:bg-slate-700`,
     sticky: true,
     width: 50, // Adjust the width value as needed
     onHeaderCell: () => ({
-      className: `text-center text-xl font-md pt-0 m-0 border- dark:border-orange-500 bg-black dark:text-white dark:bg-slate-700 !important`,
+      className: `text-center text-xl font-md pt-0 m-0 dark:border-orange-500 bg-black dark:text-white dark:bg-slate-700 !important`,
     }),
   };
   const columns = React.useMemo(() => {
@@ -179,11 +176,11 @@ const SlotCalendar = ({
         },
         className: `text-center pt-0 m-0 ${
           isToday(date)
-            ? "bg-gray-500/20 dark:bg-black/50"
-            : "bg-white dark:bg-slate-700"
+            ? "bg-sky-50 dark:bg-black/50"
+            : "bg-sky-200/90 dark:bg-slate-700"
         }`,
         onHeaderCell: () => ({
-          className: `text-center text-xl font-md pt-0 m-0 bg-black dark:text-white dark:bg-slate-700 !important`,
+          className: `text-center text-xl font-md pt-0 m-0 bg-black dark:text-white dark:bg-slate-700`,
         }),
       })),
     ];

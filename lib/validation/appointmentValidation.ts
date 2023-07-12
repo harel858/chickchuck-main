@@ -35,7 +35,6 @@ const ReqBodySchema = Joi.object({
 });
 
 function validateAppointment(data: ReqBody) {
-  console.log(data.availableSlot[0].start);
   return ReqBodySchema.validate(data);
 }
 

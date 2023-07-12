@@ -24,10 +24,7 @@ export default function Verification({ userData }: { userData: UserData[] }) {
 
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-      console.log(input);
-
       const { name, value } = event.target;
-      console.log(name);
 
       if (name === "phoneNumber") {
         const onlyDigits = value.replace(/\D/g, "");
@@ -48,7 +45,7 @@ export default function Verification({ userData }: { userData: UserData[] }) {
   const steps = useMemo(
     () => [
       {
-        label: <h4>Enter Your details</h4>,
+        label: <h4 className="text-white">Enter Your details</h4>,
         content: (
           <StepOne
             input={input}
@@ -59,7 +56,7 @@ export default function Verification({ userData }: { userData: UserData[] }) {
         ),
       },
       {
-        label: <h4>Verify code</h4>,
+        label: <h4 className="text-white">Verify code</h4>,
         content: (
           <StepTwo
             handleChange={handleChange}
@@ -86,9 +83,9 @@ export default function Verification({ userData }: { userData: UserData[] }) {
   };
 
   return (
-    <div className="w-1/2 max-md:w-11/12 flex justify-center content-center items-center dark:bg-orange-400/70 bg-orange-400/80 p-10 rounded-3xl shadow-2xl dark:shadow-white/10 ">
+    <div className="w-1/2 max-md:w-full flex justify-center content-center items-center p-5 bg-slate-900 rounded-b-xl shadow-sm shadow-black border-x border-b border-gray-500">
       <div className="w-full">
-        <Stepper activeStep={activeStep}>
+        <Stepper sx={{ color: "white" }} activeStep={activeStep}>
           {steps.map((step, index) => (
             <Step key={index} completed={completed[index]}>
               <StepButton color="inherit" onClick={handleStep(index)}>
@@ -97,7 +94,7 @@ export default function Verification({ userData }: { userData: UserData[] }) {
             </Step>
           ))}
         </Stepper>
-        <div>
+        <div className="flex flex-col justify-center items-center">
           {activeStep >= 2 ? (
             <React.Fragment>
               <Typography sx={{ mt: 2, mb: 1 }}>
@@ -105,7 +102,7 @@ export default function Verification({ userData }: { userData: UserData[] }) {
               </Typography>
             </React.Fragment>
           ) : (
-            <React.Fragment>{steps[activeStep].content}</React.Fragment>
+            <React.Fragment>{steps[activeStep]?.content}</React.Fragment>
           )}
         </div>
       </div>

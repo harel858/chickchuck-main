@@ -1,7 +1,8 @@
 "use client";
+import "./AppointmentList.css";
 import React from "react";
 import NoAppointments from "./NoAppointments";
-import { Calendar } from "antd";
+import { Calendar, DatePicker } from "antd";
 import Event from "./Event";
 import dayjs, { Dayjs } from "dayjs";
 import { AppointmentEvent } from "../../../types/types";
@@ -24,8 +25,6 @@ function AppointmentList({
     address: Address;
   };
 }) {
-  console.log(eventsByDate);
-
   const noAppointmens = eventsByDate.length === 0;
 
   return (
@@ -36,16 +35,27 @@ function AppointmentList({
         duration: 0.4,
         easeInOut: [0, 0.71, 0.2, 1.01],
       }}
-      className="flex w-full items-stretch max-xl:items-center justify-center h-full max-xl:flex-col"
+      className="flex h-full w-full items-stretch max-xl:items-center justify-center max-xl:flex-col"
     >
-      <div className="max-xl:w-full block w-1/4 ">
+      <div className="max-xl:w-full w-1/4 h-fit border-r border-gray-300">
         <div className="max-xl:hidden rounded-3xl">
           <Calendar
-            className={`rounded-none text-md `}
+            className={`rounded-none text-md`}
             fullscreen={false}
             value={value}
             onChange={(e) => e && onSelect(e)}
             defaultValue={dayjs()}
+          />
+        </div>
+        <div className="max-xl:flex hidden rounded-3xl w-full">
+          <DatePicker
+            presets={[
+              { label: "Yesterday", value: dayjs().add(-1, "d") },
+              { label: "Last Week", value: dayjs().add(-7, "d") },
+              { label: "Last Month", value: dayjs().add(-1, "month") },
+            ]}
+            onChange={(e) => e && onSelect(e)}
+            className="w-full cursor-pointer p-5"
           />
         </div>
         <div className="hidden relative max-xl:flex border border-gray-500 cursor-pointer justify-center items-center content-center w-full"></div>

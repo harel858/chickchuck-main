@@ -9,19 +9,16 @@ import StepContent from "@mui/material/StepContent";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { Poppins } from "next/font/google";
 import { Zoom } from "react-awesome-reveal";
 import Loading from "../../app/[businessName]/loading";
 import AvailableList from "./AvailableList";
-import { AppointmentInput, UserData } from "../../types/types";
+import { AppointmentInput, StepThreeProps, UserData } from "../../types/types";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
-
-type StepThreeProps = {
-  userData: UserData[];
-};
-
+import WithWho from "./steps/WithWho";
+import { Poppins } from "next/font/google";
+import ForWhat from "./steps/ForWhat";
 const font = Poppins({
   subsets: ["latin"],
   weight: "400",
@@ -42,61 +39,28 @@ function StepThree({ userData }: StepThreeProps) {
     setAnimate(true);
   }, []);
 
-  const changeRecipient = (userData: UserData) => {
-    setAppointmentInput({ ...appointmentInput, user: userData });
-  };
-
-  const changeTreatments = (treatement: Treatment) => {
-    setAppointmentInput({ ...appointmentInput, treatment: treatement });
-  };
-
   const steps = [
     {
-      label: "With Who",
+      label: "For What?",
       description: (
-        <div className="py-12 gap-2 flex flex-wrap align-center items-center">
-          {userData.map((item) => (
-            <button
-              key={item.userId}
-              onClick={() => changeRecipient(item)}
-              className={`${
-                font.className
-              } px-4 py-2  border-2 transition-all border-black ease-in-out duration-300 hover:bg-orange-500 font-medium ${
-                appointmentInput.user?.userId == item?.userId
-                  ? `bg-orange-500  text-lg`
-                  : `bg-rose-100 text-base  `
-              } hover:text-lg   text-black rounded-xl`}
-            >
-              {item.name}
-            </button>
-          ))}
-        </div>
+        <WithWho
+          userData={userData}
+          setAppointmentInput={setAppointmentInput}
+          appointmentInput={appointmentInput}
+        />
       ),
     },
     {
-      label: "For What",
+      label: "For What?",
       description: (
-        <div className="py-12 gap-2 flex flex-wrap align-center items-center">
-          {appointmentInput.user?.treatments.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => changeTreatments(item)}
-              className={`${
-                font.className
-              } px-4 py-2  border-2 transition-all border-black ease-in-out duration-300 hover:bg-orange-500 font-medium ${
-                appointmentInput.treatment?.id == item?.id
-                  ? `bg-orange-500  text-lg`
-                  : `bg-rose-100 text-base  `
-              } hover:text-lg   text-black rounded-xl`}
-            >
-              {item.title}
-            </button>
-          ))}
-        </div>
+        <ForWhat
+          setAppointmentInput={setAppointmentInput}
+          appointmentInput={appointmentInput}
+        />
       ),
     },
     {
-      label: "Create an ad",
+      label: "When?",
       description: (
         <AvailableList
           appointmentInput={appointmentInput}
@@ -119,27 +83,24 @@ function StepThree({ userData }: StepThreeProps) {
   };
 
   const handleSubmit = async () => {
-    console.log(appointmentInput);
-
     try {
       const res = await axios.post("api/appointments", {
         ...appointmentInput,
         customerId: session.data?.user.id,
       });
-      console.log(res.data);
     } catch (err: any) {
       console.log(err);
     }
   };
 
   return (
-    <div className="w-fit max-md:w-11/12 flex justify-start content-center items-center dark:bg-orange-400/70 bg-orange-400/80 p-10 rounded-3xl shadow-2xl dark:shadow-white/10 ">
+    <div className="w-1/2 max-md:w-full flex justify-start content-start items-start p-5 bg-slate-900  rounded-b-xl shadow-sm shadow-black border-x border-b border-gray-500">
       {animate ? (
         <Zoom duration={350} damping={10000}>
           <Box sx={{ width: "100%" }}>
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps.map((step, index) => (
-                <Step key={step.label}>
+                <Step key={index}>
                   <StepLabel
                     optional={
                       index === 2 ? (
@@ -150,26 +111,40 @@ function StepThree({ userData }: StepThreeProps) {
                     <h2
                       className={`${
                         activeStep === index ? `font-semibold` : `font-light`
-                      } text-xl text-white`}
+                      } text-xl text-white text-start font-semibold`}
                     >
                       {step.label}
                     </h2>
                   </StepLabel>
                   <StepContent>
-                    <div>{step.description}</div>
+                    <div className="w-full">{step.description}</div>
                     <Box sx={{ mb: 2 }}>
                       <div>
                         <Button
                           variant="contained"
-                          color={index === 1 ? "success" : "info"}
+                          disabled={
+                            index === 0
+                              ? !appointmentInput.user?.userId
+                              : index === 1
+                              ? !appointmentInput.treatment?.id
+                              : index === 2 &&
+                                appointmentInput.availableSlot.length === 0
+                          }
+                          color={index === 2 ? "success" : "primary"}
                           onClick={
                             index === steps.length - 1
                               ? handleSubmit
                               : handleNext
                           }
-                          sx={{ mt: 1, mr: 1, backgroundColor: `#fb923c` }}
+                          sx={{
+                            mt: 1,
+                            mr: 1,
+                            backgroundColor: `#2e73ab`,
+                          }}
                         >
-                          {index === steps.length - 1 ? "Submit" : "Continue"}
+                          {index === steps.length - 1
+                            ? "Book It Now"
+                            : "Continue"}
                         </Button>
                         <Button
                           disabled={index === 0}

@@ -18,8 +18,6 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      console.log("req.body", req.body);
-
       const form = new formidable.IncomingForm({ multiples: false });
 
       form.parse(req, async (error, fields, files) => {
@@ -44,11 +42,8 @@ export default async function handler(
           Body: fs.createReadStream(imageSrc.filepath),
           ContentType: imageSrc.mimetype!,
         };
-        console.log("!business.Images", !business.Images);
 
         if (!business.Images) {
-          console.log("business.Images not exist");
-
           const { created, err } = await createProfileImages({
             fileName: imageSrc.newFilename,
             businessId: business.id,
@@ -58,8 +53,9 @@ export default async function handler(
           if (created) return res.status(201).json(created);
         }
 
-        // ...
         if (type == "PROFILE") {
+          console.log(type, "profile type");
+
           const upload = await uploadImage(params);
           if (!upload) return res.status(500).json("s3 bucket err");
           const result = await updateProfileImages({
@@ -72,8 +68,6 @@ export default async function handler(
           return res.status(201).json({ message: result });
         }
         if (type == "BACKGROUND") {
-          console.log(type);
-
           const upload = await uploadImage(params);
           if (!upload) return res.status(500).json("s3 bucket err");
           const result = await updateProfileImages({

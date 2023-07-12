@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import {
   createUser,
   getAllUsers,
-  getByEmail,
+  getUserByEmail,
   getByBusinessName,
   getById,
   signIn,
@@ -29,8 +29,6 @@ export default async function handler(
     try {
       const { name, email, password, businessName } = req.body;
 
-      console.log(req.body);
-
       //validate user
       const { error } = validateUser({
         name,
@@ -51,20 +49,19 @@ export default async function handler(
       const hashedPassword = await bcrypt.hash(password, 10);
 
       //check if user exist
-      const { userExist } = await getByEmail(email);
-      console.log(userExist);
+      const userExist = await getUserByEmail(email);
 
       if (userExist) return res.status(400).json(`user already exist`);
 
       //create the user
-      const { newUser, err } = await createUser({
+      const newUser = await createUser({
         name,
         email,
         password: hashedPassword,
         businessName,
       });
 
-      if (err) return res.status(500).json(err);
+      if (!newUser) return res.status(500).json("user creation failed");
 
       return res.status(201).json(newUser);
     } catch (err) {
@@ -75,7 +72,6 @@ export default async function handler(
   if (req.method == "GET" && req.query.businessName) {
     try {
       const { businessName } = req.query;
-      console.log(businessName);
 
       if (!businessName) return res.status(500).json("server Error");
       const { userExist, err } = await getByBusinessName(businessName);
@@ -94,7 +90,6 @@ export default async function handler(
         email: string;
         password: string;
       };
-      console.log(email);
 
       if (!email || !password) return res.status(500).json("server Error");
       const { user, error } = await signIn(email, password);

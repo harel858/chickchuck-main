@@ -26,8 +26,6 @@ export default async function handler(
       if (insertionErr || !newTreatment)
         return res.status(500).json(`something went wrong`);
 
-      console.log(newTreatment);
-
       return res.status(200).json(newTreatment);
     } catch (err) {
       console.log(err);

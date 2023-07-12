@@ -5,6 +5,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -27,7 +28,8 @@
       "@components/*": ["./components/*"],
       "@navbar/*": ["./app/(navbar)/*"],
       "@actions": ["./actions"],
-      "@api/*": ["./pages/api/*"]
+      "@api/*": ["./pages/api/*"],
+      "@app/*":["./app/*"]
     }
   },
   "include": [

@@ -8,7 +8,6 @@ const lobster = Lobster_Two({ weight: ["400"], subsets: ["latin"] });
 
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
-  console.log(session);
 
   if (session?.user.UserRole != "RECIPIENT") return notFound();
   return (

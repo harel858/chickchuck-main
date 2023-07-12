@@ -37,7 +37,6 @@ function TreatmentsForm({
 
       if (res.ok) {
         const result = await res.json();
-        console.log(result);
         router.refresh();
       }
     } catch (err) {

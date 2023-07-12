@@ -56,7 +56,6 @@ export default async function handler(
         userId,
         business.id
       );
-      console.log(availableSlot);
       if (slotFailed || !availableSlot)
         return res.status(500).json(`Create Available Slots Failed`);
 
@@ -79,16 +78,17 @@ export default async function handler(
         userId: string;
         duration: string;
       };
+      if (!chosenDate || !userId || !duration)
+        return res.status(400).json("Missing Values");
 
       const date = dayjs(chosenDate);
 
       const { userExist, err } = await getById(userId);
       if (!userExist || err) return res.status(400).json("no existing user");
-      console.log(chosenDate);
       const { availableSlots, availableSlotsErr } = await getQueuesByMonth(
         userId,
         date,
-        JSON.parse(duration)
+        parseInt(duration)
       );
       if (availableSlotsErr || !availableSlots)
         return res.status(500).json(err);

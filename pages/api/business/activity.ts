@@ -56,7 +56,6 @@ export default async function handler(
         userId,
         Business.id
       );
-      console.log(availableSlot);
       if (slotFailed || !availableSlot)
         return res.status(500).json(`Create Available Slots Failed`);
 
@@ -84,7 +83,6 @@ export default async function handler(
 
       const { userExist, err } = await getById(userId);
       if (!userExist || err) return res.status(400).json("no existing user");
-      console.log(chosenDate);
       const { availableSlots, availableSlotsErr } = await getQueuesByMonth(
         userId,
         date,

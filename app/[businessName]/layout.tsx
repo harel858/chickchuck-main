@@ -54,7 +54,7 @@ async function Layout({
   const business = await getBusiness(businessName);
   if (!business) return notFound();
   return (
-    <section className="flex flex-col justify-center items-center">
+    <section className="flex flex-col justify-start items-center gap-0 ">
       <BackgroundImage business={business} lobster={lobster.className} />
       {children}
     </section>

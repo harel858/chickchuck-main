@@ -8,7 +8,6 @@ export const createCustomer = async (name: string, phoneNumber: string) => {
         phoneNumber,
       },
     });
-    console.log("newCustomer", newCustomer);
 
     return { newCustomer };
   } catch (createCustomerErr) {
@@ -50,7 +49,6 @@ export const updateCustomer = async (name: string, phoneNumber: string) => {
       where: { phoneNumber },
       data: { name },
     });
-    console.log(updatedcustomer);
 
     return { updatedcustomer };
   } catch (updateCustomerErr) {

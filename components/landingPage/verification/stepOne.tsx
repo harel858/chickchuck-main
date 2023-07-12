@@ -24,8 +24,6 @@ const StepOne = React.memo(
 
     const submitForm = useCallback(
       async (e: React.FormEvent<HTMLFormElement>) => {
-        console.log(input);
-
         e.preventDefault();
         setError("");
         setLoading(true);
@@ -49,7 +47,6 @@ const StepOne = React.memo(
             setError(err.message);
           }
           console.log(err);
-
           setLoading(false);
         }
       },
@@ -59,9 +56,9 @@ const StepOne = React.memo(
     return (
       <form
         onSubmit={submitForm}
-        className="flex flex-col items-center gap-12 mt-4 w-full"
+        className="flex flex-col items-center gap-8 mt-4 w-full p-5 "
       >
-        <div className="flex flex-col items-center gap-8 mt-4">
+        <div className="flex flex-col items-center gap-8 mt-4 w-8/12 max-2xl:w-full">
           <TextField
             id="outlined-basic"
             label="Enter Name"
@@ -77,10 +74,11 @@ const StepOne = React.memo(
               style: {
                 fontSize: "1.1em",
                 fontWeight: "500",
-                color: "rgba(245, 245, 220, 0.6)",
+                color: "rgba(245, 245, 220, 0.8)",
               },
             }}
             sx={{
+              width: "100%",
               bgcolor: "rgba(0, 0, 0, 0.5)",
               borderRadius: "8px",
               ":after": { border: "4px solid white" },
@@ -96,16 +94,20 @@ const StepOne = React.memo(
             onChange={handleChange}
             error={Boolean(error)}
             InputProps={{
-              style: { color: "white", fontSize: "1.2em" },
+              style: {
+                color: "white",
+                fontSize: "1.2em",
+              },
             }}
             InputLabelProps={{
               style: {
                 fontSize: "1.1em",
                 fontWeight: "500",
-                color: "rgba(245, 245, 220, 0.6)",
+                color: "rgba(245, 245, 220, 0.8)",
               },
             }}
             sx={{
+              width: "100%",
               bgcolor: "rgba(0, 0, 0, 0.5)",
               borderRadius: "8px",
               borderColor: "#e0e0e0",
@@ -116,7 +118,7 @@ const StepOne = React.memo(
 
         <Button
           variant="default"
-          className="bg-sky-600 dark:bg-sky-800 text-xl rounded-xl tracking-widest"
+          className="bg-sky-600 dark:bg-sky-800 text-xl rounded-xl min-w-max max-2xl:w-8/12 tracking-widest"
           isLoading={loading}
         >
           Send SMS

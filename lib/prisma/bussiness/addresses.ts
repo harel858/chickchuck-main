@@ -13,7 +13,6 @@ export const getBusinessAddress = async (businessId: string) => {
     const addresses = await prisma.address.findMany({
       where: { businessId },
     });
-    console.log(addresses);
 
     return addresses;
   } catch (err) {
@@ -37,7 +36,6 @@ export const createBussinessAddress = async ({
         Business: { connect: { id: businessId } },
       },
     });
-    console.log(addresses);
 
     return addresses;
   } catch (err) {
@@ -61,7 +59,6 @@ export const updateBussinessAddress = async (
         zipcode,
       },
     });
-    console.log(addresses);
 
     return addresses;
   } catch (err) {

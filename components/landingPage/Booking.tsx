@@ -19,7 +19,7 @@ function Booking({ userData }: { userData: UserData[] }) {
   }, [session]);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-20 h-screen w-full text-white">
+    <div className="flex flex-col items-center justify-center w-full text-white">
       {loading ? (
         <>loading...</>
       ) : !session?.data?.user ||

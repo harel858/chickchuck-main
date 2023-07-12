@@ -6,8 +6,6 @@ export const createProfileImages = async (params: {
   businessId: string;
   type: "PROFILE" | "BACKGROUND";
 }) => {
-  console.log("params", params);
-
   const { fileName, type, businessId } = params;
   try {
     if (type == "PROFILE") {
@@ -39,8 +37,6 @@ export const updateProfileImages = async (params: {
   businessId: string;
   type: "PROFILE" | "BACKGROUND";
 }) => {
-  console.log("params", params);
-
   const { fileName, type, businessId } = params;
   try {
     if (type == "PROFILE") {
@@ -59,7 +55,6 @@ export const updateProfileImages = async (params: {
           backgroundImgName: fileName,
         },
       });
-      console.log(created);
       return created;
     }
     return null;

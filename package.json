@@ -29,6 +29,7 @@
         "@radix-ui/react-tabs": "^1.0.3",
         "@react-pdf/renderer": "^3.1.12",
         "@tailwindcss/typography": "^0.5.9",
+        "@total-typescript/ts-reset": "^0.4.2",
         "@upstash/ratelimit": "^0.4.1",
         "@upstash/redis": "^1.20.3",
         "@vonage/server-sdk": "^3.0.18",

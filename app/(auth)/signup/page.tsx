@@ -56,7 +56,6 @@ function SignUpForm() {
         email: formData.email.toLowerCase(),
       });
       const user = res.data as User;
-      console.log(user);
 
       signIn("User Login", {
         email: user.email,

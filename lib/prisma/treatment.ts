@@ -22,7 +22,6 @@ export const createTreatment = async ({
         businessId,
       },
     });
-    console.log(newTreatment);
 
     return { newTreatment };
   } catch (insertionErr) {

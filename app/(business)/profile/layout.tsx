@@ -4,8 +4,7 @@ import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import { authOptions } from "@lib/auth";
 import Images from "@ui/Images";
-import { Lobster_Two } from "next/font/google";
-const lobster = Lobster_Two({ weight: ["400"], subsets: ["latin"] });
+import Navbar from "@ui/(navbar)/Navbar";
 
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
@@ -14,9 +13,10 @@ async function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <VerticalNav lobsterFont={lobster.className} user={session.user} />
-      <section className="h-screen w-full flex flex-col justify-start items-center relative px-52 max-2xl:px-0 gap-10">
-        <Images lobster={lobster.className} user={session.user} />
+      <Navbar />
+      <VerticalNav user={session.user} />
+      <section className="h-screen w-full pl-64 flex flex-col justify-start items-center relative max-2xl:px-0 max-2xl:m-0 gap-10">
+        <Images user={session.user} />
         {children}
       </section>
     </>

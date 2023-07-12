@@ -4,7 +4,6 @@ import { UserData } from "../../types/types";
 export const fetchAppointmentSlots = async (businessName: string) => {
   try {
     const value = businessName.replace(/-/g, " ").replace(/%60/g, "`");
-    console.log("value", value);
 
     const business = await prisma.business.findUnique({
       where: { businessName: value },

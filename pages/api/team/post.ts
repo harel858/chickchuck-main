@@ -3,7 +3,7 @@ import { createEmployee } from "@lib/prisma/team/create";
 import validateUser from "@lib/validation/userValidation";
 import type { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
-import { getByEmail } from "@lib/prisma/users";
+import { getUserByEmail } from "@lib/prisma/users";
 
 interface Body {
   name: string;
@@ -20,8 +20,6 @@ export default async function handler(
   if (req.method == "POST") {
     try {
       const { name, email, password, businessName } = req.body as Body;
-
-      console.log(req.body);
 
       //validate user
       const { error } = validateUser({
@@ -41,11 +39,9 @@ export default async function handler(
         return res.status(400).json(`password is required`);
       }
       const hashedPassword = await bcrypt.hash(password, 10);
-      console.log(hashedPassword);
 
       //check if user exist
-      const { userExist } = await getByEmail(email);
-      console.log(userExist);
+      const userExist = await getUserByEmail(email);
       if (userExist) return res.status(400).json(`user already exist`);
 
       const { employee, err } = await createEmployee({

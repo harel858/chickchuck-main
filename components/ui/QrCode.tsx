@@ -1,6 +1,6 @@
 "use client";
-import { QRCode } from "antd";
-import React from "react";
+import { QRCode, Skeleton } from "antd";
+import React, { useEffect, useState } from "react";
 import { AiOutlineDownload } from "react-icons/ai";
 import { Button } from "./Button";
 
@@ -19,19 +19,30 @@ const downloadQRCode = () => {
   }
 };
 
-const QrCode = ({ link }: { link: string }) => (
-  <div
-    id="myqrcode"
-    className="flex flex-col justify-center items-center gap-2 "
-  >
-    <QRCode
-      className="border border-black rounded-xl bg-orange-50"
-      value={link}
-    />
-    <Button variant={"ghost"} onClick={downloadQRCode} className="text-base">
-      Download QR Code <AiOutlineDownload className="m-2 text-3xl" />
-    </Button>
-  </div>
-);
+const QrCode = ({ link }: { link: string }) => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => setLoading(false), []);
+  return loading ? (
+    <Skeleton.Image active />
+  ) : (
+    <div
+      id="myqrcode"
+      className="flex flex-col justify-center items-center gap-2 "
+    >
+      <QRCode
+        className="border border-black rounded-xl shadow-sm shadow-black bg-white/90"
+        color="black"
+        value={link}
+      />
+      <Button
+        variant={"ghost"}
+        onClick={downloadQRCode}
+        className="text-base hover:bg-slate-900 hover:text-white"
+      >
+        Download QR Code <AiOutlineDownload className="m-2 text-3xl" />
+      </Button>
+    </div>
+  );
+};
 
 export default QrCode;

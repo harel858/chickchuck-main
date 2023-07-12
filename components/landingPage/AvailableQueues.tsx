@@ -25,6 +25,7 @@ export default function AvailableQueues({
       businessId: string;
     }[][]
   >([]);
+
   const [queues, setQueues] = useState<
     {
       id: string;
@@ -34,7 +35,6 @@ export default function AvailableQueues({
       businessId: string;
     }[][]
   >([]);
-  console.log(queues);
 
   const [loading, setLoading] = useState(false);
 
@@ -58,27 +58,24 @@ export default function AvailableQueues({
       businessId: string;
     }[][] = [];
 
-    if (allQueues.length > 0) {
+    if (allQueues && allQueues.length > 0) {
       for (let i = 0; i < allQueues.length; i++) {
-        if (allQueues[i][0].date === chosenDate) {
-          const queuesWithoutDate = allQueues[i].map(
+        if (allQueues[i]?.[0]?.date === chosenDate) {
+          const queuesWithoutDate = allQueues[i]?.map(
             ({ date, ...queueWithoutDate }) => queueWithoutDate
           );
 
-          chosenDateQueues.push(queuesWithoutDate);
+          queuesWithoutDate && chosenDateQueues.push(queuesWithoutDate);
         }
         if (dayjs().format("DD/MM/YYYY") === chosenDate) {
           chosenDateQueues.forEach((queue, index) => {
-            // Get the start time of the last slot in the current item
             const lastSlotStartTime = queue[queue.length - 1]?.start;
-
-            // Check if the last slot's start time is after the current time
             const isSlotValid = dayjs(lastSlotStartTime, "HH:mm").isAfter(
               dayjs()
             );
 
             if (!isSlotValid) {
-              chosenDateQueues.splice(index, 1); // Remove the queue from the array if its time has passed
+              chosenDateQueues.splice(index, 1);
             }
           });
         }
@@ -90,15 +87,11 @@ export default function AvailableQueues({
 
   useEffect(() => {
     const getQueues = async (date: Dayjs) => {
-      console.log("ho");
-
       setLoading(true);
       try {
         let res = await axios.get(
           `/api/slots/slot?chosenDate=${date}&userId=${appointmentInput?.user?.userId}&duration=${appointmentInput?.treatment?.duration}`
         );
-        console.log(res.data);
-
         setAllQueues(res.data);
       } catch (err) {
         setLoading(false);

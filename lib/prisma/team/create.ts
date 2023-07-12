@@ -10,8 +10,6 @@ interface Employee {
 }
 
 export async function createEmployee(data: Employee) {
-  console.log(data);
-
   try {
     const employee = await prisma.user.create({
       data: {
@@ -24,7 +22,6 @@ export async function createEmployee(data: Employee) {
         },
       },
     });
-    console.log(employee);
 
     return { employee };
   } catch (err) {

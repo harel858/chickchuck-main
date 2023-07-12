@@ -12,8 +12,6 @@ export async function createAppointment(
   notes: string | null,
   date: string
 ) {
-  console.log(userId);
-
   try {
     // Check if appointment slot is already booked
     const existingAppointment = await prisma.appointmentSlot.findFirst({
@@ -33,7 +31,6 @@ export async function createAppointment(
         },
       },
     });
-    console.log(existingAppointment);
 
     if (existingAppointment) {
       // If the appointment slot already exists, return an error or handle it however you like

@@ -24,7 +24,6 @@ const authorizeUserLogin = async (credentials: any, req: any) => {
       password,
     });
     const user = result.data;
-    console.log(user);
 
     if (result.status !== 200) throw new Error(result.data);
 
@@ -84,8 +83,6 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   callbacks: {
     async jwt({ token, user }) {
-      console.log(token.sub);
-
       const dbUser = await prisma.user.findUnique({
         where: { id: token.sub },
         include: { Business: true },

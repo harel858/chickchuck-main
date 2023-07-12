@@ -36,7 +36,6 @@ const ProfileImage = ({
   const profileImage = user.urls?.profileImage;
 
   const postData = async (imageSrc: File) => {
-    console.log(imageSrc);
     const formData = new FormData();
     formData.append("imageSrc", imageSrc);
     formData.append("type", "PROFILE");

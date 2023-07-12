@@ -110,7 +110,6 @@ export async function getByBusinessName(businessName: any) {
     const userExist = await prisma?.business.findUnique({
       where: { businessName: businessName },
     });
-    console.log(userExist);
     return { userExist };
   } catch (err) {
     return { err };

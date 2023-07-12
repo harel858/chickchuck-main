@@ -95,7 +95,7 @@ export default function CalendarComponent({
       scroll={{ y: 1000 }}
     />
   ) : (
-    <div className="bg-white/40  rounded-3xl shadow-2xl dark:shadow-white/10 p-0 w-full">
+    <div className="bg-sky-200/90 border-b border-gray-500 rounded-b-3xl shadow-2xl dark:shadow-white/50 p-0 w-full">
       <Suspense
         fallback={
           <Table
