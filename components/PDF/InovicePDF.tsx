@@ -86,7 +86,7 @@ const InvoicePDF = ({
     openingTime: string;
     closingTime: string;
     activityDays: number[];
-    address: Address;
+    address: Address | undefined;
   };
   event: AppointmentEvent;
 }) => (
@@ -112,7 +112,7 @@ export default function DownloadPDF({
     openingTime: string;
     closingTime: string;
     activityDays: number[];
-    address: Address;
+    address: Address | undefined;
   };
 }) {
   return (

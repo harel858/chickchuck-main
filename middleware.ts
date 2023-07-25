@@ -40,6 +40,7 @@ export default withAuth(
       "/profile",
       "/schedule",
       "/treatments",
+      "/team",
       "/activityTime",
     ];
 
@@ -67,6 +68,7 @@ export const config = {
     "/schedule",
     "/treatments",
     "/activityTime",
+    "/team",
     "/signin",
     "/signup",
     "/api/:path*",

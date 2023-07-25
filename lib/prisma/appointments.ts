@@ -1,5 +1,5 @@
 import { prisma } from ".";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 import { AppointmentStatus, AvailableSlot } from "@prisma/client";
 
@@ -12,13 +12,16 @@ export async function createAppointment(
   notes: string | null,
   date: string
 ) {
+  const start = slots[0]?.start;
+  const end = slots[slots.length - 1]?.end;
+  if (!start || !end) return { createErr: "not start or end provided" };
   try {
     // Check if appointment slot is already booked
     const existingAppointment = await prisma.appointmentSlot.findFirst({
       where: {
         date: dayjs(date).format("DD/MM/YYYY"),
-        start: slots[0].start,
-        end: slots[slots.length - 1].end,
+        start,
+        end,
         appointments: {
           none: {
             // Filter out appointment slots that already have appointments scheduled
@@ -40,8 +43,8 @@ export async function createAppointment(
     // Create the appointment slot
     const appointmentSlot = await prisma.appointmentSlot.create({
       data: {
-        start: slots[0].start,
-        end: slots[slots.length - 1].end,
+        start,
+        end,
         date: dayjs(date).format("DD/MM/YYYY"),
         availableSlots: { connect: slots.map((slot) => ({ id: slot.id })) },
         business: { connect: { id: businessId } },
@@ -65,7 +68,7 @@ export async function createAppointment(
     // Update the available slots to reference the appointment slot
     for (let i = 0; i < slots.length; i++) {
       await prisma.availableSlot.update({
-        where: { id: slots[i].id },
+        where: { id: slots[i]?.id },
         data: { AppointmentSlot: { connect: { id: appointmentSlot.id } } },
       });
     }

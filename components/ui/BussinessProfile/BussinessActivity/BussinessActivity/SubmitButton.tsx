@@ -7,8 +7,8 @@ import { Dayjs } from "dayjs";
 type SubmitProps = {
   user: ProfilePageData;
   hasChanges: boolean;
-  startActivity: Dayjs;
-  endActivity: Dayjs;
+  startActivity: Dayjs | null;
+  endActivity: Dayjs | null;
   activityDays: any[];
   availableSlots: Slots[];
   setError: React.Dispatch<React.SetStateAction<string>>;
@@ -31,8 +31,8 @@ export default function SubmitButton({
     setLoading(true);
     setError("");
     const params = {
-      startActivity: startActivity.toISOString(),
-      endActivity: endActivity.toISOString(),
+      startActivity: startActivity?.toISOString(),
+      endActivity: endActivity?.toISOString(),
       activityDays,
       availableSlots,
       userId: user.id,
@@ -58,7 +58,12 @@ export default function SubmitButton({
   return (
     <Button
       variant={"destructive"}
-      disabled={hasChanges || endActivity?.hour() < startActivity.hour()}
+      disabled={
+        hasChanges ||
+        !startActivity ||
+        !endActivity ||
+        endActivity.hour() <= startActivity.hour()
+      }
       onClick={handleButtonClick}
       isLoading={loading}
     >

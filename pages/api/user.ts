@@ -27,7 +27,7 @@ export default async function handler(
   }
   if (req.method == "POST") {
     try {
-      const { name, email, password, businessName } = req.body;
+      const { name, email, phone, password, businessName } = req.body;
 
       //validate user
       const { error } = validateUser({
@@ -37,7 +37,7 @@ export default async function handler(
         businessName,
       });
       if (error) {
-        const err = error.details[0].message;
+        const err = error.details[0]?.message;
         console.log({ err });
         return res.status(400).json(err);
       }
@@ -57,6 +57,7 @@ export default async function handler(
       const newUser = await createUser({
         name,
         email,
+        phone,
         password: hashedPassword,
         businessName,
       });

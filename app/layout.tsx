@@ -24,14 +24,14 @@ export default function RootLayout({
           inter.className
         )}
       >
-        <body className="min-h-screen bg-slate-300/50 dark:bg-slate-900 antialiased relative">
+        <body className="min-h-screen bg-orange-200/90 dark:bg-slate-900 antialiased relative">
           <Providers>
             <main className="relative m-0 p-0">{children}</main>
           </Providers>
 
           {/* Add the inset box shadow */}
           <div className="fixed inset-0 pointer-events-none -z-10">
-            <div className="h-screen bg-gradient-to-b from-transparent dark:to-slate-700/80 to-orange-200/90 -z-10" />
+            <div className="h-1/2 bg-gradient-to-t from-transparent dark:to-slate-700/80 to-slate-300/40 -z-10" />
           </div>
 
           {/* Allow more height for mobile menu on mobile */}

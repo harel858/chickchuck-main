@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Select, Tag } from "antd";
 import type { CustomTagProps } from "rc-select/lib/BaseSelect";
 import { ActivityDay } from "../../../../../types/types";
@@ -56,8 +56,8 @@ const ActivityDays = ({
     setHasChanges(false);
   };
   return (
-    <div className="flex flex-col justify-start items-start gap-1">
-      <p className="text-white/90 font-normal text-lg">Activity Days</p>
+    <div className="flex flex-col justify-center items-center gap-1">
+      <h5 className="text-white/90 font-semibold text-xl">Activity Days</h5>
       <Select
         mode="multiple"
         showArrow

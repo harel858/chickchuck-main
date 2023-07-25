@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import { User } from "@prisma/client";
+import { getUserByEmail } from "@lib/prisma/users";
 
-async function signIn(
+export async function signIn(
   req: NextApiRequest,
   res: NextApiResponse,
   database: {
@@ -36,4 +37,23 @@ async function signIn(
   res.status(425).end(`method ${req.method} is not allowed.`);
 }
 
-export default signIn;
+export async function signInNew(email: string, password: string) {
+  if (!email || !password) return { err: `Missing Inputs.` };
+  try {
+    // Validate user
+    const userExist = await getUserByEmail(email);
+
+    if (!userExist) return { err: `User not found` };
+
+    const verify = await bcrypt.compare(password, userExist.password);
+
+    if (!verify) return { err: `User not found` };
+
+    // Create the user object without the password
+    const { password: userPassword, ...rest } = userExist;
+    return { user: rest };
+  } catch (err) {
+    console.log(err);
+    return { err: "Internal server error" };
+  }
+}

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import ToggleView from "./ToggleView";
 import ToggleViewMode from "./ToggleViewMode";
 import { AnimatePresence, motion } from "framer-motion";
@@ -9,8 +9,8 @@ import {
   MdKeyboardDoubleArrowRight,
   MdKeyboardDoubleArrowLeft,
 } from "react-icons/md";
-import { ScheduleProps } from "../../../types/types";
 import { Button } from "@ui/Button";
+
 interface ListNavProps {
   setViewMode: React.Dispatch<React.SetStateAction<"daily" | "weekly">>;
   viewMode: "weekly" | "daily";
@@ -47,7 +47,7 @@ function ListNav({
   };
 
   return (
-    <nav className="flex flex-row-reverse max-md:flex-col max-md:items-start flex-wrap content-center justify-between items-center bg-orange-200/90 font-extralight w-full relative top-0 p-3 px-10 gap-2 transition-all duration-1000 ease-in-out">
+    <nav className="flex flex-row-reverse max-md:flex-col max-md:items-start flex-wrap content-center justify-between items-center bg-orange-200 font-extralight w-full relative top-0 p-3 px-10 gap-2 transition-all duration-1000 ease-in-out">
       <div className="flex justify-center items-center gap-3">
         <ToggleView
           setSearchQuery={setSearchQuery}
@@ -89,6 +89,7 @@ function ListNav({
         <AnimatePresence>
           {currentView === "calendar" && (
             <motion.div
+              key="toggleViewMode"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -107,6 +108,7 @@ function ListNav({
         <div className="flex justify-center items-center gap-1">
           <AnimatePresence>
             <motion.div
+              key="arrowDoubleLeft"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -123,10 +125,11 @@ function ListNav({
               />
             </motion.div>
 
-            {viewMode !== "daily" && currentView == "calendar" ? (
-              <></>
+            {viewMode !== "daily" && currentView === "calendar" ? (
+              <React.Fragment key="emptyLeftArrow"></React.Fragment>
             ) : (
               <motion.div
+                key="arrowLeft"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -154,10 +157,11 @@ function ListNav({
             >
               Today
             </Button>
-            {viewMode !== "daily" && currentView == "calendar" ? (
-              <></>
+            {viewMode !== "daily" && currentView === "calendar" ? (
+              <React.Fragment key="emptyRightArrow"></React.Fragment>
             ) : (
               <motion.div
+                key="arrowRight"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -176,6 +180,7 @@ function ListNav({
             )}
 
             <motion.div
+              key="arrowDoubleRight"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}

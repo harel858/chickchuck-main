@@ -29,7 +29,7 @@ export default async function handler(
         businessName,
       });
       if (error) {
-        const err = error.details[0].message;
+        const err = error.details[0]?.message;
         console.log({ err });
         return res.status(400).json({ err });
       }

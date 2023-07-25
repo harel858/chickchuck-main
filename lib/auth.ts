@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import axios, { AxiosError } from "axios";
 import { getCustomer } from "./prisma/customer";
 import { getImage } from "./aws/s3";
+import { signInNew } from "./routes/user/signin";
 
 interface UserCredentials {
   email: string;
@@ -19,20 +20,14 @@ const bucketName = process.env.BUCKET_NAME!;
 const authorizeUserLogin = async (credentials: any, req: any) => {
   try {
     const { email, password } = credentials as UserCredentials;
-    const result = await axios.post("http://localhost:3000/api/user/signin", {
-      email,
-      password,
-    });
-    const user = result.data;
+    const { user, err } = await signInNew(email, password);
 
-    if (result.status !== 200) throw new Error(result.data);
+    if (!user || err) throw new Error(err || "user not found");
 
     return user;
   } catch (err) {
-    if (err instanceof AxiosError) {
-      console.log(err.message);
-      throw new Error(err.message);
-    }
+    console.log(err);
+
     return null;
   }
 };

@@ -26,9 +26,9 @@ export default async function handler(
         businessId,
       });
       if (error)
-        return res.status(400).json({ error: error.details[0].message });
+        return res.status(400).json({ error: error.details[0]?.message });
       const addresses = await getBusinessAddress(businessId);
-      if (!addresses || addresses.length <= 0) {
+      if (!addresses || !addresses[0]?.id || addresses.length <= 0) {
         const newAddress = await createBussinessAddress({
           businessId,
           city,

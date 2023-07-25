@@ -2,6 +2,5 @@
 module.exports = {
   experimental: {
     appDir: true,
-    forceSwcTransforms:true
   },
 };

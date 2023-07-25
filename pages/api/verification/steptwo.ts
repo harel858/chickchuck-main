@@ -25,8 +25,12 @@ export default async function handler(
       const { customer, getCustomerErr } = await getCustomer(phoneNumber);
 
       if (getCustomerErr) return res.status(500).json(getCustomerErr);
+      console.log("customer?.name", customer?.name);
+      console.log("name", name);
 
-      if (customer?.name !== name) await updateCustomer(name, phoneNumber);
+      if (customer && customer.name !== name)
+        await updateCustomer(name, phoneNumber);
+
       if (customer) return res.status(200).json(customer);
 
       const { newCustomer, createCustomerErr } = await createCustomer(

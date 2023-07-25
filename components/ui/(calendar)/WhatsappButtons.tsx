@@ -12,7 +12,7 @@ function WhatsappButtons({ event }: { event: AppointmentEvent }) {
     >
       <Button variant={"subtle"} onClick={() => queueReminder("sh")}>
         Queue Reminder
-        <span className=" mx-2 text-green-500 text-xl">
+        <span className="mx-2 text-green-500 text-xl">
           <BsWhatsapp />
         </span>
       </Button>

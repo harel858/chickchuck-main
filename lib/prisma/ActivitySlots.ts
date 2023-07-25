@@ -1,9 +1,18 @@
 import { prisma } from ".";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { AppointmentSlot, AvailableSlot, Business, User } from "@prisma/client";
+import { AvailableSlot } from "@prisma/client";
 
 dayjs.extend(customParseFormat);
+
+interface AvailableSlotInterface {
+  id: string;
+  start: string;
+  end: string;
+  userId: string;
+  businessId: string;
+  date: string;
+}
 
 export async function createAvailableSlots(
   availableSlots: AvailableSlot[],
@@ -11,61 +20,80 @@ export async function createAvailableSlots(
   businessId: string
 ) {
   try {
-    const slotsToSave = availableSlots.map((slot) => {
-      return {
-        start: slot.start,
-        end: slot.end,
-        businessId,
-        userId: userId,
-      };
-    });
-
-    const existingSlots = await prisma.availableSlot.findMany({
+    const res = await prisma.availableSlot.deleteMany({
       where: {
-        userId: userId,
+        businessId: businessId,
       },
     });
-    if (existingSlots.length > 0) {
-      await prisma.availableSlot.deleteMany({
-        where: {
-          userId: userId,
-        },
-      });
-    }
-    const availableSlot = await prisma.availableSlot.createMany({
+    console.log(res);
+
+    /*   const slotsToSave = availableSlots.map((slot) => ({
+      start: slot.start,
+      end: slot.end,
+      businessId,
+      userId,
+    }));
+
+    const createdSlots = await prisma.availableSlot.createMany({
       data: slotsToSave,
     });
-    return { availableSlot };
+ */
+    return { deleteManySlots: res };
   } catch (slotFailed) {
     console.log(slotFailed);
     return { slotFailed };
   }
 }
-
-export async function updateAvailableSlots(
+export async function createUserAvailableSlots(
   availableSlots: AvailableSlot[],
   userId: string,
   businessId: string
 ) {
-  // Check if there are any existing slots for the given business ID
-  const existingSlots = await prisma.availableSlot.findMany({
-    where: {
-      userId: userId,
-    },
-  });
+  try {
+    await prisma.availableSlot.deleteMany({
+      where: {
+        userId: userId,
+      },
+    });
 
-  // If there are existing slots, delete them
-  if (existingSlots.length > 0) {
+    const slotsToSave = availableSlots.map((slot) => ({
+      start: slot.start,
+      end: slot.end,
+      businessId,
+      userId,
+    }));
+
+    const createdSlots = await prisma.availableSlot.createMany({
+      data: slotsToSave,
+    });
+
+    return { createdSlots };
+  } catch (slotFailed) {
+    console.log(slotFailed);
+    return { slotFailed };
+  }
+}
+/* 
+export async function updateAvailableSlots(
+  availableSlots: AvailableSlotInterface[],
+  userId: string,
+  businessId: string
+) {
+  try {
     await prisma.availableSlot.deleteMany({
       where: {
         userId,
       },
     });
-  }
 
-  // Create new available slots with the updated array of slots
-  await createAvailableSlots(availableSlots, userId, businessId);
-}
+    await createAvailableSlots(availableSlots, userId, businessId);
+
+    return { success: true };
+  } catch (error) {
+    console.log(error);
+    return { error };
+  }
+} */
 
 export async function getQueuesByMonth(
   userId: string,
@@ -74,149 +102,124 @@ export async function getQueuesByMonth(
 ) {
   try {
     const slotDuration = 5;
-
     const endDate = chosenDate.endOf("month");
 
-    let allAvailableSlots: {
-      id: string;
-      start: string;
-      end: string;
-      date: string;
-      userId: string;
-      businessId: string;
-    }[][] = [];
+    const allAvailableSlots: AvailableSlotInterface[][] = [];
 
+    //loop over 7 days of the week
     for (
       let date = chosenDate;
       date.isBefore(endDate) || date.isSame(endDate);
       date = date.add(1, "day")
     ) {
       const chosenDate = date.format("YYYY-MM-DD");
-
-      const { availableSlots, slotsErr } = await getQueuesByDate(
+      const { availableSlots, error } = await getQueuesByDate(
         userId,
         chosenDate,
         duration
       );
       if (availableSlots) {
         allAvailableSlots.push(...availableSlots);
+      } else {
+        console.log(error);
       }
     }
+    console.log("allAvailableSlots", allAvailableSlots);
 
     return { availableSlots: allAvailableSlots };
-  } catch (availableSlotsErr) {
-    console.log(availableSlotsErr);
-    return { availableSlotsErr };
+  } catch (error) {
+    console.log(error);
+    return { error };
   }
 }
+
 export async function getQueuesByDate(
   userId: string,
   chosenDate: string,
   duration: number
 ) {
-  const formatedDate = dayjs(chosenDate).format("DD/MM/YYYY");
-  const slotDuration = 5;
-
-  const slotsNeeded = Math.ceil(duration / slotDuration);
-
   try {
+    const formattedDate = dayjs(chosenDate).format("DD/MM/YYYY");
+    const slotDuration = 5;
+    const slotsNeeded = Math.ceil(duration / slotDuration);
+
     const availableSlots = await prisma.availableSlot.findMany({
       where: {
-        AND: [
-          { userId: userId },
-          { start: { gte: "00:00" } },
-          { end: { lte: "23:59" } },
-          { business: { activityDays: { has: dayjs(chosenDate).day() } } },
-          {
-            NOT: {
-              AppointmentSlot: {
-                some: {
-                  date: dayjs(chosenDate).format("DD/MM/YYYY"),
-                },
-              },
+        userId,
+        start: { gte: "00:00" },
+        end: { lte: "23:59" },
+        NOT: {
+          AppointmentSlot: {
+            some: {
+              date: dayjs(chosenDate).format("DD/MM/YYYY"),
             },
           },
-        ],
+        },
       },
-
       orderBy: { start: "asc" },
     });
+    console.log("availableSlots", availableSlots);
 
-    let consecutiveSlots: {
-      id: string;
-      start: string;
-      end: string;
-      date: string;
-      userId: string;
-      businessId: string;
-    }[] = [];
-    let result = [];
+    let consecutiveSlots: AvailableSlotInterface[] = [];
+    const result: AvailableSlotInterface[][] = [];
 
     for (let i = 0; i < availableSlots.length; i++) {
-      if (consecutiveSlots.length === 0) {
-        consecutiveSlots.push({
-          ...availableSlots[i],
-          id: availableSlots[i]?.id ?? "",
-          start: availableSlots[i]?.start ?? "",
-          end: availableSlots[i]?.end ?? "",
-          userId: availableSlots[i]?.userId ?? "",
-          businessId: availableSlots[i]?.businessId ?? "",
+      const slot = availableSlots[i];
 
-          date: formatedDate,
-        });
-      } else {
-        const prevSlotStart = dayjs(
-          consecutiveSlots[consecutiveSlots.length - 1]?.start,
-          "HH:mm"
-        );
+      if (
+        slot?.id &&
+        slot.start &&
+        slot.end &&
+        slot.userId &&
+        slot.businessId
+      ) {
+        const formattedSlot: AvailableSlotInterface = {
+          id: slot.id,
+          start: slot.start,
+          end: slot.end,
+          userId: slot.userId,
+          businessId: slot.businessId,
+          date: formattedDate,
+        };
 
-        const currentSlotEnd = dayjs(availableSlots[i - 1]?.end, "HH:mm");
-        const currentSlotStart = dayjs(availableSlots[i]?.start, "HH:mm");
-
-        const minutesBetweenSlots = currentSlotEnd.diff(
-          prevSlotStart,
-          "minute"
-        );
-        const minutesToCurrentSlot = currentSlotStart.diff(
-          prevSlotStart,
-          "minute"
-        );
-
-        if (
-          minutesBetweenSlots >= slotDuration &&
-          minutesToCurrentSlot === slotDuration
-        ) {
-          consecutiveSlots.push({
-            id: availableSlots[i]?.id ?? "",
-            start: availableSlots[i]?.start ?? "",
-            end: availableSlots[i]?.end ?? "",
-            userId: availableSlots[i]?.userId ?? "",
-            businessId: availableSlots[i]?.businessId ?? "",
-            date: formatedDate,
-          });
-          if (consecutiveSlots.length == slotsNeeded) {
-            result.push(consecutiveSlots);
-            consecutiveSlots = [];
-          }
+        if (consecutiveSlots.length === 0) {
+          consecutiveSlots.push(formattedSlot);
         } else {
-          consecutiveSlots = [
-            {
-              id: availableSlots[i]?.id ?? "",
-              start: availableSlots[i]?.start ?? "",
-              end: availableSlots[i]?.end ?? "",
-              userId: availableSlots[i]?.userId ?? "",
-              businessId: availableSlots[i]?.businessId ?? "",
-              date: formatedDate,
-            },
-          ];
+          const prevSlotStart = dayjs(
+            consecutiveSlots[consecutiveSlots.length - 1]?.start,
+            "HH:mm"
+          );
+          const currentSlotEnd = dayjs(availableSlots[i - 1]?.end, "HH:mm");
+          const currentSlotStart = dayjs(availableSlots[i]?.start, "HH:mm");
+
+          const minutesBetweenSlots = currentSlotEnd.diff(
+            prevSlotStart,
+            "minute"
+          );
+          const minutesToCurrentSlot = currentSlotStart.diff(
+            prevSlotStart,
+            "minute"
+          );
+
+          if (
+            minutesBetweenSlots >= slotDuration &&
+            minutesToCurrentSlot === slotDuration
+          ) {
+            consecutiveSlots.push(formattedSlot);
+            if (consecutiveSlots.length === slotsNeeded) {
+              result.push(consecutiveSlots);
+              consecutiveSlots = [];
+            }
+          } else {
+            consecutiveSlots = [formattedSlot];
+          }
         }
       }
     }
 
-    return { availableSlots: [...result] };
-  } catch (slotsErr) {
-    console.log(slotsErr);
-
-    return { slotsErr };
+    return { availableSlots: result };
+  } catch (error) {
+    console.log(error);
+    return { error };
   }
 }

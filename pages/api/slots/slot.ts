@@ -51,13 +51,17 @@ export default async function handler(
           return res.status(500).json(`update Days Failed`);
       }
 
-      const { availableSlot, slotFailed } = await createAvailableSlots(
+      /*  const { deleteManySlots, slotFailed } = await createAvailableSlots(
         availableSlots,
         userId,
         business.id
       );
-      if (slotFailed || !availableSlot)
+
+      if (slotFailed || !deleteManySlots?.count) {
+        console.log("createdSlots", deleteManySlots);
+        console.log("slotFailed", slotFailed);
         return res.status(500).json(`Create Available Slots Failed`);
+      } */
 
       const { response, error } = await updateActivityTime(
         userId,
@@ -84,14 +88,17 @@ export default async function handler(
       const date = dayjs(chosenDate);
 
       const { userExist, err } = await getById(userId);
+
       if (!userExist || err) return res.status(400).json("no existing user");
-      const { availableSlots, availableSlotsErr } = await getQueuesByMonth(
+      const { availableSlots } = await getQueuesByMonth(
         userId,
         date,
         parseInt(duration)
       );
-      if (availableSlotsErr || !availableSlots)
+      if (!availableSlots || availableSlots.length <= 0)
         return res.status(500).json(err);
+
+      console.log("userExist?.activityDays", userExist?.activityDays);
 
       return res.status(200).json(availableSlots);
     } catch (err) {

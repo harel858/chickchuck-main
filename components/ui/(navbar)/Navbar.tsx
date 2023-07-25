@@ -12,7 +12,7 @@ function Navbar() {
   const session = useSession();
 
   return (
-    <div className="fixed backdrop-blur-sm bg-sky-500 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-gray-900 dark:border-slate-800 shadow-sm flex items-center justify-between">
+    <nav className="fixed backdrop-blur-sm bg-sky-500 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-gray-900 dark:border-slate-800 shadow-sm flex items-center justify-between">
       <div className="container max-w-7xl mx-auto w-full flex justify-end items-center">
         {session?.data?.user.UserRole === "RECIPIENT" && (
           <Suspense
@@ -37,23 +37,7 @@ function Navbar() {
 
         <div className="hidden md:flex gap-4">
           <ThemeToggle />
-          <Link
-            href="/documentation"
-            className={buttonVariants({ variant: "ghost" })}
-          >
-            Documentation
-          </Link>
-          {session?.data?.user.UserRole === "RECIPIENT" ? (
-            <>
-              <Link
-                className={buttonVariants({ variant: "ghost" })}
-                href="/profile"
-              >
-                Profile
-              </Link>
-              <SignOutBtn />
-            </>
-          ) : (
+          {session?.data?.user.UserRole === "RECIPIENT" && (
             <Link
               className={buttonVariants({ variant: "default" })}
               href="/signin"
@@ -63,7 +47,7 @@ function Navbar() {
           )}
         </div>
       </div>
-    </div>
+    </nav>
   );
 }
 

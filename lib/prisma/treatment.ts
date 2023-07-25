@@ -30,7 +30,7 @@ export const createTreatment = async ({
   }
 };
 
-export async function deleteById(id: any) {
+export async function deleteById(id: string) {
   try {
     const deleteSuccess = await prisma.treatment.delete({ where: { id } });
     return { deleteSuccess };

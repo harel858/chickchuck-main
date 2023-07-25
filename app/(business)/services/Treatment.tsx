@@ -2,12 +2,15 @@
 import React, { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Treatment } from "@prisma/client";
+import axios from "axios";
 
 type treatmentProps = {
   item: Treatment;
 };
 
 const Treatment = React.memo(({ item }: treatmentProps) => {
+  console.log(item);
+
   const { title, id, cost, duration } = item;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -17,15 +20,8 @@ const Treatment = React.memo(({ item }: treatmentProps) => {
     async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/treatment`, {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id }),
-        });
-        if (res.ok) {
-          const deleteSucceed = await res.json();
-          router.refresh();
-        }
+        const res = await axios.delete(`/api/treatment?id=${id}`);
+        console.log(res.data);
       } catch (err) {
         console.log(err);
         setError(true);

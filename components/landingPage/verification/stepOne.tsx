@@ -1,5 +1,6 @@
 "use client";
 import React, { useCallback, useState } from "react";
+import { motion } from "framer-motion";
 import axios, { AxiosError } from "axios";
 import { TextField } from "@mui/material";
 import { Button } from "@ui/Button";
@@ -23,11 +24,14 @@ const StepOne = React.memo(
     const [loading, setLoading] = useState(false);
 
     const submitForm = useCallback(
-      async (e: React.FormEvent<HTMLFormElement>) => {
+      async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         setError("");
         setLoading(true);
-
+        if (!input.name || !input.phoneNumber) {
+          setLoading(false);
+          return setError("missing values");
+        }
         try {
           const res = await axios.post("/api/verification/stepone", input);
 
@@ -54,72 +58,90 @@ const StepOne = React.memo(
     );
 
     return (
-      <form
-        onSubmit={submitForm}
-        className="flex flex-col items-center gap-8 mt-4 w-full p-5 "
-      >
-        <div className="flex flex-col items-center gap-8 mt-4 w-8/12 max-2xl:w-full">
-          <TextField
-            id="outlined-basic"
-            label="Enter Name"
-            name="name"
-            onChange={handleChange}
-            error={Boolean(error)}
-            variant="filled"
-            InputProps={{
-              style: { color: "white", fontSize: "1.2em" },
-              inputMode: "numeric",
+      <form className="flex flex-col items-center gap-4 mt-4 w-full relative">
+        <div className="flex flex-col items-center gap-4 mt-4 w-8/12 max-2xl:w-full pb-5">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.5,
+              ease: [0, 0.71, 0.2, 1.01],
             }}
-            InputLabelProps={{
-              style: {
-                fontSize: "1.1em",
-                fontWeight: "500",
-                color: "rgba(245, 245, 220, 0.8)",
-              },
+          >
+            <TextField
+              id="outlined-basic"
+              label="Enter Name"
+              name="name"
+              onChange={handleChange}
+              error={Boolean(error)}
+              variant="filled"
+              InputProps={{
+                style: { color: "white", fontSize: "1.2em" },
+                inputMode: "numeric",
+              }}
+              InputLabelProps={{
+                style: {
+                  fontSize: "1.1em",
+                  fontWeight: "500",
+                  color: "rgba(245, 245, 220, 0.8)",
+                },
+              }}
+              sx={{
+                width: "100%",
+                bgcolor: "rgba(255, 255, 255, 0.2)",
+                borderRadius: "4px",
+                ":after": { border: "4px solid white" },
+                ...(error && { boxShadow: "0px 0px 0px 2px red" }),
+              }}
+            />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.5,
+              delay: 0.1,
+              ease: [0, 0.71, 0.2, 1.01],
             }}
-            sx={{
-              width: "100%",
-              bgcolor: "rgba(0, 0, 0, 0.5)",
-              borderRadius: "8px",
-              ":after": { border: "4px solid white" },
-              ...(error && { boxShadow: "0px 0px 0px 2px red" }),
-            }}
-          />
-
-          <TextField
-            id="outlined-basic"
-            label="Phone Number"
-            name="phoneNumber"
-            variant="filled"
-            onChange={handleChange}
-            error={Boolean(error)}
-            InputProps={{
-              style: {
-                color: "white",
-                fontSize: "1.2em",
-              },
-            }}
-            InputLabelProps={{
-              style: {
-                fontSize: "1.1em",
-                fontWeight: "500",
-                color: "rgba(245, 245, 220, 0.8)",
-              },
-            }}
-            sx={{
-              width: "100%",
-              bgcolor: "rgba(0, 0, 0, 0.5)",
-              borderRadius: "8px",
-              borderColor: "#e0e0e0",
-              ...(error && { boxShadow: "0px 0px 0px 2px red" }),
-            }}
-          />
+          >
+            <TextField
+              id="outlined-basic"
+              label="Phone Number"
+              name="phoneNumber"
+              variant="filled"
+              onChange={handleChange}
+              error={Boolean(error)}
+              InputProps={{
+                style: {
+                  color: "white",
+                  fontSize: "1.2em",
+                },
+              }}
+              InputLabelProps={{
+                style: {
+                  fontSize: "1.1em",
+                  fontWeight: "500",
+                  color: "rgba(245, 245, 220, 0.8)",
+                },
+              }}
+              sx={{
+                width: "100%",
+                bgcolor: "rgba(255, 255, 255, 0.2)",
+                borderRadius: "4px",
+                ":after": { border: "4px solid white" },
+                ...(error && { boxShadow: "0px 0px 0px 2px red" }),
+              }}
+            />
+          </motion.div>
         </div>
+        <p className="text-red-500">{error}</p>
 
+        {/* Rest of the code for text fields */}
         <Button
           variant="default"
-          className="bg-sky-600 dark:bg-sky-800 text-xl rounded-xl min-w-max max-2xl:w-8/12 tracking-widest"
+          className="fixed bottom-20 left-1/2 transform -translate-x-1/2 w-fit bg-sky-600 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"
           isLoading={loading}
+          onClick={submitForm}
         >
           Send SMS
         </Button>

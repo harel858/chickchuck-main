@@ -45,9 +45,12 @@ const SlotCalendar = ({
     });
   }, [weekDates, scheduleData, eventsByDate]);
 
-  const openingTime = dayjs(user.startActivity);
-  const closingTime = dayjs(user.endActivity);
+  const openingTime = dayjs(business.openingTime);
+  const closingTime = dayjs(business.closingTime);
   const totalSlots = closingTime.diff(openingTime, "minute") / 5;
+  console.log(dayjs(user.startActivity).format("HH:mm"));
+  console.log(dayjs(user.endActivity).format("HH:mm"));
+  console.log(totalSlots);
 
   const hours = React.useMemo(() => {
     return [...Array(totalSlots)].map((_, i) => {
@@ -57,7 +60,7 @@ const SlotCalendar = ({
       const row: {
         key: string | null;
         time: string | null;
-        [date: string]: string | AppointmentEvent | null;
+        [date: string]: string | AppointmentEvent | null | undefined;
       } = { key: time, time };
 
       const slotEvent = eventsByDate.find((event) => {
@@ -74,14 +77,14 @@ const SlotCalendar = ({
       }
 
       weekDates.forEach((date, index) => {
-        const slots = slotsByDay[index].filter(
+        const slots = slotsByDay[index]?.filter(
           (event) =>
             dayjs(event.start).format("HH:mm") === time &&
             event.date === dayjs(date).format("DD/MM/YYYY")
         );
 
         row[dayjs(date).format("DD/MM/YYYY")] =
-          slots.length > 0 ? slots[0].id : null;
+          slots?.length && slots?.length > 0 ? slots[0]?.id : null;
       });
 
       return row;
@@ -176,7 +179,7 @@ const SlotCalendar = ({
         },
         className: `text-center pt-0 m-0 ${
           isToday(date)
-            ? "bg-sky-50 dark:bg-black/50"
+            ? "bg-black/20 dark:bg-black/50"
             : "bg-sky-200/90 dark:bg-slate-700"
         }`,
         onHeaderCell: () => ({

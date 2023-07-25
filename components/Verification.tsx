@@ -1,6 +1,7 @@
 // Verification Component
 "use client";
 import React, { useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepButton from "@mui/material/StepButton";
@@ -83,7 +84,7 @@ export default function Verification({ userData }: { userData: UserData[] }) {
   };
 
   return (
-    <div className="w-1/2 max-md:w-full flex justify-center content-center items-center p-5 bg-slate-900 rounded-b-xl shadow-sm shadow-black border-x border-b border-gray-500">
+    <div className="w-1/3 max-md:w-full flex justify-center content-center items-center p-5 bg-slate-900 rounded-lg max-xl:rounded-t-none shadow-sm shadow-black border-x border-b border-gray-500">
       <div className="w-full">
         <Stepper sx={{ color: "white" }} activeStep={activeStep}>
           {steps.map((step, index) => (

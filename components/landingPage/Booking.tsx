@@ -1,5 +1,6 @@
 "use client";
 import Verification from "@components/Verification";
+import { Button } from "@ui/Button";
 import { useSession } from "next-auth/react";
 import React, { Suspense, useEffect, useState } from "react";
 import { UserData } from "../../types/types";

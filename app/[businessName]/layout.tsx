@@ -1,7 +1,8 @@
+import React, { ReactNode } from "react";
 import BackgroundImage from "@components/landingPage/BackgroundImage";
+import ProfileNav from "@ui/(navbar)/ProfileNav";
 import { getImage } from "@lib/aws/s3";
 import { prisma } from "@lib/prisma";
-import React, { ReactNode } from "react";
 import { LandingPageData } from "types/types";
 import { Lobster_Two } from "next/font/google";
 import { notFound } from "next/navigation";
@@ -24,7 +25,7 @@ async function getBusiness(params: string) {
   try {
     const business = await prisma.business.findUnique({
       where: { businessName: value },
-      include: { Images: true },
+      include: { Images: true, Address: true },
     });
     if (!business) return null;
     if (business?.Images) {
@@ -54,10 +55,14 @@ async function Layout({
   const business = await getBusiness(businessName);
   if (!business) return notFound();
   return (
-    <section className="flex flex-col justify-start items-center gap-0 ">
-      <BackgroundImage business={business} lobster={lobster.className} />
-      {children}
-    </section>
+    <>
+      {/*       <ProfileNav business={business} />
+       */}
+      <section className="h-screen flex flex-col justify-start items-center gap-8">
+        <BackgroundImage business={business} lobster={lobster.className} />
+        {children}
+      </section>
+    </>
   );
 }
 

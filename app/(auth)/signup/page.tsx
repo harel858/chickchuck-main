@@ -9,6 +9,7 @@ import { TextField } from "@mui/material";
 type registerFormData = {
   name: string;
   email: string;
+  phone: string;
   password: string;
   repeatPassword: string;
   businessName: string;
@@ -19,6 +20,7 @@ function SignUpForm() {
   const [formData, setFormData] = useState<registerFormData>({
     name: "",
     email: "",
+    phone: "",
     password: "",
     repeatPassword: "",
     businessName: "",
@@ -47,6 +49,10 @@ function SignUpForm() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (formData.password !== formData.repeatPassword) {
+      setIsLoading(false);
+      setError("The passwords do not match");
+    }
 
     // Use formData for API call
     try {
@@ -55,19 +61,26 @@ function SignUpForm() {
         ...formData,
         email: formData.email.toLowerCase(),
       });
-      const user = res.data as User;
+      if (!res.data.email || !res.data.name) {
+        setIsLoading(false);
+        return setError("The passwords do not match");
+      }
+      const user = res.data;
 
-      signIn("User Login", {
-        email: user.email,
+      const re = signIn("User Login", {
+        email: formData.email,
         password: formData.password,
         redirect: true,
         callbackUrl: `/profile`,
       });
+      console.log(re);
+
       setIsLoading(false);
       // reset formData
-      setFormData({
+      return setFormData({
         name: "",
         email: "",
+        phone: "",
         password: "",
         repeatPassword: "",
         businessName: "",
@@ -91,6 +104,7 @@ function SignUpForm() {
     const data: any = [
       "name",
       "email",
+      "phone",
       "password",
       "repeatPassword",
       "businessName",
@@ -143,7 +157,7 @@ function SignUpForm() {
 
   return (
     <form
-      className="flex flex-col items-center gap-3 w-5/12 py-4 rounded-lg dark:bg-white/50 bg-gray-600"
+      className="flex flex-col items-center gap-3 w-1/3 py-4 rounded-lg bg-white/20"
       onSubmit={handleSubmit}
     >
       <div className="flex flex-row flex-wrap items-center justify-center content-center gap-4">

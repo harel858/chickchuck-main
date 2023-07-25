@@ -22,6 +22,19 @@ export type AllUsers = {
 
 export type AppointmentEvent = {
   id: string;
+  userId: string;
+  recipient: {
+    name: string;
+    email: string;
+    phone: string | null;
+    startActivity: string;
+    endActivity: string;
+    activityDays: number[];
+    UserRole: UserRole;
+    isAdmin: boolean;
+    PremiumKit: PremiumKits;
+    businessId: string | null;
+  };
   start: string;
   end: string;
   date: string;
@@ -38,12 +51,14 @@ export type ScheduleData = {
 
 export type ScheduleProps = {
   scheduleData: ScheduleData[];
-  user: User;
+  user: User & {
+    Business: Business | null;
+  };
   business: {
     openingTime: string;
     closingTime: string;
     activityDays: number[];
-    address: Address;
+    address: Address | undefined;
   };
 };
 
@@ -149,7 +164,7 @@ export interface BusinessProps {
   openingTime: string;
   closingTime: string;
   activityDays: number[];
-  address: Address;
+  address: Address | undefined;
 }
 
 export interface Inovice {
@@ -179,6 +194,7 @@ export interface InoviceItems {
 export interface CreateUser {
   name: string;
   email: string;
+  phone: string;
   password: string;
   businessName: string;
 }
@@ -189,10 +205,12 @@ export interface LandingPageData {
     profileImage: string;
   } | null;
   businessName: string;
+  phone: string;
   openingTime: string | null;
   closingTime: string | null;
   businessImage: string | null;
   activityDays: number[];
+  Address: Address[];
 }
 
 type StepThreeProps = {

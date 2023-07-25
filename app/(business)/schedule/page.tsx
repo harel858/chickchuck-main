@@ -3,7 +3,11 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { notFound } from "next/navigation";
 import { prisma } from "@lib/prisma";
-import { ScheduleData, ScheduleProps } from "../../../types/types";
+import {
+  AppointmentEvent,
+  ScheduleData,
+  ScheduleProps,
+} from "../../../types/types";
 import { getServerSession } from "next-auth";
 import CalendarComponent from "@ui/(calendar)/Calendar";
 import {
@@ -42,18 +46,35 @@ const fetchEvents = async (id: string | null | undefined) => {
 
     if (user && appointmentSlots) {
       for (let i = 0; i < appointmentSlots.length; i++) {
-        const slotEnd = dayjs(appointmentSlots[i].date, "DD/MM/YYYY")
-          .hour(parseInt(appointmentSlots[i].end.split(":")[0]))
-          .minute(parseInt(appointmentSlots[i].end.split(":")[1]));
+        const slotDate = appointmentSlots[i]?.date;
+        const slotEnd = appointmentSlots[i]?.end;
 
+        // Check if slotDate and slotEnd are valid string values
         if (
-          now.isAfter(slotEnd) &&
-          appointmentSlots[i].appointments[0].status === "SCHEDULED"
+          slotDate !== undefined &&
+          typeof slotEnd === "string" &&
+          slotEnd.includes(":")
         ) {
-          await prisma.appointment.update({
-            where: { appointmentSlotId: appointmentSlots[i].id },
-            data: { status: "COMPLETED" },
-          });
+          const slotEndParts = slotEnd.split(":");
+          const slotEndHour = slotEndParts[0] && parseInt(slotEndParts[0]);
+          const slotEndMinute = slotEndParts[1] && parseInt(slotEndParts[1]);
+
+          const slotEndTime =
+            slotEndHour &&
+            slotEndMinute &&
+            dayjs(slotDate, "DD/MM/YYYY")
+              .hour(slotEndHour)
+              .minute(slotEndMinute);
+
+          if (
+            now.isAfter(slotEndTime) &&
+            appointmentSlots[i]?.appointments[0]?.status === "SCHEDULED"
+          ) {
+            await prisma.appointment.update({
+              where: { appointmentSlotId: appointmentSlots[i]?.id },
+              data: { status: "COMPLETED" },
+            });
+          }
         }
       }
     }
@@ -76,20 +97,28 @@ const fetchEvents = async (id: string | null | undefined) => {
 
       appointments.push(...result);
     }
-
     //return the events of the user
     const events = appointments.map((appointment) => {
-      const start = dayjs(appointment.appointmentSlot.date, "DD/MM/YYYY")
-        .hour(parseInt(appointment.appointmentSlot.start.split(":")[0]))
-        .minute(parseInt(appointment.appointmentSlot.start.split(":")[1]))
+      const { User } = appointment;
+      const { id, password, ...rest } = User;
+      const slotStart = appointment.appointmentSlot.start;
+      const slotEnd = appointment.appointmentSlot.end;
+      const slotDate = appointment.appointmentSlot.date;
+      const startHour = slotStart.split(":")[0];
+      const startMinute = slotStart.split(":")[1];
+      const endHour = slotEnd.split(":")[0];
+      const endMinute = slotEnd.split(":")[1];
+
+      // Check if slotStart, slotEnd, and slotDate are valid string values
+      const start = dayjs(slotDate, "DD/MM/YYYY")
+        .hour(parseInt(startHour!))
+        .minute(parseInt(startMinute!))
         .toISOString();
-      const end = dayjs(appointment.appointmentSlot.date, "DD/MM/YYYY")
-        .hour(parseInt(appointment.appointmentSlot.end.split(":")[0]))
-        .minute(parseInt(appointment.appointmentSlot.end.split(":")[1]))
+      const end = dayjs(slotDate, "DD/MM/YYYY")
+        .hour(parseInt(endHour!))
+        .minute(parseInt(endMinute!))
         .toISOString();
-      const date = dayjs(appointment.appointmentSlot.date, "DD/MM/YYYY").format(
-        "DD/MM/YYYY"
-      );
+      const date = dayjs(slotDate, "DD/MM/YYYY").format("DD/MM/YYYY");
 
       const color =
         appointment.status === "SCHEDULED"
@@ -99,8 +128,9 @@ const fetchEvents = async (id: string | null | undefined) => {
           : "bg-yellow-500";
 
       return {
-        userId: appointment.User.id,
         id: appointment.id,
+        userId: User.id,
+        recipient: rest,
         start,
         end,
         date,
@@ -111,11 +141,11 @@ const fetchEvents = async (id: string | null | undefined) => {
         color, // set a default color for all events
       };
     });
-
+    // Cast the result to AppointmentEvent[];
     const scheduleData: ScheduleData[] = business.user.map((user) => {
       return {
         user: { ...user, profileSrc: null },
-        events: events.filter((event) => user.id == event.userId),
+        events: events.filter((event) => event && user.id === event.userId), // Filter events for the specific user
       };
     });
 
@@ -128,7 +158,7 @@ const fetchEvents = async (id: string | null | undefined) => {
         activityDays: business.activityDays,
         address: business.Address[0],
       },
-    } as ScheduleProps;
+    };
   } catch (err) {
     console.log(err);
   }

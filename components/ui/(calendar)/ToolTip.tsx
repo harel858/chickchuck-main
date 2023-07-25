@@ -16,7 +16,7 @@ const ToolTip = forwardRef<
       openingTime: string;
       closingTime: string;
       activityDays: number[];
-      address: Address;
+      address: Address | undefined;
     };
   }
 >(({ event, business }, ref) => {
@@ -31,13 +31,13 @@ const ToolTip = forwardRef<
         className={`flex justify-around gap-5 ${event.color} bg-opacity-60 text-black rounded-t-2xl w-full px-5 relative top-0 py-3`}
       >
         <p className="font-normal text-lg w-max">{event.customer.name}</p>
-        <p className="font-normal  text-lg w-max">
+        <p className="font-normal text-lg w-max">
           {start} - {end}
         </p>
       </div>
       <div className="w-full flex flex-col gap-3 text-black">
         <div className="flex flex-col justify-center items-start p-3 px-5 gap-4 w-max">
-          <div className="flex gap-6 justify-start items-center  w-max ">
+          <div className="flex gap-6 justify-start items-center w-max ">
             <p className="font-semibold text-xl">
               Status:
               <span className="font-light text-lg"> {event.status}</span>
@@ -53,6 +53,10 @@ const ToolTip = forwardRef<
               </motion.button>
             )}
           </div>
+          <p className="font-semibold text-xl">
+            Recipient:
+            <span className="font-light text-lg"> {event.recipient.name}</span>
+          </p>
           <p className="font-semibold text-xl">
             Type of Service:
             <span className="font-light text-lg"> {event.treatment.title}</span>

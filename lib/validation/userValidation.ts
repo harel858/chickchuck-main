@@ -3,6 +3,7 @@ import joi from "joi";
 const schema = joi.object({
   name: joi.string().max(20).required(),
   email: joi.string().email().required(),
+  phone: joi.string().min(10),
   password: joi
     .string()
     .min(8) // Minimum password length of 8 characters

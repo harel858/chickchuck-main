@@ -18,11 +18,16 @@ export const fetchAppointmentSlots = async (businessName: string) => {
         },
         orderBy: [{ start: "asc" }],
       });
+      const name = business.user[i]?.name;
+      const treatments = business.user[i]?.Treatment;
+      const userId = business.user[i]?.id;
+      if (!name || !treatments || !userId) return;
+
       UsersData.push({
-        name: business.user[i].name,
+        name,
         AvailableSlot: result,
-        treatments: business.user[i].Treatment,
-        userId: business.user[i].id,
+        treatments,
+        userId,
       });
     }
 

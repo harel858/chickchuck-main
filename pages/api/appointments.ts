@@ -40,7 +40,7 @@ export default async function handler(
       });
 
       if (error) {
-        const validationError = error?.details[0].message;
+        const validationError = error?.details[0]?.message;
         console.log(validationError);
         return res.status(400).json(validationError);
       }

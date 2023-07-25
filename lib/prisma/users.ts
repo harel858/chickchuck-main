@@ -1,6 +1,9 @@
 import bcrypt from "bcrypt";
+import dayjs from "dayjs";
 import { CreateUser } from "types/types";
 import { prisma } from ".";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 
 export async function getAllUsers() {
   const users = await prisma?.user.findMany({});
@@ -10,14 +13,22 @@ export async function getAllUsers() {
 export async function createUser({
   name,
   email,
+  phone,
   password,
   businessName,
 }: CreateUser) {
+  const openingTime = dayjs().set("hour", 9).set("minute", 0).set("second", 0);
+  const closingTime = dayjs().set("hour", 17).set("minute", 0).set("second", 0);
+
   try {
     const newUser = await prisma?.user.create({
       data: {
         name,
         email: email.toLocaleLowerCase(),
+        phone,
+        startActivity: openingTime.toISOString(),
+        endActivity: closingTime.toISOString(),
+        activityDays: [0, 1, 2, 3, 4, 5],
         password,
         isAdmin: true,
       },
@@ -27,11 +38,15 @@ export async function createUser({
       data: {
         businessName,
         activityDays: [0, 1, 2, 3, 4, 5],
+        phone,
+        openingTime: openingTime.toISOString(),
+        closingTime: closingTime.toISOString(),
         user: { connect: { id: newUser.id } },
       },
     });
 
-    return newUser.id;
+    if (newBusiness && newUser) return newUser.id;
+    return null;
   } catch (err) {
     console.log(err);
     return null;
@@ -63,6 +78,32 @@ export async function getIdByEmail(email: string) {
 }
 
 export async function updateActivityTime(
+  id: string,
+  startActivity: string,
+  endActivity: string
+) {
+  try {
+    const updated = await prisma.business.update({
+      where: {
+        id,
+      },
+      data: {
+        openingTime: startActivity,
+        closingTime: endActivity,
+      },
+    });
+    const response = await prisma.business.findUnique({
+      where: { id },
+      select: { user: true },
+    });
+    return { response };
+  } catch (error) {
+    console.log(error);
+    return { error };
+  }
+}
+
+export async function updateUserActivityTime(
   id: string,
   startActivity: string,
   endActivity: string
@@ -105,6 +146,27 @@ export async function updateActivityDays(id: string, activityDays: number[]) {
   }
 }
 
+export async function updateUserActivityDays(
+  id: string,
+  activityDays: number[]
+) {
+  try {
+    const updateDaysSuccess = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        activityDays,
+      },
+    });
+
+    return { updateDaysSuccess };
+  } catch (updateDaysFailed) {
+    console.log(updateDaysFailed);
+    return { updateDaysFailed };
+  }
+}
+
 export async function getByBusinessName(businessName: any) {
   try {
     const userExist = await prisma?.business.findUnique({
@@ -125,6 +187,21 @@ export async function getById(id: any) {
     return { userExist };
   } catch (err) {
     return { err };
+  }
+}
+
+export async function getAdminById(id: any) {
+  try {
+    const userExist = await prisma?.user.findUnique({
+      where: { id },
+      include: { Business: true },
+    });
+    if (userExist?.isAdmin) return userExist;
+    return null;
+  } catch (err) {
+    console.log(err);
+
+    return null;
   }
 }
 
@@ -164,5 +241,6 @@ const userOperations = {
   getByBusinessName,
   getById,
   signIn,
+  getAdminById,
 };
 export default userOperations;

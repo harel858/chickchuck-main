@@ -22,7 +22,7 @@ function AppointmentList({
     openingTime: string;
     closingTime: string;
     activityDays: number[];
-    address: Address;
+    address: Address | undefined;
   };
 }) {
   const noAppointmens = eventsByDate.length === 0;

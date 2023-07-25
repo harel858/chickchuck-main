@@ -7,6 +7,7 @@ import {
   getQueuesByMonth,
 } from "@lib/prisma/ActivitySlots";
 import {
+  getAdminById,
   getById,
   updateActivityDays,
   updateActivityTime,
@@ -34,9 +35,8 @@ export default async function handler(
         endActivity,
       } = req.body as SlotBody;
 
-      const { userExist, err } = await getById(userId);
-      if (err || !userExist?.Business)
-        return res.status(500).json(`user not found`);
+      const userExist = await getAdminById(userId);
+      if (!userExist?.Business) return res.status(500).json(`user not found`);
       const { Business } = userExist;
 
       const activityDaysChanged =
@@ -50,17 +50,17 @@ export default async function handler(
         if (updateDaysFailed || !updateDaysSuccess)
           return res.status(500).json(`update Days Failed`);
       }
-
-      const { availableSlot, slotFailed } = await createAvailableSlots(
+      /* 
+      const { createdSlots, slotFailed } = await createAvailableSlots(
         availableSlots,
         userId,
         Business.id
       );
-      if (slotFailed || !availableSlot)
-        return res.status(500).json(`Create Available Slots Failed`);
+      if (slotFailed || !createdSlots)
+        return res.status(500).json(`Create Available Slots Failed`); */
 
       const { response, error } = await updateActivityTime(
-        userId,
+        Business.id,
         startActivity,
         endActivity
       );
@@ -83,13 +83,12 @@ export default async function handler(
 
       const { userExist, err } = await getById(userId);
       if (!userExist || err) return res.status(400).json("no existing user");
-      const { availableSlots, availableSlotsErr } = await getQueuesByMonth(
+      const { availableSlots, error } = await getQueuesByMonth(
         userId,
         date,
-        JSON.parse(duration)
+        parseInt(duration)
       );
-      if (availableSlotsErr || !availableSlots)
-        return res.status(500).json(err);
+      if (error || !availableSlots) return res.status(500).json(err);
 
       return res.status(200).json(availableSlots);
     } catch (err) {

@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { prisma } from "..";
 
 interface Employee {
@@ -10,11 +11,17 @@ interface Employee {
 }
 
 export async function createEmployee(data: Employee) {
+  const openingTime = dayjs().set("hour", 9).set("minute", 0).set("second", 0);
+  const closingTime = dayjs().set("hour", 17).set("minute", 0).set("second", 0);
+
   try {
     const employee = await prisma.user.create({
       data: {
         name: data.name,
         email: data.email,
+        startActivity: openingTime.toISOString(),
+        endActivity: closingTime.toISOString(),
+        activityDays: [0, 1, 2, 3, 4, 5],
         password: data.password,
         isAdmin: false,
         Business: {

@@ -34,8 +34,10 @@ export default async function handler(
   }
 
   if (req.method == "DELETE") {
-    const { id } = req.body;
-    if (!id) return res.status(500).json("no id ");
+    const { id } = req.query;
+    console.log("id", id);
+
+    if (!id || Array.isArray(id)) return res.status(500).json("no id");
     const { deleteSuccess, err } = await deleteById(id);
     if (!deleteSuccess || err)
       return res.status(500).json(`something went wrong`);
