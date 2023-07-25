@@ -10,6 +10,7 @@ async function signUp(
     createUser: ({
       name,
       email,
+      phone,
       password,
       businessName,
     }: CreateUser) => Promise<string | null>;
@@ -18,16 +19,19 @@ async function signUp(
 ) {
   if (req.method == "POST") {
     try {
-      const { name, email, password, businessName } = req.body;
+      const { name, email, phone, password, businessName } = req.body;
+      console.log(req.body);
+
       //validate user
       const { error } = validateUser({
         name,
         email,
+        phone,
         password,
         businessName,
       });
       if (error) {
-        const err = error.details[0].message;
+        const err = error.details[0]?.message;
         console.log({ err });
         return res.status(400).json(err);
       }
@@ -47,13 +51,14 @@ async function signUp(
       const newUserId = await database.createUser({
         name,
         email,
+        phone,
         password: hashedPassword,
         businessName,
       });
 
       if (!newUserId) return res.status(500).json("user faild creation");
 
-      return res.status(201);
+      return res.status(201).json({ name, email });
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
