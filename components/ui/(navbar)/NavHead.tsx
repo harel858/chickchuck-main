@@ -24,7 +24,7 @@ function NavHead({
       <h1
         className={` ${lobster.className}  dark:text-white text-white text-4xl w-max`}
       >
-        Queue.
+        QueueBook.
       </h1>
       <ProfileImage enable={false} user={user} />
       <h3

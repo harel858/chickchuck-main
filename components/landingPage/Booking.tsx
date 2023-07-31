@@ -4,7 +4,7 @@ import { Button } from "@ui/Button";
 import { useSession } from "next-auth/react";
 import React, { Suspense, useEffect, useState } from "react";
 import { UserData } from "../../types/types";
-import StepThree from "./StepThree";
+import Steps from "./finals/Steps";
 
 function Booking({ userData }: { userData: UserData[] }) {
   const [loading, setLoading] = useState(true);
@@ -28,7 +28,7 @@ function Booking({ userData }: { userData: UserData[] }) {
         <Verification userData={userData} />
       ) : (
         <Suspense fallback={<>loading...</>}>
-          <StepThree userData={userData} />
+          <Steps userData={userData} />
         </Suspense>
       )}
     </div>

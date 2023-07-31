@@ -2,6 +2,7 @@ import React from "react";
 import { Zoom } from "react-awesome-reveal";
 import { Treatment } from "@prisma/client";
 import { AppointmentInput } from "types/types";
+import { Select } from "antd";
 
 function ForWhat({
   appointmentInput,
@@ -17,10 +18,11 @@ function ForWhat({
     "appointmentInput.user?.treatments",
     appointmentInput.user?.treatments
   );
+  console.log(appointmentInput);
 
   return (
     <Zoom duration={350} damping={10000}>
-      <div className="py-12 gap-2 flex flex-wrap align-center items-center">
+      {/*  <div className="py-12 gap-2 flex flex-wrap align-center items-center">
         {appointmentInput.user?.treatments.map((item) => {
           console.log(appointmentInput.treatment?.id == item?.id);
           return (
@@ -38,7 +40,19 @@ function ForWhat({
             </button>
           );
         })}
-      </div>
+      </div> */}
+      <Select
+        defaultValue="lucy"
+        style={{ width: 120 }}
+        onChange={(val, opt) => {
+          if (Array.isArray(opt)) return;
+          changeTreatments(opt.option);
+        }}
+        options={appointmentInput.user?.treatments.map((item) => ({
+          value: item.title,
+          option: item,
+        }))}
+      />
     </Zoom>
   );
 }

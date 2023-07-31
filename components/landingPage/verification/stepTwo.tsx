@@ -72,7 +72,7 @@ const StepTwo = React.memo(
             onChange={handleChange}
             InputProps={{
               style: {
-                color: "white",
+                color: "black",
                 fontSize: "1.2em",
               },
             }}
@@ -80,12 +80,12 @@ const StepTwo = React.memo(
               style: {
                 fontSize: "1.1em",
                 fontWeight: "500",
-                color: "rgba(245, 245, 220, 0.8)",
+                color: "rgb(15 23 42 / 0.8)",
               },
             }}
             sx={{
               width: "100%",
-              bgcolor: "rgba(0, 0, 0, 0.5)",
+              bgcolor: "rgba(0, 0, 0, 0.01)",
               borderRadius: "8px",
               borderColor: "#e0e0e0",
               ...(error && { boxShadow: "0px 0px 0px 2px red" }),

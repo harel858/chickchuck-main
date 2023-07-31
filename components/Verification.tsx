@@ -46,7 +46,7 @@ export default function Verification({ userData }: { userData: UserData[] }) {
   const steps = useMemo(
     () => [
       {
-        label: <h4 className="text-white">Enter Your details</h4>,
+        label: <h4 className="text-slate-900">Enter Your details</h4>,
         content: (
           <StepOne
             input={input}
@@ -57,7 +57,7 @@ export default function Verification({ userData }: { userData: UserData[] }) {
         ),
       },
       {
-        label: <h4 className="text-white">Verify code</h4>,
+        label: <h4 className="text-black">Verify code</h4>,
         content: (
           <StepTwo
             handleChange={handleChange}
@@ -84,9 +84,9 @@ export default function Verification({ userData }: { userData: UserData[] }) {
   };
 
   return (
-    <div className="w-1/3 max-md:w-full flex justify-center content-center items-center p-5 bg-slate-900 rounded-lg max-xl:rounded-t-none shadow-sm shadow-black border-x border-b border-gray-500">
+    <div className="w-1/2 max-md:w-full flex justify-center content-center items-center p-5 bg-slate-100 rounded-xl max-xl:rounded-t-none shadow-sm shadow-black border-x border-b border-gray-500">
       <div className="w-full">
-        <Stepper sx={{ color: "white" }} activeStep={activeStep}>
+        <Stepper sx={{ color: "black" }} activeStep={activeStep}>
           {steps.map((step, index) => (
             <Step key={index} completed={completed[index]}>
               <StepButton color="inherit" onClick={handleStep(index)}>

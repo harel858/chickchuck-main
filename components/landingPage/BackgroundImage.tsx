@@ -15,6 +15,9 @@ function BackgroundImage({
   lobster: string;
 }) {
   const profileImage = business.Images?.profileImage;
+  console.log(
+    `https://waze.com/ul?q=${business?.Address[0]?.street} ${business?.Address[0]?.city}`
+  );
 
   const backgroundImageUrl =
     business.Images?.backgroundImage ||
@@ -29,29 +32,37 @@ function BackgroundImage({
       }}
     >
       <div className="flex flex-row gap-3 justify-start items-center absolute bottom-3 left-3">
-        <Button
-          variant={"default"}
-          className="flex justify-center items-center gap-2 bg-slate-100 z-40 text-black hover:text-white"
+        <a href={`tel:${business.phone}`}>
+          <Button
+            variant={"default"}
+            className="flex justify-center items-center gap-2 bg-slate-100 z-40 text-black hover:text-white"
+          >
+            <span className="max-xl:hidden ">{business.phone}</span>
+            <span className="text-xl">
+              <BsFillTelephoneForwardFill />
+            </span>
+          </Button>
+        </a>
+        <a
+          href={`https://waze.com/ul?q=${business?.Address[0]?.street} ${business?.Address[0]?.city}`}
         >
-          <span className="max-xl:hidden ">{business.phone}</span>
-          <span className="text-xl">
-            <BsFillTelephoneForwardFill />
-          </span>
-        </Button>
-        <Button
-          variant={"default"}
-          className="flex justify-center items-center gap-2 bg-slate-100 z-40 text-black hover:text-white"
-        >
-          <span className="max-xl:hidden">
-            {business.Address[0]?.street || null}
-          </span>
-          <span className="text-2xl">
-            <FaWaze />
-          </span>
-        </Button>
+          <Button
+            variant={"default"}
+            className="flex justify-center items-center gap-2 bg-slate-100 z-40 text-black hover:text-white"
+          >
+            <span className="max-xl:hidden">
+              {business.Address[0]
+                ? `${business.Address[0].street}, ${business.Address[0].city}`
+                : null}
+            </span>
+            <span className="text-2xl">
+              <FaWaze />
+            </span>
+          </Button>
+        </a>
       </div>
       <div className="flex flex-col justify-center items-center absolute top-5 max-xl:top-1 max-xl:right-1 left-0 right-0 w-full">
-        <h1 className={`text-white text-3xl  ${lobster}`}>Queue.</h1>
+        <h1 className={`text-white text-3xl  ${lobster}`}>QueueBook.</h1>
         <LargeHeading size={"default"} className="text-white">
           {business.businessName}
         </LargeHeading>

@@ -10,7 +10,7 @@ function UniqueLink({ link }: { link: string }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center self-center gap-14 max-2xl:w-11/12">
+    <div className="flex flex-col items-center justify-start self-center gap-6 max-2xl:w-11/12">
       <div className="flex items-center justify-center gap-2 bg-slate-900 text-white/90 shadow-sm shadow-black dark:bg-slate-300 max-2xl:w-fit rounded-xl p-2 border-2 border-gray-500">
         <Tooltip title="Copy Link">
           <button onClick={copyToClipboard}>

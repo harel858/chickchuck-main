@@ -41,7 +41,7 @@ function BusinessAddress({ user }: { user: ProfilePageData }) {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-end max-2xl:w-11/12 w-64 dark:bg-orange-400/70 bg-slate-900 shadow-sm shadow-black p-5 rounded-xl gap-10 transition-all duration-300 ease-in-out border border-gray-500">
+    <div className="relative flex flex-col items-center justify-end max-2xl:w-11/12 dark:bg-orange-400/70 bg-slate-900 shadow-sm shadow-black p-5 rounded-xl gap-10 transition-all duration-300 ease-in-out border border-gray-500">
       <div className="text-white/90 flex justify-center items-end gap-3">
         <h2 className=" text-2xl font-semibold text-center w-max">
           Business Address
@@ -51,7 +51,7 @@ function BusinessAddress({ user }: { user: ProfilePageData }) {
       {initialRendering ? (
         <Skeleton active />
       ) : (
-        <div className="flex flex-col justify-center items-center gap-5">
+        <div className="flex flex-row justify-center items-center gap-5">
           <Input
             id="filled-basic"
             placeholder={`City`}
@@ -73,19 +73,19 @@ function BusinessAddress({ user }: { user: ProfilePageData }) {
             name="zipcode"
             onChange={handleChange}
           />
-          <div className="flex flex-col justify-center items-center gap-1">
-            <p className="font-serif text-red-500">{error}</p>
-            <Button
-              variant={"destructive"}
-              disabled={!hasChanges}
-              onClick={handleButtonClick}
-              isLoading={loading}
-            >
-              Save Changes
-            </Button>
-          </div>
         </div>
       )}
+      <div className="flex flex-col justify-center items-center gap-1">
+        <p className="font-serif text-red-500">{error}</p>
+        <Button
+          variant={"destructive"}
+          disabled={!hasChanges}
+          onClick={handleButtonClick}
+          isLoading={loading}
+        >
+          Save Changes
+        </Button>
+      </div>
     </div>
   );
 }

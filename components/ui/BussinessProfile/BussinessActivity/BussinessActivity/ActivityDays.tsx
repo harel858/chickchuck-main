@@ -69,7 +69,6 @@ const ActivityDays = ({
           width: "100%",
           display: "flex",
           justifyContent: "center",
-          gap: "1em",
           alignItems: "center",
           overflowY: "hidden", // Hide the scrollbar
         }}

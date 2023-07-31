@@ -3,8 +3,14 @@ import { Spin } from "antd";
 import axios from "axios";
 import dayjs, { Dayjs } from "dayjs";
 import { useCallback, useEffect, useState } from "react";
-import { Zoom } from "react-awesome-reveal";
+import { motion } from "framer-motion";
 import { AppointmentInput, UserData } from "../../types/types";
+const scaleSpringTransition = {
+  type: "spring",
+  stiffness: 750,
+  damping: 10,
+  duration: 0.3,
+};
 
 export default function AvailableQueues({
   date,
@@ -93,7 +99,7 @@ export default function AvailableQueues({
         let res = await axios.get(
           `/api/slots/slot?chosenDate=${date}&userId=${appointmentInput?.user?.userId}&duration=${appointmentInput?.treatment?.duration}`
         );
-        console.log(res);
+        console.log(res.data);
 
         setAllQueues(res.data);
       } catch (err) {
@@ -120,7 +126,7 @@ export default function AvailableQueues({
 
   return (
     <>
-      <div className="gap-2 flex justify-start align-center items-center flex-wrap align-center">
+      <div className="h-40 overflow-x-hidden overflow-y-auto gap-2 flex justify-center align-center items-center flex-wrap align-center">
         {loading ? (
           <Spin className="self-center" />
         ) : (
@@ -159,18 +165,24 @@ function Queue({
   handleChange: (availableSlot: AvailableSlot[]) => void;
 }) {
   return (
-    <Zoom key={item[i]?.id} damping={1000} duration={350} delay={i * 100}>
+    <motion.div
+      className="flex justify-center items-center content-center gap-5 max-md:items-start max-md:justify-start max-md:w-11/12 max-md:flex-wrap"
+      transition={{ ...scaleSpringTransition, delay: 0.01 * i }}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+    >
       <button
         key={item[i]?.id}
         onClick={() => handleChange(item)}
-        className={` px-4 py-2  border-2 transition-all border-black ease-in-out duration-300 hover:bg-orange-500 font-medium ${
+        className={`px-4 py-2 border-2 transition-all border-black ease-in-out duration-300 hover:bg-orange-500 font-medium ${
           appointmentInput?.availableSlot[0]?.id == item[0]?.id
-            ? `bg-orange-500 `
-            : `bg-rose-100 `
+            ? `bg-orange-500`
+            : `bg-rose-100`
         } text-black rounded-2xl`}
       >
         {item[0]?.start} - {item[item.length - 1]?.end}
       </button>
-    </Zoom>
+    </motion.div>
   );
 }

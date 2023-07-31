@@ -4,8 +4,8 @@ import ProfileNav from "@ui/(navbar)/ProfileNav";
 import { getImage } from "@lib/aws/s3";
 import { prisma } from "@lib/prisma";
 import { LandingPageData } from "types/types";
-import { Lobster_Two } from "next/font/google";
 import { notFound } from "next/navigation";
+import { Lobster_Two } from "next/font/google";
 const lobster = Lobster_Two({ weight: ["400"], subsets: ["latin"] });
 
 type LandingPageProps = {
@@ -56,9 +56,8 @@ async function Layout({
   if (!business) return notFound();
   return (
     <>
-      {/*       <ProfileNav business={business} />
-       */}
-      <section className="h-screen flex flex-col justify-start items-center gap-8">
+      <ProfileNav business={business} />
+      <section className="h-screen flex flex-col justify-start items-center gap-8 mt-20">
         <BackgroundImage business={business} lobster={lobster.className} />
         {children}
       </section>

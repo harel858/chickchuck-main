@@ -74,11 +74,11 @@ function Images({
         boxShadow: "inset 0px 22vh 30px rgba(0, 0, 0, 0.4)",
       }}
     >
-      <div className="flex flex-col justify-center items-center gap-2 absolute top-10 left-0 right-0 w-full">
+      <div className="flex flex-col justify-center items-center absolute top-5 max-xl:top-1 max-xl:right-1 left-0 right-0 w-full">
         <h1
           className={`${lobster?.className} text-white text-4xl shadow-2xl shadow-black`}
         >
-          Queue.
+          QueueBook.
         </h1>
         <LargeHeading size={"default"} className="text-white">
           Bussiness Profile

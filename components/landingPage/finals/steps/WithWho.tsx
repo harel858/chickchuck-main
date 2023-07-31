@@ -1,3 +1,4 @@
+import { Select } from "antd";
 import React from "react";
 import { Zoom } from "react-awesome-reveal";
 
@@ -18,7 +19,7 @@ function WithWho({
 
   return (
     <Zoom duration={350} damping={10000}>
-      <div className="py-12 gap-2 flex flex-wrap align-center items-center">
+      {/*   <div className="py-12 gap-2 flex flex-wrap align-center items-center">
         {userData.map((item) => (
           <button
             key={item.userId}
@@ -32,7 +33,19 @@ function WithWho({
             {item.name}
           </button>
         ))}
-      </div>
+      </div> */}
+      <Select
+        defaultValue="lucy"
+        style={{ width: 120 }}
+        onChange={(val, opt) => {
+          if (Array.isArray(opt)) return;
+          changeRecipient(opt.option);
+        }}
+        options={userData.map((item) => ({
+          value: item.name,
+          option: item,
+        }))}
+      />
     </Zoom>
   );
 }

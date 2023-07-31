@@ -6,6 +6,10 @@ import { buttonVariants } from "@ui/Button";
 import Link from "next/link";
 import SignOutBtn from "@ui/SignOutBtn";
 import { useSession } from "next-auth/react";
+import { BsPersonCircle } from "react-icons/bs";
+import PlusButton from "./specialOperations/PlusButton";
+import Notification from "./specialOperations/Notification";
+
 const Hamburger = lazy(() => import("./(responsiveNav)/Hamburger"));
 
 function Navbar() {
@@ -13,7 +17,7 @@ function Navbar() {
 
   return (
     <nav className="fixed backdrop-blur-sm bg-sky-500 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-gray-900 dark:border-slate-800 shadow-sm flex items-center justify-between">
-      <div className="container max-w-7xl mx-auto w-full flex justify-end items-center">
+      <div className="w-full px-5 flex justify-end items-center gap-5">
         {session?.data?.user.UserRole === "RECIPIENT" && (
           <Suspense
             fallback={
@@ -25,27 +29,19 @@ function Navbar() {
             <Hamburger user={session.data.user} />
           </Suspense>
         )}
-        {session?.data?.user.UserRole !== "RECIPIENT" && (
-          <Link href="/" className={buttonVariants({ variant: "link" })}>
-            Queue
+        <PlusButton />
+        <Notification />
+        <ThemeToggle />
+        {session?.data?.user.UserRole === "RECIPIENT" && (
+          <Link
+            className={`${buttonVariants({
+              variant: "ghost",
+            })} flex flex-row-reverse justify-center gap-2 items-center text-base hover:bg-slate-100`}
+            href="/signin"
+          >
+            Sign Out <BsPersonCircle className="text-3xl" />
           </Link>
         )}
-
-        <div className="md:hidden">
-          <ThemeToggle />
-        </div>
-
-        <div className="hidden md:flex gap-4">
-          <ThemeToggle />
-          {session?.data?.user.UserRole === "RECIPIENT" && (
-            <Link
-              className={buttonVariants({ variant: "default" })}
-              href="/signin"
-            >
-              Sign In
-            </Link>
-          )}
-        </div>
       </div>
     </nav>
   );

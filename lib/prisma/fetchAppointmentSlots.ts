@@ -30,6 +30,7 @@ export const fetchAppointmentSlots = async (businessName: string) => {
         userId,
       });
     }
+    console.log("UsersData", UsersData);
 
     return UsersData;
   } catch (err) {

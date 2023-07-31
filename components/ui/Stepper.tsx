@@ -5,7 +5,7 @@ import Step from "@mui/material/Step";
 import StepButton from "@mui/material/StepButton";
 import Typography from "@mui/material/Typography";
 import Loading from "../../app/[businessName]/loading";
-import StepThree from "../landingPage/StepThree";
+import StepThree from "../landingPage/finals/Steps";
 import { UserData } from "../../types/types";
 import { useSession } from "next-auth/react";
 

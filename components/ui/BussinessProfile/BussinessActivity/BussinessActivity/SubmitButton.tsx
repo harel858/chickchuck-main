@@ -10,7 +10,6 @@ type SubmitProps = {
   startActivity: Dayjs | null;
   endActivity: Dayjs | null;
   activityDays: any[];
-  availableSlots: Slots[];
   setError: React.Dispatch<React.SetStateAction<string>>;
   setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -21,7 +20,6 @@ export default function SubmitButton({
   startActivity,
   endActivity,
   activityDays,
-  availableSlots,
   setError,
   setHasChanges,
 }: SubmitProps) {
@@ -34,7 +32,6 @@ export default function SubmitButton({
       startActivity: startActivity?.toISOString(),
       endActivity: endActivity?.toISOString(),
       activityDays,
-      availableSlots,
       userId: user.id,
       duration: 5,
     };

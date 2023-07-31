@@ -59,7 +59,7 @@ const StepOne = React.memo(
 
     return (
       <form className="flex flex-col items-center gap-4 mt-4 w-full relative">
-        <div className="flex flex-col items-center gap-4 mt-4 w-8/12 max-2xl:w-full pb-5">
+        <div className="flex flex-col items-center gap-4 mt-4 w-10/12 max-2xl:w-full pb-5">
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -67,6 +67,7 @@ const StepOne = React.memo(
               duration: 0.5,
               ease: [0, 0.71, 0.2, 1.01],
             }}
+            className="w-full"
           >
             <TextField
               id="outlined-basic"
@@ -76,19 +77,19 @@ const StepOne = React.memo(
               error={Boolean(error)}
               variant="filled"
               InputProps={{
-                style: { color: "white", fontSize: "1.2em" },
+                style: { color: "black", fontSize: "1.2em" },
                 inputMode: "numeric",
               }}
               InputLabelProps={{
                 style: {
                   fontSize: "1.1em",
                   fontWeight: "500",
-                  color: "rgba(245, 245, 220, 0.8)",
+                  color: "rgb(15 23 42 / 0.8)",
                 },
               }}
               sx={{
                 width: "100%",
-                bgcolor: "rgba(255, 255, 255, 0.2)",
+                bgcolor: "rgba(0, 0, 0, 0.01)",
                 borderRadius: "4px",
                 ":after": { border: "4px solid white" },
                 ...(error && { boxShadow: "0px 0px 0px 2px red" }),
@@ -103,6 +104,7 @@ const StepOne = React.memo(
               delay: 0.1,
               ease: [0, 0.71, 0.2, 1.01],
             }}
+            className="w-full"
           >
             <TextField
               id="outlined-basic"
@@ -113,7 +115,7 @@ const StepOne = React.memo(
               error={Boolean(error)}
               InputProps={{
                 style: {
-                  color: "white",
+                  color: "black",
                   fontSize: "1.2em",
                 },
               }}
@@ -121,12 +123,12 @@ const StepOne = React.memo(
                 style: {
                   fontSize: "1.1em",
                   fontWeight: "500",
-                  color: "rgba(245, 245, 220, 0.8)",
+                  color: "rgb(15 23 42 / 0.8)",
                 },
               }}
               sx={{
                 width: "100%",
-                bgcolor: "rgba(255, 255, 255, 0.2)",
+                bgcolor: "rgba(0, 0, 0, 0.01)",
                 borderRadius: "4px",
                 ":after": { border: "4px solid white" },
                 ...(error && { boxShadow: "0px 0px 0px 2px red" }),
@@ -139,7 +141,7 @@ const StepOne = React.memo(
         {/* Rest of the code for text fields */}
         <Button
           variant="default"
-          className="fixed bottom-20 left-1/2 transform -translate-x-1/2 w-fit bg-sky-600 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"
+          className="w-1/2 bg-sky-600 hover:bg-slate-900 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"
           isLoading={loading}
           onClick={submitForm}
         >

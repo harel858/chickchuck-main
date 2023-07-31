@@ -31,7 +31,7 @@ export default function RootLayout({
 
           {/* Add the inset box shadow */}
           <div className="fixed inset-0 pointer-events-none -z-10">
-            <div className="h-1/2 bg-gradient-to-t from-transparent dark:to-slate-700/80 to-slate-300/40 -z-10" />
+            <div className="h-screen bg-gradient-to-t from-transparent dark:to-slate-700/80 to-slate-300/40 -z-10" />
           </div>
 
           {/* Allow more height for mobile menu on mobile */}
