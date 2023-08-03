@@ -57,7 +57,7 @@ const ActivityDays = ({
   };
   return (
     <div className="flex flex-col justify-center items-center gap-1">
-      <h5 className="text-white/90 font-semibold text-xl">Activity Days</h5>
+      <h5 className="text-black font-semibold text-xl">Activity Days</h5>
       <Select
         mode="multiple"
         showArrow

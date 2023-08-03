@@ -54,7 +54,7 @@ export default function SubmitButton({
 
   return (
     <Button
-      variant={"destructive"}
+      variant={"default"}
       disabled={
         hasChanges ||
         !startActivity ||

@@ -22,14 +22,19 @@ export default function BusinessActivity({ user }: { user: ProfilePageData }) {
   );
 
   return (
-    <div className="flex flex-col items-center relative max-2xl:w-11/12 dark:bg-orange-400/70 bg-slate-900 shadow-sm shadow-black p-5 rounded-xl gap-3 transition-all duration-300 ease-in-out border border-gray-500">
-      <div className="text-white/90 flex justify-center items-center gap-2">
+    <div className="flex flex-col items-center relative max-2xl:w-11/12 dark:bg-orange-400/70 bg-slate-100 shadow-sm shadow-black p-5 rounded-xl gap-3 transition-all duration-300 ease-in-out border border-gray-500">
+      <div className="text-black flex justify-center items-center gap-2">
         <h2 className="text-2xl font-bold text-center w-max">
           Business Activity
         </h2>
         <BiTime className="text-3xl font-semibold" />
       </div>
-      <div className="flex flex-row justify-center items-start gap-5">
+      <div className="flex flex-col justify-center items-center gap-5">
+        <ActivityDays
+          activityDays={activityDays}
+          setActivityDays={setActivityDays}
+          setHasChanges={setHasChanges}
+        />
         <ActivityTimePicker
           error={error}
           setHasChanges={setHasChanges}
@@ -38,11 +43,6 @@ export default function BusinessActivity({ user }: { user: ProfilePageData }) {
           endActivity={endActivity}
           setEndActivity={setEndActivity}
           setError={setError}
-        />
-        <ActivityDays
-          activityDays={activityDays}
-          setActivityDays={setActivityDays}
-          setHasChanges={setHasChanges}
         />
       </div>
       <div className="flex flex-col justify-center items-center gap-1">

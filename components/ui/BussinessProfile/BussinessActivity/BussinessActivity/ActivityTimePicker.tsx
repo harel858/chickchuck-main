@@ -31,10 +31,10 @@ function ActivityTimePicker({
 
   return (
     <div className="flex flex-col justify-center items-center gap-1">
-      <h5 className="text-white/90 font-semibold text-xl">Activity Time</h5>
-      <div className="flex flex-col justify-center items-end gap-2">
+      <h5 className="text-black font-semibold text-xl">Activity Time</h5>
+      <div className="flex flex-row justify-center items-center gap-2">
         <div className="flex justify-center items-baseline gap-2">
-          <p className="text-white/90 font-normal text-md">Start </p>
+          <p className="text-black font-normal text-md">Start </p>
           <TimePicker
             defaultValue={startActivity ? dayjs(startActivity) : undefined}
             onChange={(newValue) => {
@@ -54,7 +54,7 @@ function ActivityTimePicker({
           />
         </div>
         <div className="flex justify-center items-baseline gap-2">
-          <p className="text-white/90 font-normal text-md">End </p>
+          <p className="text-black font-normal text-md">End </p>
           <TimePicker
             defaultValue={endActivity ? dayjs(endActivity) : undefined}
             onChange={(newValue) => {

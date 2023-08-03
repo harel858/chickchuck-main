@@ -84,12 +84,11 @@ const StepOne = React.memo(
                 style: {
                   fontSize: "1.1em",
                   fontWeight: "500",
-                  color: "rgb(15 23 42 / 0.8)",
+                  color: "black",
                 },
               }}
               sx={{
                 width: "100%",
-                bgcolor: "rgba(0, 0, 0, 0.01)",
                 borderRadius: "4px",
                 ":after": { border: "4px solid white" },
                 ...(error && { boxShadow: "0px 0px 0px 2px red" }),
@@ -123,12 +122,11 @@ const StepOne = React.memo(
                 style: {
                   fontSize: "1.1em",
                   fontWeight: "500",
-                  color: "rgb(15 23 42 / 0.8)",
+                  color: "black",
                 },
               }}
               sx={{
                 width: "100%",
-                bgcolor: "rgba(0, 0, 0, 0.01)",
                 borderRadius: "4px",
                 ":after": { border: "4px solid white" },
                 ...(error && { boxShadow: "0px 0px 0px 2px red" }),
