@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AvailableList from "../AvailableList";
 import { AppointmentInput, StepThreeProps } from "../../../types/types";
 import axios from "axios";
@@ -34,6 +34,7 @@ function Steps({ userData }: StepThreeProps) {
       placement,
     });
   };
+
   const errorNotification = (placement: NotificationPlacement) => {
     api.error({
       message: `Notification ${placement}`,
@@ -44,13 +45,6 @@ function Steps({ userData }: StepThreeProps) {
   };
   const handleSubmit = async () => {
     setLoading(true);
-    // Reset missing fields state
-    setTreatmentMissing("");
-    setRecipientMissing("");
-
-    // Check for missing fields
-    if (!appointmentInput.treatment) setTreatmentMissing("Service is missing");
-    if (!appointmentInput.user) setRecipientMissing("Recipient is missing");
 
     // Proceed only if both treatment and recipient are selected
     if (!appointmentInput.treatment || !appointmentInput.user) return;
@@ -99,6 +93,8 @@ function Steps({ userData }: StepThreeProps) {
           appointmentInput={appointmentInput}
           setAppointmentInput={setAppointmentInput}
           userData={userData}
+          setTreatmentMissing={setTreatmentMissing}
+          setRecipientMissing={setRecipientMissing}
         />
         <div className="flex flex-col justify-center items-center gap-1">
           {recipientMissing && treatmentMissing ? (

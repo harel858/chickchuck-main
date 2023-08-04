@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import AvailableQueues from "./AvailableQueues";
 import { DatePicker } from "antd";
@@ -12,13 +12,32 @@ export default function AvailableListCalendar({
   userData,
   appointmentInput,
   setAppointmentInput,
+  setRecipientMissing,
+  setTreatmentMissing,
 }: {
   userData: UserData[];
   appointmentInput: AppointmentInput;
   setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
+  setTreatmentMissing: React.Dispatch<React.SetStateAction<string>>;
+  setRecipientMissing: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
+  const isInit = useRef(true);
+  useEffect(() => {
+    console.log(isInit);
 
+    if (isInit.current) {
+      isInit.current = false;
+      return;
+    }
+    // Reset missing fields state
+    setTreatmentMissing("");
+    setRecipientMissing("");
+
+    // Check for missing fields
+    if (!appointmentInput.treatment) setTreatmentMissing("Service is missing");
+    if (!appointmentInput.user) setRecipientMissing("Recipient is missing");
+  }, [selectedDate]);
   const handleDateChange = (event: Dayjs) => {
     setSelectedDate(event);
   };
