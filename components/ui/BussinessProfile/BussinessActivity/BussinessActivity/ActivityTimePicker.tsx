@@ -2,6 +2,11 @@ import React from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { TimePicker } from "antd";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import {
+  RiRestTimeFill,
+  RiRestTimeLine,
+  RiTimerFlashLine,
+} from "react-icons/ri";
 dayjs.extend(customParseFormat);
 
 type ActivityTimePickerProps = {
@@ -31,10 +36,12 @@ function ActivityTimePicker({
 
   return (
     <div className="flex flex-col justify-center items-center gap-1">
-      <h5 className="text-black font-semibold text-xl">Activity Time</h5>
-      <div className="flex flex-row justify-center items-center gap-2">
-        <div className="flex justify-center items-baseline gap-2">
-          <p className="text-black font-normal text-md">Start </p>
+      <div className="flex flex-col justify-center items-end gap-2">
+        <div className="flex flex-row justify-center items-baseline">
+          <p className="text-black font-normal text-lg font-serif flex justify-center items-center gap-1">
+            Opening
+            <RiTimerFlashLine className="text-xl" />
+          </p>
           <TimePicker
             defaultValue={startActivity ? dayjs(startActivity) : undefined}
             onChange={(newValue) => {
@@ -51,10 +58,14 @@ function ActivityTimePicker({
               setHasChanges(false);
             }}
             format={format}
+            className="w-max"
           />
         </div>
-        <div className="flex justify-center items-baseline gap-2">
-          <p className="text-black font-normal text-md">End </p>
+        <div className="flex flex-row justify-center items-baseline">
+          <p className="text-black font-normal text-lg font-serif flex justify-center items-center gap-1">
+            Closing
+            <RiRestTimeLine className="text-xl" />
+          </p>
           <TimePicker
             defaultValue={endActivity ? dayjs(endActivity) : undefined}
             onChange={(newValue) => {
@@ -71,6 +82,7 @@ function ActivityTimePicker({
               setHasChanges(false);
             }}
             format={format}
+            className="w-max"
           />
         </div>
       </div>

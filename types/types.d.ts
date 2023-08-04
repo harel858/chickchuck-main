@@ -79,6 +79,7 @@ export type UserData = {
   AvailableSlot: AvailableSlot[];
   treatments: Treatment[];
   userId: string;
+  activityDays: number[];
 };
 
 export type Slots = {

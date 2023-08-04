@@ -35,6 +35,7 @@ const fetchAppointmentSlots = async (businessName: string) => {
         AvailableSlot: user.availableSlots,
         treatments: user.Treatment,
         userId: user.id,
+        activityDays: user.activityDays,
       });
     }
     console.log("UsersData", UsersData);

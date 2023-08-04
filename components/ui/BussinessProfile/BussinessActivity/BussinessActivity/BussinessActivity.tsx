@@ -6,6 +6,7 @@ import ActivityTimePicker from "./ActivityTimePicker";
 import SubmitButton from "./SubmitButton";
 import { BiTime } from "react-icons/bi";
 import { Skeleton } from "antd";
+import { GiSandsOfTime } from "react-icons/gi";
 
 export default function BusinessActivity({ user }: { user: ProfilePageData }) {
   const [error, setError] = useState<string>("");
@@ -22,14 +23,15 @@ export default function BusinessActivity({ user }: { user: ProfilePageData }) {
   );
 
   return (
-    <div className="flex flex-col items-center relative max-2xl:w-11/12 dark:bg-orange-400/70 bg-slate-100 shadow-sm shadow-black p-5 rounded-xl gap-3 transition-all duration-300 ease-in-out border border-gray-500">
+    <div className="flex flex-col items-center relative max-2xl:w-11/12 dark:bg-orange-400/70 bg-slate-100 shadow-sm shadow-black p-5 rounded-xl gap-1 transition-all duration-300 ease-in-out border border-gray-500">
       <div className="text-black flex justify-center items-center gap-2">
         <h2 className="text-2xl font-bold text-center w-max">
           Business Activity
         </h2>
-        <BiTime className="text-3xl font-semibold" />
+        <GiSandsOfTime className="text-3xl font-semibold" />
       </div>
-      <div className="flex flex-col justify-center items-center gap-5">
+      <br />
+      <div className="flex flex-col justify-center items-start gap-3">
         <ActivityDays
           activityDays={activityDays}
           setActivityDays={setActivityDays}
@@ -45,6 +47,7 @@ export default function BusinessActivity({ user }: { user: ProfilePageData }) {
           setError={setError}
         />
       </div>
+      <br />
       <div className="flex flex-col justify-center items-center gap-1">
         <p className="font-serif text-red-500">{error}</p>
         <SubmitButton

@@ -1,19 +1,12 @@
 import React, { useCallback, useState } from "react";
-import { motion } from "framer-motion";
 import dayjs, { Dayjs } from "dayjs";
 import AvailableQueues from "./AvailableQueues";
-import { AppointmentInput, UserData } from "../../types/types";
 import { DatePicker } from "antd";
 import { Zoom } from "react-awesome-reveal";
 import { Button } from "@ui/Button";
-import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
-
-const scaleSpringTransition = {
-  type: "spring",
-  stiffness: 750,
-  damping: 10,
-  duration: 0.3,
-};
+import LeftArrow from "@components/arrows/LeftArrow";
+import RightArrow from "@components/arrows/RightArrow";
+import { AppointmentInput, UserData } from "../../types/types";
 
 export default function AvailableListCalendar({
   userData,
@@ -30,13 +23,14 @@ export default function AvailableListCalendar({
     setSelectedDate(event);
   };
 
-  const handlePreviousDay = () => {
+  const handlePreviousDay = useCallback(() => {
     setSelectedDate(selectedDate.subtract(1, "day"));
-  };
+  }, [selectedDate]);
 
-  const handleNextDay = () => {
+  const handleNextDay = useCallback(() => {
     setSelectedDate(selectedDate.add(1, "day"));
-  };
+  }, [selectedDate]);
+
   // Function to get the days of the current week
   const getDaysOfCurrentWeek = useCallback((currentDate: Dayjs): Dayjs[] => {
     const startOfWeek = currentDate.startOf("week");
@@ -58,20 +52,7 @@ export default function AvailableListCalendar({
     <div className="w-full flex flex-col justify-start items-center gap-4">
       <Zoom damping={1000} duration={350} className="w-full">
         <div className="w-full flex justify-center items-center gap-3">
-          <motion.div
-            key="arrowLeft"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-            transition={scaleSpringTransition}
-          >
-            <BsArrowLeftCircle
-              className="text-4xl text-black rounded-full hover:bg-white/70 cursor-pointer"
-              onClick={handlePreviousDay}
-            />
-          </motion.div>
+          <LeftArrow onClickHandler={handlePreviousDay} />
           <DatePicker
             presets={[
               { label: "Tomorrow", value: dayjs().add(1, "d") },
@@ -80,26 +61,16 @@ export default function AvailableListCalendar({
             ]}
             onChange={(newDate) => newDate && handleDateChange(newDate)}
             value={selectedDate}
-            className="w-1/2 cursor-pointer"
+            className="w-52 cursor-pointer"
           />
-          <motion.div
-            key="arrowRight"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-            transition={scaleSpringTransition}
-          >
-            <BsArrowRightCircle
-              className="text-4xl text-black rounded-full hover:bg-white/70 cursor-pointer"
-              onClick={handleNextDay}
-            />
-          </motion.div>
+          <RightArrow onClickHandler={handleNextDay} />
         </div>
       </Zoom>
       <div className="flex flex-row justify-center items-center gap-1 w-11/12">
         {daysOfCurrentWeek.map((day, i) => {
+          const validDay = appointmentInput.user?.activityDays.some(
+            (item) => item == day.day()
+          );
           return (
             <Button
               key={i}
@@ -114,9 +85,13 @@ export default function AvailableListCalendar({
               <p className="text-base font-medium font-sans">
                 {day.format("dddd").slice(0, 1)}`
               </p>
-              <p className="text-xs font-normal font-sans text-gray-500">
-                {day.format("MM/DD")}
-              </p>
+              {!validDay ? (
+                <p>Close</p>
+              ) : (
+                <p className="text-xs font-normal font-sans text-gray-500">
+                  {day.format("MM/DD")}
+                </p>
+              )}
             </Button>
           );
         })}

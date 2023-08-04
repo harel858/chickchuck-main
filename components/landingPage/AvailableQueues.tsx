@@ -43,6 +43,8 @@ export default function AvailableQueues({
   >([]);
 
   const [loading, setLoading] = useState(false);
+  const [validDay, setValidDay] = useState(true);
+  console.log(validDay);
 
   const queuesSorting = (
     allQueues: {
@@ -92,10 +94,17 @@ export default function AvailableQueues({
   };
 
   useEffect(() => {
+    console.log(appointmentInput.user?.activityDays);
+
+    const validDay = appointmentInput.user?.activityDays.some(
+      (item) => item == date.day()
+    );
+    setValidDay(validDay || false);
     if (!appointmentInput.user || !appointmentInput.treatment) return;
-    setLoading(true);
 
     const getQueues = async (date: Dayjs) => {
+      setLoading(true);
+
       try {
         let res = await axios.get(
           `/api/slots/slot?chosenDate=${date}&userId=${appointmentInput?.user?.userId}&duration=${appointmentInput?.treatment?.duration}`
@@ -122,7 +131,6 @@ export default function AvailableQueues({
     },
     [appointmentInput]
   );
-  console.log(loading);
 
   return loading ? (
     <Spin size="large" />
@@ -133,17 +141,21 @@ export default function AvailableQueues({
           queues.length > 0 ? "h-36" : "h-auto"
         } w-10/12 rounded-2xl max-md:w-full overflow-x-hidden overflow-y-auto gap-2 flex justify-center align-center items-center flex-wrap align-center`}
       >
-        {queues?.map((item, i) => {
-          return (
-            <Queue
-              i={i}
-              key={item[0]?.id}
-              item={item}
-              appointmentInput={appointmentInput}
-              handleChange={handleChange}
-            />
-          );
-        })}
+        {validDay ? (
+          queues?.map((item, i) => {
+            return (
+              <Queue
+                i={i}
+                key={item[0]?.id}
+                item={item}
+                appointmentInput={appointmentInput}
+                handleChange={handleChange}
+              />
+            );
+          })
+        ) : (
+          <p className="text-black">Day is not Valid</p>
+        )}
       </div>
     </>
   );

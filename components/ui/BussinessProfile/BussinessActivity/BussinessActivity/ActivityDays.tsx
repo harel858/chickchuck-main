@@ -3,6 +3,7 @@ import React from "react";
 import { Select, Tag } from "antd";
 import type { CustomTagProps } from "rc-select/lib/BaseSelect";
 import { ActivityDay } from "../../../../../types/types";
+import { TbCalendarTime } from "react-icons/tb";
 
 const options: ActivityDay[] = [
   { value: 0, label: "Sunday" },
@@ -56,8 +57,10 @@ const ActivityDays = ({
     setHasChanges(false);
   };
   return (
-    <div className="flex flex-col justify-center items-center gap-1">
-      <h5 className="text-black font-semibold text-xl">Activity Days</h5>
+    <div className="flex flex-col justify-center items-baseline">
+      <p className="text-black font-normal text-lg font-serif flex justify-center items-center gap-1">
+        Activity Days <TbCalendarTime className="text-xl" />
+      </p>
       <Select
         mode="multiple"
         showArrow

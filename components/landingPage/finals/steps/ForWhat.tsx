@@ -11,18 +11,16 @@ function ForWhat({
 }: {
   appointmentInput: AppointmentInput;
   setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
-  treatmentMissing: boolean;
+  treatmentMissing: string;
 }) {
   const changeTreatments = (treatement: Treatment) => {
     setAppointmentInput({ ...appointmentInput, treatment: treatement });
   };
-  console.log(treatmentMissing);
 
   return (
     <Zoom duration={350} damping={10000}>
       <Select
         defaultValue={`Select Service`}
-        style={{ width: 200 }}
         onChange={(val, opt) => {
           if (Array.isArray(opt)) return;
           changeTreatments(opt.option);
@@ -33,7 +31,7 @@ function ForWhat({
         }))}
         className={`${
           treatmentMissing ? "border-2 border-red-500" : "border-none"
-        } rounded-xl `}
+        } rounded-xl w-52 cursor-pointer`}
       />
     </Zoom>
   );

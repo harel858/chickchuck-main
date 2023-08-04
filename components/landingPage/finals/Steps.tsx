@@ -8,30 +8,49 @@ import { useSession } from "next-auth/react";
 import WithWho from "./steps/WithWho";
 import ForWhat from "./steps/ForWhat";
 import { Button } from "@ui/Button";
+import { NotificationPlacement } from "antd/es/notification/interface";
+import { notification } from "antd";
 
 function Steps({ userData }: StepThreeProps) {
   // Get the user session
   const { data: session } = useSession();
+  const [api, contextHolder] = notification.useNotification();
 
   // Initialize the state with an object directly
   const [appointmentInput, setAppointmentInput] = useState<AppointmentInput>({
     treatment: null,
     availableSlot: [],
-    user: null,
+    user: userData[0] && userData.length == 1 ? userData[0] : null,
     date: dayjs(),
   });
-
-  const [treatmentMissing, setTreatmentMissing] = useState(false);
-  const [recipientMissing, setRecipientMissing] = useState(false);
-
+  const [treatmentMissing, setTreatmentMissing] = useState("");
+  const [recipientMissing, setRecipientMissing] = useState("");
+  const [loading, setLoading] = useState(false);
+  const successNotification = (placement: NotificationPlacement) => {
+    api.success({
+      message: `Notification ${placement}`,
+      description:
+        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+      placement,
+    });
+  };
+  const errorNotification = (placement: NotificationPlacement) => {
+    api.error({
+      message: `Notification ${placement}`,
+      description:
+        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+      placement,
+    });
+  };
   const handleSubmit = async () => {
+    setLoading(true);
     // Reset missing fields state
-    setTreatmentMissing(false);
-    setRecipientMissing(false);
+    setTreatmentMissing("");
+    setRecipientMissing("");
 
     // Check for missing fields
-    if (!appointmentInput.treatment) setTreatmentMissing(true);
-    if (!appointmentInput.user) setRecipientMissing(true);
+    if (!appointmentInput.treatment) setTreatmentMissing("Service is missing");
+    if (!appointmentInput.user) setRecipientMissing("Recipient is missing");
 
     // Proceed only if both treatment and recipient are selected
     if (!appointmentInput.treatment || !appointmentInput.user) return;
@@ -41,37 +60,74 @@ function Steps({ userData }: StepThreeProps) {
         ...appointmentInput,
         customerId: session?.user.id,
       });
+      if (res.status == 200) {
+        setLoading(false);
+        successNotification("bottom");
+      }
       // Do something with the response if needed
     } catch (err) {
+      setLoading(false);
+      errorNotification("bottom");
       console.log(err);
     }
   };
 
   return (
-    <div className="w-1/2 max-md:w-full flex flex-col justify-center content-center items-center gap-5 p-5 bg-slate-100 rounded-xl max-xl:rounded-t-none shadow-sm shadow-black border-x border-b border-gray-500">
-      <h2 className={`text-slate-900 font-normal font-serif text-2xl`}>
-        Book An Appointment
-      </h2>
-      <div className="flex max-md:flex-col justify-center items-center gap-5">
-        <WithWho
+    <>
+      <div className="w-1/2 max-md:w-full flex flex-col justify-center content-center items-center gap-5 p-5 bg-slate-100 rounded-xl max-xl:rounded-t-none shadow-sm shadow-black border-x border-b border-gray-500">
+        <h2 className={`text-slate-900 font-normal font-serif text-2xl`}>
+          Book An Appointment
+        </h2>
+        <div className="flex max-md:flex-col justify-center items-center gap-5">
+          {userData.length > 1 ? (
+            <WithWho
+              userData={userData}
+              setAppointmentInput={setAppointmentInput}
+              appointmentInput={appointmentInput}
+              recipientMissing={recipientMissing} // Use the combined state
+            />
+          ) : (
+            <></>
+          )}
+          <ForWhat
+            setAppointmentInput={setAppointmentInput}
+            appointmentInput={appointmentInput}
+            treatmentMissing={treatmentMissing} // Use the combined state
+          />
+        </div>
+        <AvailableList
+          appointmentInput={appointmentInput}
+          setAppointmentInput={setAppointmentInput}
           userData={userData}
-          setAppointmentInput={setAppointmentInput}
-          appointmentInput={appointmentInput}
-          recipientMissing={treatmentMissing} // Use the combined state
         />
-        <ForWhat
-          setAppointmentInput={setAppointmentInput}
-          appointmentInput={appointmentInput}
-          treatmentMissing={recipientMissing} // Use the combined state
-        />
+        <div className="flex flex-col justify-center items-center gap-1">
+          {recipientMissing && treatmentMissing ? (
+            <p className="text-red-500 font-serif text-lg font-medium">
+              Recipient And Treatment Are Missing!
+            </p>
+          ) : recipientMissing ? (
+            <p className="text-red-500 font-serif text-lg font-medium">
+              {recipientMissing}!
+            </p>
+          ) : (
+            treatmentMissing && (
+              <p className="text-red-500 font-serif text-lg font-medium">
+                {treatmentMissing}!
+              </p>
+            )
+          )}
+          <Button
+            disabled={appointmentInput.availableSlot.length === 0}
+            onClick={handleSubmit}
+            isLoading={loading}
+            className={`hover:bg-green-700 ${loading ? "bg-green-700" : ""}`}
+          >
+            Book Now
+          </Button>
+        </div>
       </div>
-      <AvailableList
-        appointmentInput={appointmentInput}
-        setAppointmentInput={setAppointmentInput}
-        userData={userData}
-      />
-      <Button onClick={handleSubmit}>Submit</Button>
-    </div>
+      {contextHolder}
+    </>
   );
 }
 
