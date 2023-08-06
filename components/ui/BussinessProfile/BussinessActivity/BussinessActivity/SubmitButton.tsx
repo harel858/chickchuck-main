@@ -3,6 +3,8 @@ import { ProfilePageData, Slots } from "../../../../../types/types";
 import axios, { AxiosError } from "axios";
 import { Button } from "@ui/Button";
 import { Dayjs } from "dayjs";
+import { notification } from "antd";
+import { NotificationPlacement } from "antd/es/notification/interface";
 
 type SubmitProps = {
   user: ProfilePageData;
@@ -25,6 +27,24 @@ export default function SubmitButton({
 }: SubmitProps) {
   const [loading, setLoading] = React.useState(false);
 
+  const [api, contextHolder] = notification.useNotification();
+  const successNotification = (placement: NotificationPlacement) => {
+    api.success({
+      message: `Notification ${placement}`,
+      description:
+        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+      placement,
+    });
+  };
+
+  const errorNotification = (placement: NotificationPlacement) => {
+    api.error({
+      message: `Notification ${placement}`,
+      description:
+        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+      placement,
+    });
+  };
   const handleButtonClick = async () => {
     setLoading(true);
     setError("");
@@ -39,32 +59,39 @@ export default function SubmitButton({
     try {
       const res = await axios.post(`/api/business/activity`, params);
 
-      setLoading(false);
-      setHasChanges(true);
+      if (res.status === 200) {
+        setLoading(false);
+        setHasChanges(true);
+        return successNotification("bottom");
+      }
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err.message);
         setLoading(false);
-        return;
+        return errorNotification("bottom");
       }
-      setLoading(false);
       console.log(err);
+      setLoading(false);
+      return errorNotification("bottom");
     }
   };
 
   return (
-    <Button
-      variant={"default"}
-      disabled={
-        hasChanges ||
-        !startActivity ||
-        !endActivity ||
-        endActivity.hour() <= startActivity.hour()
-      }
-      onClick={handleButtonClick}
-      isLoading={loading}
-    >
-      Save Changes
-    </Button>
+    <>
+      {contextHolder}
+      <Button
+        variant={"default"}
+        disabled={
+          hasChanges ||
+          !startActivity ||
+          !endActivity ||
+          endActivity.hour() <= startActivity.hour()
+        }
+        onClick={handleButtonClick}
+        isLoading={loading}
+      >
+        Save Changes
+      </Button>
+    </>
   );
 }

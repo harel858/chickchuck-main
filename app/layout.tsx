@@ -20,7 +20,7 @@ export default function RootLayout({
       <html
         lang="en"
         className={cn(
-          " text-slate-900 antialiased overflow-x-hidden ",
+          "text-slate-900 antialiased overflow-x-hidden ",
           inter.className
         )}
       >

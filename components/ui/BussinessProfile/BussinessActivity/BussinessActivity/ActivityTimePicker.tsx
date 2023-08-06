@@ -1,12 +1,10 @@
 import React from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { TimePicker } from "antd";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import {
-  RiRestTimeFill,
-  RiRestTimeLine,
-  RiTimerFlashLine,
-} from "react-icons/ri";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 dayjs.extend(customParseFormat);
 
 type ActivityTimePickerProps = {
@@ -28,63 +26,63 @@ function ActivityTimePicker({
   setError,
   setHasChanges,
 }: ActivityTimePickerProps) {
-  const format = "HH:mm A";
+  const format = "HH:mm";
   console.log("dayjs(startActivity)", dayjs(startActivity).format(format));
   console.log("dayjs(endActivity)", dayjs(endActivity).format(format));
   const totalSlots = endActivity.diff(startActivity, "minute") / 5;
   console.log("totalSlots", totalSlots);
 
   return (
-    <div className="flex flex-col justify-center items-center gap-1">
-      <div className="flex flex-col justify-center items-end gap-2">
-        <div className="flex flex-row justify-center items-baseline">
-          <p className="text-black font-normal text-lg font-serif flex justify-center items-center gap-1">
-            Opening
-            <RiTimerFlashLine className="text-xl" />
-          </p>
-          <TimePicker
-            defaultValue={startActivity ? dayjs(startActivity) : undefined}
-            onChange={(newValue) => {
-              if (
-                !newValue ||
-                (endActivity && newValue.hour() >= endActivity.hour())
-              ) {
-                setError("Activity time is not valid");
-                setHasChanges(true);
-                return;
-              }
-              setStartActivity(newValue);
-              setError("");
-              setHasChanges(false);
-            }}
-            format={format}
-            className="w-max"
-          />
-        </div>
-        <div className="flex flex-row justify-center items-baseline">
-          <p className="text-black font-normal text-lg font-serif flex justify-center items-center gap-1">
-            Closing
-            <RiRestTimeLine className="text-xl" />
-          </p>
-          <TimePicker
-            defaultValue={endActivity ? dayjs(endActivity) : undefined}
-            onChange={(newValue) => {
-              if (
-                !newValue ||
-                (startActivity && startActivity.hour() >= newValue.hour())
-              ) {
-                setError("Activity time is not valid");
-                setHasChanges(true);
-                return;
-              }
-              setEndActivity(newValue);
-              setError("");
-              setHasChanges(false);
-            }}
-            format={format}
-            className="w-max"
-          />
-        </div>
+    <div className="flex flex-col justify-center items-center gap-2">
+      <div className="flex flex-col justify-center items-center gap-2">
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <div className="flex flex-row justify-center items-baseline">
+            <TimePicker
+              label={<p className="text-xl font-serif">Opening</p>}
+              defaultValue={startActivity ? dayjs(startActivity) : undefined}
+              onChange={(newValue) => {
+                if (
+                  !newValue ||
+                  (endActivity && newValue.hour() >= endActivity.hour())
+                ) {
+                  setError("Activity time is not valid");
+                  setHasChanges(true);
+                  return;
+                }
+                setStartActivity(newValue);
+                setError("");
+                setHasChanges(false);
+              }}
+              sx={{
+                width: "100%",
+                borderRadius: "4px",
+                ":after": { border: "4px solid white" },
+                ...(error && { boxShadow: "0px 0px 0px 2px red" }),
+              }}
+              className="w-max"
+            />
+          </div>
+          <div className="flex flex-row justify-center items-baseline">
+            <TimePicker
+              label={<p className="text-xl font-serif">Closing</p>}
+              defaultValue={endActivity ? dayjs(endActivity) : undefined}
+              onChange={(newValue) => {
+                if (
+                  !newValue ||
+                  (startActivity && startActivity.hour() >= newValue.hour())
+                ) {
+                  setError("Activity time is not valid");
+                  setHasChanges(true);
+                  return;
+                }
+                setEndActivity(newValue);
+                setError("");
+                setHasChanges(false);
+              }}
+              className="w-max"
+            />
+          </div>
+        </LocalizationProvider>
       </div>
     </div>
   );

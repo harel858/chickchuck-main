@@ -82,6 +82,15 @@ export type UserData = {
   activityDays: number[];
 };
 
+export type BusinessData = {
+  usersData: UserData[];
+  business: Business & {
+    user: (User & {
+      Treatment: Treatment[];
+    })[];
+  };
+};
+
 export type Slots = {
   start: string;
   end: string;
@@ -213,7 +222,3 @@ export interface LandingPageData {
   activityDays: number[];
   Address: Address[];
 }
-
-type StepThreeProps = {
-  userData: UserData[];
-};

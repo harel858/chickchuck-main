@@ -85,7 +85,7 @@ function Images({
         </LargeHeading>
       </div>
       <Button
-        className="bg-slate-200 shadow-md shadow-black/50 hover:bg-slate-700 text-black hover:text-white absolute z-20 top-24 right-4  text-base"
+        className="bg-slate-200 shadow-md shadow-black/50 hover:bg-slate-900 text-black hover:text-white absolute z-20 top-24 right-4  text-base"
         onClick={handleButtonClick}
       >
         Edit Business Image <BsImage className="mx-2" />
@@ -97,7 +97,7 @@ function Images({
         type="file"
         onChange={handleChange}
       />
-      <div className="absolute z-40 -bottom-6 left-1/2 right-1/2 transform -translate-x-1/2">
+      <div className="absolute z-40 -bottom-6 left-1/2 right-1/2 flex justify-center">
         <ProfileImage enable={true} user={user} />
       </div>
     </div>

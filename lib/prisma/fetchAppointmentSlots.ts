@@ -21,13 +21,15 @@ export const fetchAppointmentSlots = async (businessName: string) => {
       const name = business.user[i]?.name;
       const treatments = business.user[i]?.Treatment;
       const userId = business.user[i]?.id;
-      if (!name || !treatments || !userId) return;
+      const activityDays = business.user[i]?.activityDays;
+      if (!name || !treatments || !userId || !activityDays) return;
 
       UsersData.push({
         name,
         AvailableSlot: result,
         treatments,
         userId,
+        activityDays,
       });
     }
     console.log("UsersData", UsersData);

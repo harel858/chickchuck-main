@@ -8,9 +8,13 @@ import StepButton from "@mui/material/StepButton";
 import Typography from "@mui/material/Typography";
 import StepOne from "./landingPage/verification/stepOne";
 import StepTwo from "./landingPage/verification/stepTwo";
-import { UserData, VerificationData } from "../types/types";
+import { BusinessData, VerificationData } from "../types/types";
 
-export default function Verification({ userData }: { userData: UserData[] }) {
+export default function Verification({
+  businessData,
+}: {
+  businessData: BusinessData;
+}) {
   const [activeStep, setActiveStep] = useState(0);
   const [input, setInput] = useState<VerificationData>({
     name: "",

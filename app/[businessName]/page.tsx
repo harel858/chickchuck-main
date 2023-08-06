@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import React from "react";
 import { prisma } from "@lib/prisma";
 import Booking from "../../components/landingPage/Booking";
-import { UserData } from "types/types";
+import { BusinessData, UserData } from "types/types";
 type LandingPageProps = {
   params: {
     businessName: string;
@@ -18,7 +18,7 @@ const fetchAppointmentSlots = async (businessName: string) => {
       include: { user: { include: { Treatment: true } } },
     });
     if (!business) return null;
-    let UsersData: UserData[] = [];
+    let usersData: UserData[] = [];
     for (let i = 0; i < business.user.length; i++) {
       const user = await prisma.user.findUnique({
         where: { id: business.user[i]?.id },
@@ -30,7 +30,7 @@ const fetchAppointmentSlots = async (businessName: string) => {
 
       if (!user) return null;
 
-      UsersData.push({
+      usersData.push({
         name: user.name,
         AvailableSlot: user.availableSlots,
         treatments: user.Treatment,
@@ -38,9 +38,9 @@ const fetchAppointmentSlots = async (businessName: string) => {
         activityDays: user.activityDays,
       });
     }
-    console.log("UsersData", UsersData);
+    console.log("UsersData", usersData);
 
-    return UsersData;
+    return { usersData, business };
   } catch (err) {
     console.log(err);
   }
@@ -49,10 +49,10 @@ const fetchAppointmentSlots = async (businessName: string) => {
 export default async function LandingPage({
   params: { businessName },
 }: LandingPageProps) {
-  const userData = await fetchAppointmentSlots(businessName);
-  console.log("userData", userData);
+  const businessData = await fetchAppointmentSlots(businessName);
+  console.log("userData", businessData);
 
-  if (!userData) return notFound();
+  if (!businessData) return notFound();
 
-  return <Booking userData={userData} />;
+  return <Booking businessData={businessData} />;
 }

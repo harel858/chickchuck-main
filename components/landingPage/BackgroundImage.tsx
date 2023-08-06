@@ -67,12 +67,14 @@ function BackgroundImage({
           {business.businessName}
         </LargeHeading>
       </div>
-      <Avatar
-        alt="Profile Img"
-        sx={{ width: 90, height: 90 }}
-        className="border-white border-2 absolute z-40 -bottom-6 left-1/2 right-1/2 transform -translate-x-1/2"
-        src={profileImage || undefined}
-      />
+      <div className="absolute z-40 -bottom-6 left-1/2 right-1/2 flex justify-center">
+        <Avatar
+          alt="Profile Img"
+          sx={{ width: 90, height: 90 }}
+          className={`border-white border-2`}
+          src={profileImage || undefined}
+        />
+      </div>
     </div>
   );
 }

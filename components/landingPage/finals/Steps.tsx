@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AvailableList from "../AvailableList";
-import { AppointmentInput, StepThreeProps } from "../../../types/types";
+import { AppointmentInput, BusinessData } from "../../../types/types";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
@@ -11,7 +11,8 @@ import { Button } from "@ui/Button";
 import { NotificationPlacement } from "antd/es/notification/interface";
 import { notification } from "antd";
 
-function Steps({ userData }: StepThreeProps) {
+function Steps({ businessData }: { businessData: BusinessData }) {
+  const { usersData } = businessData;
   // Get the user session
   const { data: session } = useSession();
   const [api, contextHolder] = notification.useNotification();
@@ -20,7 +21,7 @@ function Steps({ userData }: StepThreeProps) {
   const [appointmentInput, setAppointmentInput] = useState<AppointmentInput>({
     treatment: null,
     availableSlot: [],
-    user: userData[0] && userData.length == 1 ? userData[0] : null,
+    user: usersData[0] && usersData.length == 1 ? usersData[0] : null,
     date: dayjs(),
   });
   const [treatmentMissing, setTreatmentMissing] = useState("");
@@ -73,9 +74,9 @@ function Steps({ userData }: StepThreeProps) {
           Book An Appointment
         </h2>
         <div className="flex max-md:flex-col justify-center items-center gap-5">
-          {userData.length > 1 ? (
+          {usersData.length > 1 ? (
             <WithWho
-              userData={userData}
+              userData={usersData}
               setAppointmentInput={setAppointmentInput}
               appointmentInput={appointmentInput}
               recipientMissing={recipientMissing} // Use the combined state
@@ -92,7 +93,7 @@ function Steps({ userData }: StepThreeProps) {
         <AvailableList
           appointmentInput={appointmentInput}
           setAppointmentInput={setAppointmentInput}
-          userData={userData}
+          businessData={businessData}
           setTreatmentMissing={setTreatmentMissing}
           setRecipientMissing={setRecipientMissing}
         />

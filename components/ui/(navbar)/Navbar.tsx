@@ -4,10 +4,9 @@ import { lazy, Suspense } from "react";
 import { ThemeToggle } from "@components/ThemeToggle";
 import { buttonVariants } from "@ui/Button";
 import Link from "next/link";
-import SignOutBtn from "@ui/SignOutBtn";
 import { useSession } from "next-auth/react";
 import { BsPersonCircle } from "react-icons/bs";
-import PlusButton from "./specialOperations/PlusButton";
+import PlusButton from "./specialOperations/plusButton/PlusButton";
 import Notification from "./specialOperations/Notification";
 
 const Hamburger = lazy(() => import("./(responsiveNav)/Hamburger"));

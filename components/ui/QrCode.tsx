@@ -37,7 +37,7 @@ const QrCode = ({ link }: { link: string }) => {
       <Button
         variant={"ghost"}
         onClick={downloadQRCode}
-        className="text-base hover:bg-slate-900 hover:text-white"
+        className="text-base hover:bg-slate-100 text-black"
       >
         Download QR Code <AiOutlineDownload className="m-2 text-3xl" />
       </Button>

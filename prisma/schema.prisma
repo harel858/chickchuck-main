@@ -26,6 +26,7 @@ model User {
   PremiumKit       PremiumKits       @default(Light)
   Business         Business?         @relation(fields: [businessId], references: [id])
   businessId       String?
+  Customer         Customer[]
 }
 
 model Images {
@@ -83,6 +84,7 @@ model Customer {
   name         String
   phoneNumber  String        @unique
   UserRole     UserRole      @default(CUSTOMER)
+  User         User[]
   appointments Appointment[]
 }
 

@@ -1,9 +1,13 @@
 "use client";
 import React from "react";
-import { Select, Tag } from "antd";
-import type { CustomTagProps } from "rc-select/lib/BaseSelect";
+import Autocomplete from "@mui/material/Autocomplete";
 import { ActivityDay } from "../../../../../types/types";
 import { TbCalendarTime } from "react-icons/tb";
+import Checkbox from "@mui/material/Checkbox";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import TextField from "@mui/material/TextField";
+import { Chip } from "@mui/material";
 
 const options: ActivityDay[] = [
   { value: 0, label: "Sunday" },
@@ -14,28 +18,8 @@ const options: ActivityDay[] = [
   { value: 5, label: "Friday" },
   { value: 6, label: "Saturday" },
 ];
-
-const tagRender = (props: CustomTagProps) => {
-  const { label, value, closable, onClose } = props;
-
-  const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
-  const shortenedLabel = JSON.stringify(label).substring(0, 4); // Extract the first three characters
-
-  return (
-    <Tag
-      color={"blue"}
-      onMouseDown={onPreventMouseDown}
-      closable={closable}
-      onClose={onClose}
-      className="text-base"
-    >
-      {shortenedLabel}
-    </Tag>
-  );
-};
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 const ActivityDays = ({
   activityDays,
@@ -46,6 +30,10 @@ const ActivityDays = ({
   activityDays: number[];
   setActivityDays: React.Dispatch<React.SetStateAction<number[]>>;
 }) => {
+  const activityDaysAsObjects = activityDays.map((dayValue) => {
+    const dayObject = options.find((option) => option.value === dayValue);
+    return dayObject ? dayObject : { value: dayValue, label: "" };
+  });
   const handleSelectChange = (selectedValues: number[]) => {
     const selectedDays: number[] = [];
     for (let i = 0; i < options.length; i++) {
@@ -58,25 +46,50 @@ const ActivityDays = ({
   };
   return (
     <div className="flex flex-col justify-center items-baseline">
-      <p className="text-black font-normal text-lg font-serif flex justify-center items-center gap-1">
-        Activity Days <TbCalendarTime className="text-xl" />
-      </p>
-      <Select
-        mode="multiple"
-        showArrow
-        size="large"
-        tagRender={tagRender}
-        defaultValue={[...activityDays]}
-        style={{
-          color: "black",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          overflowY: "hidden", // Hide the scrollbar
-        }}
-        onChange={handleSelectChange}
+      <Autocomplete
+        multiple
+        id="checkboxes-tags-demo"
+        value={activityDaysAsObjects}
         options={options}
+        disableCloseOnSelect
+        getOptionLabel={(option) => option.label}
+        onChange={(event, value) =>
+          handleSelectChange(value.map((option) => option.value))
+        }
+        renderOption={(props, option, { selected }) => (
+          <li {...props} key={option.value}>
+            <Checkbox
+              key={option.value}
+              icon={icon}
+              checkedIcon={checkedIcon}
+              style={{ marginRight: 8 }}
+              checked={selected}
+            />
+            {option.label}
+          </li>
+        )}
+        renderTags={(tagValue, getTagProps) => {
+          return tagValue.map((option, index) => (
+            <Chip
+              {...getTagProps({ index })}
+              key={option.value}
+              label={option.label}
+            />
+          ));
+        }}
+        style={{ width: 500 }}
+        renderInput={(params) => (
+          <TextField
+            key={params.id}
+            {...params}
+            label={
+              <p className="font-serif text-xl flex justify-center items-center gap-1">
+                Activity Days <TbCalendarTime className="text-xl" />
+              </p>
+            }
+            placeholder="Activity Days"
+          />
+        )}
       />
     </div>
   );

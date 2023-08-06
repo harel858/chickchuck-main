@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { ProfilePageData, Slots } from "../../../../../types/types";
 import ActivityDays from "./ActivityDays";
 import ActivityTimePicker from "./ActivityTimePicker";
 import SubmitButton from "./SubmitButton";
-import { BiTime } from "react-icons/bi";
-import { Skeleton } from "antd";
 import { GiSandsOfTime } from "react-icons/gi";
+import { notification } from "antd";
+import { NotificationPlacement } from "antd/es/notification/interface";
 
 export default function BusinessActivity({ user }: { user: ProfilePageData }) {
   const [error, setError] = useState<string>("");
@@ -31,7 +31,7 @@ export default function BusinessActivity({ user }: { user: ProfilePageData }) {
         <GiSandsOfTime className="text-3xl font-semibold" />
       </div>
       <br />
-      <div className="flex flex-col justify-center items-start gap-3">
+      <div className="flex flex-col justify-center items-center gap-5">
         <ActivityDays
           activityDays={activityDays}
           setActivityDays={setActivityDays}
