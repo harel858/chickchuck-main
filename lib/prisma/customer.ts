@@ -17,11 +17,6 @@ export const createCustomer = async (name: string, phoneNumber: string) => {
   }
 };
 
-export async function customerSignIn(phoneNumber: string) {
-  try {
-  } catch (err) {}
-}
-
 export const getCustomer = async (phoneNumber: string) => {
   try {
     const customer = await prisma.customer.findUnique({

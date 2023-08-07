@@ -3,24 +3,52 @@ import { motion } from "framer-motion";
 import { TextField } from "@mui/material";
 import { Button } from "@ui/Button";
 import axios, { AxiosError } from "axios";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 interface InputData {
   name: string;
-  phoneNumber: string;
+  phoneNumber: number | null;
 }
 function Customer() {
   const [input, setInput] = useState<InputData>({
     name: "",
-    phoneNumber: "",
+    phoneNumber: null,
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setInput((prev) => ({ ...prev, [name]: [value] }));
+    console.log(input);
+
+    // Validate and ensure only numeric characters are entered
+    if (name === "phoneNumber" && !/^\d*$/.test(value)) {
+      return; // Don't update the state if non-numeric characters are entered
+    }
+
+    setInput((prev) => ({ ...prev, [name]: value }));
   };
 
   const submitForm = useCallback(
@@ -33,41 +61,43 @@ function Customer() {
         return setError("missing values");
       }
       try {
-        const res = await axios.post("/api/verification/stepone", input);
+        const res = await axios.post("/api/customers/create", input);
 
         if (res.status === 200) {
-          const data = res.data;
-          setInput((prevInput) => ({
-            ...prevInput,
-            request_id: data.request_id,
-          }));
           setLoading(false);
+          setOpen(true);
+          return;
         }
       } catch (err: any) {
         console.log(err);
+
         if (err instanceof AxiosError) {
-          console.log(err.message);
-          setError(err.message);
+          if (err.response?.status === 409 || err.response?.status === 400) {
+            setError(err.response.data);
+            setLoading(false);
+            return;
+          }
         }
-        console.log(err);
         setLoading(false);
+        return;
       }
     },
     [input]
   );
 
   return (
-    <form className="flex flex-col items-center gap-4 mt-4 w-full relative">
-      <div className="flex flex-col items-center gap-4 mt-4 w-10/12 max-2xl:w-full pb-5">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 0.5,
-            ease: [0, 0.71, 0.2, 1.01],
-          }}
-          className="w-full"
-        >
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{
+        duration: 0.5,
+        delay: 0.2,
+        ease: [0, 0.71, 0.2, 1.01],
+      }}
+      className="w-full"
+    >
+      <form className="flex flex-col items-center gap-4 mt-4 w-full relative">
+        <div className="flex flex-col items-center gap-4 mt-4 w-10/12 max-2xl:w-full pb-5">
           <TextField
             id="outlined-basic"
             label="Enter Name"
@@ -93,17 +123,7 @@ function Customer() {
               ...(error && { boxShadow: "0px 0px 0px 2px red" }),
             }}
           />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 0.5,
-            delay: 0.1,
-            ease: [0, 0.71, 0.2, 1.01],
-          }}
-          className="w-full"
-        >
+
           <TextField
             id="outlined-basic"
             label="Phone Number"
@@ -131,20 +151,29 @@ function Customer() {
               ...(error && { boxShadow: "0px 0px 0px 2px red" }),
             }}
           />
-        </motion.div>
-      </div>
-      <p className="text-red-500">{error}</p>
+        </div>
+        <p className="text-red-500">{error}</p>
 
-      {/* Rest of the code for text fields */}
-      <Button
-        variant="default"
-        className="w-1/2 bg-sky-600 hover:bg-slate-900 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"
-        isLoading={loading}
-        onClick={submitForm}
+        <Button
+          variant="default"
+          className="w-1/2 bg-sky-600 hover:bg-slate-900 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"
+          isLoading={loading}
+          onClick={submitForm}
+        >
+          Create
+        </Button>
+      </form>
+      <Snackbar
+        open={open}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        autoHideDuration={6000}
+        onClose={handleClose}
       >
-        Create
-      </Button>
-    </form>
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          This is a success message!
+        </Alert>
+      </Snackbar>
+    </motion.div>
   );
 }
 

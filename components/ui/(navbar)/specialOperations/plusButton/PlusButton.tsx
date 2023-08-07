@@ -8,6 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+
 const Content = lazy(() => import("./Content"));
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -88,7 +89,7 @@ export default function PlusButton() {
         </BootstrapDialogTitle>
         <DialogContent className="bg-slate-100" dividers>
           <Suspense fallback={<>loading...</>}>
-            <Content handleClose={handleClose} />
+            <Content />
           </Suspense>
         </DialogContent>
         <DialogActions></DialogActions>
