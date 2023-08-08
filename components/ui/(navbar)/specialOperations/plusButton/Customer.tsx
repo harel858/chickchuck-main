@@ -97,6 +97,9 @@ function Customer() {
       className="w-full"
     >
       <form className="flex flex-col items-center gap-4 mt-4 w-full relative">
+        <h2 className={`text-slate-900 font-normal font-serif text-2xl`}>
+          Create A Customer
+        </h2>
         <div className="flex flex-col items-center gap-4 mt-4 w-10/12 max-2xl:w-full pb-5">
           <TextField
             id="outlined-basic"
@@ -153,10 +156,9 @@ function Customer() {
           />
         </div>
         <p className="text-red-500">{error}</p>
-
         <Button
           variant="default"
-          className="w-1/2 bg-sky-600 hover:bg-slate-900 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"
+          className="w-max bg-sky-600 hover:bg-slate-900 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"
           isLoading={loading}
           onClick={submitForm}
         >

@@ -1,20 +1,21 @@
 "use client";
 import { useState } from "react";
-import AvailableList from "../AvailableList";
-import { AppointmentInput, BusinessData } from "../../../types/types";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
-import WithWho from "./steps/WithWho";
-import ForWhat from "./steps/ForWhat";
+import AvailableList from "./AvailableList";
 import { Button } from "@ui/Button";
 import { NotificationPlacement } from "antd/es/notification/interface";
 import { notification } from "antd";
+import { AppointmentInput, BusinessData } from "types/types";
+import WithWho from "@components/landingPage/finals/steps/WithWho";
+import ForWhat from "./ForWhat";
 
-function Steps({ businessData }: { businessData: BusinessData }) {
-  const { usersData } = businessData;
+function Appointment({ businessData }: { businessData: BusinessData }) {
   // Get the user session
   const { data: session } = useSession();
+  const { usersData } = businessData;
+
   const [api, contextHolder] = notification.useNotification();
 
   // Initialize the state with an object directly
@@ -35,6 +36,7 @@ function Steps({ businessData }: { businessData: BusinessData }) {
       placement,
     });
   };
+  console.log("appointmentInput.user", appointmentInput.user);
 
   const errorNotification = (placement: NotificationPlacement) => {
     api.error({
@@ -69,10 +71,7 @@ function Steps({ businessData }: { businessData: BusinessData }) {
 
   return (
     <>
-      <div className="w-1/2 max-md:w-full flex flex-col justify-center content-center items-center gap-5 p-5 bg-slate-100 rounded-xl max-xl:rounded-t-none shadow-sm shadow-black border-x border-b border-gray-500">
-        <h2 className={`text-slate-900 font-normal font-serif text-2xl`}>
-          Book An Appointment
-        </h2>
+      <div className="max-md:w-full flex flex-col justify-start content-center items-center gap-5 p-5">
         <div className="flex max-md:flex-col justify-center items-center gap-5">
           {usersData.length > 1 ? (
             <WithWho
@@ -113,19 +112,20 @@ function Steps({ businessData }: { businessData: BusinessData }) {
               </p>
             )
           )}
-          <Button
-            disabled={appointmentInput.availableSlot.length === 0}
-            onClick={handleSubmit}
-            isLoading={loading}
-            className={`hover:bg-green-700 ${loading ? "bg-green-700" : ""}`}
-          >
-            Book Now
-          </Button>
         </div>
+        <Button
+          variant="default"
+          className="w-max  bg-sky-600 hover:bg-slate-900 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"
+          disabled={appointmentInput.availableSlot.length === 0}
+          onClick={handleSubmit}
+          isLoading={loading}
+        >
+          Book Now
+        </Button>
       </div>
       {contextHolder}
     </>
   );
 }
 
-export default Steps;
+export default Appointment;

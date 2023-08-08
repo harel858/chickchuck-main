@@ -17,7 +17,6 @@ export default function AvailableQueues({
   setAppointmentInput,
 }: {
   date: Dayjs;
-  userData: UserData[];
   appointmentInput: AppointmentInput;
   setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
 }) {

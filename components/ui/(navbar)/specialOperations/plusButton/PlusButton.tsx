@@ -8,6 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { BusinessData } from "types/types";
 
 const Content = lazy(() => import("./Content"));
 
@@ -57,7 +58,11 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
   );
 }
 
-export default function PlusButton() {
+export default function PlusButton({
+  businessData,
+}: {
+  businessData: BusinessData;
+}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -89,7 +94,7 @@ export default function PlusButton() {
         </BootstrapDialogTitle>
         <DialogContent className="bg-slate-100" dividers>
           <Suspense fallback={<>loading...</>}>
-            <Content />
+            <Content businessData={businessData} />
           </Suspense>
         </DialogContent>
         <DialogActions></DialogActions>

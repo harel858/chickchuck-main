@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
-import AvailableQueues from "./AvailableQueues";
-import { DatePicker } from "antd";
 import { Zoom } from "react-awesome-reveal";
 import { Button } from "@ui/Button";
 import LeftArrow from "@components/arrows/LeftArrow";
 import RightArrow from "@components/arrows/RightArrow";
-import { AppointmentInput, BusinessData, UserData } from "../../types/types";
+import AvailableQueues from "@components/landingPage/AvailableQueues";
+import { DatePicker, MobileDatePicker } from "@mui/x-date-pickers";
+import { AppointmentInput } from "types/types";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 export default function AvailableListCalendar({
   activityDays,
@@ -72,20 +74,16 @@ export default function AvailableListCalendar({
     <div className="w-full flex flex-col justify-start items-center gap-4">
       <Zoom damping={1000} duration={350} className="w-full">
         <div className="w-full flex justify-center items-center gap-3">
-          <LeftArrow onClickHandler={handlePreviousDay} />
-          <DatePicker
-            disabledDate={(current) =>
-              current && current.isBefore(dayjs(), "day")
-            }
-            presets={[
-              { label: "Tomorrow", value: dayjs().add(1, "d") },
-              { label: "Next Week", value: dayjs().add(7, "d") },
-              { label: "Next Month", value: dayjs().add(1, "month") },
-            ]}
-            onChange={(newDate) => newDate && handleDateChange(newDate)}
-            value={selectedDate}
-            className="w-52 cursor-pointer"
-          />
+          <LeftArrow onClickHandler={handlePreviousDay} />{" "}
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <MobileDatePicker
+              shouldDisableDate={(date) => date.isBefore(dayjs(), "day")}
+              onChange={(newDate) => newDate && handleDateChange(newDate)}
+              value={selectedDate}
+              closeOnSelect
+              className="w-52 cursor-pointer"
+            />
+          </LocalizationProvider>
           <RightArrow onClickHandler={handleNextDay} />
         </div>
       </Zoom>

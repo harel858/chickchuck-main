@@ -5,8 +5,14 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Customer from "./Customer";
+import Appointment from "./appointment/Appointment";
+import { BusinessData } from "types/types";
 
-export default function Content() {
+export default function Content({
+  businessData,
+}: {
+  businessData: BusinessData;
+}) {
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -25,7 +31,9 @@ export default function Content() {
         <TabPanel value="1">
           <Customer />
         </TabPanel>
-        <TabPanel value="2">Item Two</TabPanel>
+        <TabPanel value="2">
+          <Appointment businessData={businessData} />
+        </TabPanel>
       </TabContext>
     </Box>
   );
