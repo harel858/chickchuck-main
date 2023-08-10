@@ -21,6 +21,7 @@ export default function Verification({
     phoneNumber: "",
     request_id: "",
     code: "",
+    bussinesId: businessData.business.id,
   });
 
   const [completed, setCompleted] = React.useState<{

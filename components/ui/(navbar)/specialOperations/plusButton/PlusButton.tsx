@@ -26,28 +26,20 @@ export interface DialogTitleProps {
   children?: React.ReactNode;
   onClose: () => void;
 }
-
 function BootstrapDialogTitle(props: DialogTitleProps) {
   const { children, onClose, ...other } = props;
 
   return (
-    <DialogTitle
-      sx={{
-        m: 0,
-        p: 2,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: "2em",
-      }}
-      {...other}
-    >
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
       {children}
       {onClose ? (
         <IconButton
           aria-label="close"
           onClick={onClose}
           sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
             color: (theme) => theme.palette.grey[500],
           }}
         >
@@ -57,7 +49,6 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
     </DialogTitle>
   );
 }
-
 export default function PlusButton({
   businessData,
 }: {
@@ -90,7 +81,7 @@ export default function PlusButton({
           id="customized-dialog-title"
           onClose={handleClose}
         >
-          Create A Client/Appointment
+          Client/Appointment
         </BootstrapDialogTitle>
         <DialogContent className="bg-slate-100" dividers>
           <Suspense fallback={<>loading...</>}>

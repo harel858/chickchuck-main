@@ -23,6 +23,7 @@ function Steps({ businessData }: { businessData: BusinessData }) {
     availableSlot: [],
     user: usersData[0] && usersData.length == 1 ? usersData[0] : null,
     date: dayjs(),
+    customerId: session?.user.id,
   });
   const [treatmentMissing, setTreatmentMissing] = useState("");
   const [recipientMissing, setRecipientMissing] = useState("");
@@ -53,7 +54,6 @@ function Steps({ businessData }: { businessData: BusinessData }) {
     try {
       const res = await axios.post("api/appointments", {
         ...appointmentInput,
-        customerId: session?.user.id,
       });
       if (res.status == 200) {
         setLoading(false);

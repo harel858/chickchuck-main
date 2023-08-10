@@ -8,8 +8,9 @@ import { Button } from "@ui/Button";
 import { NotificationPlacement } from "antd/es/notification/interface";
 import { notification } from "antd";
 import { AppointmentInput, BusinessData } from "types/types";
-import WithWho from "@components/landingPage/finals/steps/WithWho";
+import WithWho from "./WithWho";
 import ForWhat from "./ForWhat";
+import ForWho from "./ForWho";
 
 function Appointment({ businessData }: { businessData: BusinessData }) {
   // Get the user session
@@ -24,6 +25,7 @@ function Appointment({ businessData }: { businessData: BusinessData }) {
     availableSlot: [],
     user: usersData[0] && usersData.length == 1 ? usersData[0] : null,
     date: dayjs(),
+    customerId: null,
   });
   const [treatmentMissing, setTreatmentMissing] = useState("");
   const [recipientMissing, setRecipientMissing] = useState("");
@@ -55,7 +57,6 @@ function Appointment({ businessData }: { businessData: BusinessData }) {
     try {
       const res = await axios.post("api/appointments", {
         ...appointmentInput,
-        customerId: session?.user.id,
       });
       if (res.status == 200) {
         setLoading(false);
@@ -72,21 +73,29 @@ function Appointment({ businessData }: { businessData: BusinessData }) {
   return (
     <>
       <div className="max-md:w-full flex flex-col justify-start content-center items-center gap-5 p-5">
-        <div className="flex max-md:flex-col justify-center items-center gap-5">
-          {usersData.length > 1 ? (
-            <WithWho
-              userData={usersData}
-              setAppointmentInput={setAppointmentInput}
-              appointmentInput={appointmentInput}
-              recipientMissing={recipientMissing} // Use the combined state
-            />
-          ) : (
+        <h2 className={`text-slate-900 font-normal font-serif text-2xl`}>
+          Create An Appointment
+        </h2>
+        <div className="flex flex-col max-md:flex-col justify-center items-center gap-10">
+          {/*  {usersData.length > 1 ? ( */}
+          <WithWho
+            userData={usersData}
+            setAppointmentInput={setAppointmentInput}
+            appointmentInput={appointmentInput}
+            recipientMissing={recipientMissing} // Use the combined state
+          />
+          {/*     ) : (
             <></>
-          )}
+          )} */}{" "}
+          <ForWho
+            businessData={businessData}
+            setAppointmentInput={setAppointmentInput}
+            appointmentInput={appointmentInput}
+          />
           <ForWhat
             setAppointmentInput={setAppointmentInput}
             appointmentInput={appointmentInput}
-            treatmentMissing={treatmentMissing} // Use the combined state
+            treatmentMissing={treatmentMissing} // Use the combined
           />
         </div>
         <AvailableList

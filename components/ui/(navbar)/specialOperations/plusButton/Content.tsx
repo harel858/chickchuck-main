@@ -29,7 +29,7 @@ export default function Content({
           </TabList>
         </Box>
         <TabPanel value="1">
-          <Customer />
+          <Customer bussinesId={businessData.business.id} />
         </TabPanel>
         <TabPanel value="2">
           <Appointment businessData={businessData} />

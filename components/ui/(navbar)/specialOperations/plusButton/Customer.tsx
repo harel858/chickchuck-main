@@ -17,7 +17,7 @@ interface InputData {
   name: string;
   phoneNumber: number | null;
 }
-function Customer() {
+function Customer({ bussinesId }: { bussinesId: string }) {
   const [input, setInput] = useState<InputData>({
     name: "",
     phoneNumber: null,
@@ -61,7 +61,10 @@ function Customer() {
         return setError("missing values");
       }
       try {
-        const res = await axios.post("/api/customers/create", input);
+        const res = await axios.post("/api/customers/create", {
+          ...input,
+          bussinesId,
+        });
 
         if (res.status === 200) {
           setLoading(false);

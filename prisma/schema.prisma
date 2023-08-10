@@ -46,6 +46,7 @@ model Business {
   businessImage   String?
   user            User[]
   activityDays    Int[]
+  Customer        Customer[]
   AvailableSlot   AvailableSlot[]
   Address         Address[]
   Appointment     Appointment[]
@@ -86,6 +87,7 @@ model Customer {
   UserRole     UserRole      @default(CUSTOMER)
   User         User[]
   appointments Appointment[]
+  Business     Business[]
 }
 
 model Treatment {

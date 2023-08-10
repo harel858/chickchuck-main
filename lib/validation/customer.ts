@@ -7,6 +7,7 @@ interface ReqBody {
 const ReqBodySchema = Joi.object({
   phoneNumber: Joi.number().min(10).required(),
   name: Joi.string().required(),
+  bussinesId: Joi.string().required(),
 });
 function validateCustomer(data: ReqBody) {
   return ReqBodySchema.validate(data);

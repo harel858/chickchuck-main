@@ -19,10 +19,13 @@ export default async function handler(
 ) {
   if (req.method == "POST") {
     try {
-      const { request_id, code, phoneNumber, name } =
+      const { request_id, code, phoneNumber, name, bussinesId } =
         req.body as VerificationData;
 
-      const { customer, getCustomerErr } = await getCustomer(phoneNumber);
+      const { customer, getCustomerErr } = await getCustomer(
+        phoneNumber,
+        bussinesId
+      );
 
       if (getCustomerErr) return res.status(500).json(getCustomerErr);
 
@@ -33,7 +36,8 @@ export default async function handler(
 
       const { newCustomer, createCustomerErr } = await createCustomer(
         name,
-        phoneNumber
+        phoneNumber,
+        bussinesId
       );
       if (!newCustomer || createCustomerErr) {
         return res.status(500).json(`faild`);

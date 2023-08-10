@@ -1,45 +1,43 @@
+"use client";
 import React from "react";
-import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import Checkbox from "@mui/material/Checkbox";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import TextField from "@mui/material/TextField";
 import { Chip } from "@mui/material";
-import { AppointmentInput } from "types/types";
-import { SelectChangeEvent } from "@mui/material/Select";
+import { AppointmentInput, BusinessData } from "types/types";
+import { TbCalendarTime } from "react-icons/tb";
 
-function ForWhat({
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
+const ForWho = ({
+  businessData,
   appointmentInput,
   setAppointmentInput,
 }: {
-  appointmentInput: AppointmentInput;
+  businessData: BusinessData;
   setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
-  treatmentMissing: string;
-}) {
-  const handleChange = (event: SelectChangeEvent) => {
-    const treatement = appointmentInput.user?.treatments.find(
-      (item) => item.id === event.target.value
-    );
-    console.log(treatement);
-    if (!treatement) return;
-    setAppointmentInput({ ...appointmentInput, treatment: treatement });
-  };
-  const options = appointmentInput.user?.treatments.map((item) => ({
+  appointmentInput: AppointmentInput;
+}) => {
+  const options = businessData.business.Customer.map((item) => ({
     value: item.id,
-    label: item.title,
+    label: item.name,
   }));
 
-  const handleSelectChange = (id: string | undefined) => {
-    const treatment = appointmentInput.user?.treatments.find(
-      (item) => item.id === id
-    );
-    if (!treatment || !id) return;
-    setAppointmentInput({ ...appointmentInput, treatment: treatment });
-  };
+  const handleSelectChange = (customerId: string | undefined) => {
+    console.log("e", customerId);
 
+    if (!customerId) return;
+
+    setAppointmentInput({ ...appointmentInput, customerId: customerId });
+  };
   return (
     <Autocomplete
-      disabled={!appointmentInput.user}
       disablePortal
       id="combo-box-demo"
-      options={options || []}
+      options={options}
       sx={{ width: 300, minWidth: 200 }}
       getOptionLabel={(option) => option.label}
       renderInput={(params) => {
@@ -71,6 +69,6 @@ function ForWhat({
       onChange={(e, value) => handleSelectChange(value?.value)}
     />
   );
-}
+};
 
-export default ForWhat;
+export default ForWho;

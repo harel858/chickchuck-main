@@ -32,7 +32,9 @@ const StepTwo = React.memo(
       e.preventDefault();
 
       try {
-        const res = await axios.post("/api/verification/steptwo", input);
+        const res = await axios.post("/api/verification/steptwo", {
+          ...input,
+        });
         if (res.status === 200) {
           const { phoneNumber } = input;
           const res = await signIn("Customer Login", {

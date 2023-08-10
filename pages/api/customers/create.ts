@@ -10,12 +10,15 @@ export default async function handler(
 ) {
   if (req.method == "POST") {
     try {
-      const { phoneNumber, name } = req.body;
+      const { phoneNumber, name, bussinesId } = req.body;
 
       const { error } = validateCustomer(req.body);
       if (error) return res.status(400).json(error?.details[0]?.message);
 
-      const { customer, getCustomerErr } = await getCustomer(phoneNumber);
+      const { customer, getCustomerErr } = await getCustomer(
+        phoneNumber,
+        bussinesId
+      );
 
       if (getCustomerErr) return res.status(500).json(getCustomerErr);
 
@@ -26,7 +29,8 @@ export default async function handler(
 
       const { newCustomer, createCustomerErr } = await createCustomer(
         name,
-        phoneNumber
+        phoneNumber,
+        bussinesId
       );
 
       if (!newCustomer || createCustomerErr)

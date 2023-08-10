@@ -72,6 +72,7 @@ export type VerificationData = {
   request_id: string;
   phoneNumber: string;
   code: string;
+  bussinesId: string;
 };
 
 export type UserData = {
@@ -88,6 +89,7 @@ export type BusinessData = {
     user: (User & {
       Treatment: Treatment[];
     })[];
+    Customer: Customer[];
   };
 };
 
@@ -123,6 +125,7 @@ export type AppointmentInput = {
   user: UserData | null;
   availableSlot: AvailableSlot[];
   date: Dayjs;
+  customerId: string | null | undefined;
 };
 
 export type NavBarProps = {
