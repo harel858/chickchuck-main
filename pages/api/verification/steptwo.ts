@@ -26,6 +26,8 @@ export default async function handler(
         phoneNumber,
         bussinesId
       );
+      console.log("customer", customer);
+      console.log("getCustomerErr", getCustomerErr);
 
       if (getCustomerErr) return res.status(500).json(getCustomerErr);
 

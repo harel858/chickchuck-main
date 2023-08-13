@@ -25,7 +25,8 @@
   cursor: pointer;
   background: beige;
 }
-
+/* background-color: rgb(15 23 42)
+ */
 .button {
     outline: none;
     border: none;

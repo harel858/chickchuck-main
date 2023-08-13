@@ -15,7 +15,7 @@ const fetchAppointmentSlots = async (businessName: string) => {
 
     const business = await prisma.business.findUnique({
       where: { businessName: value },
-      include: { user: { include: { Treatment: true } } },
+      include: { user: { include: { Treatment: true } }, Customer: true },
     });
     if (!business) return null;
     let usersData: UserData[] = [];

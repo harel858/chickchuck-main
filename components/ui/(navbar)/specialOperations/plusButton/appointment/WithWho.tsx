@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Chip } from "@mui/material";
 import TextField from "@mui/material/TextField";
@@ -15,6 +15,16 @@ function WithWho({
   appointmentInput: AppointmentInput;
   recipientMissing: string;
 }) {
+  const isInit = useRef(true);
+  useEffect(() => {
+    console.log(isInit);
+
+    if (isInit.current) {
+      isInit.current = false;
+      return;
+    }
+  }, []);
+
   const handleSelectChange = (id: string | undefined) => {
     const user = userData.find((item) => item.userId === id);
     if (!user || !id) return;
@@ -30,12 +40,26 @@ function WithWho({
       disablePortal
       id="combo-box-demo"
       options={options}
-      sx={{ width: 300, minWidth: 200 }}
+      value={
+        appointmentInput.user
+          ? {
+              label: appointmentInput.user?.name,
+              value: appointmentInput.user?.userId,
+            }
+          : null
+      }
+      sx={{ width: 180, minWidth: 120 }}
       getOptionLabel={(option) => option.label}
       renderInput={(params) => {
         return (
           <TextField
+            error={!isInit.current && !!recipientMissing}
             {...params}
+            label={
+              <p className="font-serif text-xl flex justify-center items-center gap-1">
+                Recipient
+              </p>
+            }
             key={params.id}
             placeholder="Select Recipient"
             variant="standard"

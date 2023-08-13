@@ -92,7 +92,6 @@ export type BusinessData = {
     Customer: Customer[];
   };
 };
-
 export type Slots = {
   start: string;
   end: string;

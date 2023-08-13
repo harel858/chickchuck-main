@@ -39,6 +39,7 @@ const StepTwo = React.memo(
           const { phoneNumber } = input;
           const res = await signIn("Customer Login", {
             phoneNumber,
+            bussinesId: input.bussinesId,
             redirect: false,
           });
           console.log(res);

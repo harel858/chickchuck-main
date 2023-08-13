@@ -58,7 +58,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
     <>
       <Navbar businessData={businessData} />
       <VerticalNav user={session.user} />
-      <section className="h-screen w-full flex justify-center items-center">
+      <section className="h-screen w-full pl-64 flex flex-col justify-center items-center relative max-2xl:px-0 max-2xl:m-0 gap-10">
         {children}
       </section>
     </>

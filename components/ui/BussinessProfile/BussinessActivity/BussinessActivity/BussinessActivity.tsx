@@ -23,7 +23,7 @@ export default function BusinessActivity({ user }: { user: ProfilePageData }) {
   );
 
   return (
-    <div className="flex flex-col items-center relative max-2xl:w-11/12 dark:bg-orange-400/70 bg-slate-100 shadow-sm shadow-black p-5 rounded-xl gap-1 transition-all duration-300 ease-in-out border border-gray-500">
+    <div className="flex flex-col items-center relative max-sm:w-11/12 min-w-max dark:bg-orange-400/70 bg-slate-100 shadow-sm shadow-black p-5 rounded-xl gap-1 transition-all duration-300 ease-in-out border border-gray-500">
       <div className="text-black flex justify-center items-center gap-2">
         <h2 className="text-2xl font-bold text-center w-max">
           Business Activity

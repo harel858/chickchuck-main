@@ -1,11 +1,12 @@
 import React from "react";
 import NavBarItem from "./NavBarItem";
 import { AiOutlineSchedule } from "react-icons/ai";
-import { CgProfile } from "react-icons/cg";
-import { GiFeather } from "react-icons/gi";
+import { FaBusinessTime } from "react-icons/fa";
+import { RiCoinsLine, RiTeamLine } from "react-icons/ri";
 import NavItemWithLinks from "./NavItemWithLinks";
 import NavHead from "./NavHead";
 import { User } from "next-auth";
+import { CgProfile } from "react-icons/cg";
 
 function VerticalNav({
   user,
@@ -26,7 +27,7 @@ function VerticalNav({
         <NavBarItem
           title={"Bussiness Profile"}
           link={`/profile`}
-          icon={<CgProfile />}
+          icon={<FaBusinessTime />}
         />
         <NavBarItem
           title={"Schedule"}
@@ -36,12 +37,18 @@ function VerticalNav({
         <NavBarItem
           title={"Services"}
           link={`/services`}
-          icon={<GiFeather />}
+          icon={<RiCoinsLine />}
         />
-        <NavItemWithLinks responsive={false} />
+        <NavBarItem title={"Clients"} link={"/clients"} icon={<CgProfile />} />
+        <NavBarItem title={"Team"} link={"/team"} icon={<RiTeamLine />} />
       </ul>
     </nav>
   );
 }
 
 export default VerticalNav;
+
+{
+  /*         <NavItemWithLinks responsive={false} />
+   */
+}

@@ -6,21 +6,25 @@ import { Zoom } from "react-awesome-reveal";
 import { Button } from "@ui/Button";
 import LeftArrow from "@components/arrows/LeftArrow";
 import RightArrow from "@components/arrows/RightArrow";
-import { AppointmentInput, BusinessData, UserData } from "../../types/types";
+import { AppointmentInput, UserData } from "../../types/types";
 
-export default function AvailableListCalendar({
-  activityDays,
+export default function AvailableList({
+  businessActivityDays,
   appointmentInput,
   setAppointmentInput,
   setRecipientMissing,
   setTreatmentMissing,
+  usersData,
 }: {
-  activityDays: number[];
+  businessActivityDays: number[];
+  usersData: UserData[];
   appointmentInput: AppointmentInput;
   setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
   setTreatmentMissing: React.Dispatch<React.SetStateAction<string>>;
   setRecipientMissing: React.Dispatch<React.SetStateAction<string>>;
 }) {
+  console.log("businessActivityDays", businessActivityDays);
+
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
   const isInit = useRef(true);
   useEffect(() => {
@@ -72,7 +76,14 @@ export default function AvailableListCalendar({
     <div className="w-full flex flex-col justify-start items-center gap-4">
       <Zoom damping={1000} duration={350} className="w-full">
         <div className="w-full flex justify-center items-center gap-3">
-          <LeftArrow onClickHandler={handlePreviousDay} />
+          <LeftArrow
+            disabled={
+              !appointmentInput.customerId ||
+              !appointmentInput.treatment?.id ||
+              !appointmentInput.user?.userId
+            }
+            onClickHandler={handlePreviousDay}
+          />
           <DatePicker
             disabledDate={(current) =>
               current && current.isBefore(dayjs(), "day")
@@ -86,12 +97,21 @@ export default function AvailableListCalendar({
             value={selectedDate}
             className="w-52 cursor-pointer"
           />
-          <RightArrow onClickHandler={handleNextDay} />
+          <RightArrow
+            disabled={
+              !appointmentInput.customerId ||
+              !appointmentInput.treatment?.id ||
+              !appointmentInput.user?.userId
+            }
+            onClickHandler={handleNextDay}
+          />
         </div>
       </Zoom>
       <div className="flex flex-row justify-center items-center gap-1 w-11/12">
         {daysOfCurrentWeek.map((day, i) => {
-          const validDay = activityDays.some((item) => item == day.day());
+          const validDay = businessActivityDays.some(
+            (item) => item == day.day()
+          );
           const pastDay = day.isBefore(dayjs(), "day");
           return (
             <Button
@@ -122,6 +142,8 @@ export default function AvailableListCalendar({
         })}
       </div>
       <AvailableQueues
+        usersData={usersData}
+        businessActivityDays={businessActivityDays}
         date={selectedDate}
         appointmentInput={appointmentInput}
         setAppointmentInput={setAppointmentInput}

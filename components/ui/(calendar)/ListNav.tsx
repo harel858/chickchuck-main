@@ -10,6 +10,8 @@ import {
   MdKeyboardDoubleArrowLeft,
 } from "react-icons/md";
 import { Button } from "@ui/Button";
+import LeftArrow from "@components/arrows/LeftArrow";
+import RightArrow from "@components/arrows/RightArrow";
 
 interface ListNavProps {
   setViewMode: React.Dispatch<React.SetStateAction<"daily" | "weekly">>;
@@ -106,97 +108,75 @@ function ListNav({
       </motion.div>
       <div className="flex justify-center items-center gap-3">
         <div className="flex justify-center items-center gap-1">
-          <AnimatePresence>
-            <motion.div
-              key="arrowDoubleLeft"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              transition={scaleSpringTransition}
-            >
-              <MdKeyboardDoubleArrowLeft
-                className="text-4xl rounded-full hover:bg-white/70 cursor-pointer"
-                onClick={() => {
-                  handleDateChange(-7);
-                  setSearchQuery("");
-                }}
-              />
-            </motion.div>
-
-            {viewMode !== "daily" && currentView === "calendar" ? (
-              <React.Fragment key="emptyLeftArrow"></React.Fragment>
-            ) : (
-              <motion.div
-                key="arrowLeft"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-                transition={scaleSpringTransition}
-              >
-                <BsArrowLeftCircle
-                  className="text-4xl rounded-full hover:bg-white/70 cursor-pointer"
-                  onClick={() => {
-                    handleDateChange(-1);
-                    setSearchQuery("");
-                  }}
-                />
-              </motion.div>
-            )}
-
-            <Button
-              variant="ghost"
-              className="rounded-3xl dark:text-white"
+          <motion.div
+            key="arrowDoubleLeft"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            transition={scaleSpringTransition}
+          >
+            <MdKeyboardDoubleArrowLeft
+              className="text-4xl rounded-full hover:bg-white/70 cursor-pointer"
               onClick={() => {
-                onSelect(dayjs());
+                handleDateChange(-7);
                 setSearchQuery("");
               }}
-            >
-              Today
-            </Button>
-            {viewMode !== "daily" && currentView === "calendar" ? (
-              <React.Fragment key="emptyRightArrow"></React.Fragment>
-            ) : (
-              <motion.div
-                key="arrowRight"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-                transition={scaleSpringTransition}
-              >
-                <BsArrowRightCircle
-                  className="text-4xl rounded-full hover:bg-white/70 cursor-pointer"
-                  onClick={() => {
-                    handleDateChange(1);
-                    setSearchQuery("");
-                  }}
-                />
-              </motion.div>
-            )}
+            />
+          </motion.div>
 
-            <motion.div
-              key="arrowDoubleRight"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              transition={scaleSpringTransition}
-            >
-              <MdKeyboardDoubleArrowRight
-                className="text-4xl rounded-full hover:bg-white/70 cursor-pointer"
-                onClick={() => {
-                  handleDateChange(7);
-                  setSearchQuery("");
-                }}
-              />
-            </motion.div>
-          </AnimatePresence>
+          {viewMode !== "daily" && currentView === "calendar" ? (
+            <React.Fragment key="emptyLeftArrow"></React.Fragment>
+          ) : (
+            <LeftArrow
+              disabled={false}
+              onClickHandler={() => {
+                handleDateChange(-1);
+                setSearchQuery("");
+              }}
+            />
+          )}
+
+          <Button
+            variant="ghost"
+            className="rounded-3xl dark:text-white"
+            onClick={() => {
+              onSelect(dayjs());
+              setSearchQuery("");
+            }}
+          >
+            Today
+          </Button>
+          {viewMode !== "daily" && currentView === "calendar" ? (
+            <React.Fragment key="emptyRightArrow"></React.Fragment>
+          ) : (
+            <RightArrow
+              disabled={false}
+              onClickHandler={() => {
+                handleDateChange(1);
+                setSearchQuery("");
+              }}
+            />
+          )}
+
+          <motion.div
+            key="arrowDoubleRight"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            transition={scaleSpringTransition}
+          >
+            <MdKeyboardDoubleArrowRight
+              className="text-4xl rounded-full hover:bg-white/70 cursor-pointer"
+              onClick={() => {
+                handleDateChange(7);
+                setSearchQuery("");
+              }}
+            />
+          </motion.div>
         </div>
         <motion.input
           transition={{ type: "spring", stiffness: 750, damping: 10 }}

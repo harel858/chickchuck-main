@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Chip } from "@mui/material";
@@ -8,29 +8,36 @@ import { SelectChangeEvent } from "@mui/material/Select";
 function ForWhat({
   appointmentInput,
   setAppointmentInput,
+  treatmentMissing,
 }: {
   appointmentInput: AppointmentInput;
   setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
   treatmentMissing: string;
 }) {
-  const handleChange = (event: SelectChangeEvent) => {
-    const treatement = appointmentInput.user?.treatments.find(
-      (item) => item.id === event.target.value
-    );
-    console.log(treatement);
-    if (!treatement) return;
-    setAppointmentInput({ ...appointmentInput, treatment: treatement });
-  };
+  const isInit = useRef(true);
+  useEffect(() => {
+    console.log(isInit);
+
+    if (isInit.current) {
+      isInit.current = false;
+      return;
+    }
+  }, []);
+
   const options = appointmentInput.user?.treatments.map((item) => ({
     value: item.id,
     label: item.title,
   }));
 
   const handleSelectChange = (id: string | undefined) => {
+    console.log(id);
+
     const treatment = appointmentInput.user?.treatments.find(
       (item) => item.id === id
     );
-    if (!treatment || !id) return;
+    if (!treatment || !id)
+      return setAppointmentInput({ ...appointmentInput, treatment: null });
+
     setAppointmentInput({ ...appointmentInput, treatment: treatment });
   };
 
@@ -40,14 +47,20 @@ function ForWhat({
       disablePortal
       id="combo-box-demo"
       options={options || []}
-      sx={{ width: 300, minWidth: 200 }}
+      sx={{ width: 180, minWidth: 120 }}
       getOptionLabel={(option) => option.label}
       renderInput={(params) => {
         return (
           <TextField
+            error={!isInit.current && !!treatmentMissing}
             {...params}
             key={params.id}
-            placeholder="Select Client"
+            placeholder="Select Service"
+            label={
+              <p className="font-serif text-xl flex justify-center items-center gap-1">
+                Service
+              </p>
+            }
             variant="standard"
           />
         );

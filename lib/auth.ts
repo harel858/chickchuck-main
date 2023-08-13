@@ -14,6 +14,7 @@ interface UserCredentials {
 
 interface CustomerCredentials {
   phoneNumber: string;
+  bussinesId: string;
 }
 const bucketName = process.env.BUCKET_NAME!;
 
@@ -34,8 +35,11 @@ const authorizeUserLogin = async (credentials: any, req: any) => {
 
 const authorizeCustomerLogin = async (credentials: any, req: any) => {
   try {
-    const { phoneNumber } = credentials as CustomerCredentials;
-    const { customer, getCustomerErr } = await getCustomer(phoneNumber);
+    const { phoneNumber, bussinesId } = credentials as CustomerCredentials;
+    const { customer, getCustomerErr } = await getCustomer(
+      phoneNumber,
+      bussinesId
+    );
 
     if (getCustomerErr || !customer) throw new Error("Customer log in Fail");
 

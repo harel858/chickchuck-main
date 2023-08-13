@@ -78,7 +78,7 @@ function Images({
         <h1
           className={`${lobster?.className} text-white text-4xl shadow-2xl shadow-black`}
         >
-          QueueBook.
+          QuickQ.
         </h1>
         <LargeHeading size={"default"} className="text-white">
           Bussiness Profile

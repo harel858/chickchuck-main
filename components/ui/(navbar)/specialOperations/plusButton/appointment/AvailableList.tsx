@@ -1,27 +1,30 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { Zoom } from "react-awesome-reveal";
 import { Button } from "@ui/Button";
 import LeftArrow from "@components/arrows/LeftArrow";
 import RightArrow from "@components/arrows/RightArrow";
 import AvailableQueues from "@components/landingPage/AvailableQueues";
-import { DatePicker, MobileDatePicker } from "@mui/x-date-pickers";
-import { AppointmentInput } from "types/types";
+import { MobileDatePicker } from "@mui/x-date-pickers";
+import { AppointmentInput, UserData } from "types/types";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
-export default function AvailableListCalendar({
-  activityDays,
+export default function AvailableList({
+  usersData,
+  businessActivityDays,
   appointmentInput,
   setAppointmentInput,
   setRecipientMissing,
   setTreatmentMissing,
+  setCustomerMissing,
 }: {
-  activityDays: number[];
+  usersData: UserData[];
+  businessActivityDays: number[];
   appointmentInput: AppointmentInput;
   setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
   setTreatmentMissing: React.Dispatch<React.SetStateAction<string>>;
   setRecipientMissing: React.Dispatch<React.SetStateAction<string>>;
+  setCustomerMissing: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
   const isInit = useRef(true);
@@ -35,8 +38,10 @@ export default function AvailableListCalendar({
     // Reset missing fields state
     setTreatmentMissing("");
     setRecipientMissing("");
+    setCustomerMissing("");
 
     // Check for missing fields
+    if (!appointmentInput.customerId) setCustomerMissing("Client is missing");
     if (!appointmentInput.treatment) setTreatmentMissing("Service is missing");
     if (!appointmentInput.user) setRecipientMissing("Recipient is missing");
   }, [selectedDate]);
@@ -70,46 +75,90 @@ export default function AvailableListCalendar({
 
   const daysOfCurrentWeek = getDaysOfCurrentWeek(selectedDate);
 
+  console.log("appointmentInput", appointmentInput);
+
   return (
-    <div className="w-full flex flex-col justify-start items-center gap-4">
-      <Zoom damping={1000} duration={350} className="w-full">
-        <div className="w-full flex justify-center items-center gap-3">
-          <LeftArrow onClickHandler={handlePreviousDay} />{" "}
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <MobileDatePicker
-              shouldDisableDate={(date) => date.isBefore(dayjs(), "day")}
-              onChange={(newDate) => newDate && handleDateChange(newDate)}
-              value={selectedDate}
-              closeOnSelect
-              className="w-52 cursor-pointer"
-            />
-          </LocalizationProvider>
-          <RightArrow onClickHandler={handleNextDay} />
-        </div>
-      </Zoom>
+    <div
+      className="w-full flex flex-col justify-start items-center"
+      onClick={() => {
+        if (!appointmentInput.customerId)
+          setCustomerMissing("Client is missing");
+        if (!appointmentInput.treatment)
+          setTreatmentMissing("Service is missing");
+        if (!appointmentInput.user) setRecipientMissing("Recipient is missing");
+      }}
+    >
+      <div className="w-full flex justify-center items-center gap-3">
+        <LeftArrow
+          disabled={
+            !appointmentInput.customerId ||
+            !appointmentInput.treatment?.id ||
+            !appointmentInput.user?.userId
+          }
+          onClickHandler={handlePreviousDay}
+        />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <MobileDatePicker
+            shouldDisableDate={(date) => date.isBefore(dayjs(), "day")}
+            onChange={(newDate) => newDate && handleDateChange(newDate)}
+            value={selectedDate}
+            closeOnSelect
+            className="w-52 cursor-pointer"
+            sx={{ width: 180, minWidth: 120 }}
+            disabled={
+              !appointmentInput.customerId ||
+              !appointmentInput.treatment ||
+              !appointmentInput.user
+            }
+          />
+        </LocalizationProvider>
+        <RightArrow
+          disabled={
+            !appointmentInput.customerId ||
+            !appointmentInput.treatment?.id ||
+            !appointmentInput.user?.userId
+          }
+          onClickHandler={handleNextDay}
+        />
+      </div>
       <div className="flex flex-row justify-center items-center gap-1 w-11/12">
         {daysOfCurrentWeek.map((day, i) => {
-          const validDay = activityDays.some((item) => item == day.day());
+          let validDay = false;
+          if (usersData.length <= 1)
+            validDay = businessActivityDays.some((item) => item == day.day());
+
+          if (usersData.length > 1 && appointmentInput.user)
+            validDay = appointmentInput.user?.activityDays.some(
+              (item) => item == day.day()
+            );
           const pastDay = day.isBefore(dayjs(), "day");
           return (
             <Button
               key={i}
               variant={"ghost"}
               onClick={() => handleDateChange(day)}
-              disabled={pastDay || !validDay}
+              disabled={
+                pastDay ||
+                !validDay ||
+                !appointmentInput.customerId ||
+                !appointmentInput.treatment ||
+                !appointmentInput.user
+              }
               className={`${
                 selectedDate.format("DD/MM/YYYY") == day.format("DD/MM/YYYY")
                   ? "bg-slate-900 text-white"
                   : pastDay
                   ? "bg-orange-200 text-black opacity-80"
                   : "bg-orange-200 text-black"
-              } flex flex-col justify-center items-center gap-1 px-1 py-7 border border-gray-500 hover:text-white hover:bg-slate-900`}
+              } flex flex-col justify-center items-center gap-1 px-1 py-5 border border-gray-500 hover:text-white hover:bg-slate-900`}
             >
-              <p className="text-base font-medium font-sans">
-                {day.format("dddd").slice(0, 1)}`
+              <p className="text-sm font-medium font-sans">
+                {day.format("dddd").slice(0, 2)}`
               </p>
               {!validDay ? (
-                <p>Close</p>
+                <p className="text-xs font-normal font-sans text-gray-500">
+                  Close
+                </p>
               ) : (
                 <p className="text-xs font-normal font-sans text-gray-500">
                   {day.format("MM/DD")}
@@ -120,6 +169,8 @@ export default function AvailableListCalendar({
         })}
       </div>
       <AvailableQueues
+        businessActivityDays={businessActivityDays}
+        usersData={usersData}
         date={selectedDate}
         appointmentInput={appointmentInput}
         setAppointmentInput={setAppointmentInput}

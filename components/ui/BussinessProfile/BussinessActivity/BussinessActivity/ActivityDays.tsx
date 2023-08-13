@@ -47,6 +47,7 @@ const ActivityDays = ({
   return (
     <div className="flex flex-col justify-center items-baseline">
       <Autocomplete
+        sx={{ width: 300 }}
         multiple
         id="checkboxes-tags-demo"
         value={activityDaysAsObjects}
@@ -77,7 +78,6 @@ const ActivityDays = ({
             />
           ));
         }}
-        style={{ width: 500 }}
         renderInput={(params) => (
           <TextField
             key={params.id}

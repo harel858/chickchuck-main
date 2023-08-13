@@ -1,5 +1,5 @@
 import classes from "./style.module.css";
-import * as React from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";

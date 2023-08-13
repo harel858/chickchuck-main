@@ -34,7 +34,7 @@ export const Navigation = ({ isOpen }: { isOpen: boolean }) => {
     <motion.ul
       className={` ${
         !isOpen ? `hidden` : `flex`
-      } relative flex-col w-full  gap-1 justify-start items-center align-start text-black text-md max-sm:text-sm `}
+      } relative flex-col w-full gap-1 justify-start items-center align-start text-black text-md max-sm:text-sm`}
       variants={variants}
     >
       {itemIds.map(

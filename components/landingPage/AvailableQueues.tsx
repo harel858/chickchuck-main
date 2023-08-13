@@ -5,6 +5,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { AppointmentInput, UserData } from "../../types/types";
+import NotActive from "./NotActive";
 const scaleSpringTransition = {
   stiffness: 750,
   damping: 10,
@@ -15,7 +16,11 @@ export default function AvailableQueues({
   date,
   appointmentInput,
   setAppointmentInput,
+  usersData,
+  businessActivityDays,
 }: {
+  usersData: UserData[];
+  businessActivityDays: number[];
   date: Dayjs;
   appointmentInput: AppointmentInput;
   setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
@@ -43,8 +48,10 @@ export default function AvailableQueues({
 
   const [loading, setLoading] = useState(false);
   const [validDay, setValidDay] = useState(true);
-  console.log(validDay);
-
+  const completeInput: boolean =
+    !!appointmentInput.customerId &&
+    !!appointmentInput.treatment?.id &&
+    !!appointmentInput.user?.userId;
   const queuesSorting = (
     allQueues: {
       id: string;
@@ -93,13 +100,17 @@ export default function AvailableQueues({
   };
 
   useEffect(() => {
-    console.log(appointmentInput.user?.activityDays);
-
-    const validDay = appointmentInput.user?.activityDays.some(
-      (item) => item == date.day()
-    );
-    setValidDay(validDay || false);
     if (!appointmentInput.user || !appointmentInput.treatment) return;
+    let validDay = false;
+    if (usersData.length <= 1)
+      validDay = businessActivityDays.some((item) => item == date.day());
+
+    if (usersData.length > 1)
+      validDay = appointmentInput.user?.activityDays.some(
+        (item) => item == date.day()
+      );
+
+    setValidDay(validDay);
 
     const getQueues = async (date: Dayjs) => {
       setLoading(true);
@@ -137,10 +148,10 @@ export default function AvailableQueues({
     <>
       <div
         className={`${
-          queues.length > 0 ? "h-36" : "h-auto"
+          queues.length > 0 && completeInput ? "h-36" : "h-auto"
         } w-10/12 rounded-2xl max-md:w-full overflow-x-hidden overflow-y-auto gap-2 flex justify-center align-center items-center flex-wrap align-center`}
       >
-        {validDay ? (
+        {validDay && completeInput ? (
           queues?.map((item, i) => {
             return (
               <Queue
@@ -152,8 +163,10 @@ export default function AvailableQueues({
               />
             );
           })
+        ) : !completeInput ? (
+          <></>
         ) : (
-          <p className="text-black">Day is not Valid</p>
+          !validDay && completeInput && <NotActive title="Not Active" />
         )}
       </div>
     </>

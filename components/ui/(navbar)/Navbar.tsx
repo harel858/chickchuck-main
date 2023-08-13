@@ -16,7 +16,7 @@ function Navbar({ businessData }: { businessData: BusinessData }) {
   const session = useSession();
 
   return (
-    <nav className="fixed backdrop-blur-sm bg-white/50 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-gray-900 dark:border-slate-800 shadow-sm flex items-center justify-between">
+    <nav className="fixed backdrop-blur-sm bg-orange-100/70 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-gray-900 dark:border-slate-800 shadow-sm flex items-center justify-between">
       <div className="w-full px-5 flex justify-end items-center gap-5">
         {session?.data?.user.UserRole === "RECIPIENT" && (
           <Suspense

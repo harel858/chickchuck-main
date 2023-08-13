@@ -9,9 +9,18 @@ const scaleSpringTransition = {
   duration: 0.3,
 };
 
-function LeftArrow({ onClickHandler }: { onClickHandler: () => void }) {
+function LeftArrow({
+  onClickHandler,
+  disabled,
+}: {
+  onClickHandler: () => void;
+  disabled: boolean;
+}) {
+  console.log("disabled", disabled);
+
   return (
-    <motion.div
+    <motion.button
+      disabled={disabled}
       key="arrowLeft"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -22,9 +31,12 @@ function LeftArrow({ onClickHandler }: { onClickHandler: () => void }) {
     >
       <BsArrowLeftCircle
         className="text-3xl text-black rounded-full hover:bg-white/70 cursor-pointer"
-        onClick={onClickHandler}
+        onClick={() => {
+          if (disabled) return;
+          onClickHandler();
+        }}
       />
-    </motion.div>
+    </motion.button>
   );
 }
 

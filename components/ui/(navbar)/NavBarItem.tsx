@@ -16,7 +16,7 @@ function NavBarItem({ title, link, icon }: NavItemProps) {
 
   return (
     <li
-      className={`flex justify-start gap-4 w-full group hover:bg-opacity-10 hover:bg-black/10 dark:hover:bg-white/10 ${
+      className={`flex justify-start gap-4 border-white/30 border-b w-full group hover:bg-opacity-10 hover:bg-black/10 dark:hover:bg-white/10 ${
         isActive && `bg-black/50 dark:bg-white/50`
       } cursor-pointer p-4 my-0 transition-all ease-in duration-200`}
       onClick={() => router.push(link)}

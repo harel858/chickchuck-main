@@ -12,6 +12,11 @@ import { NotificationPlacement } from "antd/es/notification/interface";
 import { notification } from "antd";
 
 function Steps({ businessData }: { businessData: BusinessData }) {
+  console.log(
+    "businessData.business.activityDays",
+    businessData.business.activityDays
+  );
+
   const { usersData } = businessData;
   // Get the user session
   const { data: session } = useSession();
@@ -93,7 +98,8 @@ function Steps({ businessData }: { businessData: BusinessData }) {
         <AvailableList
           appointmentInput={appointmentInput}
           setAppointmentInput={setAppointmentInput}
-          activityDays={businessData.business.activityDays}
+          usersData={usersData}
+          businessActivityDays={businessData.business.activityDays}
           setTreatmentMissing={setTreatmentMissing}
           setRecipientMissing={setRecipientMissing}
         />

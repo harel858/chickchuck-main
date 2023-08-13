@@ -7,6 +7,11 @@ import TabPanel from "@mui/lab/TabPanel";
 import Customer from "./Customer";
 import Appointment from "./appointment/Appointment";
 import { BusinessData } from "types/types";
+import {
+  BsCalendarPlusFill,
+  BsFillPersonPlusFill,
+  BsJournalPlus,
+} from "react-icons/bs";
 
 export default function Content({
   businessData,
@@ -24,8 +29,22 @@ export default function Content({
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
-            <Tab label="Customer" value="1" />
-            <Tab label="Appointment" value="2" />
+            <Tab
+              label={
+                <h4 className="flex justify-center items-center gap-2">
+                  Customer <BsFillPersonPlusFill className="text-xl" />
+                </h4>
+              }
+              value="1"
+            />
+            <Tab
+              label={
+                <h4 className="flex justify-center items-center gap-2">
+                  Appointment <BsCalendarPlusFill className="text-xl" />
+                </h4>
+              }
+              value="2"
+            />
           </TabList>
         </Box>
         <TabPanel value="1">

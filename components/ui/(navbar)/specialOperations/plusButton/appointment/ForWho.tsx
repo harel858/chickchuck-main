@@ -1,13 +1,11 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
-import Checkbox from "@mui/material/Checkbox";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import TextField from "@mui/material/TextField";
 import { Chip } from "@mui/material";
 import { AppointmentInput, BusinessData } from "types/types";
-import { TbCalendarTime } from "react-icons/tb";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -16,11 +14,23 @@ const ForWho = ({
   businessData,
   appointmentInput,
   setAppointmentInput,
+  customerMissing,
 }: {
   businessData: BusinessData;
   setAppointmentInput: React.Dispatch<React.SetStateAction<AppointmentInput>>;
   appointmentInput: AppointmentInput;
+  customerMissing: string;
 }) => {
+  const isInit = useRef(true);
+  useEffect(() => {
+    console.log(isInit);
+
+    if (isInit.current) {
+      isInit.current = false;
+      return;
+    }
+  }, []);
+
   const options = businessData.business.Customer.map((item) => ({
     value: item.id,
     label: item.name,
@@ -29,7 +39,8 @@ const ForWho = ({
   const handleSelectChange = (customerId: string | undefined) => {
     console.log("e", customerId);
 
-    if (!customerId) return;
+    if (!customerId)
+      return setAppointmentInput({ ...appointmentInput, customerId: null });
 
     setAppointmentInput({ ...appointmentInput, customerId: customerId });
   };
@@ -38,14 +49,20 @@ const ForWho = ({
       disablePortal
       id="combo-box-demo"
       options={options}
-      sx={{ width: 300, minWidth: 200 }}
+      sx={{ width: 180, minWidth: 120 }}
       getOptionLabel={(option) => option.label}
       renderInput={(params) => {
         return (
           <TextField
+            error={!isInit.current && !!customerMissing}
             {...params}
             key={params.id}
             placeholder="Select Client"
+            label={
+              <p className="font-serif text-xl flex justify-center items-center gap-1">
+                Client
+              </p>
+            }
             variant="standard"
           />
         );
