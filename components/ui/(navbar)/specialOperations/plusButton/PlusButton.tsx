@@ -1,3 +1,4 @@
+"use client";
 import React, { lazy, Suspense, useCallback } from "react";
 import { Button } from "@ui/Button";
 import { BsPlusSquare } from "react-icons/bs";
@@ -9,6 +10,7 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { BusinessData } from "types/types";
+import { AiFillPlusCircle } from "react-icons/ai";
 
 const Content = lazy(() => import("./Content"));
 
@@ -64,14 +66,11 @@ export default function PlusButton({
   }, [open]);
 
   return (
-    <div>
-      <Button
-        variant={"ghost"}
-        className={`transition-all ease-in-out duration-300 hover:scale-125 w-fit h-fit cursor-pointer m-0 p-0 flex flex-row-reverse justify-center gap-2 items-center text-base hover:bg-slate-100`}
+    <>
+      <AiFillPlusCircle
         onClick={handleClickOpen}
-      >
-        <BsPlusSquare className="text-3xl m-0 p-0" />
-      </Button>
+        className="z-50 fixed bottom-5 right-5 hover:scale-125 duration-200 transition-all ease-in-out cursor-pointer text-6xl m-0 p-0 text-blue-500 bg-transparent"
+      />
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
@@ -90,6 +89,6 @@ export default function PlusButton({
         </DialogContent>
         <DialogActions></DialogActions>
       </BootstrapDialog>
-    </div>
+    </>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 
 interface NavItemProps {
@@ -28,14 +27,13 @@ function NavBarItem({ title, link, icon }: NavItemProps) {
       >
         {icon}
       </div>
-      <Link
-        href={link}
+      <div
         className={`text-white relative ${
           isActive ? `font-medium ` : `font-light`
         } w-max after:absolute after:bottom-0 after:mt-1 after:left-0 after:h-0.5 after:w-full after:bg-blue-500 after:translate-y-1 after:scale-x-0 after:ease-in after:duration-200 ease-in duration-200 group-hover:after:scale-x-100 text-xl`}
       >
         {title}
-      </Link>
+      </div>
     </li>
   );
 }

@@ -6,6 +6,7 @@ import { authOptions } from "@lib/auth";
 import { prisma } from "@lib/prisma";
 import { UserData } from "types/types";
 import Navbar from "@ui/(navbar)/Navbar";
+import PlusButton from "@ui/(navbar)/specialOperations/plusButton/PlusButton";
 
 const fetchAppointmentSlots = async (id: string | undefined) => {
   if (!id) return null;
@@ -56,7 +57,10 @@ async function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Navbar businessData={businessData} />
+      {/* @ts-ignore  */}
+      <Navbar session={session} />
+      <PlusButton businessData={businessData} />
+      {/* @ts-ignore  */}
       <VerticalNav user={session.user} />
       <section className="h-screen w-full flex justify-center items-center">
         {children}

@@ -1,24 +1,15 @@
-"use client";
 import classes from "./style.module.css";
 import { lazy, Suspense } from "react";
 import { ThemeToggle } from "@components/ThemeToggle";
-import { buttonVariants } from "@ui/Button";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { BsPersonCircle } from "react-icons/bs";
-import PlusButton from "./specialOperations/plusButton/PlusButton";
 import Notification from "./specialOperations/Notification";
-import { BusinessData } from "types/types";
-
+import { Session } from "next-auth";
 const Hamburger = lazy(() => import("./(responsiveNav)/Hamburger"));
 
-function Navbar({ businessData }: { businessData: BusinessData }) {
-  const session = useSession();
-
+async function Navbar({ session }: { session: Session }) {
   return (
-    <nav className="fixed backdrop-blur-sm bg-orange-100/70 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-gray-900 dark:border-slate-800 shadow-sm flex items-center justify-between">
+    <nav className="fixed backdrop-blur-sm bg-orange-200/70 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-gray-900 dark:border-slate-800 shadow-sm flex items-center justify-between">
       <div className="w-full px-5 flex justify-end items-center gap-5">
-        {session?.data?.user.UserRole === "RECIPIENT" && (
+        {session?.user.UserRole === "RECIPIENT" && (
           <Suspense
             fallback={
               <div
@@ -26,22 +17,11 @@ function Navbar({ businessData }: { businessData: BusinessData }) {
               />
             }
           >
-            <Hamburger user={session.data.user} />
+            <Hamburger user={session.user} />
           </Suspense>
         )}
-        <PlusButton businessData={businessData} />
         <Notification />
         <ThemeToggle />
-        {session?.data?.user.UserRole === "RECIPIENT" && (
-          <Link
-            className={`${buttonVariants({
-              variant: "ghost",
-            })} flex flex-row-reverse justify-center gap-2 items-center text-base hover:bg-slate-100`}
-            href="/signin"
-          >
-            Sign Out <BsPersonCircle className="text-3xl" />
-          </Link>
-        )}
       </div>
     </nav>
   );

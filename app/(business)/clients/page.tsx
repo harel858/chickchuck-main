@@ -1,42 +1,35 @@
-"use client";
 import React from "react";
-import Box from "@mui/material/Box";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import { FixedSizeList, ListChildComponentProps } from "react-window";
+import { authOptions } from "@lib/auth";
+import { prisma } from "@lib/prisma";
+import { getServerSession } from "next-auth";
+import { notFound } from "next/navigation";
+import Clients from "@components/clients/Clients";
 
-function renderRow(props: ListChildComponentProps) {
-  const { index, style } = props;
-
-  return (
-    <ListItem style={style} key={index} component="div" disablePadding>
-      <ListItemButton>
-        <ListItemText primary={`Item ${index + 1}`} />
-      </ListItemButton>
-    </ListItem>
-  );
+async function getBusinessCustomers(userId: string | undefined) {
+  if (!userId) return null;
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        Business: {
+          include: { Customer: { include: { appointments: true } } },
+        },
+      },
+    });
+    if (!user?.Business) return null;
+    const { Business } = user;
+    return Business.Customer;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
 }
 
-export default function VirtualizedList() {
-  return (
-    <Box
-      sx={{
-        width: "100%",
-        height: 400,
-        maxWidth: "80%",
-        bgcolor: "background.paper",
-      }}
-    >
-      <FixedSizeList
-        height={400}
-        width={360}
-        itemSize={46}
-        itemCount={200}
-        overscanCount={5}
-      >
-        {renderRow}
-      </FixedSizeList>
-    </Box>
-  );
+async function Page() {
+  const session = await getServerSession(authOptions);
+  const customers = await getBusinessCustomers(session?.user.id);
+  if (!customers || session?.user.UserRole === "CUSTOMER") return notFound();
+  return <Clients customers={customers} />;
 }
+
+export default Page;

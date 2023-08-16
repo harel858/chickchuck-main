@@ -3,12 +3,16 @@ import NavBarItem from "./NavBarItem";
 import { AiOutlineSchedule } from "react-icons/ai";
 import { FaBusinessTime } from "react-icons/fa";
 import { RiCoinsLine, RiTeamLine } from "react-icons/ri";
-import NavItemWithLinks from "./NavItemWithLinks";
+import { IoMdExit } from "react-icons/io";
 import NavHead from "./NavHead";
-import { User } from "next-auth";
+import { getServerSession, User } from "next-auth";
 import { CgProfile } from "react-icons/cg";
+import { authOptions } from "@lib/auth";
+import { notFound } from "next/navigation";
+import { signOut } from "next-auth/react";
+import SignOutBTN from "./SignOutBTN";
 
-function VerticalNav({
+async function VerticalNav({
   user,
 }: {
   user: User & {
@@ -20,6 +24,9 @@ function VerticalNav({
     } | null;
   };
 }) {
+  const session = await getServerSession(authOptions);
+  if (!session) return notFound();
+
   return (
     <nav className="fixed top-0 h-screen w-64 max-2xl:hidden shadow-sm shadow-black/20 pt-9 gap-10 flex flex-col align-center items-center justify-start bg-slate-800 dark:bg-neutral-700 dark:text-blue-50 border-r border-gray-600 z-50">
       <NavHead user={user} />
@@ -41,6 +48,7 @@ function VerticalNav({
         />
         <NavBarItem title={"Clients"} link={"/clients"} icon={<CgProfile />} />
         <NavBarItem title={"Team"} link={"/team"} icon={<RiTeamLine />} />
+        <SignOutBTN />
       </ul>
     </nav>
   );

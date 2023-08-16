@@ -224,3 +224,9 @@ export interface LandingPageData {
   activityDays: number[];
   Address: Address[];
 }
+
+export interface customers {
+  customers: (Customer & {
+    appointments: Appointment[];
+  })[];
+}

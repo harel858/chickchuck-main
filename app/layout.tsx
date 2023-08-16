@@ -24,7 +24,7 @@ export default function RootLayout({
           inter.className
         )}
       >
-        <body className="min-h-screen bg-orange-100 dark:bg-slate-900 antialiased relative">
+        <body className="min-h-screen bg-orange-200 dark:bg-slate-900 antialiased relative">
           <Providers>
             <main className="relative m-0 p-0">{children}</main>
           </Providers>

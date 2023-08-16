@@ -4,7 +4,6 @@ import ToggleView from "./ToggleView";
 import ToggleViewMode from "./ToggleViewMode";
 import { AnimatePresence, motion } from "framer-motion";
 import dayjs, { Dayjs } from "dayjs";
-import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
 import {
   MdKeyboardDoubleArrowRight,
   MdKeyboardDoubleArrowLeft,
