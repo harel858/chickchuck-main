@@ -3,22 +3,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import ClientItem from "@components/clients/ClientItem";
 import NoClients from "@components/clients/NoClients";
 import SearchClient from "@components/clients/SearchClient";
-import { Appointment, Customer } from "@prisma/client";
+import { CustomerItem } from "types/types";
 
-function Clients({
-  customers,
-}: {
-  customers: (Customer & {
-    appointments: Appointment[];
-  })[];
-}) {
+function Clients({ customers }: { customers: CustomerItem[] }) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResult, setSearchResult] = useState<
-    (Customer & {
-      appointments: Appointment[];
-    })[]
-  >([]);
+  const [searchResult, setSearchResult] = useState<CustomerItem[]>([]);
   useEffect(() => {
     if (!searchQuery) return;
     const handleSearch = () => {
@@ -43,8 +33,8 @@ function Clients({
     [searchQuery, setSearchQuery]
   );
   return (
-    <div className="flex flex-col justify-center items-center gap-5 shadow-2xl dark:shadow-white/50 p-0 pt-5 w-full">
-      <nav className="flex flex-row-reverse max-md:flex-col max-md:items-start flex-wrap content-center justify-between items-center font-extralight w-full relative top-0 p-3 px-10 gap-2 transition-all duration-1000 ease-in-out">
+    <div className="flex flex-col justify-center items-center gap-2 p-0 pt-5 w-full max-lg:w-full">
+      <nav className="flex flex-row-reverse max-md:flex-col max-md:items-start flex-wrap content-center justify-center items-center font-extralight w-full relative top-0 p-3 px-10 gap-2 transition-all duration-1000 ease-in-out">
         <SearchClient
           onSearchChange={onSearchChange}
           searchQuery={searchQuery}
@@ -55,7 +45,7 @@ function Clients({
           <NoClients title={"You don't have any customers yet"} />
         ) : !searchQuery && customers?.length > 0 ? (
           <ul
-            className={`flex gap-2 flex-1 w-full flex-col justify-center content-center items-center overflow-x-hidden rounded-bl-3xl rounded-br-3xl `}
+            className={`flex gap-4 flex-1 w-full flex-row flex-wrap justify-evenly content-center items-center overflow-x-hidden rounded-bl-3xl rounded-br-3xl `}
           >
             {customers.map((customer, i) => (
               <ClientItem key={customer.id} i={i} customer={customer} />
@@ -63,7 +53,7 @@ function Clients({
           </ul>
         ) : (
           <ul
-            className={`flex gap-2 flex-1 w-full flex-col justify-center content-center items-center overflow-x-hidden rounded-bl-3xl rounded-br-3xl `}
+            className={`flex gap-4 flex-1 w-full flex-row flex-wrap justify-evenly content-center items-center overflow-x-hidden rounded-bl-3xl rounded-br-3xl `}
           >
             {searchResult.map((customer, i) => (
               <ClientItem key={customer.id} i={i} customer={customer} />

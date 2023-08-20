@@ -1,5 +1,4 @@
 import React from "react";
-import { Avatar } from "@mui/material";
 import { User } from "next-auth";
 import ProfileImage from "./ProfileImage";
 import { Lobster_Two } from "next/font/google";

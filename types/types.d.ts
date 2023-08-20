@@ -225,8 +225,14 @@ export interface LandingPageData {
   Address: Address[];
 }
 
-export interface customers {
-  customers: (Customer & {
-    appointments: Appointment[];
+export type CustomerItem = {
+  average_monthly_income: number;
+  id: string;
+  name: string;
+  phoneNumber: string;
+  UserRole: UserRole;
+  appointments: (Appointment & {
+    treatment: Treatment;
+    appointmentSlot: AppointmentSlot;
   })[];
-}
+};

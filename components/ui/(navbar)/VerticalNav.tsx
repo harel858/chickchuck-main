@@ -3,13 +3,11 @@ import NavBarItem from "./NavBarItem";
 import { AiOutlineSchedule } from "react-icons/ai";
 import { FaBusinessTime } from "react-icons/fa";
 import { RiCoinsLine, RiTeamLine } from "react-icons/ri";
-import { IoMdExit } from "react-icons/io";
 import NavHead from "./NavHead";
 import { getServerSession, User } from "next-auth";
 import { CgProfile } from "react-icons/cg";
 import { authOptions } from "@lib/auth";
 import { notFound } from "next/navigation";
-import { signOut } from "next-auth/react";
 import SignOutBTN from "./SignOutBTN";
 
 async function VerticalNav({
@@ -55,8 +53,3 @@ async function VerticalNav({
 }
 
 export default VerticalNav;
-
-{
-  /*         <NavItemWithLinks responsive={false} />
-   */
-}

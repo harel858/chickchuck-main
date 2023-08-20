@@ -1,16 +1,15 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { Appointment, Customer } from "@prisma/client";
+import { CustomerItem } from "types/types";
+import DetailsButton from "./details/DetailsButton";
 
 export default function ClientItem({
   i,
   customer,
 }: {
   i: number;
-  customer: Customer & {
-    appointments: Appointment[];
-  };
+  customer: CustomerItem;
 }) {
   return (
     <motion.li
@@ -22,13 +21,17 @@ export default function ClientItem({
         duration: 0.2,
         easeInOut: [0, 0.71, 0.2, 1.01],
       }}
-      className={`w-11/12 hover:bg-gray-900 bg-sky-200 border border-gray-500 text-black cursor-pointer hover:text-white rounded-2xl relative px-16 py-7  flex justify-between gap-10 items-center`}
+      className={`w-1/3 max-lg:w-11/12 hover:bg-gray-900 bg-slate-50 border border-gray-500 text-black cursor-pointer hover:text-white rounded-2xl relative px-5 py-7 flex-col justify-around items-center group`}
     >
-      <div className="flex flex-col gap-1 justify-center items-start">
-        <p className="font-medium text-xl w-max">{customer.name}</p>
-        <p className="font-thin text-lg">{customer.name}</p>
+      <div className="flex flex-row gap-1 justify-between items-center w-full">
+        <p className="font-serif font-semibold text-2xl w-max">
+          {customer.name}
+        </p>
+        <DetailsButton customer={customer} />
       </div>
-      <p className="font-extralight text-lg">{customer.phoneNumber}</p>
+      <div className="flex flex-row gap-1 justify-between items-center w-full">
+        <p className="font-extralight text-lg">{customer.phoneNumber}</p>
+      </div>
     </motion.li>
   );
 }

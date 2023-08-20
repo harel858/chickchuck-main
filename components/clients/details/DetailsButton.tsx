@@ -7,9 +7,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { BusinessData } from "types/types";
-import Fab from "@mui/material/Fab";
-import AddIcon from "@mui/icons-material/Add";
+import { CustomerItem } from "types/types";
+import { Button } from "@ui/Button";
+
 const Content = lazy(() => import("./Content"));
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -50,10 +50,10 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
     </DialogTitle>
   );
 }
-export default function PlusButton({
-  businessData,
+export default function DetailsButton({
+  customer,
 }: {
-  businessData: BusinessData;
+  customer: CustomerItem;
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -66,15 +66,12 @@ export default function PlusButton({
 
   return (
     <>
-      <Fab
-        className="fixed bottom-10 right-10 z-50 bg-blue-600"
-        variant={"circular"}
-        color="primary"
-        aria-label="add"
+      <Button
         onClick={handleClickOpen}
+        className="group-hover:bg-slate-100 group-hover:text-black"
       >
-        <AddIcon />
-      </Fab>
+        Details
+      </Button>
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
@@ -84,11 +81,11 @@ export default function PlusButton({
           id="customized-dialog-title"
           onClose={handleClose}
         >
-          Client/Appointment
+          Customer File
         </BootstrapDialogTitle>
         <DialogContent className="bg-slate-100" dividers>
           <Suspense fallback={<>loading...</>}>
-            <Content businessData={businessData} />
+            <Content customer={customer} />
           </Suspense>
         </DialogContent>
         <DialogActions></DialogActions>

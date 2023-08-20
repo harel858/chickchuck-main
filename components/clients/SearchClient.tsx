@@ -12,7 +12,7 @@ function SearchClient({
   return (
     <motion.input
       transition={{ type: "spring", stiffness: 750, damping: 10 }}
-      whileHover={{ scale: 1.1 }}
+      whileHover={{ scale: 1.05 }}
       type="text"
       placeholder="Search clients"
       value={searchQuery}

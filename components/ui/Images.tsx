@@ -7,8 +7,6 @@ import { Button } from "./Button";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import LargeHeading from "./LargeHeading";
-import { Lobster_Two } from "next/font/google";
-const lobster = Lobster_Two({ weight: ["400"], subsets: ["latin"] });
 
 function Images({
   user,
@@ -75,11 +73,6 @@ function Images({
       }}
     >
       <div className="flex flex-col justify-center items-center absolute top-5 max-xl:top-1 max-xl:right-1 left-0 right-0 w-full">
-        <h1
-          className={`${lobster?.className} text-white text-4xl shadow-2xl shadow-black`}
-        >
-          QuickQ.
-        </h1>
         <LargeHeading size={"default"} className="text-white">
           Bussiness Profile
         </LargeHeading>
