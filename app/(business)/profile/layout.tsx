@@ -58,7 +58,6 @@ async function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {/* @ts-ignore  */}
       <Navbar session={session} />
       <PlusButton businessData={businessData} />
       {/* @ts-ignore  */}

@@ -24,13 +24,13 @@ export default function ClientItem({
       className={`w-1/3 max-lg:w-11/12 hover:bg-gray-900 bg-slate-50 border border-gray-500 text-black cursor-pointer hover:text-white rounded-2xl relative px-5 py-7 flex-col justify-around items-center group`}
     >
       <div className="flex flex-row gap-1 justify-between items-center w-full">
-        <p className="font-serif font-semibold text-2xl w-max">
+        <p className="font-sans font-semibold text-2xl w-max">
           {customer.name}
         </p>
-        <DetailsButton customer={customer} />
       </div>
       <div className="flex flex-row gap-1 justify-between items-center w-full">
         <p className="font-extralight text-lg">{customer.phoneNumber}</p>
+        <DetailsButton customer={customer} />
       </div>
     </motion.li>
   );

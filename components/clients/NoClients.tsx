@@ -11,7 +11,7 @@ function NoClients({ title }: { title: string }) {
         delay={250}
         cascade
         damping={0.02}
-        className={`text-3xl max-sm:text-lg`}
+        className={`text-xl max-sm:text-lg`}
       >
         {title}
       </Fade>
@@ -24,7 +24,7 @@ function NoClients({ title }: { title: string }) {
         }}
         className="pb-5"
       >
-        <FaRegCalendarTimes className="text-9xl" />
+        <FaRegCalendarTimes className="text-7xl" />
       </motion.div>
     </div>
   );
