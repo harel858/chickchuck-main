@@ -4,7 +4,6 @@ import dayjs, { Dayjs } from "dayjs";
 import SearchByDate from "./SearchByDate";
 import NoClients from "../NoClients";
 import HistoryItem from "./HistoryItem";
-import LargeHeading from "@ui/LargeHeading";
 import { FaHistory } from "react-icons/fa";
 
 export default function History({
@@ -48,7 +47,7 @@ export default function History({
   return (
     <div className="w-full flex flex-col justify-start items-center h-80 overflow-x-hidden overflow-y-auto gap-10">
       <div className="flex flex-col justify-center items-center gap-3">
-        <h2 className="text-2xl font-serif font-semibold flex flex-row items-center justify-center gap-2">
+        <h2 className="text-2xl font-medium flex flex-row items-center justify-center gap-2">
           Service Records
           <FaHistory className="text-2xl" />
         </h2>

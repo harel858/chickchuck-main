@@ -7,11 +7,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import Customer from "./Customer";
 import Appointment from "./appointment/Appointment";
 import { BusinessData } from "types/types";
-import {
-  BsCalendarPlusFill,
-  BsFillPersonPlusFill,
-  BsJournalPlus,
-} from "react-icons/bs";
+import { BsCalendarPlusFill, BsFillPersonPlusFill } from "react-icons/bs";
 
 export default function Content({
   businessData,

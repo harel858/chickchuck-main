@@ -5,7 +5,6 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Rating from "@mui/material/Rating";
-import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import { Appointment, AppointmentSlot, Treatment } from "@prisma/client";
 
@@ -77,10 +76,10 @@ function HistoryItem({
         <div className="flex flex-row justify-center items-center w-full">
           <TextField
             id="standard-multiline-static"
-            label="Note"
+            label="Appointment Note"
             multiline
             rows={4}
-            defaultValue={appointment.notes || "Add AN Note"}
+            defaultValue={appointment.notes || "Add An Note"}
             variant="filled"
             className="self-center w-full"
           />
