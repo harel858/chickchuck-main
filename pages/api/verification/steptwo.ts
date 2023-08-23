@@ -5,7 +5,7 @@ import {
   createCustomer,
   getCustomer,
   updateCustomer,
-} from "../../../lib/prisma/customer";
+} from "../../../lib/prisma/customer/customer";
 import { VerificationData } from "../../../types/types";
 
 const vonage = new (Vonage as any)({

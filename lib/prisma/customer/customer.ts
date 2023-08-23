@@ -1,4 +1,4 @@
-import { prisma } from ".";
+import { prisma } from "..";
 
 export const createCustomer = async (
   name: string,

@@ -7,10 +7,9 @@ import TabPanel from "@mui/lab/TabPanel";
 import CustomerFile from "./CustomerFile";
 import Operations from "./Operations";
 import { CustomerItem } from "types/types";
-import { BsCalendarPlusFill, BsFillPersonPlusFill } from "react-icons/bs";
+import { BsFillPersonBadgeFill } from "react-icons/bs";
 import History from "./History";
 import { FaHistory } from "react-icons/fa";
-import LargeHeading from "@ui/LargeHeading";
 
 export default function Content({ customer }: { customer: CustomerItem }) {
   const [value, setValue] = React.useState("1");
@@ -27,7 +26,7 @@ export default function Content({ customer }: { customer: CustomerItem }) {
             <Tab
               label={
                 <h4 className="flex justify-center items-center gap-2">
-                  Customer File <BsFillPersonPlusFill className="text-xl" />
+                  Customer File <BsFillPersonBadgeFill className="text-xl" />
                 </h4>
               }
               value="1"
@@ -39,14 +38,6 @@ export default function Content({ customer }: { customer: CustomerItem }) {
                 </h4>
               }
               value="2"
-            />
-            <Tab
-              label={
-                <h4 className="flex justify-center items-center gap-2">
-                  Operations <BsCalendarPlusFill className="text-xl" />
-                </h4>
-              }
-              value="3"
             />
           </TabList>
         </Box>

@@ -3,7 +3,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios, { AxiosError } from "axios";
-import { getCustomer } from "./prisma/customer";
+import { getCustomer } from "./prisma/customer/customer";
 import { getImage } from "./aws/s3";
 import { signInNew } from "./routes/user/signin";
 

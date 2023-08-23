@@ -226,6 +226,8 @@ export interface LandingPageData {
 }
 
 export type CustomerItem = {
+  BusinessId: string;
+  blockedByBusiness: boolean;
   average_monthly_income: number;
   id: string;
   name: string;

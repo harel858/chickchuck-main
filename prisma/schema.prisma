@@ -38,20 +38,21 @@ model Images {
 }
 
 model Business {
-  id              String            @id @default(uuid())
-  businessName    String            @unique
-  phone           String            @unique
-  openingTime     String
-  closingTime     String
-  businessImage   String?
-  user            User[]
-  activityDays    Int[]
-  Customer        Customer[]
-  AvailableSlot   AvailableSlot[]
-  Address         Address[]
-  Appointment     Appointment[]
-  AppointmentSlot AppointmentSlot[]
-  Images          Images?
+  id               String            @id @default(uuid())
+  businessName     String            @unique
+  phone            String            @unique
+  openingTime      String
+  closingTime      String
+  businessImage    String?
+  user             User[]
+  activityDays     Int[]
+  Customer         Customer[]
+  AvailableSlot    AvailableSlot[]
+  Address          Address[]
+  Appointment      Appointment[]
+  AppointmentSlot  AppointmentSlot[]
+  Images           Images?
+  blockedCustomers Customer[]        @relation("BlockedCustomers")
 }
 
 model Address {
@@ -81,13 +82,14 @@ model Appointment {
 }
 
 model Customer {
-  id           String        @id @default(uuid())
-  name         String
-  phoneNumber  String        @unique
-  UserRole     UserRole      @default(CUSTOMER)
-  User         User[]
-  appointments Appointment[]
-  Business     Business[]
+  id                String        @id @default(uuid())
+  name              String
+  phoneNumber       String        @unique
+  UserRole          UserRole      @default(CUSTOMER)
+  User              User[]
+  appointments      Appointment[]
+  Business          Business[]
+  blockedByBusiness Business[]    @relation("BlockedCustomers")
 }
 
 model Treatment {

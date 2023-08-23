@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { createCustomer, getCustomer } from "@lib/prisma/customer";
+import { createCustomer, getCustomer } from "@lib/prisma/customer/customer";
 import validateCustomer from "@lib/validation/customer";
 
 export default async function handler(

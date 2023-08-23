@@ -21,6 +21,7 @@ async function getBusinessCustomers(userId: string | undefined) {
                 appointments: {
                   include: { treatment: true, appointmentSlot: true },
                 },
+                blockedByBusiness: true,
               },
             },
           },
@@ -70,7 +71,11 @@ async function getBusinessCustomers(userId: string | undefined) {
 
       return {
         ...customer,
+        blockedByBusiness: customer.blockedByBusiness.some(
+          (business) => business.id === Business.id
+        ),
         average_monthly_income: averageMonthlyIncome,
+        BusinessId: Business.id,
       };
     });
 

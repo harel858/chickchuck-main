@@ -81,7 +81,7 @@ export default function DetailsButton({
           id="customized-dialog-title"
           onClose={handleClose}
         >
-          Customer File
+          Customer Details
         </BootstrapDialogTitle>
         <DialogContent className="bg-slate-100" dividers>
           <Suspense fallback={<>loading...</>}>
