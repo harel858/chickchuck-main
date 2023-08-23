@@ -45,7 +45,7 @@ export default function History({
   );
 
   return (
-    <div className="w-full flex flex-col justify-start items-center h-80 overflow-x-hidden overflow-y-auto gap-10">
+    <div className="w-full flex flex-col justify-start items-center h-80 overflow-x-hidden overflow-y-auto gap-5">
       <div className="flex flex-col justify-center items-center gap-3">
         <h2 className="text-2xl font-medium flex flex-row items-center justify-center gap-2">
           Service Records
@@ -57,23 +57,21 @@ export default function History({
         />
       </div>
       {searchQuery && searchResult.length > 0 ? (
-        searchResult.map((appointment) => (
-          <ul className="flex flex-col items-center justify-center w-full">
-            <HistoryItem appointment={appointment} />
-          </ul>
-        ))
+        <ul className="flex flex-col items-center justify-center w-full">
+          {searchResult.map((appointment) => (
+            <HistoryItem key={appointment.id} appointment={appointment} />
+          ))}
+        </ul>
       ) : searchQuery && searchResult.length == 0 ? (
         <ul className="flex flex-col items-center justify-center w-1/3">
           <NoClients title={`No Appointments For This Date`} />
         </ul>
       ) : (
-        <>
+        <ul className="flex flex-col items-center justify-center w-full">
           {appointments.map((appointment) => (
-            <ul className="flex flex-col items-center justify-center w-full">
-              <HistoryItem appointment={appointment} />
-            </ul>
+            <HistoryItem key={appointment.id} appointment={appointment} />
           ))}
-        </>
+        </ul>
       )}
     </div>
   );

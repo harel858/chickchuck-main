@@ -17,6 +17,12 @@ function Customer({ customer }: { customer: CustomerItem }) {
       </h2>
       <ul className="p-0 flex flex-col justify-center items-center gap-2 w-full">
         <li className="flex flex-row justify-between items-center w-full">
+          <p className="text-lg font-serif font-semibold">Avg Monthly Profit</p>
+          <p className="text-lg font-semibold text-green-600">
+            {customer.average_monthly_income}$
+          </p>
+        </li>
+        <li className="flex flex-row justify-between items-center w-full">
           <p className="text-lg font-serif font-semibold">Name</p>
           <p className="text-lg font-semibold text-gray-600">{customer.name}</p>
         </li>
@@ -33,6 +39,7 @@ function Customer({ customer }: { customer: CustomerItem }) {
             </Button>
           </a>
         </li>
+
         <li className="flex flex-row justify-between items-center w-full">
           <p className="text-lg font-serif font-semibold">Block</p>
           <ToggleBlock customer={customer} />
