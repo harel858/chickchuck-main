@@ -1,8 +1,9 @@
+import { authOptions } from "@lib/auth";
 import { prisma } from "@lib/prisma";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import React from "react";
-import Treatment from "./Treatment";
+import Services from "@components/services/Services";
 import TreatmentsForm from "./treatmentsForm";
 export const revalidate = 1;
 
@@ -23,22 +24,10 @@ const fetchUser = async (email: string | null | undefined) => {
 };
 
 async function Page() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   const user = await fetchUser(session?.user?.email);
   if (!user) return notFound();
-
-  return (
-    <div className="flex flex-col justify-center align-center content-center items-center ">
-      <div>
-        <TreatmentsForm user={user} />
-        <ul>
-          {user?.Treatment?.map((item) => {
-            return <Treatment key={item.id} item={item} />;
-          })}
-        </ul>
-      </div>
-    </div>
-  );
+  return <Services user={user} />;
 }
 
 export default Page;

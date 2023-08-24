@@ -38,7 +38,7 @@ function Clients({ customers }: { customers: CustomerItem[] }) {
     <div className="flex flex-col justify-center items-center gap-4 p-0 pt-5 w-full max-lg:w-full">
       <div className="flex flex-col justify-center items-center gap-4">
         <LargeHeading className="flex flex-row justify-center items-center gap-2">
-          Clients <CgProfile />
+          My Clients <CgProfile />
         </LargeHeading>
         <SearchClient
           onSearchChange={onSearchChange}

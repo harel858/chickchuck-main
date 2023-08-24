@@ -36,8 +36,9 @@ async function getBusinessCustomers(userId: string | undefined) {
     const customersWithIncome = Business.Customer.map((customer) => {
       const appointmentsLastYear = customer.appointments.filter(
         (appointment) =>
-          appointment.status !== "COMPLETED" &&
-          dayjs(appointment?.appointmentSlot?.date).year() !== thisYear
+          appointment.status === "COMPLETED" &&
+          dayjs(appointment?.appointmentSlot?.date, "DD/MM/YYYY").year() ===
+            thisYear
       );
 
       const uniqueDates = appointmentsLastYear.reduce(
@@ -53,13 +54,10 @@ async function getBusinessCustomers(userId: string | undefined) {
         []
       );
 
-      console.log("uniqueDates", uniqueDates);
-
       const totalIncomeLastYear = appointmentsLastYear.reduce(
         (total, appointment) => total + appointment.treatment.cost,
         0
       );
-      console.log("totalIncomeLastYear", totalIncomeLastYear);
 
       const averageMonthlyIncome = uniqueDates.length
         ? totalIncomeLastYear /
@@ -67,7 +65,6 @@ async function getBusinessCustomers(userId: string | undefined) {
             ? dayjs().month() - Math.min(...uniqueDates)
             : 1)
         : 0;
-      console.log("averageMonthlyIncome", averageMonthlyIncome);
 
       return {
         ...customer,

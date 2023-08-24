@@ -62,7 +62,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
       <PlusButton businessData={businessData} />
       {/* @ts-ignore  */}
       <VerticalNav user={session.user} />
-      <section className="h-screen w-full flex justify-center items-center">
+      <section className="flex mt-20 justify-center items-center overflow-hidden pl-64 max-2xl:p-0">
         {children}
       </section>
     </>

@@ -3,11 +3,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { notFound } from "next/navigation";
 import { prisma } from "@lib/prisma";
-import {
-  AppointmentEvent,
-  ScheduleData,
-  ScheduleProps,
-} from "../../../types/types";
+import { ScheduleData } from "../../../types/types";
 import { getServerSession } from "next-auth";
 import CalendarComponent from "@ui/(calendar)/Calendar";
 import {
