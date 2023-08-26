@@ -238,3 +238,6 @@ export type CustomerItem = {
     appointmentSlot: AppointmentSlot;
   })[];
 };
+
+export type ServiceFormKeys = "title" | "cost" | "duration";
+export type ErrorData = Record<ServiceFormKeys, boolean>;

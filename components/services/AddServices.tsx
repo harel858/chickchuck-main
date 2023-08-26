@@ -1,5 +1,6 @@
 "use client";
 import React, { lazy, Suspense, useCallback } from "react";
+import Form from "./Form/Form";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -7,9 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import FormContent from "./FormContent";
 import { Button } from "@ui/Button";
-import { Treatment } from "@prisma/client";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 
 const Content = lazy(() => import("./Content"));
@@ -80,11 +79,11 @@ export default function AddServices() {
           id="customized-dialog-title"
           onClose={handleClose}
         >
-          Customer Details
+          Create Service
         </BootstrapDialogTitle>
         <DialogContent className="bg-slate-100" dividers>
           <Suspense fallback={<>loading...</>}>
-            <FormContent />
+            <Form />
           </Suspense>
         </DialogContent>
         <DialogActions></DialogActions>
