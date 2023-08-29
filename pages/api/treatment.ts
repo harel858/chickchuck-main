@@ -1,4 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { bussinessById } from "@lib/prisma/bussiness/getUnique";
+import validateService from "@lib/validation/serviceValidation";
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
   createTreatment,
@@ -13,18 +15,43 @@ export default async function handler(
 ) {
   if (req.method == "POST") {
     try {
-      const { title, cost, duration, businessId } = req.body;
-
-      const { userExist, err } = await getById(businessId);
-      if (err || !userExist) return res.status(500).json(`user not found`);
-      const { newTreatment, insertionErr } = await createTreatment({
+      const {
         title,
-        cost: parseInt(cost),
-        duration: parseInt(duration),
+        cost,
+        duration,
+        documentName,
+        advancePayment,
+        businessId,
+      } = req.body;
+      console.log("businessId", businessId);
+
+      //validate Service
+      const { error } = validateService({
+        title,
+        cost,
+        duration,
+        documentName,
         businessId,
       });
-      if (insertionErr || !newTreatment)
-        return res.status(500).json(`something went wrong`);
+      if (error) {
+        const err = error.details[0]?.message;
+        console.log({ err });
+        return res.status(400).json(err);
+      }
+
+      const business = await bussinessById(businessId);
+      if (!business?.id) return res.status(500).json(`business not found`);
+
+      const { newTreatment } = await createTreatment({
+        title,
+        cost: +cost,
+        duration: +duration,
+        documentName,
+        advancePayment: +advancePayment,
+        business,
+      });
+
+      if (!newTreatment) return res.status(500).json(`something went wrong`);
 
       return res.status(200).json(newTreatment);
     } catch (err) {
