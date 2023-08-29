@@ -51,7 +51,7 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
     </DialogTitle>
   );
 }
-export default function AddServices() {
+export default function AddServices({ businessId }: { businessId: string }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -83,7 +83,7 @@ export default function AddServices() {
         </BootstrapDialogTitle>
         <DialogContent className="bg-slate-100" dividers>
           <Suspense fallback={<>loading...</>}>
-            <Form />
+            <Form businessId={businessId} />
           </Suspense>
         </DialogContent>
         <DialogActions></DialogActions>

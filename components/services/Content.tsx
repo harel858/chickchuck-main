@@ -32,7 +32,8 @@ export default function Content({ treatment }: { treatment: Treatment }) {
           </TabList>
         </Box>
         <TabPanel value="1">
-          <ServiceFile />
+          {/*           <ServiceFile businessId={treatment.businessId} />
+           */}{" "}
         </TabPanel>
       </TabContext>
     </Box>

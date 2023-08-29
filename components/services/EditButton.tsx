@@ -1,5 +1,6 @@
 "use client";
 import React, { lazy, Suspense, useCallback } from "react";
+import ServiceFile from "./ServiceFile";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -9,7 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { BiEdit } from "react-icons/bi";
 import { Button } from "@ui/Button";
-import { Treatment } from "@prisma/client";
+import { RequiredDocument, Treatment } from "@prisma/client";
 
 const Content = lazy(() => import("./Content"));
 
@@ -51,7 +52,13 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
     </DialogTitle>
   );
 }
-export default function DetailsButton({ treatment }: { treatment: Treatment }) {
+export default function DetailsButton({
+  treatment,
+}: {
+  treatment: Treatment & {
+    RequiredDocument: RequiredDocument[];
+  };
+}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -82,7 +89,7 @@ export default function DetailsButton({ treatment }: { treatment: Treatment }) {
         </BootstrapDialogTitle>
         <DialogContent className="bg-slate-100" dividers>
           <Suspense fallback={<>loading...</>}>
-            <Content treatment={treatment} />
+            <ServiceFile treatment={treatment} />
           </Suspense>
         </DialogContent>
         <DialogActions></DialogActions>

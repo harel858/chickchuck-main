@@ -239,5 +239,5 @@ export type CustomerItem = {
   })[];
 };
 
-export type ServiceFormKeys = "title" | "cost" | "duration";
+export type ServiceFormKeys = "title" | "cost" | "duration" | "document Name";
 export type ErrorData = Record<ServiceFormKeys, boolean>;

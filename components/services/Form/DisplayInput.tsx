@@ -1,17 +1,20 @@
 import React from "react";
 import { ErrorData, ServiceFormKeys } from "types/types";
 import TextField from "@mui/material/TextField";
+type ServiceFormData = Record<ServiceFormKeys, string | number>;
 
 function DisplayInput({
   data,
   handleChange,
   errors,
+  serviceFormData,
 }: {
   data: ServiceFormKeys[];
   handleChange: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   errors: ErrorData;
+  serviceFormData: ServiceFormData;
 }) {
   return (
     <div className="flex flex-col items-center gap-4 mt-4 w-10/12 max-2xl:w-full pb-5">
@@ -21,7 +24,11 @@ function DisplayInput({
             id="outlined-basic"
             label={item.charAt(0).toUpperCase() + item.slice(1, item.length)}
             name={item}
-            type={item !== "title" ? "number" : "text"}
+            value={serviceFormData[item]}
+            required={item !== "document Name"}
+            type={
+              item == "duration" ? "number" : item == "cost" ? "number" : "text"
+            }
             inputProps={
               item === "duration"
                 ? {

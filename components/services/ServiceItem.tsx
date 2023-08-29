@@ -3,15 +3,19 @@ import React from "react";
 import { motion } from "framer-motion";
 import { CustomerItem } from "types/types";
 import DetailsButton from "./EditButton";
-import { Treatment } from "@prisma/client";
+import { RequiredDocument, Treatment } from "@prisma/client";
 
 export default function ClientItem({
   i,
   treatment,
 }: {
   i: number;
-  treatment: Treatment;
+  treatment: Treatment & {
+    RequiredDocument: RequiredDocument[];
+  };
 }) {
+  console.log(treatment);
+
   return (
     <motion.li
       key={i}

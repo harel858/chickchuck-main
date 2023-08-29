@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@ui/Button";
 import { Alert, Snackbar } from "@mui/material";
 import { ErrorData, ServiceFormKeys } from "types/types";
+import axios, { AxiosError } from "axios";
 
 type ServiceFormData = Record<ServiceFormKeys, string>;
 
@@ -11,14 +12,18 @@ const initialServiceFormData: ServiceFormData = {
   title: "",
   cost: "",
   duration: "",
+  "document Name": "",
 };
 const initialErrorData: ErrorData = {
   title: false,
   cost: false,
   duration: false,
+  "document Name": false,
 };
 
-function Form() {
+function Form({ businessId }: { businessId: string }) {
+  console.log(businessId);
+
   const [serviceFormData, setServiceFormData] = useState<ServiceFormData>(
     initialServiceFormData
   );
@@ -37,6 +42,7 @@ function Form() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     let newErrors = { ...initialErrorData }; // Create a new errors object based on initialErrorData
 
@@ -50,17 +56,23 @@ function Form() {
 
     setErrors(newErrors);
     // Commented out for now, uncomment when you want to make the API call
-    /*
+
     try {
-      const res = await axios.post(`/api/treatment`, { ...ServiceFormData });
+      const res = await axios.post(`/api/treatment`, {
+        ...serviceFormData,
+        advancePayment: 0,
+        documentName: serviceFormData["document Name"],
+        businessId: businessId,
+      });
       console.log(res.data);
+      setLoading(false);
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err.message);
       }
       console.error(err);
+      setLoading(false);
     }
-    */
   };
 
   const handleChange = useCallback(
@@ -69,8 +81,6 @@ function Form() {
       const positiveNumberRegex = /^[0-9]+$/;
 
       const { name, value } = event.target;
-
-      if (name === "duration" && isNaN(+value)) return;
 
       if (name === "duration" && !isNaN(+value) && +value % 5 !== 0) {
         // Ensure the value is a multiple of 5
@@ -105,9 +115,10 @@ function Form() {
           Create A Service
         </h2>
         <DisplayInput
-          data={["title", "cost", "duration"]}
+          data={["title", "cost", "duration", "document Name"]}
           handleChange={handleChange}
           errors={errors}
+          serviceFormData={serviceFormData}
         />
         <Button
           variant="default"

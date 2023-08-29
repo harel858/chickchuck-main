@@ -37,6 +37,23 @@ model Images {
   businessId        String   @unique
 }
 
+model RequiredDocument {
+  id        String      @id @default(uuid())
+  name      String      @unique
+  treatment Treatment[]
+}
+
+model Document {
+  id           String   @id @default(uuid())
+  documentName String
+  documentType String // You can specify types like "Document," "Certification," etc.
+  documentURL  String // You can store the URL or file path to the document
+  customer     Customer @relation(fields: [customerId], references: [id])
+  customerId   String
+  business     Business @relation(fields: [businessId], references: [id])
+  businessId   String
+}
+
 model Business {
   id               String            @id @default(uuid())
   businessName     String            @unique
@@ -53,6 +70,8 @@ model Business {
   AppointmentSlot  AppointmentSlot[]
   Images           Images?
   blockedCustomers Customer[]        @relation("BlockedCustomers")
+  Document         Document[]
+  Treatment        Treatment[]
 }
 
 model Address {
@@ -90,16 +109,20 @@ model Customer {
   appointments      Appointment[]
   Business          Business[]
   blockedByBusiness Business[]    @relation("BlockedCustomers")
+  Documents         Document[]
 }
 
 model Treatment {
-  id           String        @id @default(uuid())
-  title        String
-  cost         Int
-  duration     Int
-  business     User          @relation(fields: [businessId], references: [id])
-  businessId   String
-  appointments Appointment[]
+  id               String             @id @default(uuid())
+  title            String
+  cost             Int
+  duration         Int
+  advancePayment   Int? // New field for advance payment amount
+  user             User[]
+  business         Business           @relation(fields: [businessId], references: [id])
+  businessId       String
+  appointments     Appointment[]
+  RequiredDocument RequiredDocument[]
 }
 
 model AvailableSlot {

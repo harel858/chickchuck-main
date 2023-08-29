@@ -5,19 +5,27 @@ import NoServices from "./NoServices";
 import AddServices from "./AddServices";
 import SearchService from "./SearchService";
 import LargeHeading from "@ui/LargeHeading";
-import { Treatment, User } from "@prisma/client";
+import { RequiredDocument, Treatment, User } from "@prisma/client";
 import { RiCoinsLine } from "react-icons/ri";
 
 function Services({
   user,
 }: {
   user: User & {
-    Treatment: Treatment[];
+    Treatment: (Treatment & {
+      RequiredDocument: RequiredDocument[];
+    })[];
   };
 }) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResult, setSearchResult] = useState<Treatment[]>([]);
+  const [searchResult, setSearchResult] = useState<
+    (Treatment & {
+      RequiredDocument: RequiredDocument[];
+    })[]
+  >([]);
+  console.log(user);
+
   useEffect(() => {
     if (!searchQuery) return;
     const handleSearch = () => {
@@ -46,7 +54,7 @@ function Services({
           My Services <RiCoinsLine />
         </LargeHeading>
         <div className="flex flex-row justify-center items-center gap-10 max-lg:flex-col">
-          <AddServices />
+          <AddServices businessId={user.businessId!} />
           <SearchService
             onSearchChange={onSearchChange}
             searchQuery={searchQuery}
