@@ -79,7 +79,7 @@ export default function DocsOptions({
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple
-          variant="filled"
+          variant="standard"
           value={personName}
           name={name}
           onChange={handleChange}
