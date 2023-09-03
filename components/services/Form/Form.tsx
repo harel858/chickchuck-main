@@ -1,32 +1,44 @@
 import React, { useCallback, useState } from "react";
 import DisplayInput from "./DisplayInput";
+import AdvanceFeatures from "./AdvanceFeatures";
 import { motion } from "framer-motion";
 import { Button } from "@ui/Button";
 import { Alert, Snackbar } from "@mui/material";
-import { ErrorData, ServiceFormKeys } from "types/types";
+import { ErrorData, ServiceFormData, ServiceFormKeys } from "types/types";
+import { SelectChangeEvent } from "@mui/material/Select";
 import axios, { AxiosError } from "axios";
+import { RequiredDocument } from "@prisma/client";
 
-type ServiceFormData = Record<ServiceFormKeys, string>;
-
-const initialServiceFormData: ServiceFormData = {
+const initialServiceFormData = {
   title: "",
   cost: "",
   duration: "",
-  "document Name": "",
+  "advance Payment": "",
+  "document Name": [],
 };
 const initialErrorData: ErrorData = {
   title: false,
   cost: false,
   duration: false,
+  "advance Payment": false,
   "document Name": false,
 };
 
-function Form({ businessId }: { businessId: string }) {
-  console.log(businessId);
+function Form({
+  businessId,
+  bussinesDocs,
+  treatmentDocs,
+}: {
+  businessId: string;
+  treatmentDocs?: RequiredDocument[];
+  bussinesDocs: RequiredDocument[];
+}) {
+  console.log("bussinesDocs", bussinesDocs);
 
-  const [serviceFormData, setServiceFormData] = useState<ServiceFormData>(
-    initialServiceFormData
-  );
+  const [serviceFormData, setServiceFormData] = useState<ServiceFormData>({
+    ...initialServiceFormData,
+    "document Name": bussinesDocs || [],
+  });
   const [errors, setErrors] = useState<ErrorData>(initialErrorData);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -60,12 +72,14 @@ function Form({ businessId }: { businessId: string }) {
     try {
       const res = await axios.post(`/api/treatment`, {
         ...serviceFormData,
-        advancePayment: 0,
+        advancePayment: serviceFormData["advance Payment"],
         documentName: serviceFormData["document Name"],
         businessId: businessId,
       });
-      console.log(res.data);
-      setLoading(false);
+      if (res.status === 201) {
+        setOpen(true);
+        return setLoading(false);
+      }
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err.message);
@@ -76,11 +90,22 @@ function Form({ businessId }: { businessId: string }) {
   };
 
   const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (
+      event:
+        | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        | RequiredDocument[]
+    ) => {
       // Regular expression to allow only positive numbers
-      const positiveNumberRegex = /^[0-9]+$/;
-
-      const { name, value } = event.target;
+      if (Array.isArray(event)) {
+        return setServiceFormData({
+          ...serviceFormData,
+          ["document Name"]: event,
+        });
+      }
+      const {
+        target: { value, name },
+      } = event;
+      console.log("value", value);
 
       if (name === "duration" && !isNaN(+value) && +value % 5 !== 0) {
         // Ensure the value is a multiple of 5
@@ -114,12 +139,21 @@ function Form({ businessId }: { businessId: string }) {
         <h2 className={`text-slate-900 font-normal font-serif text-2xl`}>
           Create A Service
         </h2>
-        <DisplayInput
-          data={["title", "cost", "duration", "document Name"]}
-          handleChange={handleChange}
-          errors={errors}
-          serviceFormData={serviceFormData}
-        />
+        <div className="flex flex-row flex-wrap justify-center items-center gap-4 mt-4 w-10/12 max-2xl:w-full pb-5">
+          <DisplayInput
+            data={["title", "cost", "duration"]}
+            handleChange={handleChange}
+            errors={errors}
+            serviceFormData={serviceFormData}
+          />
+          <AdvanceFeatures
+            handleChange={handleChange}
+            errors={errors}
+            serviceFormData={serviceFormData}
+            treatmentDocs={treatmentDocs}
+            bussinesDocs={bussinesDocs}
+          />
+        </div>
         <Button
           variant="default"
           className="w-max bg-sky-600 hover:bg-slate-900 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"
@@ -142,6 +176,5 @@ function Form({ businessId }: { businessId: string }) {
     </motion.div>
   );
 }
-2;
 
 export default Form;

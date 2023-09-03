@@ -1,6 +1,5 @@
 "use client";
 import React, { lazy, Suspense, useCallback } from "react";
-import ServiceFile from "./ServiceFile";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -8,9 +7,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { BiEdit } from "react-icons/bi";
 import { Button } from "@ui/Button";
-import { RequiredDocument, Treatment } from "@prisma/client";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import RequiredDocumentsForm from "./RequiredDocumentsForm";
+import { RequiredDocument } from "@prisma/client";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -50,14 +50,12 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
     </DialogTitle>
   );
 }
-export default function DetailsButton({
-  treatment,
-  bussinesDocs,
+export default function AddRequiredDocuments({
+  businessId,
+  docs,
 }: {
-  treatment: Treatment & {
-    RequiredDocument: RequiredDocument[];
-  };
-  bussinesDocs: RequiredDocument[];
+  businessId: string;
+  docs: RequiredDocument[];
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -72,9 +70,10 @@ export default function DetailsButton({
     <>
       <Button
         onClick={handleClickOpen}
-        className="group-hover:bg-slate-100 hover:scale-125 transition-all ease-in-out duration-200 group-hover:text-black rounded-full"
+        className="flex flex-row-reverse justify-center items-center gap-2 text-xl font-medium text-black bg-slate-100 hover:text-white"
       >
-        <BiEdit className="text-2xl" />
+        Required Documents
+        <AiOutlinePlusCircle className="text-3xl" />
       </Button>
       <BootstrapDialog
         onClose={handleClose}
@@ -85,11 +84,11 @@ export default function DetailsButton({
           id="customized-dialog-title"
           onClose={handleClose}
         >
-          Customer Details
+          Required Documents
         </BootstrapDialogTitle>
-        <DialogContent className="bg-slate-100" dividers>
+        <DialogContent sx={{ background: "rgb(241,245,249)" }} dividers>
           <Suspense fallback={<>loading...</>}>
-            <ServiceFile treatment={treatment} bussinesDocs={bussinesDocs} />
+            <RequiredDocumentsForm docs={docs} businessId={businessId} />
           </Suspense>
         </DialogContent>
         <DialogActions></DialogActions>

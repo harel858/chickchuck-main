@@ -6,12 +6,12 @@ import { MdSearchOff } from "react-icons/md";
 
 function NoClients({ title }: { title: string }) {
   return (
-    <div className="flex flex-1 flex-col gap-5 justify-center content-center items-center text-black">
+    <div className="flex flex-1 flex-col border-t max-xl:border-0 gap-5 justify-center content-center items-center text-black">
       <Fade
         delay={250}
         cascade
         damping={0.02}
-        className={`text-3xl max-sm:text-lg`}
+        className={`text-xl max-sm:text-lg`}
       >
         {title}
       </Fade>

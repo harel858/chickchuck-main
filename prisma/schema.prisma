@@ -38,9 +38,11 @@ model Images {
 }
 
 model RequiredDocument {
-  id        String      @id @default(uuid())
-  name      String      @unique
-  treatment Treatment[]
+  id         String      @id @default(uuid())
+  name       String
+  treatment  Treatment[]
+  Business   Business    @relation(fields: [businessId], references: [id])
+  businessId String
 }
 
 model Document {
@@ -55,9 +57,9 @@ model Document {
 }
 
 model Business {
-  id               String            @id @default(uuid())
-  businessName     String            @unique
-  phone            String            @unique
+  id               String             @id @default(uuid())
+  businessName     String             @unique
+  phone            String             @unique
   openingTime      String
   closingTime      String
   businessImage    String?
@@ -69,9 +71,10 @@ model Business {
   Appointment      Appointment[]
   AppointmentSlot  AppointmentSlot[]
   Images           Images?
-  blockedCustomers Customer[]        @relation("BlockedCustomers")
+  blockedCustomers Customer[]         @relation("BlockedCustomers")
   Document         Document[]
   Treatment        Treatment[]
+  RequiredDocument RequiredDocument[]
 }
 
 model Address {
@@ -114,7 +117,7 @@ model Customer {
 
 model Treatment {
   id               String             @id @default(uuid())
-  title            String
+  title            String             @unique
   cost             Int
   duration         Int
   advancePayment   Int? // New field for advance payment amount

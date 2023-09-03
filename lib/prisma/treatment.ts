@@ -21,9 +21,7 @@ export const createTreatment = async ({
   advancePayment,
   business,
 }: CreateData) => {
-  console.log("documentName", documentName);
-
-  const { id: businessId, user: users, Images } = business;
+  const { id: businessId, user: users } = business;
 
   try {
     const treatmentData = {
@@ -36,27 +34,10 @@ export const createTreatment = async ({
       business: { connect: { id: businessId } },
     };
 
-    if (documentName) {
-      console.log("documentName", documentName);
-
-      const newRequiredDocument = await prisma.requiredDocument.create({
-        data: { name: documentName },
-      });
-
-      treatmentData.RequiredDocument = {
-        connect: { id: newRequiredDocument.id },
-      };
-    }
-
     const newTreatment = await prisma.treatment.create({
       data: treatmentData,
       include: { RequiredDocument: true },
     });
-
-    // Log for debugging
-    console.log("New Treatment:", newTreatment);
-    console.log("Required Document:", newTreatment.RequiredDocument);
-    console.log("newTreatment.RequiredDocument", newTreatment.RequiredDocument);
 
     return { newTreatment };
   } catch (error) {

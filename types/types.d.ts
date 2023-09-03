@@ -239,5 +239,17 @@ export type CustomerItem = {
   })[];
 };
 
-export type ServiceFormKeys = "title" | "cost" | "duration" | "document Name";
+export type ServiceFormKeys =
+  | "title"
+  | "cost"
+  | "duration"
+  | "document Name"
+  | "advance Payment";
+export type BasicFormKeys = "title" | "cost" | "duration";
+export type AdvanceFormKeys = "document Name" | "advance Payment";
 export type ErrorData = Record<ServiceFormKeys, boolean>;
+
+export type ServiceFormData = Record<
+  ServiceFormKeys,
+  string | number | RequiredDocument[]
+>;

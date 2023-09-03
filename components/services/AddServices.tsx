@@ -1,5 +1,5 @@
 "use client";
-import React, { lazy, Suspense, useCallback } from "react";
+import React, { Suspense, useCallback } from "react";
 import Form from "./Form/Form";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -10,8 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "@ui/Button";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-
-const Content = lazy(() => import("./Content"));
+import { RequiredDocument } from "@prisma/client";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -51,7 +50,13 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
     </DialogTitle>
   );
 }
-export default function AddServices({ businessId }: { businessId: string }) {
+export default function AddServices({
+  businessId,
+  bussinesDocs,
+}: {
+  businessId: string;
+  bussinesDocs: RequiredDocument[];
+}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -79,11 +84,11 @@ export default function AddServices({ businessId }: { businessId: string }) {
           id="customized-dialog-title"
           onClose={handleClose}
         >
-          Create Service
+          Create New Service
         </BootstrapDialogTitle>
-        <DialogContent className="bg-slate-100" dividers>
+        <DialogContent sx={{ background: "rgb(241,245,249)" }} dividers>
           <Suspense fallback={<>loading...</>}>
-            <Form businessId={businessId} />
+            <Form businessId={businessId} bussinesDocs={bussinesDocs} />
           </Suspense>
         </DialogContent>
         <DialogActions></DialogActions>

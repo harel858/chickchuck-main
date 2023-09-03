@@ -82,6 +82,8 @@ export default async function handler(
         userId: string;
         duration: string;
       };
+      console.log({ chosenDate, userId, duration });
+
       if (!chosenDate || !userId || !duration)
         return res.status(400).json("Missing Values");
 
@@ -93,7 +95,7 @@ export default async function handler(
       const { availableSlots } = await getQueuesByMonth(
         userId,
         date,
-        parseInt(duration)
+        +duration
       );
       if (!availableSlots || availableSlots.length <= 0)
         return res.status(500).json(err);

@@ -37,6 +37,8 @@ function Images({
       const response = await axios.post("/api/user/image-route", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      console.log(response);
+
       if (response.status == 201) return router.refresh();
     } catch (error) {
       console.error(error);

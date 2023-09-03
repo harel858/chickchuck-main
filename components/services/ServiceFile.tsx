@@ -3,43 +3,42 @@ import DisplayInput from "./Form/DisplayInput";
 import { motion } from "framer-motion";
 import { Button } from "@ui/Button";
 import { Alert, Snackbar } from "@mui/material";
-import { ErrorData, ServiceFormKeys } from "types/types";
-import axios, { AxiosError } from "axios";
+import { ErrorData, ServiceFormData } from "types/types";
 import { RequiredDocument, Treatment } from "@prisma/client";
+import AdvanceFeatures from "./Form/AdvanceFeatures";
+import { updateService } from "actions/editService";
+import { SelectChangeEvent } from "@mui/material/Select";
 
-type ServiceFormData = Record<ServiceFormKeys, string | number>;
-
-const initialServiceFormData: ServiceFormData = {
-  title: "",
-  cost: "",
-  duration: "",
-  "document Name": "",
-};
 const initialErrorData: ErrorData = {
   title: false,
   cost: false,
   duration: false,
+  "advance Payment": false,
   "document Name": false,
 };
 
 function Form({
   treatment,
+  bussinesDocs,
 }: {
   treatment: Treatment & {
     RequiredDocument: RequiredDocument[];
   };
+  bussinesDocs: RequiredDocument[];
 }) {
   const [serviceFormData, setServiceFormData] = useState<ServiceFormData>({
     title: treatment.title,
     cost: +treatment.cost!,
     duration: +treatment.duration!,
-    "document Name": treatment.RequiredDocument[0]?.name
-      ? treatment.RequiredDocument[0].name
-      : "",
+    "document Name": treatment.RequiredDocument || [],
+    "advance Payment": "",
   });
+  console.log("serviceFormData", serviceFormData);
+
   const [errors, setErrors] = useState<ErrorData>(initialErrorData);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const { cost, duration, title, ...rest } = serviceFormData;
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
@@ -51,45 +50,18 @@ function Form({
     setOpen(false);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
-    e.preventDefault();
-    let newErrors = { ...initialErrorData }; // Create a new errors object based on initialErrorData
-
-    for (let key in serviceFormData) {
-      if (serviceFormData[key as keyof ServiceFormData] === "") {
-        newErrors = { ...newErrors, [key]: true };
-      } else if (serviceFormData[key as keyof ServiceFormData] !== "") {
-        newErrors = { ...newErrors, [key]: false };
-      }
-    }
-
-    setErrors(newErrors);
-    // Commented out for now, uncomment when you want to make the API call
-    /* 
-    try {
-      const res = await axios.post(`/api/treatment`, {
-        ...serviceFormData,
-        advancePayment: 0,
-        documentName: serviceFormData["document Name"],
-        businessId: treatment.businessId,
-      });
-      console.log(res.data);
-      setLoading(false);
-    } catch (err) {
-      if (err instanceof AxiosError) {
-        console.log(err.message);
-      }
-      console.error(err);
-      setLoading(false);
-    } */
-  };
-
   const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      // Regular expression to allow only positive numbers
-      const positiveNumberRegex = /^[0-9]+$/;
-
+    (
+      event:
+        | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        | RequiredDocument[]
+    ) => {
+      if (Array.isArray(event)) {
+        return setServiceFormData({
+          ...serviceFormData,
+          ["document Name"]: event,
+        });
+      }
       const { name, value } = event.target;
 
       if (name === "duration" && !isNaN(+value) && +value % 5 !== 0) {
@@ -118,18 +90,28 @@ function Form({
       className="w-full"
     >
       <form
-        onSubmit={handleSubmit}
+        action={(e) => updateService(e, treatment.id)}
         className="flex flex-col items-center mt-4 w-full relative"
       >
         <h2 className={`text-slate-900 font-normal font-serif text-2xl`}>
           Edit Service Details
         </h2>
-        <DisplayInput
-          data={["title", "cost", "duration", "document Name"]}
-          handleChange={handleChange}
-          errors={errors}
-          serviceFormData={serviceFormData}
-        />
+        <div className="flex flex-row flex-wrap justify-center items-center gap-4 mt-4 w-10/12 max-2xl:w-full pb-5">
+          <DisplayInput
+            data={["title", "cost", "duration"]}
+            handleChange={handleChange}
+            errors={errors}
+            serviceFormData={serviceFormData}
+          />
+          <AdvanceFeatures
+            initOpen="panel1"
+            handleChange={handleChange}
+            errors={errors}
+            serviceFormData={serviceFormData}
+            treatmentDocs={treatment.RequiredDocument}
+            bussinesDocs={bussinesDocs}
+          />
+        </div>
         <Button
           variant="default"
           className="w-max bg-sky-600 hover:bg-slate-900 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"

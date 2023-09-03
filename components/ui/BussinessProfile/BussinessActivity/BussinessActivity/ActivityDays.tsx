@@ -83,8 +83,8 @@ const ActivityDays = ({
             key={params.id}
             {...params}
             label={
-              <p className="font-serif text-xl flex justify-center items-center gap-1">
-                Activity Days <TbCalendarTime className="text-xl" />
+              <p className="font-serif text-3xl flex justify-center items-center gap-1">
+                Activity Days <TbCalendarTime className="text-3xl" />
               </p>
             }
             placeholder="Activity Days"

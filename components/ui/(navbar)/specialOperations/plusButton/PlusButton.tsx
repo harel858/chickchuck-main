@@ -10,6 +10,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { BusinessData } from "types/types";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
+import { Button } from "@ui/Button";
 const Content = lazy(() => import("./Content"));
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -66,15 +67,13 @@ export default function PlusButton({
 
   return (
     <>
-      <Fab
-        className="fixed bottom-10 right-10 z-50 bg-blue-600"
-        variant={"circular"}
-        color="primary"
+      <Button
+        className="fixed bottom-10 right-10 z-50 rounded-full bg-blue-700 hover:bg-blue-600 transition-all duration-200 ease-in-out hover:scale-125"
         aria-label="add"
         onClick={handleClickOpen}
       >
-        <AddIcon />
-      </Fab>
+        <AddIcon className="rounded-full text-3xl" />
+      </Button>
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"

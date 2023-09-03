@@ -1,21 +1,20 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { CustomerItem } from "types/types";
 import DetailsButton from "./EditButton";
-import { RequiredDocument, Treatment } from "@prisma/client";
+import { Business, RequiredDocument, Treatment, User } from "@prisma/client";
 
 export default function ClientItem({
   i,
+  bussinesDocs,
   treatment,
 }: {
   i: number;
   treatment: Treatment & {
     RequiredDocument: RequiredDocument[];
   };
+  bussinesDocs: RequiredDocument[];
 }) {
-  console.log(treatment);
-
   return (
     <motion.li
       key={i}
@@ -35,7 +34,7 @@ export default function ClientItem({
       </div>
       <div className="flex flex-row gap-1 justify-between items-center w-full">
         <p className="font-extralight text-lg">{treatment.cost}$</p>
-        <DetailsButton treatment={treatment} />
+        <DetailsButton treatment={treatment} bussinesDocs={bussinesDocs} />
       </div>
     </motion.li>
   );

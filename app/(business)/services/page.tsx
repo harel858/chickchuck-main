@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import React from "react";
 import Services from "@components/services/Services";
-export const revalidate = 1;
+export const revalidate = 0;
 
 const fetchUser = async (email: string | null | undefined) => {
   try {
@@ -12,7 +12,10 @@ const fetchUser = async (email: string | null | undefined) => {
 
     const user = await prisma.user.findUnique({
       where: { email },
-      include: { Treatment: { include: { RequiredDocument: true } } },
+      include: {
+        Treatment: { include: { RequiredDocument: true } },
+        Business: { include: { RequiredDocument: true } },
+      },
     });
 
     return user;

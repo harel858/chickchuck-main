@@ -23,7 +23,7 @@ export default async function handler(
         advancePayment,
         businessId,
       } = req.body;
-      console.log("businessId", businessId);
+      console.log("req.body", req.body);
 
       //validate Service
       const { error } = validateService({
@@ -53,7 +53,7 @@ export default async function handler(
 
       if (!newTreatment) return res.status(500).json(`something went wrong`);
 
-      return res.status(200).json(newTreatment);
+      return res.status(201).json(newTreatment);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);

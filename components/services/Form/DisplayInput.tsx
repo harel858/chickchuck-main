@@ -1,33 +1,85 @@
-import React from "react";
-import { ErrorData, ServiceFormKeys } from "types/types";
+import React, { ReactNode } from "react";
 import TextField from "@mui/material/TextField";
-type ServiceFormData = Record<ServiceFormKeys, string | number>;
+import DocsOptions from "./DocsOptions";
+import { ErrorData, ServiceFormData, ServiceFormKeys } from "types/types";
+import { MdTitle, MdOutlinePriceChange } from "react-icons/md";
+import { CgSandClock } from "react-icons/cg";
+import { SlDocs } from "react-icons/sl";
+import { RiSecurePaymentFill } from "react-icons/ri";
+import { InputAdornment } from "@mui/material";
+import { RequiredDocument } from "@prisma/client";
+import { SelectChangeEvent } from "@mui/material/Select";
+
+const inputIcons: Record<ServiceFormKeys, ReactNode> = {
+  title: <MdTitle className="text-2xl" />,
+  cost: <MdOutlinePriceChange className="text-2xl" />,
+  duration: <CgSandClock className="text-2xl" />,
+  "document Name": <SlDocs className="text-2xl " />,
+  "advance Payment": <RiSecurePaymentFill className="text-2xl " />,
+};
 
 function DisplayInput({
   data,
   handleChange,
   errors,
   serviceFormData,
+  bussinesDocs,
+  treatmentDocs,
 }: {
   data: ServiceFormKeys[];
   handleChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | RequiredDocument[]
   ) => void;
   errors: ErrorData;
   serviceFormData: ServiceFormData;
+  treatmentDocs?: RequiredDocument[];
+  bussinesDocs?: RequiredDocument[];
 }) {
   return (
-    <div className="flex flex-col items-center gap-4 mt-4 w-10/12 max-2xl:w-full pb-5">
-      {data.map((item) => (
-        <div key={item}>
+    <>
+      {data.map((item) => {
+        if (item === "document Name" && bussinesDocs)
+          return (
+            <DocsOptions
+              key={item}
+              name={item}
+              onChange={handleChange}
+              treatmentDocs={treatmentDocs}
+              bussinesDocs={bussinesDocs}
+            />
+          );
+        return (
           <TextField
+            key={item}
             id="outlined-basic"
-            label={item.charAt(0).toUpperCase() + item.slice(1, item.length)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  {inputIcons[item as keyof typeof inputIcons]}
+                </InputAdornment>
+              ),
+              style: { color: "black", fontSize: "1.2em" },
+              inputMode: "numeric",
+            }}
+            variant={item == "advance Payment" ? "filled" : "standard"}
+            label={
+              item === "cost"
+                ? "Price"
+                : item.charAt(0).toUpperCase() + item.slice(1, item.length)
+            }
             name={item}
+            color={"primary"}
             value={serviceFormData[item]}
-            required={item !== "document Name"}
+            disabled={item === "advance Payment" && !serviceFormData.cost}
+            required={item !== "advance Payment"}
             type={
-              item == "duration" ? "number" : item == "cost" ? "number" : "text"
+              item === "duration" ||
+              item === "advance Payment" ||
+              item === "cost"
+                ? "number"
+                : "text"
             }
             inputProps={
               item === "duration"
@@ -35,7 +87,10 @@ function DisplayInput({
                     step: "5",
                     pattern: "/^e-[0-9]+$/",
                     min: 0,
-                    style: { color: "black", fontSize: "1.2em" },
+                    style: {
+                      color: "black",
+                      fontSize: "1.2em",
+                    },
                   }
                 : item === "cost"
                 ? {
@@ -44,24 +99,28 @@ function DisplayInput({
                     min: 0,
                     style: { color: "black", fontSize: "1.2em" },
                   }
+                : item === "advance Payment"
+                ? {
+                    inputMode: "numeric",
+                    pattern: "/^[0-9]+$/",
+                    min: 0,
+                    max: serviceFormData["cost"] || 0,
+                    style: { fontSize: "1.2em" },
+                  }
                 : {
                     inputMode: "text",
-                    style: { color: "black", fontSize: "1.2em" },
+                    style: {
+                      fontSize: "1.2em",
+                    },
                   }
-            } // Set step attribute for "duration"
+            }
             onChange={handleChange}
             error={errors[item]}
             helperText={errors[item] ? "Field is required" : ""}
-            variant="filled"
-            InputProps={{
-              style: { color: "black", fontSize: "1.2em" },
-              inputMode: "numeric",
-            }}
             InputLabelProps={{
               style: {
-                fontSize: "1.1em",
+                fontSize: "1.5em",
                 fontWeight: "500",
-                color: "black",
               },
             }}
             sx={{
@@ -70,9 +129,9 @@ function DisplayInput({
               ":after": { border: "4px solid white" },
             }}
           />
-        </div>
-      ))}
-    </div>
+        );
+      })}
+    </>
   );
 }
 

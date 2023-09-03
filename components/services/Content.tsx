@@ -1,15 +1,14 @@
 import React from "react";
-import ServiceFile from "./ServiceFile";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { BsFillPersonBadgeFill } from "react-icons/bs";
-import { FaHistory } from "react-icons/fa";
-import { Treatment } from "@prisma/client";
+import { CiCircleMore } from "react-icons/ci";
+import Form from "./Form/Form";
 
-export default function Content({ treatment }: { treatment: Treatment }) {
+export default function Content({ businessId }: { businessId: string }) {
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -29,11 +28,21 @@ export default function Content({ treatment }: { treatment: Treatment }) {
               }
               value="1"
             />
+            <Tab
+              label={
+                <h4 className="flex justify-center items-center gap-2">
+                  Advance Settings <CiCircleMore className="text-xl" />
+                </h4>
+              }
+              value="2"
+            />
           </TabList>
         </Box>
         <TabPanel value="1">
-          {/*           <ServiceFile businessId={treatment.businessId} />
-           */}{" "}
+          <Form businessId={businessId} />
+        </TabPanel>
+        <TabPanel value="2">
+          <Form businessId={businessId} />
         </TabPanel>
       </TabContext>
     </Box>
