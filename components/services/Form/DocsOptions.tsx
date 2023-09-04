@@ -62,6 +62,7 @@ export default function DocsOptions({
     const {
       target: { value },
     } = event;
+    console.log(value);
     if (typeof value === "string") return;
     setPersonName(value);
     const newValue = bussinesDocs.filter((item) =>

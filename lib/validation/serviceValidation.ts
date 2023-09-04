@@ -5,13 +5,15 @@ interface ReqBody {
   cost: number;
   duration: number;
   documentName: string;
+  advancePayment: string;
   businessId: string;
 }
 const ReqBodySchema = Joi.object({
   title: Joi.string().required(),
   cost: Joi.number().required(),
   duration: Joi.number().required(),
-  documentName: Joi.string(),
+  advancePayment: Joi.number().required(),
+  documentName: Joi.array(),
   businessId: Joi.string().required(),
 });
 function validateService(data: ReqBody) {

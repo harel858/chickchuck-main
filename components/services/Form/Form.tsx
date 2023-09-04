@@ -8,12 +8,13 @@ import { ErrorData, ServiceFormData, ServiceFormKeys } from "types/types";
 import { SelectChangeEvent } from "@mui/material/Select";
 import axios, { AxiosError } from "axios";
 import { RequiredDocument } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 const initialServiceFormData = {
   title: "",
-  cost: "",
-  duration: "",
-  "advance Payment": "",
+  cost: 0,
+  duration: 0,
+  "advance Payment": 0,
   "document Name": [],
 };
 const initialErrorData: ErrorData = {
@@ -28,10 +29,14 @@ function Form({
   businessId,
   bussinesDocs,
   treatmentDocs,
+  closeDialog,
+  successMessage,
 }: {
   businessId: string;
   treatmentDocs?: RequiredDocument[];
   bussinesDocs: RequiredDocument[];
+  successMessage: () => void;
+  closeDialog: () => void;
 }) {
   console.log("bussinesDocs", bussinesDocs);
 
@@ -41,17 +46,6 @@ function Form({
   });
   const [errors, setErrors] = useState<ErrorData>(initialErrorData);
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  const handleClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
@@ -70,6 +64,8 @@ function Form({
     // Commented out for now, uncomment when you want to make the API call
 
     try {
+      console.log("serviceFormData", serviceFormData["document Name"]);
+
       const res = await axios.post(`/api/treatment`, {
         ...serviceFormData,
         advancePayment: serviceFormData["advance Payment"],
@@ -77,8 +73,9 @@ function Form({
         businessId: businessId,
       });
       if (res.status === 201) {
-        setOpen(true);
-        return setLoading(false);
+        successMessage();
+        setLoading(false);
+        return closeDialog();
       }
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -115,7 +112,7 @@ function Form({
 
       setServiceFormData({
         ...serviceFormData,
-        [name]: value,
+        [name]: isNaN(+value) ? value : +value,
       });
     },
     [serviceFormData, setServiceFormData]
@@ -163,16 +160,6 @@ function Form({
           Create
         </Button>
       </form>
-      <Snackbar
-        open={open}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          This is a success message!
-        </Alert>
-      </Snackbar>
     </motion.div>
   );
 }

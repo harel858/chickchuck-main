@@ -11,6 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "@ui/Button";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { RequiredDocument } from "@prisma/client";
+import { message } from "antd";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -58,16 +59,22 @@ export default function AddServices({
   bussinesDocs: RequiredDocument[];
 }) {
   const [open, setOpen] = React.useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const handleClickOpen = () => {
+  const successMessage = useCallback(() => {
+    messageApi.success("Hello, Ant Design!");
+  }, [messageApi]);
+
+  const handleClickOpen = useCallback(() => {
     setOpen(true);
-  };
+  }, [setOpen, open]);
   const handleClose = useCallback(() => {
     setOpen(false);
   }, [open]);
 
   return (
     <>
+      {contextHolder}
       <Button
         onClick={handleClickOpen}
         className="flex flex-row-reverse justify-center items-center gap-2 text-xl font-medium text-black bg-slate-100 hover:text-white"
@@ -88,7 +95,12 @@ export default function AddServices({
         </BootstrapDialogTitle>
         <DialogContent sx={{ background: "rgb(241,245,249)" }} dividers>
           <Suspense fallback={<>loading...</>}>
-            <Form businessId={businessId} bussinesDocs={bussinesDocs} />
+            <Form
+              successMessage={successMessage}
+              closeDialog={handleClose}
+              businessId={businessId}
+              bussinesDocs={bussinesDocs}
+            />
           </Suspense>
         </DialogContent>
         <DialogActions></DialogActions>

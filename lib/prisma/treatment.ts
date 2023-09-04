@@ -1,11 +1,11 @@
-import { Business, Images, User } from "@prisma/client";
+import { Business, Images, RequiredDocument, User } from "@prisma/client";
 import { prisma } from ".";
 
 type CreateData = {
   title: string;
   cost: number;
   duration: number;
-  documentName: string;
+  documentName: RequiredDocument[];
   advancePayment: number;
   business: Business & {
     user: User[];
@@ -29,7 +29,12 @@ export const createTreatment = async ({
       cost,
       duration,
       advancePayment,
-      RequiredDocument: {},
+      RequiredDocument:
+        documentName.length > 0
+          ? {
+              connect: documentName.map((doc) => ({ id: doc.id })),
+            }
+          : {},
       user: { connect: users.map((user) => ({ id: user.id })) },
       business: { connect: { id: businessId } },
     };

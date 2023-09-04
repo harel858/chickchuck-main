@@ -11,6 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { BiEdit } from "react-icons/bi";
 import { Button } from "@ui/Button";
 import { RequiredDocument, Treatment } from "@prisma/client";
+import { message, notification } from "antd";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -59,6 +60,15 @@ export default function DetailsButton({
   };
   bussinesDocs: RequiredDocument[];
 }) {
+  const [api, contextHolder] = notification.useNotification();
+
+  const successMessage = useCallback(() => {
+    api.open({
+      message: "Hello, Ant Design!",
+      type: "success",
+      placement: "topLeft",
+    });
+  }, [api]);
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -70,6 +80,7 @@ export default function DetailsButton({
 
   return (
     <>
+      {contextHolder}
       <Button
         onClick={handleClickOpen}
         className="group-hover:bg-slate-100 hover:scale-125 transition-all ease-in-out duration-200 group-hover:text-black rounded-full"
@@ -89,7 +100,12 @@ export default function DetailsButton({
         </BootstrapDialogTitle>
         <DialogContent className="bg-slate-100" dividers>
           <Suspense fallback={<>loading...</>}>
-            <ServiceFile treatment={treatment} bussinesDocs={bussinesDocs} />
+            <ServiceFile
+              successMessage={successMessage}
+              handleClose={handleClose}
+              treatment={treatment}
+              bussinesDocs={bussinesDocs}
+            />
           </Suspense>
         </DialogContent>
         <DialogActions></DialogActions>
