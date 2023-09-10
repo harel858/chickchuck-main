@@ -13,10 +13,9 @@ function Services({
   user,
 }: {
   user: User & {
-    Business:
-      | Business & {
-          RequiredDocument: RequiredDocument[];
-        };
+    Business: Business & {
+      RequiredDocument: RequiredDocument[];
+    };
     Treatment: (Treatment & {
       RequiredDocument: RequiredDocument[];
     })[];
@@ -62,7 +61,7 @@ function Services({
           <div className="flex flex-row gap-4 justify-center items-center">
             <AddServices
               businessId={user.businessId!}
-              bussinesDocs={user.Business.RequiredDocument}
+              bussinesDocs={user.Business?.RequiredDocument || []}
             />
             <AddRequiredDocuments
               businessId={user.businessId!}

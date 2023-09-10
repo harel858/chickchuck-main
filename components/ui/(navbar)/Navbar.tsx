@@ -13,7 +13,7 @@ function Navbar({ session }: { session: Session }) {
       <h1
         className={`${lobster.className} dark:text-white text-black text-4xl w-max `}
       >
-        QuickQ.
+        QSync.
       </h1>
       <Hamburger user={session.user} />
       <div className="flex flex-row justify-center items-center absolute right-2">

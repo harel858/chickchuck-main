@@ -10,18 +10,22 @@ async function fetchUser(email: string | null | undefined) {
     if (!email) return null;
     const user = await prisma.user.findUnique({
       where: { email },
-      include: { Business: true },
+      include: {
+        Business: {
+          include: { user: { include: { Treatment: true } }, Treatment: true },
+        },
+      },
     });
-    if (!user) return null;
+    if (!user?.isAdmin) return null;
 
     const business = await prisma.business.findUnique({
       where: { id: user?.Business?.id },
-      include: { Address: true },
     });
+
     if (!user || !business) return null;
 
     const { Business, ...rest } = user;
-    return { ...rest, business };
+    return Business;
   } catch (error) {
     console.log(error);
     return null;
@@ -31,10 +35,10 @@ async function fetchUser(email: string | null | undefined) {
 async function Page() {
   const session = await getServerSession(authOptions);
 
-  const user = await fetchUser(session?.user?.email);
-  if (!user) return notFound();
+  const business = await fetchUser(session?.user?.email);
+  if (!business) return notFound();
 
-  return <TeamManeger user={user} />;
+  return <TeamManeger business={business} />;
 }
 
 export default Page;

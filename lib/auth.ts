@@ -2,13 +2,12 @@ import { prisma } from "./prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios, { AxiosError } from "axios";
 import { getCustomer } from "./prisma/customer/customer";
 import { getImage } from "./aws/s3";
 import { signInNew } from "./routes/user/signin";
 
 interface UserCredentials {
-  email: string;
+  emailORphoneNumber: string;
   password: string;
 }
 
@@ -20,15 +19,16 @@ const bucketName = process.env.BUCKET_NAME!;
 
 const authorizeUserLogin = async (credentials: any, req: any) => {
   try {
-    const { email, password } = credentials as UserCredentials;
-    const { user, err } = await signInNew(email, password);
+    const { emailORphoneNumber, password } = credentials as UserCredentials;
+    console.log(emailORphoneNumber);
+
+    const { user, err } = await signInNew(emailORphoneNumber, password);
 
     if (!user || err) throw new Error(err || "user not found");
 
     return user;
   } catch (err) {
     console.log(err);
-
     return null;
   }
 };

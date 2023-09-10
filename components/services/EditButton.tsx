@@ -1,5 +1,5 @@
 "use client";
-import React, { lazy, Suspense, useCallback } from "react";
+import React, { Suspense, useCallback } from "react";
 import ServiceFile from "./ServiceFile";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -11,7 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { BiEdit } from "react-icons/bi";
 import { Button } from "@ui/Button";
 import { RequiredDocument, Treatment } from "@prisma/client";
-import { message, notification } from "antd";
+import { notification } from "antd";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -68,7 +68,8 @@ export default function DetailsButton({
       type: "success",
       placement: "topLeft",
     });
-  }, [api]);
+  }, [api, contextHolder]);
+
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {

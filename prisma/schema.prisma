@@ -11,12 +11,14 @@ datasource db {
 model User {
   id               String            @id @default(uuid())
   name             String
-  email            String            @unique
+  email            String?           @unique
   password         String
-  phone            String?
+  phone            String            @unique
   startActivity    String
   endActivity      String
   activityDays     Int[]
+  hourlyWage       String?
+  GlobalSalary     String?
   UserRole         UserRole          @default(RECIPIENT)
   appointments     Appointment[]
   availableSlots   AvailableSlot[]
@@ -24,8 +26,8 @@ model User {
   Treatment        Treatment[]
   isAdmin          Boolean
   PremiumKit       PremiumKits       @default(Light)
-  Business         Business?         @relation(fields: [businessId], references: [id])
-  businessId       String?
+  Business         Business          @relation(fields: [businessId], references: [id])
+  businessId       String
   Customer         Customer[]
 }
 
@@ -52,8 +54,6 @@ model Document {
   documentURL  String // You can store the URL or file path to the document
   customer     Customer @relation(fields: [customerId], references: [id])
   customerId   String
-  business     Business @relation(fields: [businessId], references: [id])
-  businessId   String
 }
 
 model Business {
@@ -72,7 +72,6 @@ model Business {
   AppointmentSlot  AppointmentSlot[]
   Images           Images?
   blockedCustomers Customer[]         @relation("BlockedCustomers")
-  Document         Document[]
   Treatment        Treatment[]
   RequiredDocument RequiredDocument[]
 }

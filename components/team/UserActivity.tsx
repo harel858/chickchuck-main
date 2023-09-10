@@ -1,13 +1,13 @@
-"use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { BiTime } from "react-icons/bi";
-import UserActivityDays from "./UserActivityDays";
-import UserActivityTime from "./UserActivityTime";
+import ActivityDays from "./UserActivityDays";
+import ActivityTimePicker from "./ActivityTimePicker";
 import SubmitButton from "./SubmitButton";
-import { ProfilePageData, Slots } from "types/types";
+import { GiSandsOfTime } from "react-icons/gi";
+import { User } from "@prisma/client";
+import { Slots } from "types/types";
 
-export default function BusinessActivity({ user }: { user: ProfilePageData }) {
+export default function UserActivity({ user }: { user: User }) {
   const [error, setError] = useState<string>("");
   const [startActivity, setStartActivity] = useState<Dayjs>(
     dayjs(user.startActivity)
@@ -17,9 +17,7 @@ export default function BusinessActivity({ user }: { user: ProfilePageData }) {
     dayjs(user.endActivity)
   );
   const [hasChanges, setHasChanges] = useState<boolean>(true);
-  const [activityDays, setActivityDays] = useState<number[]>(
-    user.business.activityDays
-  );
+  const [activityDays, setActivityDays] = useState<number[]>(user.activityDays);
   const [availableSlots, setAvailableSlots] = useState<Slots[]>([]);
 
   const generateAvailableSlots = useCallback(
@@ -50,28 +48,24 @@ export default function BusinessActivity({ user }: { user: ProfilePageData }) {
   }, [startActivity, endActivity, activityDays]);
 
   return (
-    <div className="mt-40 flex flex-col items-center justify-end relative max-2xl:w-11/12 w-64 dark:bg-orange-400/70 bg-slate-900 shadow-sm shadow-black p-5 rounded-xl gap-3 transition-all duration-300 ease-in-out border border-gray-500">
-      <div className="text-white/90 flex justify-center items-center gap-2">
-        <h2 className="text-2xl font-bold text-center w-max">
-          Business Activity
-        </h2>
-        <BiTime className="text-3xl font-semibold" />
+    <div className=" flex flex-col items-center justify-evenly py-5">
+      <div className="flex flex-col justify-center items-center gap-5">
+        <ActivityDays
+          activityDays={activityDays}
+          setActivityDays={setActivityDays}
+          setHasChanges={setHasChanges}
+        />
+        <ActivityTimePicker
+          error={error}
+          setHasChanges={setHasChanges}
+          startActivity={startActivity}
+          setStartActivity={setStartActivity}
+          endActivity={endActivity}
+          setEndActivity={setEndActivity}
+          setError={setError}
+        />
       </div>
-
-      <UserActivityDays
-        activityDays={activityDays}
-        setActivityDays={setActivityDays}
-        setHasChanges={setHasChanges}
-      />
-      <UserActivityTime
-        error={error}
-        setHasChanges={setHasChanges}
-        startActivity={startActivity}
-        setStartActivity={setStartActivity}
-        endActivity={endActivity}
-        setEndActivity={setEndActivity}
-        setError={setError}
-      />
+      <br />
       <div className="flex flex-col justify-center items-center gap-1">
         <p className="font-serif text-red-500">{error}</p>
         <SubmitButton

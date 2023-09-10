@@ -253,3 +253,27 @@ export type ServiceFormData = Record<
   ServiceFormKeys,
   string | number | RequiredDocument[]
 >;
+export type CreateUserFormKey =
+  | "name"
+  | "phone Number"
+  | "password"
+  | "confirm password";
+
+export type CreateUserForm = Record<CreateUserFormKey, string>;
+
+export type UserFileFormKey = "salary" | "phone Number";
+
+export type UserFileFormData = {
+  salary: string | null;
+  "phone Number": string;
+  email: string;
+  services: Treatment[];
+};
+
+export type TeamData = {
+  business: Business & {
+    user: (User & {
+      Treatment: Treatment[];
+    })[];
+  };
+};

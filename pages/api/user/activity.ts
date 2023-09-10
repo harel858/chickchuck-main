@@ -36,6 +36,7 @@ export default async function handler(
         startActivity,
         endActivity,
       } = req.body as SlotBody;
+      console.log("availableSlots", availableSlots);
 
       //find user
       const { userExist, err } = await getById(userId);

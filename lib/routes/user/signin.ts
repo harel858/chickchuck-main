@@ -37,11 +37,11 @@ export async function signIn(
   res.status(425).end(`method ${req.method} is not allowed.`);
 }
 
-export async function signInNew(email: string, password: string) {
-  if (!email || !password) return { err: `Missing Inputs.` };
+export async function signInNew(emailORphoneNumber: string, password: string) {
+  if (!emailORphoneNumber || !password) return { err: `Missing Inputs.` };
   try {
     // Validate user
-    const userExist = await getUserByEmail(email);
+    const userExist = await getUserByEmail(emailORphoneNumber);
 
     if (!userExist) return { err: `User not found` };
 

@@ -3,7 +3,15 @@ import { TextField } from "@mui/material";
 import { Button } from "@ui/Button";
 import { addDocs } from "actions/addNewDocs";
 
-function Form({ businessId }: { businessId: string }) {
+function Form({
+  successMessage,
+  businessId,
+  handleClose,
+}: {
+  businessId: string;
+  handleClose: () => void;
+  successMessage: () => void;
+}) {
   const [isPending, startTransition] = useTransition();
   const [value, setValue] = useState<string>("");
   const [error, setError] = useState(false);
@@ -13,7 +21,11 @@ function Form({ businessId }: { businessId: string }) {
 
   return (
     <form
-      action={(e) => startTransition(() => addDocs(e, businessId))}
+      action={(e) => {
+        startTransition(() => addDocs(e, businessId));
+        successMessage();
+        handleClose();
+      }}
       className="flex flex-col justify-center items-center gap-4"
     >
       <TextField

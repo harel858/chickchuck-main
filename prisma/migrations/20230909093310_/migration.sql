@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "GlobalSalary" SET DATA TYPE TEXT,
+ALTER COLUMN "hourlyWage" SET DATA TYPE TEXT;

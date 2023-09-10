@@ -12,16 +12,23 @@ const Demo = styled("div")(({ theme }) => ({
 function RequiredDocumentsForm({
   businessId,
   docs,
+  successMessage,
+  handleClose,
 }: {
   businessId: string;
   docs: RequiredDocument[];
+  successMessage: () => void;
+  handleClose: () => void;
 }) {
-  console.log(docs);
   const [dense, setDense] = React.useState(false);
 
   return (
     <div className="flex flex-col justify-around items-center gap-5">
-      <Form businessId={businessId} />
+      <Form
+        successMessage={successMessage}
+        handleClose={handleClose}
+        businessId={businessId}
+      />
       {docs.length <= 0 ? (
         <NoDocsExited title="No Existing Documents" />
       ) : (

@@ -3,12 +3,9 @@ import DisplayInput from "./DisplayInput";
 import AdvanceFeatures from "./AdvanceFeatures";
 import { motion } from "framer-motion";
 import { Button } from "@ui/Button";
-import { Alert, Snackbar } from "@mui/material";
-import { ErrorData, ServiceFormData, ServiceFormKeys } from "types/types";
-import { SelectChangeEvent } from "@mui/material/Select";
+import { ErrorData, ServiceFormData } from "types/types";
 import axios, { AxiosError } from "axios";
 import { RequiredDocument } from "@prisma/client";
-import { revalidatePath } from "next/cache";
 
 const initialServiceFormData = {
   title: "",

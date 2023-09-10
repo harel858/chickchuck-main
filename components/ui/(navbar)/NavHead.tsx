@@ -23,7 +23,7 @@ function NavHead({
       <h1
         className={` ${lobster.className}  dark:text-white text-white text-4xl w-max`}
       >
-        QuickQ.
+        QSync.
       </h1>
       <ProfileImage enable={false} user={user} />
       <h3

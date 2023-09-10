@@ -1,5 +1,5 @@
 "use client";
-import React, { lazy, Suspense, useCallback } from "react";
+import React, { Suspense, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -11,6 +11,7 @@ import { Button } from "@ui/Button";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import RequiredDocumentsForm from "./RequiredDocumentsForm";
 import { RequiredDocument } from "@prisma/client";
+import { notification } from "antd";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -50,6 +51,7 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
     </DialogTitle>
   );
 }
+
 export default function AddRequiredDocuments({
   businessId,
   docs,
@@ -57,6 +59,15 @@ export default function AddRequiredDocuments({
   businessId: string;
   docs: RequiredDocument[];
 }) {
+  const [api, contextHolder] = notification.useNotification();
+
+  const successMessage = useCallback(() => {
+    api.open({
+      message: "Hello, Ant Design!",
+      type: "success",
+      placement: "topLeft",
+    });
+  }, [api]);
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -68,6 +79,7 @@ export default function AddRequiredDocuments({
 
   return (
     <>
+      {contextHolder}
       <Button
         onClick={handleClickOpen}
         className="flex flex-row-reverse justify-center items-center gap-2 text-xl font-medium text-black bg-slate-100 hover:text-white"
@@ -88,7 +100,12 @@ export default function AddRequiredDocuments({
         </BootstrapDialogTitle>
         <DialogContent sx={{ background: "rgb(241,245,249)" }} dividers>
           <Suspense fallback={<>loading...</>}>
-            <RequiredDocumentsForm docs={docs} businessId={businessId} />
+            <RequiredDocumentsForm
+              handleClose={handleClose}
+              successMessage={successMessage}
+              docs={docs}
+              businessId={businessId}
+            />
           </Suspense>
         </DialogContent>
         <DialogActions></DialogActions>

@@ -52,8 +52,7 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
   const businessData = await fetchAppointmentSlots(session?.user.id);
-  if (session?.user.UserRole !== "RECIPIENT" || !businessData)
-    return notFound();
+  if (!businessData) return notFound();
 
   return (
     <>

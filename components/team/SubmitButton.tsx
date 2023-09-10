@@ -2,15 +2,17 @@ import React from "react";
 import axios, { AxiosError } from "axios";
 import { Button } from "@ui/Button";
 import { Dayjs } from "dayjs";
-import { ProfilePageData, Slots } from "types/types";
+import { User } from "@prisma/client";
+import { Slots } from "types/types";
 
 type SubmitProps = {
-  user: ProfilePageData;
+  user: User;
   hasChanges: boolean;
   startActivity: Dayjs | null;
   endActivity: Dayjs | null;
   activityDays: any[];
   availableSlots: Slots[];
+
   setError: React.Dispatch<React.SetStateAction<string>>;
   setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -58,13 +60,13 @@ export default function SubmitButton({
 
   return (
     <Button
-      variant={"destructive"}
       disabled={
         hasChanges ||
         !startActivity ||
         !endActivity ||
         endActivity.hour() <= startActivity.hour()
       }
+      className={"bg-blue-600 text-white hover:bg-blue-500"}
       onClick={handleButtonClick}
       isLoading={loading}
     >

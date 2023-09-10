@@ -21,6 +21,15 @@ export async function createUser({
   const closingTime = dayjs().set("hour", 17).set("minute", 0).set("second", 0);
 
   try {
+    const newBusiness = await prisma.business.create({
+      data: {
+        businessName,
+        activityDays: [0, 1, 2, 3, 4, 5],
+        phone,
+        openingTime: openingTime.toISOString(),
+        closingTime: closingTime.toISOString(),
+      },
+    });
     const newUser = await prisma?.user.create({
       data: {
         name,
@@ -31,17 +40,7 @@ export async function createUser({
         activityDays: [0, 1, 2, 3, 4, 5],
         password,
         isAdmin: true,
-      },
-    });
-
-    const newBusiness = await prisma.business.create({
-      data: {
-        businessName,
-        activityDays: [0, 1, 2, 3, 4, 5],
-        phone,
-        openingTime: openingTime.toISOString(),
-        closingTime: closingTime.toISOString(),
-        user: { connect: { id: newUser.id } },
+        Business: { connect: { businessName: newBusiness.businessName } },
       },
     });
 
@@ -52,16 +51,22 @@ export async function createUser({
     return null;
   }
 }
-
-export async function getUserByEmail(email: string) {
+export async function getUserByEmail(emailORphoneNumber: string) {
   try {
-    const userExist = await prisma?.user.findUnique({
-      where: { email: email.toLowerCase() },
+    console.log("emailORphoneNumber", emailORphoneNumber);
+
+    const userExist = await prisma?.user.findFirst({
+      where: {
+        OR: [
+          { email: emailORphoneNumber.toLowerCase() },
+          { phone: emailORphoneNumber },
+        ],
+      },
     });
+
     return userExist;
   } catch (err) {
-    console.log(null);
-
+    console.error(err);
     return null;
   }
 }
@@ -205,13 +210,13 @@ export async function getAdminById(id: any) {
   }
 }
 
-export async function signIn(email: string, pass: string) {
-  if (!email || !pass)
+export async function signIn(emailORphoneNumber: string, pass: string) {
+  if (!emailORphoneNumber || !pass)
     return {
       error: { message: `Check the details you provided are correct.` },
     };
   try {
-    const userExist = await getUserByEmail(email);
+    const userExist = await getUserByEmail(emailORphoneNumber);
 
     if (!userExist)
       return {

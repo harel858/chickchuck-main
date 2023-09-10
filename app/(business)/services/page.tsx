@@ -17,6 +17,7 @@ const fetchUser = async (email: string | null | undefined) => {
         Business: { include: { RequiredDocument: true } },
       },
     });
+    if (!user || !user.Business) return null;
 
     return user;
   } catch (err) {
@@ -28,7 +29,7 @@ const fetchUser = async (email: string | null | undefined) => {
 async function Page() {
   const session = await getServerSession(authOptions);
   const user = await fetchUser(session?.user?.email);
-  if (!user) return notFound();
+  if (!user?.Business) return notFound();
   return <Services user={user} />;
 }
 

@@ -5,7 +5,7 @@ import { Button } from "@ui/Button";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 type signInData = {
-  email: string;
+  emailORphoneNumber: string;
   password: string;
 };
 
@@ -14,7 +14,7 @@ function SignInForm() {
   const [error, setError] = useState("");
   const [isLodaing, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<signInData>({
-    email: "",
+    emailORphoneNumber: "",
     password: "",
   });
 
@@ -62,16 +62,16 @@ function SignInForm() {
     }
   };
   const displayInput = () => {
-    const data: any = ["email", "password"];
+    const data: any = ["emailORphoneNumber", "password"];
     return (
       <div className="w-11/12">
         {data?.map(
           (item: keyof signInData, _index: number, _array: string[]) => (
             <label key={_index}>
-              {item}:
+              {item !== "password" ? "Email Or Phone Number" : item}
               <input
                 className="w-full py-3 rounded-xl border border-gray-500 focus:outline-none focus:border-2 dark:focus:border-white/80 focus:border-black/80 transition duration-300 transform scale-95 hover:scale-100"
-                type={item === "email" ? "email" : "password"}
+                type={item === "emailORphoneNumber" ? "text" : "password"}
                 name={item}
                 required
                 value={formData[item]}

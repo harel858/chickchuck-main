@@ -27,13 +27,8 @@ export default async function handler(
 ) {
   if (req.method == "POST") {
     try {
-      const {
-        activityDays,
-        availableSlots,
-        userId,
-        startActivity,
-        endActivity,
-      } = req.body as SlotBody;
+      const { activityDays, userId, startActivity, endActivity } =
+        req.body as SlotBody;
 
       const userExist = await getAdminById(userId);
       if (!userExist?.Business) return res.status(500).json(`user not found`);
