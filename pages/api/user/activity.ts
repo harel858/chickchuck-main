@@ -1,26 +1,24 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { AvailableSlot } from "@prisma/client";
 import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
-  createAvailableSlots,
   createUserAvailableSlots,
   getQueuesByMonth,
 } from "@lib/prisma/ActivitySlots";
 import {
   getById,
-  updateActivityDays,
-  updateActivityTime,
   updateUserActivityDays,
   updateUserActivityTime,
 } from "@lib/prisma/users";
+import { Slots } from "types/types";
 
 type SlotBody = {
+  startActivity: string | undefined;
+  endActivity: string | undefined;
   activityDays: number[];
-  availableSlots: AvailableSlot[];
+  breaks: string[];
+  availableSlots: Slots[];
   userId: string;
-  startActivity: string;
-  endActivity: string;
 };
 
 export default async function handler(
@@ -33,17 +31,28 @@ export default async function handler(
         activityDays,
         availableSlots,
         userId,
+        breaks: breaksId,
         startActivity,
         endActivity,
       } = req.body as SlotBody;
-      console.log("availableSlots", availableSlots);
 
+      if (!startActivity || !endActivity)
+        return res.status(500).json(`activity cannot be empty`);
       //find user
       const { userExist, err } = await getById(userId);
       if (!userExist?.Business || err)
         return res.status(500).json(`user not found`);
 
       const { Business } = userExist;
+
+      // Check if break times have changed
+      const breakTimeChanged = breaksId.some((newBreakId) =>
+        userExist.BreakTime.every(
+          (existingBreak) => existingBreak.id !== newBreakId
+        )
+      );
+
+      console.log("breakTimeChanged", breakTimeChanged);
 
       //check if activity days has changed
       const activityDaysChanged =
@@ -70,7 +79,8 @@ export default async function handler(
       const { response, error } = await updateUserActivityTime(
         userExist.id,
         startActivity,
-        endActivity
+        endActivity,
+        breaksId
       );
       if (error || !response) return res.status(500).json(`update Time Failed`);
 

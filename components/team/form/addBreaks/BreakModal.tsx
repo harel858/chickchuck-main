@@ -1,16 +1,13 @@
 import React, { useState } from "react";
-import Form from "./form/Form";
+import Content from "./Content";
 import { Modal, notification } from "antd";
 import { Button } from "@ui/Button";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import { Business, User } from "@prisma/client";
-import { UsergroupAddOutlined } from "@ant-design/icons";
+import { MdFreeBreakfast } from "react-icons/md";
 import { NotificationPlacement } from "antd/es/notification/interface";
 import { TeamPageParams } from "types/types";
 
-export default function AddMember({ business }: { business: TeamPageParams }) {
+export default function BreakModal({ business }: { business: TeamPageParams }) {
   const [modal1Open, setModal1Open] = useState(false);
-  const [current, setCurrent] = useState(0);
   const [api, contextHolder] = notification.useNotification();
 
   const successNotification = (placement: NotificationPlacement) => {
@@ -23,18 +20,19 @@ export default function AddMember({ business }: { business: TeamPageParams }) {
   };
   return (
     <>
+      {contextHolder}
       <Button
         onClick={() => setModal1Open(true)}
         className="flex flex-row-reverse justify-center items-center gap-2 text-xl font-medium text-black bg-slate-100 hover:text-white"
       >
-        New Team Member
-        <AiOutlinePlusCircle className="text-3xl" />
+        Break Times
+        <MdFreeBreakfast className="text-3xl" />
       </Button>
       <Modal
         title={
           <div className="flex flex-row justify-center items-center gap-2">
-            <h3 className="font-sans text-2xl">New Member</h3>
-            <UsergroupAddOutlined className="text-4xl" />
+            <h3 className="font-sans text-2xl"> Break Times</h3>
+            <MdFreeBreakfast className="text-4xl" />
           </div>
         }
         className="pt-5"
@@ -44,7 +42,6 @@ export default function AddMember({ business }: { business: TeamPageParams }) {
         cancelButtonProps={{ hidden: true }}
         onCancel={() => {
           setModal1Open(false);
-          setCurrent(0);
         }}
         bodyStyle={{
           background: "rgba(254,215,170,0.7)",
@@ -53,12 +50,9 @@ export default function AddMember({ business }: { business: TeamPageParams }) {
           margin: "0 auto",
         }}
       >
-        <Form
-          current={current}
-          setCurrent={setCurrent}
-          business={business}
-          setModal1Open={setModal1Open}
+        <Content
           successNotification={successNotification}
+          business={business}
         />
       </Modal>
     </>

@@ -54,8 +54,6 @@ export default async function handler(
         }
 
         if (type == "PROFILE") {
-          console.log(type, "profile type");
-
           const upload = await uploadImage(params);
           if (!upload) return res.status(500).json("s3 bucket err");
           const result = await updateProfileImages({

@@ -4,6 +4,7 @@ import { authOptions } from "@lib/auth";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import TeamManeger from "@components/team/TeamManeger";
+export const revalidate = 0;
 
 async function fetchUser(email: string | null | undefined) {
   try {
@@ -12,12 +13,15 @@ async function fetchUser(email: string | null | undefined) {
       where: { email },
       include: {
         Business: {
-          include: { user: { include: { Treatment: true } }, Treatment: true },
+          include: {
+            user: { include: { Treatment: true, BreakTime: true } },
+            Treatment: true,
+            BreakTime: true,
+          },
         },
       },
     });
     if (!user?.isAdmin) return null;
-
     const business = await prisma.business.findUnique({
       where: { id: user?.Business?.id },
     });

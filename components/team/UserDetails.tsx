@@ -1,10 +1,10 @@
 import React, { ReactNode } from "react";
-import { AndroidOutlined, AppleOutlined } from "@ant-design/icons";
-import { Tabs } from "antd";
+import { notification, Tabs } from "antd";
 import { FaBusinessTime, FaRegUserCircle } from "react-icons/fa";
 import UserActivity from "./UserActivity";
-import { Treatment, User } from "@prisma/client";
+import { BreakTime, Treatment, User } from "@prisma/client";
 import UserFile from "./UserFile";
+import { NotificationPlacement } from "antd/es/notification/interface";
 interface TabData {
   label: string;
   icon: ReactNode;
@@ -14,22 +14,39 @@ interface TabData {
 export default function UserDetails({
   user,
   allServices,
+  allBreakTimes,
+  setModalOpen,
 }: {
   user: User & {
     Treatment: Treatment[];
+    BreakTime: BreakTime[];
   };
+  allBreakTimes: BreakTime[];
   allServices: Treatment[];
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const tabs: TabData[] = [
     {
       label: "Member File",
       icon: <FaRegUserCircle className="text-2xl" />,
-      children: <UserFile allServices={allServices} user={user} />,
+      children: (
+        <UserFile
+          setModalOpen={setModalOpen}
+          allServices={allServices}
+          user={user}
+        />
+      ),
     },
     {
       label: "Member Activity",
       icon: <FaBusinessTime className="text-2xl" />,
-      children: <UserActivity user={user} />,
+      children: (
+        <UserActivity
+          allBreakTimes={allBreakTimes}
+          user={user}
+          setModalOpen={setModalOpen}
+        />
+      ),
     },
   ];
   return (

@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { Button } from "@ui/Button";
 import { Dayjs } from "dayjs";
-import { User } from "@prisma/client";
+import { BreakTime, User } from "@prisma/client";
 import { Slots } from "types/types";
 
 type SubmitProps = {
@@ -10,11 +10,12 @@ type SubmitProps = {
   hasChanges: boolean;
   startActivity: Dayjs | null;
   endActivity: Dayjs | null;
-  activityDays: any[];
+  activityDays: number[];
   availableSlots: Slots[];
-
+  breaks: BreakTime[];
   setError: React.Dispatch<React.SetStateAction<string>>;
   setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function SubmitButton({
@@ -24,18 +25,22 @@ export default function SubmitButton({
   endActivity,
   activityDays,
   availableSlots,
+  breaks,
   setError,
   setHasChanges,
+  setModalOpen,
 }: SubmitProps) {
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleButtonClick = async () => {
     setLoading(true);
     setError("");
+
     const params = {
       startActivity: startActivity?.toISOString(),
       endActivity: endActivity?.toISOString(),
       activityDays,
+      breaks: breaks.map((item) => item.id),
       availableSlots,
       userId: user.id,
     };
@@ -47,25 +52,26 @@ export default function SubmitButton({
 
       setLoading(false);
       setHasChanges(true);
+      setModalOpen(false);
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log(err.message);
-        setLoading(false);
-        return;
+      } else {
+        console.log(err);
       }
       setLoading(false);
-      console.log(err);
     }
   };
 
+  const isButtonDisabled =
+    hasChanges ||
+    !startActivity ||
+    !endActivity ||
+    endActivity.hour() <= startActivity.hour();
+
   return (
     <Button
-      disabled={
-        hasChanges ||
-        !startActivity ||
-        !endActivity ||
-        endActivity.hour() <= startActivity.hour()
-      }
+      disabled={isButtonDisabled}
       className={"bg-blue-600 text-white hover:bg-blue-500"}
       onClick={handleButtonClick}
       isLoading={loading}

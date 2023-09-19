@@ -111,7 +111,8 @@ export async function updateActivityTime(
 export async function updateUserActivityTime(
   id: string,
   startActivity: string,
-  endActivity: string
+  endActivity: string,
+  breaksId: string[]
 ) {
   try {
     const updated = await prisma.user.update({
@@ -121,6 +122,7 @@ export async function updateUserActivityTime(
       data: {
         startActivity,
         endActivity,
+        BreakTime: { connect: breaksId.map((item) => ({ id: item })) },
       },
     });
     const response = await prisma.user.findUnique({
@@ -187,7 +189,7 @@ export async function getById(id: any) {
   try {
     const userExist = await prisma?.user.findUnique({
       where: { id },
-      include: { Business: true },
+      include: { Business: true, BreakTime: true },
     });
     return { userExist };
   } catch (err) {

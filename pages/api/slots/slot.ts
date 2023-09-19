@@ -2,10 +2,7 @@
 import { AvailableSlot } from "@prisma/client";
 import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
-import {
-  createAvailableSlots,
-  getQueuesByMonth,
-} from "@lib/prisma/ActivitySlots";
+import { getQueuesByMonth } from "@lib/prisma/ActivitySlots";
 import {
   getById,
   updateActivityDays,
@@ -26,13 +23,8 @@ export default async function handler(
 ) {
   if (req.method == "POST") {
     try {
-      const {
-        activityDays,
-        availableSlots,
-        userId,
-        startActivity,
-        endActivity,
-      } = req.body as SlotBody;
+      const { activityDays, userId, startActivity, endActivity } =
+        req.body as SlotBody;
 
       const { userExist, err } = await getById(userId);
       if (err || !userExist?.Business)
@@ -50,18 +42,6 @@ export default async function handler(
         if (updateDaysFailed || !updateDaysSuccess)
           return res.status(500).json(`update Days Failed`);
       }
-
-      /*  const { deleteManySlots, slotFailed } = await createAvailableSlots(
-        availableSlots,
-        userId,
-        business.id
-      );
-
-      if (slotFailed || !deleteManySlots?.count) {
-        console.log("createdSlots", deleteManySlots);
-        console.log("slotFailed", slotFailed);
-        return res.status(500).json(`Create Available Slots Failed`);
-      } */
 
       const { response, error } = await updateActivityTime(
         userId,
@@ -82,7 +62,6 @@ export default async function handler(
         userId: string;
         duration: string;
       };
-      console.log({ chosenDate, userId, duration });
 
       if (!chosenDate || !userId || !duration)
         return res.status(400).json("Missing Values");
@@ -97,10 +76,9 @@ export default async function handler(
         date,
         +duration
       );
+
       if (!availableSlots || availableSlots.length <= 0)
         return res.status(500).json(err);
-
-      console.log("userExist?.activityDays", userExist?.activityDays);
 
       return res.status(200).json(availableSlots);
     } catch (err) {

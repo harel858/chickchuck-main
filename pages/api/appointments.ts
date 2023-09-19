@@ -14,6 +14,7 @@ interface ReqBody {
     id: string;
     start: string;
     end: string;
+    breakTimeId: string;
     date: string;
     userId: string;
     businessId: string;

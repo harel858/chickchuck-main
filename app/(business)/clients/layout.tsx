@@ -41,7 +41,6 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
         activityDays: user.activityDays,
       });
     }
-    console.log("UsersData", usersData);
 
     return { usersData, business: Business };
   } catch (err) {

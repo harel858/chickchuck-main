@@ -46,7 +46,7 @@
         "framer-motion": "^10.0.0",
         "joi": "^17.7.0",
         "lucide-react": "^0.161.0",
-        "next": "^13.4.3",
+        "next": "^13.4.19",
         "next-auth": "^4.18.10",
         "next-themes": "npm:@wits/next-themes@^0.2.16",
         "react": "^18.2.0",

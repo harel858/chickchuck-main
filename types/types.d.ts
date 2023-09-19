@@ -25,7 +25,7 @@ export type AppointmentEvent = {
   userId: string;
   recipient: {
     name: string;
-    email: string;
+    email: string | null;
     phone: string | null;
     startActivity: string;
     endActivity: string;
@@ -63,8 +63,9 @@ export type ScheduleProps = {
 };
 
 export type ActivityDay = {
-  value: any;
+  value: number;
   label: string;
+  color: string;
 };
 
 export type VerificationData = {
@@ -276,4 +277,13 @@ export type TeamData = {
       Treatment: Treatment[];
     })[];
   };
+};
+
+export type TeamPageParams = Business & {
+  BreakTime: BreakTime[];
+  user: (User & {
+    BreakTime: BreakTime[];
+    Treatment: Treatment[];
+  })[];
+  Treatment: Treatment[];
 };

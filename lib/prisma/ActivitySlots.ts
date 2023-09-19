@@ -2,6 +2,7 @@ import { prisma } from ".";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AvailableSlot } from "@prisma/client";
+import { Slots } from "types/types";
 
 dayjs.extend(customParseFormat);
 
@@ -9,6 +10,7 @@ interface AvailableSlotInterface {
   id: string;
   start: string;
   end: string;
+  breakTimeId: string | null;
   userId: string;
   businessId: string;
   date: string;
@@ -27,17 +29,6 @@ export async function createAvailableSlots(
     });
     console.log(res);
 
-    /*   const slotsToSave = availableSlots.map((slot) => ({
-      start: slot.start,
-      end: slot.end,
-      businessId,
-      userId,
-    }));
-
-    const createdSlots = await prisma.availableSlot.createMany({
-      data: slotsToSave,
-    });
- */
     return { deleteManySlots: res };
   } catch (slotFailed) {
     console.log(slotFailed);
@@ -45,7 +36,7 @@ export async function createAvailableSlots(
   }
 }
 export async function createUserAvailableSlots(
-  availableSlots: AvailableSlot[],
+  availableSlots: Slots[],
   userId: string,
   businessId: string
 ) {
@@ -73,27 +64,6 @@ export async function createUserAvailableSlots(
     return { slotFailed };
   }
 }
-/* 
-export async function updateAvailableSlots(
-  availableSlots: AvailableSlotInterface[],
-  userId: string,
-  businessId: string
-) {
-  try {
-    await prisma.availableSlot.deleteMany({
-      where: {
-        userId,
-      },
-    });
-
-    await createAvailableSlots(availableSlots, userId, businessId);
-
-    return { success: true };
-  } catch (error) {
-    console.log(error);
-    return { error };
-  }
-} */
 
 export async function getQueuesByMonth(
   userId: string,
@@ -124,7 +94,6 @@ export async function getQueuesByMonth(
         console.log(error);
       }
     }
-    console.log("allAvailableSlots", allAvailableSlots);
 
     return { availableSlots: allAvailableSlots };
   } catch (error) {
@@ -158,7 +127,6 @@ export async function getQueuesByDate(
       },
       orderBy: { start: "asc" },
     });
-    console.log("availableSlots", availableSlots);
 
     let consecutiveSlots: AvailableSlotInterface[] = [];
     const result: AvailableSlotInterface[][] = [];
@@ -177,6 +145,7 @@ export async function getQueuesByDate(
           id: slot.id,
           start: slot.start,
           end: slot.end,
+          breakTimeId: slot.breakTimeId,
           userId: slot.userId,
           businessId: slot.businessId,
           date: formattedDate,
@@ -216,6 +185,7 @@ export async function getQueuesByDate(
         }
       }
     }
+    console.log("result", result);
 
     return { availableSlots: result };
   } catch (error) {

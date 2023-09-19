@@ -1,6 +1,6 @@
 import { AvailableSlot } from "@prisma/client";
 import { Spin } from "antd";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import dayjs, { Dayjs } from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -30,6 +30,7 @@ export default function AvailableQueues({
       id: string;
       start: string;
       end: string;
+      breakTimeId: string;
       date: string;
       userId: string;
       businessId: string;
@@ -41,6 +42,7 @@ export default function AvailableQueues({
       id: string;
       start: string;
       end: string;
+      breakTimeId: string;
       userId: string;
       businessId: string;
     }[][]
@@ -57,6 +59,7 @@ export default function AvailableQueues({
       id: string;
       start: string;
       end: string;
+      breakTimeId: string;
       date: string;
       userId: string;
       businessId: string;
@@ -68,6 +71,7 @@ export default function AvailableQueues({
       id: string;
       start: string;
       end: string;
+      breakTimeId: string;
       userId: string;
       businessId: string;
     }[][] = [];
@@ -122,6 +126,9 @@ export default function AvailableQueues({
         console.log(res.data);
         setAllQueues(res.data);
       } catch (err) {
+        if (err instanceof AxiosError) {
+          console.log(err.message);
+        }
         setLoading(false);
         console.log(err);
       }
@@ -184,6 +191,7 @@ function Queue({
     id: string;
     start: string;
     end: string;
+    breakTimeId: string;
     userId: string;
     businessId: string;
   }[];

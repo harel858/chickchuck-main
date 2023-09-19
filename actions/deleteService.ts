@@ -20,7 +20,6 @@ export async function deleteService(serviceId: string) {
     const deleteService = await prisma.treatment.delete({
       where: { id: serviceId },
     });
-    console.log(deleteService);
 
     revalidatePath("/services");
   } catch (error) {

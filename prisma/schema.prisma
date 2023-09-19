@@ -17,8 +17,8 @@ model User {
   startActivity    String
   endActivity      String
   activityDays     Int[]
-  hourlyWage       String?
-  GlobalSalary     String?
+  TypeOfWage       TypeOfWage        @default(HOURLY)
+  Wage             String?
   UserRole         UserRole          @default(RECIPIENT)
   appointments     Appointment[]
   availableSlots   AvailableSlot[]
@@ -29,6 +29,7 @@ model User {
   Business         Business          @relation(fields: [businessId], references: [id])
   businessId       String
   Customer         Customer[]
+  BreakTime        BreakTime[]
 }
 
 model Images {
@@ -45,6 +46,16 @@ model RequiredDocument {
   treatment  Treatment[]
   Business   Business    @relation(fields: [businessId], references: [id])
   businessId String
+}
+
+model BreakTime {
+  id            String          @id @default(uuid())
+  StartTime     String
+  EndTime       String
+  AvailableSlot AvailableSlot[]
+  user          User[]
+  Business      Business        @relation(fields: [businessId], references: [id])
+  businessId    String
 }
 
 model Document {
@@ -74,6 +85,7 @@ model Business {
   blockedCustomers Customer[]         @relation("BlockedCustomers")
   Treatment        Treatment[]
   RequiredDocument RequiredDocument[]
+  BreakTime        BreakTime[]
 }
 
 model Address {
@@ -136,6 +148,8 @@ model AvailableSlot {
   AppointmentSlot AppointmentSlot[]
   Business        Business?         @relation(fields: [businessId], references: [id])
   businessId      String?
+  BreakTime       BreakTime?        @relation(fields: [breakTimeId], references: [id])
+  breakTimeId     String?
 }
 
 model AppointmentSlot {
@@ -160,6 +174,11 @@ enum AppointmentStatus {
 enum UserRole {
   CUSTOMER
   RECIPIENT
+}
+
+enum TypeOfWage {
+  GLOBALY
+  HOURLY
 }
 
 enum PremiumKits {

@@ -9,9 +9,10 @@ const SwitchWage = ({
   setTypeOfWage: React.Dispatch<React.SetStateAction<"GLOBALY" | "HOURLY">>;
 }) => (
   <Switch
-    className={`${typeOfWage === "HOURLY" && "bg-gray-500"}`}
+    className={`${typeOfWage === "GLOBALY" && "bg-gray-500"}`}
     checkedChildren={typeOfWage}
     unCheckedChildren={typeOfWage}
+    checked={typeOfWage === "HOURLY"}
     onChange={() =>
       setTypeOfWage((prev) => (prev === "GLOBALY" ? "HOURLY" : "GLOBALY"))
     }

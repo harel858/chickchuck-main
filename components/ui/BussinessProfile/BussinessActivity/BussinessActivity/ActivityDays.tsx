@@ -10,13 +10,13 @@ import TextField from "@mui/material/TextField";
 import { Chip } from "@mui/material";
 
 const options: ActivityDay[] = [
-  { value: 0, label: "Sunday" },
-  { value: 1, label: "Monday" },
-  { value: 2, label: "Tuesday" },
-  { value: 3, label: "Wednesday" },
-  { value: 4, label: "Thursday" },
-  { value: 5, label: "Friday" },
-  { value: 6, label: "Saturday" },
+  { value: 0, label: "Sunday", color: "blue" },
+  { value: 1, label: "Monday", color: "red" },
+  { value: 2, label: "Tuesday", color: "green" },
+  { value: 3, label: "Wednesday", color: "purple" },
+  { value: 4, label: "Thursday", color: "yellow" },
+  { value: 5, label: "Friday", color: "red" },
+  { value: 6, label: "Saturday", color: "cyan" },
 ];
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;

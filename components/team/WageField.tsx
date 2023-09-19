@@ -25,14 +25,13 @@ const NumericInput = (props: NumericInputProps) => {
   // Ensure value is not null before formatting
   const formattedValue = value !== null ? value : null;
 
-  const title =
-    formattedValue !== "" ? (
-      <span className="numeric-input-title">
-        {formattedValue !== "-" ? formattedValue : "-"}
-      </span>
-    ) : (
-      "Input a number"
-    );
+  const title = formattedValue ? (
+    <span className="numeric-input-title">
+      {formattedValue !== "-" ? formattedValue : "-"}
+    </span>
+  ) : (
+    "Input a number"
+  );
 
   return (
     <Tooltip
