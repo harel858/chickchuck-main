@@ -7,6 +7,7 @@ import {
   AppointmentStatus,
   Business,
   Address,
+  Appointment,
 } from "@prisma/client";
 import { Dayjs } from "dayjs";
 
@@ -91,6 +92,15 @@ export type BusinessData = {
       Treatment: Treatment[];
     })[];
     Customer: Customer[];
+  };
+  user: User & {
+    Business: Business & {
+      user: (User & {
+        Treatment: Treatment[];
+      })[];
+      Customer: Customer[];
+    };
+    appointments: Appointment[];
   };
 };
 export type Slots = {
@@ -287,3 +297,18 @@ export type TeamPageParams = Business & {
   })[];
   Treatment: Treatment[];
 };
+
+export interface Notification {
+  userId: string;
+  type: string; // or other notification types like "appointment", "message", "event", etc.
+  timestamp: string; // ISO 8601 format
+  content: string; //"You have a new appointment with Dr. Smith on October 15, 2023, at 2:30 PM.";
+  appointmentId: string;
+  // Other relevant appointment details
+  read: boolean; // Indicates whether the user has read the notification
+}
+
+export interface NotificationData {
+  notification: NotificationItem;
+  appointment: Appointment;
+}

@@ -16,8 +16,12 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
       where: { id },
       include: {
         Business: {
-          include: { user: { include: { Treatment: true } }, Customer: true },
+          include: {
+            user: { include: { Treatment: true } },
+            Customer: true,
+          },
         },
+        appointments: true,
       },
     });
     if (!user || !user.Business) return null;
@@ -42,9 +46,10 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
         activityDays: user.activityDays,
       });
     }
+
     console.log("UsersData", usersData);
 
-    return { usersData, business: Business };
+    return { usersData, business: Business, user };
   } catch (err) {
     console.log(err);
   }
@@ -58,7 +63,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Navbar session={session} />
+      <Navbar session={session} appointments={businessData.user.appointments} />{" "}
       <PlusButton businessData={businessData} />
       {/* @ts-ignore  */}
       <VerticalNav user={session.user} />

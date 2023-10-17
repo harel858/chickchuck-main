@@ -88,37 +88,3 @@ function WithWho({
 }
 
 export default WithWho;
-
-/*  <Autocomplete
-        disablePortal
-        id="combo-box-demo"
-        options={options}
-        sx={{ width: 300 }}
-        getOptionLabel={(option) => option.label}
-        renderInput={(params) => {
-          return (
-            <TextField
-              {...params}
-              key={params.id}
-              placeholder="Activity Days"
-            />
-          );
-        }}
-        renderOption={(props, option) => {
-          return (
-            <li {...props} key={option.value}>
-              {option.label}
-            </li>
-          );
-        }}
-        renderTags={(tagValue, getTagProps) => {
-          return tagValue.map((option, index) => (
-            <Chip
-              {...getTagProps({ index })}
-              key={option.value}
-              label={option.label}
-            />
-          ));
-        }}
-        onChange={(e, value) => handleSelectChange(value?.value)}
-      /> */

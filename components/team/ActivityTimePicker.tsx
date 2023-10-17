@@ -14,6 +14,8 @@ type ActivityTimePickerProps = {
   setEndActivity: React.Dispatch<React.SetStateAction<dayjs.Dayjs>>;
   setError: React.Dispatch<React.SetStateAction<string>>;
   setHasChanges: React.Dispatch<React.SetStateAction<boolean>>;
+  bussinesOpeningTime: number;
+  bussinesClosingTime: number;
   error: string;
 };
 
@@ -25,12 +27,10 @@ function ActivityTimePicker({
   setEndActivity,
   setError,
   setHasChanges,
+  bussinesClosingTime,
+  bussinesOpeningTime,
 }: ActivityTimePickerProps) {
   const format = "HH:mm";
-  console.log("dayjs(startActivity)", dayjs(startActivity).format(format));
-  console.log("dayjs(endActivity)", dayjs(endActivity).format(format));
-  const totalSlots = endActivity.diff(startActivity, "minute") / 5;
-  console.log("totalSlots", totalSlots);
 
   return (
     <div className="flex flex-col justify-center items-center gap-2">
@@ -41,9 +41,12 @@ function ActivityTimePicker({
               label={<p className="text-xl font-serif">Opening</p>}
               defaultValue={startActivity ? dayjs(startActivity) : undefined}
               onChange={(newValue) => {
+                console.log("bussinesOpeningTime", bussinesOpeningTime);
+                console.log(" newValue.hour() ", newValue);
                 if (
                   !newValue ||
-                  (endActivity && newValue.hour() >= endActivity.hour())
+                  (endActivity && newValue.hour() >= endActivity.hour()) ||
+                  newValue.hour() < bussinesOpeningTime
                 ) {
                   setError("Activity time is not valid");
                   setHasChanges(true);
@@ -69,7 +72,8 @@ function ActivityTimePicker({
               onChange={(newValue) => {
                 if (
                   !newValue ||
-                  (startActivity && startActivity.hour() >= newValue.hour())
+                  (startActivity && startActivity.hour() >= newValue.hour()) ||
+                  newValue.hour() > bussinesClosingTime
                 ) {
                   setError("Activity time is not valid");
                   setHasChanges(true);

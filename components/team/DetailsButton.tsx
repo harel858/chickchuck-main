@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Modal } from "antd";
 import { Button } from "@ui/Button";
 import { BreakTime, Treatment, User } from "@prisma/client";
-import UserFile from "./UserDetails";
 import { BiEdit } from "react-icons/bi";
 import UserDetails from "./UserDetails";
 
@@ -10,11 +9,15 @@ export default function DetailsButton({
   user,
   allServices,
   allBreakTimes,
+  bussinesClosingTime,
+  bussinesOpeningTime,
 }: {
   user: User & {
     Treatment: Treatment[];
     BreakTime: BreakTime[];
   };
+  bussinesOpeningTime: number;
+  bussinesClosingTime: number;
   allBreakTimes: BreakTime[];
   allServices: Treatment[];
 }) {
@@ -57,6 +60,8 @@ export default function DetailsButton({
           allServices={allServices}
           user={user}
           allBreakTimes={allBreakTimes}
+          bussinesOpeningTime={bussinesOpeningTime}
+          bussinesClosingTime={bussinesClosingTime}
         />
       </Modal>
     </>

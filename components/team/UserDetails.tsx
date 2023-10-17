@@ -16,6 +16,8 @@ export default function UserDetails({
   allServices,
   allBreakTimes,
   setModalOpen,
+  bussinesClosingTime,
+  bussinesOpeningTime,
 }: {
   user: User & {
     Treatment: Treatment[];
@@ -23,6 +25,8 @@ export default function UserDetails({
   };
   allBreakTimes: BreakTime[];
   allServices: Treatment[];
+  bussinesOpeningTime: number;
+  bussinesClosingTime: number;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const tabs: TabData[] = [
@@ -45,6 +49,8 @@ export default function UserDetails({
           allBreakTimes={allBreakTimes}
           user={user}
           setModalOpen={setModalOpen}
+          bussinesOpeningTime={bussinesOpeningTime}
+          bussinesClosingTime={bussinesClosingTime}
         />
       ),
     },

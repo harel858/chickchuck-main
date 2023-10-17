@@ -1,9 +1,9 @@
 import "@styles/globals.css";
+import "antd/dist/reset.css";
 import React from "react";
 import { Roboto } from "next/font/google";
 import Providers from "@ui/Providers";
 import { cn } from "@lib/utils";
-import Navbar from "@ui/(navbar)/Navbar";
 import { ServerThemeProvider } from "next-themes";
 
 const inter = Roboto({

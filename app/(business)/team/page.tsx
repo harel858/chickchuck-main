@@ -41,7 +41,6 @@ async function Page() {
 
   const business = await fetchUser(session?.user?.email);
   if (!business) return notFound();
-
   return <TeamManeger business={business} />;
 }
 

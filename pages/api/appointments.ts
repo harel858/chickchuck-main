@@ -1,8 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createAppointment } from "../../lib/prisma/appointments";
-
-import { AvailableSlot, Customer, Treatment, User } from "@prisma/client";
+import { Treatment } from "@prisma/client";
 import validateAppointment from "../../lib/validation/appointmentValidation";
 import { getById } from "../../lib/prisma/users";
 import { UserData } from "../../types/types";
@@ -14,7 +13,7 @@ interface ReqBody {
     id: string;
     start: string;
     end: string;
-    breakTimeId: string;
+    breakTimeId: string | null;
     date: string;
     userId: string;
     businessId: string;
@@ -31,13 +30,15 @@ export default async function handler(
     try {
       const { availableSlot, treatment, user, customerId, date }: ReqBody =
         req.body;
-
+      console.log("req.body", req.body);
+      if (!availableSlot || !treatment || !user || !customerId || !date)
+        return res.status(500).json("missing values");
       const { error } = validateAppointment({
         availableSlot,
         customerId: customerId,
-        date,
+        date: { appointmentDate: date },
         treatment,
-        userId: user.userId,
+        userId: user?.userId,
       });
 
       if (error) {

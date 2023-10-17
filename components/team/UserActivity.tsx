@@ -11,12 +11,16 @@ export default function UserActivity({
   user,
   setModalOpen,
   allBreakTimes,
+  bussinesClosingTime,
+  bussinesOpeningTime,
 }: {
   user: User & {
     Treatment: Treatment[];
     BreakTime: BreakTime[];
   };
   allBreakTimes: BreakTime[];
+  bussinesOpeningTime: number;
+  bussinesClosingTime: number;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const initialActivityDays = user.activityDays;
@@ -75,6 +79,8 @@ export default function UserActivity({
           setStartActivity={setStartActivity}
           endActivity={endActivity}
           setEndActivity={setEndActivity}
+          bussinesOpeningTime={bussinesOpeningTime}
+          bussinesClosingTime={bussinesClosingTime}
           setError={setError}
         />
         <UserBreakTime

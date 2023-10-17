@@ -51,6 +51,8 @@ function Appointment({ businessData }: { businessData: BusinessData }) {
     // Proceed only if both treatment and recipient are selected
 
     try {
+      console.log("appointmentInput", appointmentInput);
+
       const res = await axios.post("api/appointments", {
         ...appointmentInput,
       });

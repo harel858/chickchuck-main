@@ -7,7 +7,6 @@ import { prisma } from "@lib/prisma";
 import { UserData } from "types/types";
 import Navbar from "@ui/(navbar)/Navbar";
 import PlusButton from "@ui/(navbar)/specialOperations/plusButton/PlusButton";
-
 const fetchAppointmentSlots = async (id: string | undefined) => {
   if (!id) return null;
   try {
@@ -15,8 +14,12 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
       where: { id },
       include: {
         Business: {
-          include: { user: { include: { Treatment: true } }, Customer: true },
+          include: {
+            user: { include: { Treatment: true } },
+            Customer: true,
+          },
         },
+        appointments: true,
       },
     });
     if (!user || !user.Business) return null;
@@ -41,9 +44,10 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
         activityDays: user.activityDays,
       });
     }
+
     console.log("UsersData", usersData);
 
-    return { usersData, business: Business };
+    return { usersData, business: Business, user };
   } catch (err) {
     console.log(err);
   }
@@ -52,13 +56,12 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
   const businessData = await fetchAppointmentSlots(session?.user.id);
-  if (session?.user.UserRole !== "RECIPIENT" || !businessData)
-    return notFound();
+  if (!businessData) return notFound();
 
   return (
     <>
       {/* @ts-ignore  */}
-      <Navbar session={session} />
+      <Navbar session={session} appointments={businessData.user.appointments} />
       <PlusButton businessData={businessData} />
       {/* @ts-ignore  */}
       <VerticalNav user={session.user} />

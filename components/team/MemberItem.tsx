@@ -3,12 +3,15 @@ import React from "react";
 import { motion } from "framer-motion";
 import DetailsButton from "./DetailsButton";
 import { BreakTime, Treatment, User } from "@prisma/client";
+import dayjs from "dayjs";
 
 export default function MemberItem({
   user,
   i,
   allBreakTimes,
   allServices,
+  bussinesClosingTime,
+  bussinesOpeningTime,
 }: {
   i: number;
   allBreakTimes: BreakTime[];
@@ -16,9 +19,12 @@ export default function MemberItem({
     Treatment: Treatment[];
     BreakTime: BreakTime[];
   };
+  bussinesOpeningTime: number;
+  bussinesClosingTime: number;
   allServices: Treatment[];
 }) {
-  console.log("allBreakTimes", allBreakTimes);
+  console.log("bussinesOpeningTime", bussinesOpeningTime);
+  console.log("dayjs", dayjs(bussinesOpeningTime).hour());
 
   return (
     <motion.li
@@ -37,6 +43,8 @@ export default function MemberItem({
         allBreakTimes={allBreakTimes}
         allServices={allServices}
         user={user}
+        bussinesOpeningTime={bussinesOpeningTime}
+        bussinesClosingTime={bussinesClosingTime}
       />
     </motion.li>
   );

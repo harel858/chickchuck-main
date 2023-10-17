@@ -1,6 +1,6 @@
 "use client";
-import { QRCode, Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
+import { QRCode, Skeleton } from "antd";
 import { AiOutlineDownload } from "react-icons/ai";
 import { Button } from "./Button";
 

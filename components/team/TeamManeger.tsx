@@ -9,6 +9,7 @@ import MemberItem from "./MemberItem";
 import { RiTeamLine } from "react-icons/ri";
 import AddBreak from "./form/addBreaks/BreakModal";
 import { TeamPageParams } from "types/types";
+import dayjs from "dayjs";
 
 function TeamManeger({ business }: { business: TeamPageParams }) {
   const [loading, setLoading] = useState(false);
@@ -40,6 +41,8 @@ function TeamManeger({ business }: { business: TeamPageParams }) {
     },
     [searchQuery, setSearchQuery]
   );
+  console.log("business.openingTime.hour", dayjs(business.openingTime).hour());
+  console.log("business.openingTime.hour", dayjs(business.openingTime));
 
   return (
     <>
@@ -74,6 +77,8 @@ function TeamManeger({ business }: { business: TeamPageParams }) {
                 <MemberItem
                   key={user.id}
                   i={i}
+                  bussinesOpeningTime={dayjs(business.openingTime).hour()}
+                  bussinesClosingTime={dayjs(business.closingTime).hour()}
                   user={user}
                   allBreakTimes={business.BreakTime}
                   allServices={business.Treatment}
@@ -89,6 +94,8 @@ function TeamManeger({ business }: { business: TeamPageParams }) {
                   key={user.id}
                   i={i}
                   user={user}
+                  bussinesOpeningTime={dayjs(business.openingTime).hour()}
+                  bussinesClosingTime={dayjs(business.closingTime).hour()}
                   allBreakTimes={business.BreakTime}
                   allServices={business.Treatment}
                 />
