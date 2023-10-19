@@ -309,6 +309,10 @@ export interface Notification {
 }
 
 export interface NotificationData {
-  notification: NotificationItem;
-  appointment: Appointment;
+  notification: Notification;
+  appointment: Appointment & {
+    customer: Customer;
+    treatment: Treatment;
+    appointmentSlot: AppointmentSlot;
+  };
 }

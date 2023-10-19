@@ -48,11 +48,13 @@ export default function DetailsButton({
           setModalOpen(false);
           setCurrent(0);
         }}
-        bodyStyle={{
-          background: "rgba(254,215,170,0.7)",
-          borderRadius: "3em",
-          padding: "2em",
-          margin: "0 auto",
+        styles={{
+          body: {
+            background: "rgba(254,215,170,0.7)",
+            borderRadius: "3em",
+            padding: "2em",
+            margin: "0 auto",
+          },
         }}
       >
         <UserDetails

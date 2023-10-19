@@ -12,7 +12,7 @@ function NotificationItem({
 
   return (
     <li
-      className="z-50 w-full cursor-pointer"
+      className=" z-50 w-full cursor-pointer"
       onClick={() => updateItem(NotificationData.notification)}
     >
       NotificationItem

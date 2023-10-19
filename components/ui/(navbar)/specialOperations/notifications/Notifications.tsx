@@ -1,20 +1,39 @@
 "use client";
-import { Appointment } from "@prisma/client";
+import {
+  Appointment,
+  AppointmentSlot,
+  Customer,
+  Treatment,
+} from "@prisma/client";
+import { Button } from "@ui/Button";
+import { Popover } from "antd";
 import { useState, useEffect, useRef } from "react";
 import { GrNotification } from "react-icons/gr";
 import { Notification, NotificationData } from "types/types";
-import NotificationItem from "./NotificationItem";
+import NotificationList from "./notificationList";
 
 function NotificationComponent({
   appointments,
   userId,
 }: {
-  appointments: Appointment[];
+  appointments: (Appointment & {
+    customer: Customer;
+    treatment: Treatment;
+    appointmentSlot: AppointmentSlot;
+  })[];
   userId: string;
 }) {
   const [notifications, setNotifications] = useState<NotificationData[]>([]);
   const webSocketRef = useRef<WebSocket | null>(null);
+  const [open, setOpen] = useState(false);
 
+  const hide = () => {
+    setOpen(false);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+  };
   useEffect(() => {
     // Initialize the WebSocket when the component mounts
     webSocketRef.current = new WebSocket(
@@ -59,25 +78,34 @@ function NotificationComponent({
       }
     };
   }, []); // An empty dependency array ensures this effect runs only once when the component mounts
+  const NOTIFICATION_LENGTH = notifications.filter(
+    (item) => item.notification.read
+  ).length;
 
   return (
-    <div className="relative">
-      <button className="relative bg-transparent focus:outline-none">
-        <GrNotification className="text-3xl" />
-        {notifications.length > 0 && (
-          <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs">
-            {notifications.length}
-          </span>
-        )}
-      </button>
-      {notifications.length > 0 && (
-        <ul className="absolute right-0 mt-2 w-64 max-w-md bg-white shadow-lg rounded-lg p-2">
-          {notifications.map((notification, index) => (
-            <NotificationItem key={index} NotificationData={notification} />
-          ))}
-        </ul>
-      )}
-    </div>
+    <Popover
+      content={<NotificationList notifications={notifications} />}
+      title="Notifications"
+      trigger="click"
+      open={open}
+      onOpenChange={handleOpenChange}
+    >
+      <div className="relative">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={hide}
+          className="relative transition-all ease-in-out duration-300 hover:scale-125"
+        >
+          <GrNotification className="text-3xl" />
+          {notifications.length > 0 && (
+            <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs">
+              {NOTIFICATION_LENGTH}
+            </span>
+          )}
+        </Button>
+      </div>
+    </Popover>
   );
 }
 

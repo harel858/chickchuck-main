@@ -21,7 +21,9 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
             Customer: true,
           },
         },
-        appointments: true,
+        appointments: {
+          include: { customer: true, treatment: true, appointmentSlot: true },
+        },
       },
     });
     if (!user || !user.Business) return null;

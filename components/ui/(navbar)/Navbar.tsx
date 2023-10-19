@@ -1,11 +1,16 @@
 "use client";
 import React from "react";
 import { ThemeToggle } from "@components/ThemeToggle";
-import Notifications from "./specialOperations/Notifications";
+import Notifications from "./specialOperations/notifications/Notifications";
 import { Session } from "next-auth";
 import Hamburger from "./(responsiveNav)/Hamburger";
 import { Lobster_Two } from "next/font/google";
-import { Appointment } from "@prisma/client";
+import {
+  Appointment,
+  AppointmentSlot,
+  Customer,
+  Treatment,
+} from "@prisma/client";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 function Navbar({
@@ -13,7 +18,11 @@ function Navbar({
   appointments,
 }: {
   session: Session;
-  appointments: Appointment[];
+  appointments: (Appointment & {
+    customer: Customer;
+    treatment: Treatment;
+    appointmentSlot: AppointmentSlot;
+  })[];
 }) {
   const userId = session.user.id;
   return (

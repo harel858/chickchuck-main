@@ -3,7 +3,6 @@ import Form from "./form/Form";
 import { Modal, notification } from "antd";
 import { Button } from "@ui/Button";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { Business, User } from "@prisma/client";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 import { NotificationPlacement } from "antd/es/notification/interface";
 import { TeamPageParams } from "types/types";
