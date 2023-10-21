@@ -68,7 +68,7 @@ const Hamburger = ({
     <motion.nav
       className={`${
         !isOpen ? `hidden pointer-events-none` : `flex`
-      } fixed z-40 top-0 left-0 h-screen w-52 max-2xl:flex pt-16 gap-10 hidden flex-col align-center items-center justify-start`}
+      } fixed z-40 top-0 left-0 h-screen w-52 max-md:flex pt-16 gap-10 hidden flex-col align-center items-center justify-start`}
       initial={false}
       animate={isOpen ? "open" : "closed"}
       custom={height}

@@ -35,6 +35,8 @@ export default async function handler(
         const business = await bussinessById(userExist.Business.id);
         if (!business) return res.status(500).json("business not found");
 
+        console.log("imageSrc.newFilename", imageSrc.newFilename);
+
         // Process form data
         const params = {
           Bucket: bucketName,

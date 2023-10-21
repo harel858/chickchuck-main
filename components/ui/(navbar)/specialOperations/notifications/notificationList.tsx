@@ -32,10 +32,10 @@ function NotificationList({
                     />
                   }
                   title={
-                    <h4>
+                    <p className="font-bold text-md font-serif">
                       {item.appointment.customer.name} just made a new
                       appointment
-                    </h4>
+                    </p>
                   }
                   description={`${item.notification.content}`}
                 />

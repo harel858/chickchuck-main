@@ -27,11 +27,14 @@ const s3 = new S3Client({
 
 export const uploadImage = async (params: UploadParams) => {
   try {
+    params.Key = `uploads/${params.Key}`;
     const command = new PutObjectCommand(params);
     const upload = await s3.send(command);
+    console.log({ upload });
+
     return upload;
   } catch (err) {
-    console.log(err);
+    console.log({ err });
     return null;
   }
 };
@@ -46,19 +49,24 @@ export const getImage = async (params: getParams) => {
     if (params.Key.backgroundImgName) {
       const command = new GetObjectCommand({
         ...params,
-        Key: params.Key.backgroundImgName,
+        Key: `uploads/${params.Key.backgroundImgName}`,
       });
       const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+      console.log({ url });
+
       urls.backgroundImage = url;
     }
     if (params.Key.profileImgName) {
       const command = new GetObjectCommand({
         ...params,
-        Key: params.Key.profileImgName,
+        Key: `uploads/${params.Key.profileImgName}`,
       });
       const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+      console.log({ url });
+
       urls.profileImage = url;
     }
+    console.log({ urls });
 
     return urls;
   } catch (err) {

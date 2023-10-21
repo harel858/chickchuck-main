@@ -3,6 +3,12 @@
   padding: 1rem !important;
 }
 
+ .ant-table-cell-row-hover td{
+  background-color: none !important;
+}
+:where(.css-dev-only-do-not-override-amq5gd).ant-table-wrapper .ant-table-tbody .ant-table-row>.ant-table-cell-row-hover{
+  background-color: rgb(186 230 253 / 0.9) !important;
+}
 .ant-picker-calendar {
   display: flex !important;
   flex-direction: column !important;
@@ -10,6 +16,26 @@
   justify-content: start !important;
   background-color: transparent !important;
   overflow: hidden !important;
+}
+
+/* Custom hover effect for table rows */
+.custom-row:hover {
+  background-color: transparent !important; /* Set the background color to transparent */
+  color: inherit !important; /* Set the text color to inherit */
+  /* Add any other styles you want to disable the hover effect */
+}
+.custom-row:hover td {
+  background: black !important;
+}
+.ant-table-tbody>tr.ant-table-row-level-1:hover>td {
+  background: unset;
+}
+
+.ant-table tr:hover{
+  background-color: rgb(186 230 253 / 0.9) !important}
+
+.ant-table-tbody>tr.ant-table-row:hover>td {
+  background: none !important;
 }
 
 .ant-picker-calendar-header {
@@ -53,17 +79,16 @@
 }
 .ant-picker-presets li {
   border-radius: 2em;
-  background-color: beige;
   padding: 10px;
   color: #1677ff;
 }
 .ant-picker-footer {
   border-radius: 10px;
-  background-color: beige;
   padding: 0;
   min-width: fit-content !important;
   margin: 0 auto !important;
 }
+
 .ant-picker-footer .ant-picker-today-btn {
   min-width: 100% !important;
   z-index: 40 !important;

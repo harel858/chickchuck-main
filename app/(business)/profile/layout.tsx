@@ -62,15 +62,25 @@ async function Layout({ children }: { children: React.ReactNode }) {
   const businessData = await fetchAppointmentSlots(session?.user.id);
   if (session?.user.UserRole !== "RECIPIENT" || !businessData)
     return notFound();
+  const value = businessData.business?.businessName.replace(
+    /(\s)(?!\s*$)/g,
+    "-"
+  );
 
   return (
     <>
-      <Navbar session={session} appointments={businessData.user.appointments} />{" "}
+      <Navbar
+        session={session}
+        link={value}
+        appointments={businessData.user.appointments}
+      />
       <PlusButton businessData={businessData} />
       {/* @ts-ignore  */}
-      <VerticalNav user={session.user} />
-      <section className="h-screen w-full pl-64 flex flex-col justify-start items-center relative max-2xl:px-0 max-2xl:m-0 gap-10">
+      {/*       <VerticalNav user={session.user} />
+       */}{" "}
+      <section className="h-screen w-full flex flex-col justify-center items-center relative max-2xl:px-0 max-2xl:m-0 gap-10">
         <Images user={session.user} />
+
         {children}
       </section>
     </>

@@ -7,6 +7,19 @@ import { ScheduleProps, AppointmentEvent } from "../../../types/types";
 import dayjs from "dayjs";
 import CalendarEvent from "./CalendarEvent";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { Tooltip } from "antd";
+import { ColumnsType } from "antd/es/table";
+
+function CustomRow(props: any) {
+  const time = props?.record?.time;
+  console.log("time", time);
+
+  return (
+    <Tooltip title={time}>
+      <td className="hover:bg-black" {...props} />
+    </Tooltip>
+  );
+}
 dayjs.extend(customParseFormat);
 const SlotCalendar = ({
   scheduleProps,
@@ -56,7 +69,8 @@ const SlotCalendar = ({
     return [...Array(totalSlots)].map((_, i) => {
       const minutes = i * 5;
       const time = openingTime.add(minutes, "minute").format("HH:mm");
-
+      /*       const hour = openingTime.add(minutes, "minute").format("HH:mm");
+       */
       const row: {
         key: string | null;
         time: string | null;
@@ -75,7 +89,6 @@ const SlotCalendar = ({
       if (slotEvent) {
         row.event = slotEvent;
       }
-
       weekDates.forEach((date, index) => {
         const slots = slotsByDay[index]?.filter(
           (event) =>
@@ -109,12 +122,29 @@ const SlotCalendar = ({
       className: `text-center text-xl font-md pt-0 m-0 dark:border-orange-500 bg-black dark:text-white dark:bg-slate-700 !important`,
     }),
   };
-  const columns = React.useMemo(() => {
+  const columns: ColumnsType<{
+    [date: string]: string | AppointmentEvent | null | undefined;
+    key: string | null;
+    time: string | null;
+  }> = React.useMemo(() => {
     return [
       timeColumn,
       ...weekDates.map((date, index) => ({
         title: dayjs(date).format("MMMM D"),
         dataIndex: dayjs(date).format("DD/MM/YYYY"),
+        onCell: (record: any) => ({
+          onClick: () => record, // Log the hour from the initial row
+          record: record,
+        }),
+
+        className: `hover:bg-black !important cursor-pointer text-center pt-0 m-0 ${
+          isToday(date)
+            ? "bg-black/20 dark:bg-black/50"
+            : "bg-sky-200/90 dark:bg-slate-700"
+        }`,
+        onHeaderCell: () => ({
+          className: `text-center text-xl font-md pt-0 m-0 bg-black dark:text-white dark:bg-slate-700`,
+        }),
         render: (eventId: string | AppointmentEvent) => {
           const event =
             typeof eventId === "string"
@@ -140,19 +170,22 @@ const SlotCalendar = ({
 
           return (
             <div
-              className={`flex justify-center items-center p-0 m-0 absolute top-0 left-0 right-0 w-full h-full z-40 overflow-visible `}
+              className={`flex justify-center items-center p-0 m-0 absolute top-0 left-0 right-0 w-full h-full overflow-visible `}
               style={{ height: `${(eventRowSpan - 1) * 60}px` }}
             >
               {hours.map((slot, slotIndex) => {
+                console.log("slot.time", slotIndex);
+
                 if (slotIndex >= startSlotIndex && slotIndex <= endSlotIndex) {
                   if (typeof eventId === "string" && slot.id === eventId) {
                     return (
-                      <CalendarEvent
-                        key={event.id}
-                        viewMode={viewMode}
-                        event={event}
-                        business={scheduleProps.business}
-                      />
+                      <div key={event.id}>
+                        <CalendarEvent
+                          viewMode={viewMode}
+                          event={event}
+                          business={scheduleProps.business}
+                        />
+                      </div>
                     );
                   } else if (
                     typeof slot.event !== "string" &&
@@ -160,12 +193,13 @@ const SlotCalendar = ({
                     slot.event.id === event.id
                   ) {
                     return (
-                      <CalendarEvent
-                        key={slot.event.id}
-                        viewMode={viewMode}
-                        event={slot.event}
-                        business={scheduleProps.business}
-                      />
+                      <div key={slot.event.id}>
+                        <CalendarEvent
+                          viewMode={viewMode}
+                          event={slot.event}
+                          business={scheduleProps.business}
+                        />
+                      </div>
                     );
                   } else {
                     return null;
@@ -177,25 +211,16 @@ const SlotCalendar = ({
             </div>
           );
         },
-        className: `text-center pt-0 m-0 ${
-          isToday(date)
-            ? "bg-black/20 dark:bg-black/50"
-            : "bg-sky-200/90 dark:bg-slate-700"
-        }`,
-        onHeaderCell: () => ({
-          className: `text-center text-xl font-md pt-0 m-0 bg-black dark:text-white dark:bg-slate-700`,
-        }),
       })),
     ];
   }, [weekDates, hours, eventsByDate]);
 
+  // Your SlotCalendar component...
+
   const dailyColumns = [
     timeColumn,
-    ...columns.filter(
-      (item) => item.dataIndex === selectedDate.format("DD/MM/YYYY")
-    ),
+    ...columns.filter((item) => item.key === selectedDate.format("DD/MM/YYYY")),
   ];
-
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -209,12 +234,17 @@ const SlotCalendar = ({
           tableLayout="fixed"
           dataSource={hours}
           columns={columns}
+          components={{
+            body: {
+              cell: CustomRow,
+            },
+          }}
           pagination={false}
           bordered
           size="large"
           rowKey={(record) => record.key || ""}
           scroll={{ y: 450, x: true }}
-          className="slotCalendar relative top-0 rounded-t-none overflow-hidden bg-orange-300/75"
+          className="slotCalendar  relative top-0 rounded-t-none overflow-hidden bg-orange-300/75"
         />
       ) : (
         <Table

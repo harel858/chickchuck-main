@@ -12,25 +12,26 @@ function NavBarItem({ title, link, icon }: NavItemProps) {
   const router = useRouter();
   const pathname = usePathname();
   const isActive = pathname === link;
+  console.log(link);
 
   return (
     <li
-      className={`flex justify-start gap-4 border-white/30 border-b w-full group hover:bg-opacity-10 hover:bg-black/10 dark:hover:bg-white/10 ${
-        isActive && `bg-black/50 dark:bg-white/50`
-      } cursor-pointer p-4 my-0 transition-all ease-in duration-200`}
+      className={`px-4 h-full flex flex-col justify-end gap-2 border-white/30 border-b w-full group hover:bg-opacity-10 hover:bg-gray-500/10 dark:hover:bg-white/10 cursor-pointer my-0 transition-all ease-in duration-200`}
       onClick={() => router.push(link)}
     >
       <div
         className={`self-center transition-all ease-in duration-200 scale-125 group-hover:scale-150 ${
           isActive && `scale-150`
-        } text-xl text-white`}
+        } text-xl text-black`}
       >
         {icon}
       </div>
       <div
-        className={`text-white relative ${
+        className={`text-black font-serif relative ${
           isActive ? `font-medium ` : `font-light`
-        } w-max after:absolute after:bottom-0 after:mt-1 after:left-0 after:h-0.5 after:w-full after:bg-blue-500 after:translate-y-1 after:scale-x-0 after:ease-in after:duration-200 ease-in duration-200 group-hover:after:scale-x-100 text-xl`}
+        } w-max after:absolute after:bottom-0 after:mt-1 after:left-0 after:h-0.5 after:w-full after:bg-blue-500 after:translate-y-1 after:scale-x-0 after:ease-in after:duration-200 ease-in duration-200 group-hover:after:scale-x-125 ${
+          isActive && "after:scale-x-125"
+        } text-lg`}
       >
         {title}
       </div>

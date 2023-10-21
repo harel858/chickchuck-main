@@ -76,7 +76,7 @@ function Event({
           easeInOut: [0, 0.71, 0.2, 1.01],
         }}
         onClick={handleTooltipOpen}
-        className={`flex flex-col ${
+        className={`z-50 flex flex-col ${
           viewMode === "weekly" ? `w-full` : `w-max pr-5`
         } h-full dark:bg-slate-200 dark:text-black dark:hover:text-white dark:hover:bg-slate-900 hover:bg-gray-700 pl-2  bg-sky-800/90  cursor-pointer text-white relative border-b border-black/50  rounded-xl`}
       >
