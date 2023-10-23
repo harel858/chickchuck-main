@@ -1,13 +1,13 @@
 "use client";
 import React, { useState, useCallback, useEffect, lazy, Suspense } from "react";
+import { Table } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentEvent, ScheduleProps } from "../../../types/types";
 import ListNav from "./ListNav";
 const MemoizedAppointmentList = lazy(() => import("./AppointmentList"));
-const LazySlotCalendar = lazy(() => import("./SlotCalendar"));
+const LazySlotCalendar = lazy(() => import("./test"));
 const SearchResults = lazy(() => import("./SearchResults"));
-import { Table } from "antd";
 dayjs.extend(customParseFormat);
 
 export default function CalendarComponent({
@@ -95,7 +95,7 @@ export default function CalendarComponent({
       scroll={{ y: 1000 }}
     />
   ) : (
-    <div className="bg-sky-200/90 p-0 w-full">
+    <div className="bg-sky-200/90 p-0 w-full overflow-hidden">
       <Suspense
         fallback={
           <Table

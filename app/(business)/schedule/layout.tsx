@@ -77,7 +77,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
       <PlusButton businessData={businessData} />
 
       <section className="flex justify-center items-center overflow-hidden">
-        <div className="w-full mt-20 shadow-2xl shadow-black/50">
+        <div className="w-full mt-20 shadow-2xl shadow-black/50 overflow-hidden">
           {children}
         </div>
       </section>

@@ -49,7 +49,7 @@ function ListNav({
 
   return (
     <nav className="flex flex-row-reverse max-md:flex-col max-md:items-start flex-wrap content-center justify-between items-center bg-orange-200 font-extralight w-full relative top-0 p-3 px-10 gap-2 transition-all duration-1000 ease-in-out">
-      <div className="flex justify-center items-center gap-3">
+      <div className="flex justify-center items-baseline gap-3">
         <ToggleView
           setSearchQuery={setSearchQuery}
           setCurrentView={setCurrentView}
@@ -64,7 +64,7 @@ function ListNav({
             exit={{ opacity: 0, y: -10 }}
             transition={scaleSpringTransition}
           >
-            {selectedValue.format("MMMM D, YYYY")}
+            {selectedValue.format("DD/MM/YYYY")}
           </motion.h2>
         ) : (
           <motion.h2
@@ -75,7 +75,7 @@ function ListNav({
             exit={{ opacity: 0, y: -10 }}
             transition={scaleSpringTransition}
           >
-            {selectedValue.format("MMMM , YYYY")}
+            {selectedValue.format("DD/MM/YYYY")}
           </motion.h2>
         )}
       </div>
@@ -105,7 +105,7 @@ function ListNav({
           )}
         </AnimatePresence>
       </motion.div>
-      <div className="flex justify-center items-center gap-3">
+      <div className="flex justify-center items-baseline gap-3">
         <div className="flex justify-center items-center gap-1">
           <motion.div
             key="arrowDoubleLeft"
