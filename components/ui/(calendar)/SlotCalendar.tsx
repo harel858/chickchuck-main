@@ -1,266 +1,216 @@
 "use client";
-import "./AppointmentList.css";
-import React from "react";
-import { Table } from "antd";
+import React, { useState } from "react";
+import { Table, Tooltip } from "antd";
 import { motion } from "framer-motion";
 import { ScheduleProps, AppointmentEvent } from "../../../types/types";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import CalendarEvent from "./CalendarEvent";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import { Tooltip } from "antd";
-import { ColumnsType } from "antd/es/table";
+import ListNav from "./ListNav";
+import CustomRow from "./CustomRow";
 
-function CustomRow(props: any) {
-  const time = props?.record?.time;
-  console.log("time", time);
-
-  return (
-    <Tooltip title={time}>
-      <td className="hover:bg-black" {...props} />
-    </Tooltip>
-  );
-}
-dayjs.extend(customParseFormat);
 const SlotCalendar = ({
   scheduleProps,
   eventsByDate,
   selectedDate,
-  viewMode,
+  selectedUser,
+  onSelect,
+  handleSearchChange,
+  searchQuery,
+  setSelectedUser,
+  setSearchQuery,
 }: {
+  selectedUser: {
+    value: string;
+    label: string;
+  };
   scheduleProps: ScheduleProps;
   eventsByDate: AppointmentEvent[];
   selectedDate: dayjs.Dayjs;
-  setViewMode: React.Dispatch<React.SetStateAction<"weekly" | "daily">>;
-  viewMode: "weekly" | "daily";
+  onSelect: (newValue: Dayjs) => void;
+  searchQuery: string;
+  setSelectedUser: (newValue: { value: string; label: string }) => void;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
   const { scheduleData, business, user } = scheduleProps;
-  const today = dayjs().startOf("day").toDate();
-  const isToday = (date: Date) => dayjs(date).isSame(today, "day");
+  console.log("user", user);
+
+  const openingTime = dayjs(user.startActivity);
+
   const startOfWeek = selectedDate.startOf("week").day(0);
   const weekDates = [...Array(7)].map((_, i) =>
     startOfWeek.add(i, "day").toDate()
   );
 
-  const slotsByDay = React.useMemo(() => {
-    return weekDates.map((date) => {
-      const daySchedule = scheduleData.find((schedule) =>
-        schedule.events.some(
-          (event) => event.date === dayjs(date).format("DD/MM/YYYY")
-        )
-      );
-
-      const events = eventsByDate.filter(
-        (event) => event.date === dayjs(date).format("DD/MM/YYYY")
-      );
-
-      const daySlots = daySchedule ? daySchedule.events : [];
-      return [...daySlots, ...events];
-    });
-  }, [weekDates, scheduleData, eventsByDate]);
-
-  const openingTime = dayjs(business.openingTime);
-  const closingTime = dayjs(business.closingTime);
-  const totalSlots = closingTime.diff(openingTime, "minute") / 5;
-  console.log(dayjs(user.startActivity).format("HH:mm"));
-  console.log(dayjs(user.endActivity).format("HH:mm"));
-  console.log(totalSlots);
-
   const hours = React.useMemo(() => {
+    const openingTime = dayjs(user.startActivity);
+    const closingTime = dayjs(user.endActivity);
+    const totalSlots = closingTime.diff(openingTime, "minute") / 5;
+
     return [...Array(totalSlots)].map((_, i) => {
       const minutes = i * 5;
       const time = openingTime.add(minutes, "minute").format("HH:mm");
-      /*       const hour = openingTime.add(minutes, "minute").format("HH:mm");
-       */
-      const row: {
-        key: string | null;
-        time: string | null;
-        [date: string]: string | AppointmentEvent | null | undefined;
-      } = { key: time, time };
 
-      const slotEvent = eventsByDate.find((event) => {
-        return (
+      const slots = eventsByDate.filter(
+        (event) =>
           dayjs(event.start).format("HH:mm") === time &&
           weekDates.some(
             (date) => dayjs(date).format("DD/MM/YYYY") === event.date
           )
-        );
-      });
+      );
 
-      if (slotEvent) {
-        row.event = slotEvent;
-      }
-      weekDates.forEach((date, index) => {
-        const slots = slotsByDay[index]?.filter(
-          (event) =>
-            dayjs(event.start).format("HH:mm") === time &&
-            event.date === dayjs(date).format("DD/MM/YYYY")
-        );
-
-        row[dayjs(date).format("DD/MM/YYYY")] =
-          slots?.length && slots?.length > 0 ? slots[0]?.id : null;
-      });
-
-      return row;
+      return {
+        key: time || null,
+        time: time || null,
+        [slots[0]?.date || ""]: slots[0]?.id || null,
+      };
     });
-  }, [
-    openingTime,
-    closingTime,
-    totalSlots,
-    eventsByDate,
-    weekDates,
-    slotsByDay,
-  ]);
+  }, [eventsByDate, user, weekDates]);
 
   const timeColumn = {
     title: "Time",
     dataIndex: "time",
     key: "time",
-    className: `text-center !important text-xl font-md p-0 !important m-0 border-x border-black/20 dark:border-orange-500 bg-orange-200 dark:text-white dark:bg-slate-700`,
+    className: ` w-20 text-center !important text-xl font-md p-0 !important m-0 border-x border-black/20 dark:border-orange-500 bg-slate-200 dark:text-white dark:bg-slate-700`,
     sticky: true,
     width: 50, // Adjust the width value as needed
+    onCell: (row: any) => ({
+      onClick: () => row, // Log the hour from the initial row
+      row: row,
+    }),
     onHeaderCell: () => ({
-      className: `text-center text-xl font-md pt-0 m-0 dark:border-orange-500 bg-black dark:text-white dark:bg-slate-700 !important`,
+      className: `bg-slate-200 !important text-center text-xl font-md pt-0 m-0 dark:border-orange-500  dark:text-white dark:bg-slate-700 !important`,
     }),
   };
-  const columns: ColumnsType<{
-    [date: string]: string | AppointmentEvent | null | undefined;
-    key: string | null;
-    time: string | null;
-  }> = React.useMemo(() => {
+  const columns = React.useMemo(() => {
     return [
       timeColumn,
-      ...weekDates.map((date, index) => ({
-        title: dayjs(date).format("MMMM D"),
-        dataIndex: dayjs(date).format("DD/MM/YYYY"),
-        onCell: (record: any) => ({
-          onClick: () => record, // Log the hour from the initial row
-          record: record,
-        }),
+      ...weekDates.map((date, index) => {
+        const isCurrentDate =
+          dayjs(date).format("DD/MM/YYYY") == dayjs().format("DD/MM/YYYY");
+        console.log("isCurrentDate", isCurrentDate);
 
-        className: `hover:bg-black !important cursor-pointer text-center pt-0 m-0 ${
-          isToday(date)
-            ? "bg-black/20 dark:bg-black/50"
-            : "bg-sky-200/90 dark:bg-slate-700"
-        }`,
-        onHeaderCell: () => ({
-          className: `text-center text-xl font-md pt-0 m-0 bg-black dark:text-white dark:bg-slate-700`,
-        }),
-        render: (eventId: string | AppointmentEvent) => {
-          const event =
-            typeof eventId === "string"
-              ? eventsByDate.find((e) => e.id === eventId)
-              : eventId;
+        return {
+          title: dayjs(date).format("dd D"),
+          dataIndex: dayjs(date).format("DD/MM/YYYY"),
+          onCell: (record: any) => ({
+            onClick: () => record, // Log the hour from the initial record
+            record: { ...record, date: date },
+            children: [dayjs(date).format("DD/MM/YYYY")],
+          }),
+          className: "h-5 !important",
+          render: (eventId: string | null) => {
+            const event =
+              typeof eventId === "string"
+                ? eventsByDate.find((e) => e.id === eventId)
+                : eventId;
 
-          if (!event) {
-            return null;
-          }
+            if (!event) {
+              return null;
+            }
 
-          const startSlotIndex = hours.findIndex(
-            (slot) => slot.time === dayjs(event.start).format("HH:mm")
-          );
-          const endSlotIndex = hours.findIndex(
-            (slot) => slot.time === dayjs(event.end).format("HH:mm")
-          );
+            const startSlotIndex = hours.findIndex(
+              (slot) => slot.time === dayjs(event.start).format("HH:mm")
+            );
+            const endSlotIndex = hours.findIndex(
+              (slot) => slot.time === dayjs(event.end).format("HH:mm")
+            );
 
-          if (startSlotIndex === -1 || endSlotIndex === -1) {
-            return null;
-          }
+            if (startSlotIndex === -1 || endSlotIndex === -1) {
+              return null;
+            }
 
-          const eventRowSpan = endSlotIndex - startSlotIndex + 1;
+            const eventRowSpan = endSlotIndex - startSlotIndex + 1;
 
-          return (
-            <div
-              className={`flex justify-center items-center p-0 m-0 absolute top-0 left-0 right-0 w-full h-full overflow-visible `}
-              style={{ height: `${(eventRowSpan - 1) * 60}px` }}
-            >
-              {hours.map((slot, slotIndex) => {
-                console.log("slot.time", slotIndex);
-
-                if (slotIndex >= startSlotIndex && slotIndex <= endSlotIndex) {
-                  if (typeof eventId === "string" && slot.id === eventId) {
-                    return (
-                      <div key={event.id}>
+            return (
+              <div
+                className={`flex justify-center items-center p-0 m-0 absolute top-0 left-0 right-0 w-full h-full z-40 overflow-visible `}
+                style={{ height: `${(eventRowSpan - 1) * 53}px` }}
+              >
+                {hours.map((slot, slotIndex) => {
+                  if (
+                    slotIndex >= startSlotIndex &&
+                    slotIndex <= endSlotIndex
+                  ) {
+                    if (
+                      typeof eventId === "string" &&
+                      slot[dayjs(date).format("DD/MM/YYYY")] === eventId
+                    ) {
+                      return (
                         <CalendarEvent
-                          viewMode={viewMode}
+                          key={event.id}
+                          viewMode={"weekly"}
                           event={event}
                           business={scheduleProps.business}
                         />
-                      </div>
-                    );
-                  } else if (
-                    typeof slot.event !== "string" &&
-                    slot.event &&
-                    slot.event.id === event.id
-                  ) {
-                    return (
-                      <div key={slot.event.id}>
-                        <CalendarEvent
-                          viewMode={viewMode}
-                          event={slot.event}
-                          business={scheduleProps.business}
-                        />
-                      </div>
-                    );
+                      );
+                    } else {
+                      return null;
+                    }
                   } else {
                     return null;
                   }
-                } else {
-                  return null;
-                }
-              })}
-            </div>
-          );
-        },
-      })),
+                })}
+              </div>
+            );
+          },
+
+          onHeaderCell: () => ({
+            className: `text-center text-xl font-md pt-0 m-0 ${
+              isCurrentDate ? "todayDate" : "bg-black"
+            } dark:text-white dark:bg-slate-700`,
+          }),
+        };
+      }),
     ];
-  }, [weekDates, hours, eventsByDate]);
+  }, [weekDates]);
 
-  // Your SlotCalendar component...
-
-  const dailyColumns = [
-    timeColumn,
-    ...columns.filter((item) => item.key === selectedDate.format("DD/MM/YYYY")),
-  ];
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
-      className="overflow-x-auto rounded-b-3xl"
+      className="overflow-x-auto rounded-b-3xl flex flex-col justify-center items-center"
     >
-      {viewMode === "weekly" ? (
-        <Table
-          tableLayout="fixed"
-          dataSource={hours}
-          columns={columns}
-          components={{
-            body: {
-              cell: CustomRow,
-            },
-          }}
-          pagination={false}
-          bordered
-          size="large"
-          rowKey={(record) => record.key || ""}
-          scroll={{ y: 450, x: true }}
-          className="slotCalendar  relative top-0 rounded-t-none overflow-hidden bg-orange-300/75"
-        />
-      ) : (
-        <Table
-          tableLayout="fixed"
-          dataSource={hours}
-          columns={dailyColumns}
-          pagination={false}
-          bordered
-          size="large"
-          rowKey={(record) => record.key || ""}
-          scroll={{ y: 450, x: true }}
-          className="slotCalendar relative top-0 overflow-hidden bg-orange-300/75"
-        />
-      )}
+      <ListNav
+        scheduleProps={scheduleProps}
+        viewMode={"weekly"}
+        selectedValue={selectedDate}
+        currentView={"calendar"}
+        onSelect={onSelect}
+        searchQuery={searchQuery}
+        onSearchChange={handleSearchChange}
+        selectedUser={selectedUser}
+        setSearchQuery={setSearchQuery}
+        setSelectedUser={setSelectedUser}
+      />
+      <Table
+        tableLayout="fixed"
+        dataSource={hours}
+        columns={columns}
+        pagination={false}
+        bordered
+        size="large"
+        components={{
+          body: {
+            cell: (props: any) =>
+              CustomRow(
+                {
+                  ...props,
+                  scheduleprops: scheduleProps,
+                  userid: selectedUser.value,
+                },
+                openingTime
+              ),
+          },
+        }}
+        rowKey={(record) => record.key || ""}
+        scroll={{ x: "max-content", y: 485 }}
+        className="slotCalendar relative top-0 rounded-t-none overflow-hidden bg-slate-200/75"
+      />
     </motion.div>
   );
 };
 
-export default SlotCalendar;
+export default React.memo(SlotCalendar);

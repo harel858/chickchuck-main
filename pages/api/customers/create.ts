@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { createCustomer, getCustomer } from "@lib/prisma/customer/customer";
 import validateCustomer from "@lib/validation/customer";
+import { bussinessById } from "@lib/prisma/bussiness/getUnique";
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,14 +16,16 @@ export default async function handler(
       const { error } = validateCustomer(req.body);
       if (error) return res.status(400).json(error?.details[0]?.message);
 
-      const { customer, getCustomerErr } = await getCustomer(
-        phoneNumber,
-        bussinesId
+      const business = await bussinessById(bussinesId);
+
+      if (!business)
+        return res.status(500).json("error with finding the business");
+
+      const matchingCustomer = business.Customer?.find(
+        (customer) => customer.phoneNumber === phoneNumber
       );
 
-      if (getCustomerErr) return res.status(500).json(getCustomerErr);
-
-      if (customer)
+      if (matchingCustomer)
         return res
           .status(409)
           .json(`User with this phone number is already existed`);

@@ -20,7 +20,9 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
             Customer: true,
           },
         },
-        appointments: true,
+        appointments: {
+          include: { customer: true, treatment: true, appointmentSlot: true },
+        },
       },
     });
     if (!user || !user.Business) return null;
@@ -57,15 +59,25 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
   const businessData = await fetchAppointmentSlots(session?.user.id);
-  if (!businessData) return notFound();
+  if (session?.user.UserRole !== "RECIPIENT" || !businessData)
+    return notFound();
+  const value = businessData.business?.businessName.replace(
+    /(\s)(?!\s*$)/g,
+    "-"
+  );
+
   return (
     <>
       {/* @ts-ignore  */}
-      <Navbar session={session} appointments={businessData.user.appointments} />
-      {/* @ts-ignore  */}
-      <VerticalNav user={session.user} />
-      <section className="flex mt-20 justify-center items-center overflow-hidden pl-64 max-2xl:p-0">
-        {children}
+      <Navbar
+        session={session}
+        appointments={businessData.user.appointments}
+        link={value}
+      />
+      <PlusButton businessData={businessData} />
+
+      <section className="flex justify-center items-center overflow-hidden">
+        <div className="w-full mt-20 overflow-hidden">{children}</div>
       </section>
     </>
   );

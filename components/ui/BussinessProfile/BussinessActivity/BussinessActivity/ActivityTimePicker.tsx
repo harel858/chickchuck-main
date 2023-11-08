@@ -27,10 +27,8 @@ function ActivityTimePicker({
   setHasChanges,
 }: ActivityTimePickerProps) {
   const format = "HH:mm";
-  console.log("dayjs(startActivity)", dayjs(startActivity).format(format));
-  console.log("dayjs(endActivity)", dayjs(endActivity).format(format));
+
   const totalSlots = endActivity.diff(startActivity, "minute") / 5;
-  console.log("totalSlots", totalSlots);
 
   return (
     <div className="flex flex-col justify-center items-center gap-2">

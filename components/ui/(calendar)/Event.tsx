@@ -83,7 +83,7 @@ function Event({
           className={`absolute h-2/3 w-1 bottom-4 left-6 ${event.color} bg-opacity-60 font-extrabold rounded-full`}
         ></span>
         <div className="flex flex-col gap-1 justify-center items-start max-md:items-center ">
-          <p className="font-medium text-xl w-max">{event.treatment.title}</p>
+          <p className="font-medium text-xl w-max">{event.treatment?.title}</p>
           <p className="font-thin text-lg">{event.customer.name}</p>
         </div>
         <p className="font-extralight text-lg">{event.date}</p>

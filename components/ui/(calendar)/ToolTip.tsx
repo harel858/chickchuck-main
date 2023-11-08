@@ -59,11 +59,17 @@ const ToolTip = forwardRef<
           </p>
           <p className="font-semibold text-xl">
             Type of Service:
-            <span className="font-light text-lg"> {event.treatment.title}</span>
+            <span className="font-light text-lg">
+              {" "}
+              {event.treatment?.title}
+            </span>
           </p>
           <p className="font-semibold text-xl">
             Charge:
-            <span className="font-light text-lg"> {event.treatment.cost}$</span>
+            <span className="font-light text-lg">
+              {" "}
+              {event.treatment?.cost}$
+            </span>
           </p>
           <p className="font-semibold text-xl">
             Date:

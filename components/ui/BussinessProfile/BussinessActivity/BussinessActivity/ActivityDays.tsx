@@ -38,7 +38,7 @@ const ActivityDays = ({
     const selectedDays: number[] = [];
     for (let i = 0; i < options.length; i++) {
       const value = options[i]?.value;
-      if (selectedValues.includes(value)) selectedDays.push(value);
+      if (value && selectedValues.includes(value)) selectedDays.push(value);
     }
 
     setActivityDays(selectedDays);

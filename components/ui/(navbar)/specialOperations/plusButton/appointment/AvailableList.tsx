@@ -27,8 +27,7 @@ export default function AvailableList({
   setCustomerMissing: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
-  const isInit = useRef(true);
-  useEffect(() => {
+  /* useEffect(() => {
     console.log(isInit);
 
     if (isInit.current) {
@@ -44,7 +43,7 @@ export default function AvailableList({
     if (!appointmentInput.customerId) setCustomerMissing("Client is missing");
     if (!appointmentInput.treatment) setTreatmentMissing("Service is missing");
     if (!appointmentInput.user) setRecipientMissing("Recipient is missing");
-  }, [selectedDate]);
+  }, [selectedDate]); */
   const handleDateChange = (event: Dayjs) => {
     setSelectedDate(event);
   };
@@ -148,8 +147,8 @@ export default function AvailableList({
                 selectedDate.format("DD/MM/YYYY") == day.format("DD/MM/YYYY")
                   ? "bg-slate-900 text-white"
                   : pastDay
-                  ? "bg-orange-200 text-black opacity-80"
-                  : "bg-orange-200 text-black"
+                  ? "bg-slate-200 text-black opacity-80"
+                  : "bg-slate-200 text-black"
               } flex flex-col justify-center items-center gap-1 px-1 py-5 border border-gray-500 hover:text-white hover:bg-slate-900`}
             >
               <p className="text-sm font-medium font-sans">

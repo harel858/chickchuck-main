@@ -55,6 +55,3 @@ ul::-webkit-scrollbar-thumb:hover {
 .ant-picker-ok button:hover {
   background-color: #0056ce !important;
 }
-.ant-select-selector{
-  background-color: rgb(112, 128, 144,0.3) !important;
-}

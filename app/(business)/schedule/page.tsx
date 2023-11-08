@@ -22,13 +22,13 @@ const fetchEvents = async (id: string | null | undefined) => {
     if (!id) return null;
     const user = await prisma.user.findUnique({
       where: { id },
-      include: { Business: true },
+      include: { Business: true, Treatment: true },
     });
     if (!user?.Business) return null;
 
     const business = await prisma.business.findUnique({
       where: { id: user?.Business.id },
-      include: { user: true, Address: true },
+      include: { user: true, Address: true, Customer: true },
     });
     if (!business) return null;
 
@@ -78,7 +78,7 @@ const fetchEvents = async (id: string | null | undefined) => {
       User: User;
       customer: Customer;
       appointmentSlot: AppointmentSlot;
-      treatment: Treatment;
+      treatment: Treatment | null;
     })[] = [];
     for (let i = 0; i < business?.user.length!; i++) {
       const result = await prisma.appointment.findMany({
@@ -96,7 +96,7 @@ const fetchEvents = async (id: string | null | undefined) => {
     //return the events of the user
     const events = appointments.map((appointment) => {
       const { User } = appointment;
-      const { id, password, ...rest } = User;
+      const { password, ...rest } = User;
       const slotStart = appointment.appointmentSlot.start;
       const slotEnd = appointment.appointmentSlot.end;
       const slotDate = appointment.appointmentSlot.date;
@@ -149,9 +149,11 @@ const fetchEvents = async (id: string | null | undefined) => {
       scheduleData,
       user,
       business: {
+        id: business.id,
         openingTime: business.openingTime,
         closingTime: business.closingTime,
         activityDays: business.activityDays,
+        Customers: business.Customer,
         address: business.Address[0],
       },
     };

@@ -6,6 +6,7 @@ import { Button } from "@ui/Button";
 import { ErrorData, ServiceFormData } from "types/types";
 import axios, { AxiosError } from "axios";
 import { RequiredDocument } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 const initialServiceFormData = {
   title: "",
@@ -72,7 +73,9 @@ function Form({
       if (res.status === 201) {
         successMessage();
         setLoading(false);
-        return closeDialog();
+        closeDialog();
+
+        return revalidatePath("/services");
       }
     } catch (err) {
       if (err instanceof AxiosError) {

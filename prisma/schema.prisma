@@ -99,12 +99,13 @@ model Address {
 
 model Appointment {
   id                String            @id @default(uuid())
+  Title             String
   customer          Customer          @relation(fields: [customerId], references: [id])
   customerId        String
   appointmentSlot   AppointmentSlot   @relation(fields: [appointmentSlotId], references: [id])
   appointmentSlotId String            @unique
-  treatment         Treatment         @relation(fields: [treatmentId], references: [id])
-  treatmentId       String
+  treatment         Treatment?        @relation(fields: [treatmentId], references: [id])
+  treatmentId       String?
   status            AppointmentStatus
   notes             String?
   createdAt         DateTime          @default(now())

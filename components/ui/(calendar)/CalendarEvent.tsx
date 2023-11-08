@@ -38,6 +38,8 @@ function Event({
   viewMode: "weekly" | "daily";
   business: BusinessProps;
 }) {
+  console.log("init");
+
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = React.useState(false);
   const handleTooltipClose = (e: MouseEvent | TouchEvent) => {
@@ -76,16 +78,16 @@ function Event({
           easeInOut: [0, 0.71, 0.2, 1.01],
         }}
         onClick={handleTooltipOpen}
-        className={`z-50 flex flex-col ${
+        className={`z-50 bg-slate-950 flex flex-col ${
           viewMode === "weekly" ? `w-full` : `w-max pr-5`
-        } h-full dark:bg-slate-200 dark:text-black dark:hover:text-white dark:hover:bg-slate-900 hover:bg-gray-700 pl-2  bg-sky-800/90  cursor-pointer text-white relative border-b border-black/50  rounded-xl`}
+        } h-full dark:bg-slate-200 dark:text-black dark:hover:text-white dark:hover:bg-slate-900 hover:bg-gray-700 pl-2  bg-sky-800/90  cursor-pointer text-white relative border-b border-black/50  rounded-lg`}
       >
         <span
           className={`absolute h-5/6 w-1 bottom-2 left-1 ${event.color}  font-extrabold rounded-full`}
         ></span>
         <div className="flex flex-col justify-center items-start pt-2 pl-2 gap-1">
           <p className="font-medium text-lg text-left">
-            {event.treatment.title}
+            {event.treatment?.title}
           </p>
           <p className="font-medium text-lg">{event.customer.name}</p>
           <p className="font-normal text-lg">

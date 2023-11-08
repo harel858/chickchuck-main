@@ -1,27 +1,28 @@
 "use client";
-import React from "react";
-import ToggleView from "./ToggleView";
-import ToggleViewMode from "./ToggleViewMode";
-import { AnimatePresence, motion } from "framer-motion";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import dayjs, { Dayjs } from "dayjs";
-import {
-  MdKeyboardDoubleArrowRight,
-  MdKeyboardDoubleArrowLeft,
-} from "react-icons/md";
-import { Button } from "@ui/Button";
-import LeftArrow from "@components/arrows/LeftArrow";
-import RightArrow from "@components/arrows/RightArrow";
+import { DatePickerProps, Select } from "antd";
+import { DatePicker } from "antd";
+import { ScheduleData, ScheduleProps } from "types/types";
+import { UserOutlined } from "@ant-design/icons";
 
 interface ListNavProps {
-  setViewMode: React.Dispatch<React.SetStateAction<"daily" | "weekly">>;
-  viewMode: "weekly" | "daily";
+  scheduleProps: ScheduleProps;
+  /*   setViewMode: React.Dispatch<React.SetStateAction<"daily" | "weekly">>;
+   */ viewMode: "weekly" | "daily";
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   selectedValue: Dayjs;
   onSelect: (newValue: Dayjs) => void;
   currentView: "list" | "calendar";
-  setCurrentView: React.Dispatch<React.SetStateAction<"list" | "calendar">>;
-  searchQuery: string;
+  /*   setCurrentView: React.Dispatch<React.SetStateAction<"list" | "calendar">>;
+   */ searchQuery: string;
   onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  setSelectedUser: (newValue: { value: string; label: string }) => void;
+  selectedUser: {
+    value: string;
+    label: string;
+  };
 }
 
 const scaleSpringTransition = {
@@ -32,162 +33,67 @@ const scaleSpringTransition = {
 };
 
 function ListNav({
-  setSearchQuery,
-  selectedValue,
   onSelect,
-  setCurrentView,
-  currentView,
   searchQuery,
   onSearchChange,
-  setViewMode,
-  viewMode,
+  scheduleProps,
+  setSelectedUser,
+  selectedUser,
 }: ListNavProps) {
-  const handleDateChange = (amount: number) => {
-    const newDate = selectedValue.add(amount, "day");
-    onSelect(newDate);
-  };
+  const weekFormat = "MM/DD";
+
+  const customWeekStartEndFormat: DatePickerProps["format"] = (value) =>
+    `${dayjs(value).startOf("week").format(weekFormat)} ~ ${dayjs(value)
+      .endOf("week")
+      .format(weekFormat)}`;
 
   return (
-    <nav className="flex flex-row-reverse max-md:flex-col max-md:items-start flex-wrap content-center justify-between items-center bg-orange-200 font-extralight w-full relative top-0 p-3 px-10 gap-2 transition-all duration-1000 ease-in-out">
-      <div className="flex justify-center items-baseline gap-3">
-        <ToggleView
-          setSearchQuery={setSearchQuery}
-          setCurrentView={setCurrentView}
-          currentView={currentView}
-        />
-        {currentView === "list" ? (
-          <motion.h2
-            key="list"
-            className="text-4xl font-normal"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={scaleSpringTransition}
-          >
-            {selectedValue.format("DD/MM/YYYY")}
-          </motion.h2>
-        ) : (
-          <motion.h2
-            key="calendar"
-            className="text-4xl font-normal"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={scaleSpringTransition}
-          >
-            {selectedValue.format("DD/MM/YYYY")}
-          </motion.h2>
-        )}
+    <div className=" flex justify-between flex-row flex-wrap max-xl:justify-center content-center items-center bg-slate-200 font-extralight w-full relative top-0 py-5 px-10 gap-2 transition-all duration-1000 ease-in-out">
+      <div className="flex justify-center align-baseline items-baseline gap-3">
+        <motion.div
+          className="flex justify-center items-center content-center gap-2 max-md:items-start max-md:justify-start max-md:w-11/12 max-md:flex-wrap"
+          transition={{ duration: 0.3 }}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+        >
+          <DatePicker
+            onPanelChange={(props) => console.log("props", props)}
+            picker="week"
+            defaultValue={dayjs()}
+            size={"large"}
+            format={customWeekStartEndFormat}
+            onSelect={onSelect} // Handle date selection if needed
+          />
+        </motion.div>
       </div>
-
-      <motion.div
-        className="flex justify-center items-center content-center gap-5 max-md:items-start max-md:justify-start max-md:w-11/12 max-md:flex-wrap"
-        transition={{ duration: 0.3 }}
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-      >
-        <AnimatePresence>
-          {currentView === "calendar" && (
-            <motion.div
-              key="toggleViewMode"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ToggleViewMode
-                setSearchQuery={setSearchQuery}
-                setViewMode={setViewMode}
-                viewMode={viewMode}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+      <Select
+        style={{ width: 120 }}
+        options={scheduleProps?.scheduleData?.map((item) => ({
+          value: item.user.id,
+          label: item.user.name,
+        }))}
+        loading={true}
+        size={"large"}
+        onChange={(value, options) => {
+          !Array.isArray(options) && setSelectedUser(options);
+        }}
+        defaultValue={selectedUser}
+        suffixIcon={<UserOutlined className="text-lg" />}
+      />
       <div className="flex justify-center items-baseline gap-3">
-        <div className="flex justify-center items-center gap-1">
-          <motion.div
-            key="arrowDoubleLeft"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-            transition={scaleSpringTransition}
-          >
-            <MdKeyboardDoubleArrowLeft
-              className="text-4xl rounded-full hover:bg-white/70 cursor-pointer"
-              onClick={() => {
-                handleDateChange(-7);
-                setSearchQuery("");
-              }}
-            />
-          </motion.div>
-
-          {viewMode !== "daily" && currentView === "calendar" ? (
-            <React.Fragment key="emptyLeftArrow"></React.Fragment>
-          ) : (
-            <LeftArrow
-              disabled={false}
-              onClickHandler={() => {
-                handleDateChange(-1);
-                setSearchQuery("");
-              }}
-            />
-          )}
-
-          <Button
-            variant="ghost"
-            className="rounded-3xl dark:text-white"
-            onClick={() => {
-              onSelect(dayjs());
-              setSearchQuery("");
-            }}
-          >
-            Today
-          </Button>
-          {viewMode !== "daily" && currentView === "calendar" ? (
-            <React.Fragment key="emptyRightArrow"></React.Fragment>
-          ) : (
-            <RightArrow
-              disabled={false}
-              onClickHandler={() => {
-                handleDateChange(1);
-                setSearchQuery("");
-              }}
-            />
-          )}
-
-          <motion.div
-            key="arrowDoubleRight"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-            transition={scaleSpringTransition}
-          >
-            <MdKeyboardDoubleArrowRight
-              className="text-4xl rounded-full hover:bg-white/70 cursor-pointer"
-              onClick={() => {
-                handleDateChange(7);
-                setSearchQuery("");
-              }}
-            />
-          </motion.div>
-        </div>
+        <div className="flex justify-center items-center gap-1"></div>
         <motion.input
           transition={{ type: "spring", stiffness: 750, damping: 10 }}
           whileHover={{ scale: 1.1 }}
           type="text"
           placeholder="Search clients"
           value={searchQuery}
-          onChange={onSearchChange}
+          onChange={(e) => onSearchChange}
           className="dark:text-white px-2 py-1 text-xl rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-    </nav>
+    </div>
   );
 }
 

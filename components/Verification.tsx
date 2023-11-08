@@ -8,12 +8,21 @@ import StepButton from "@mui/material/StepButton";
 import Typography from "@mui/material/Typography";
 import StepOne from "./landingPage/verification/stepOne";
 import StepTwo from "./landingPage/verification/stepTwo";
-import { BusinessData, VerificationData } from "../types/types";
+import { BusinessData, UserData, VerificationData } from "../types/types";
+import { Business, Customer, Treatment, User } from "@prisma/client";
 
 export default function Verification({
   businessData,
 }: {
-  businessData: BusinessData;
+  businessData: {
+    usersData: UserData[];
+    business: Business & {
+      user: (User & {
+        Treatment: Treatment[];
+      })[];
+      Customer: Customer[];
+    };
+  };
 }) {
   const [activeStep, setActiveStep] = useState(0);
   const [input, setInput] = useState<VerificationData>({

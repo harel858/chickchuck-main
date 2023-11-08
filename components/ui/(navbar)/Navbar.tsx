@@ -28,15 +28,15 @@ function Navbar({
   link: string;
   appointments: (Appointment & {
     customer: Customer;
-    treatment: Treatment;
+    treatment: Treatment | null;
     appointmentSlot: AppointmentSlot;
   })[];
 }) {
   const profileImage = session.user.urls?.profileImage;
 
   return (
-    <nav className="p-0 flex items-center justify-center max-2xl:p-0 fixed backdrop-blur-sm bg-orange-200/70 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-orange-200 dark:border-slate-800 shadow-sm ">
-      <ul className="max-md:hidden h-full flex flex-row justify-between items-center align-between text-md text-white dark:text-white">
+    <nav className="fixed p-0 flex items-center justify-center max-2xl:p-0 backdrop-blur-sm bg-slate-200/70 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-slate-200 dark:border-slate-800 shadow-sm ">
+      <ul className="max-xl:hidden h-full flex flex-row justify-between items-center align-between text-md text-white dark:text-white">
         <NavBarItem
           title={"Online Profile"}
           link={link}

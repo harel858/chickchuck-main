@@ -5,6 +5,7 @@ import { Button } from "@ui/Button";
 import axios, { AxiosError } from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import { revalidatePath } from "next/cache";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -69,6 +70,7 @@ function Customer({ bussinesId }: { bussinesId: string }) {
         if (res.status === 200) {
           setLoading(false);
           setOpen(true);
+          revalidatePath("/schedule");
           return;
         }
       } catch (err: any) {

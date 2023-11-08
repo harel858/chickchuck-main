@@ -31,6 +31,7 @@ function Appointment({ businessData }: { businessData: BusinessData }) {
     date: dayjs(),
     customerId: null,
   });
+
   const [treatmentMissing, setTreatmentMissing] = useState("");
   const [recipientMissing, setRecipientMissing] = useState("");
   const [customerMissing, setCustomerMissing] = useState("");

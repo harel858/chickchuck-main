@@ -39,7 +39,7 @@ function AdvanceFeatures({
 
   return (
     <Accordion
-      className="bg-orange-200/50 w-full flex flex-col justify-center items-center"
+      className="bg-slate-200/50 w-full flex flex-col justify-center items-center"
       expanded={expanded === "panel1"}
       onChange={handleAccordion("panel1")}
     >

@@ -15,7 +15,13 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
       where: { id },
       include: {
         Business: {
-          include: { user: { include: { Treatment: true } }, Customer: true },
+          include: {
+            user: { include: { Treatment: true } },
+            Customer: true,
+          },
+        },
+        appointments: {
+          include: { customer: true, treatment: true, appointmentSlot: true },
         },
       },
     });
@@ -42,7 +48,9 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
       });
     }
 
-    return { usersData, business: Business };
+    console.log("UsersData", usersData);
+
+    return { usersData, business: Business, user };
   } catch (err) {
     console.log(err);
   }

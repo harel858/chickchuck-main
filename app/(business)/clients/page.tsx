@@ -55,7 +55,10 @@ async function getBusinessCustomers(userId: string | undefined) {
       );
 
       const totalIncomeLastYear = appointmentsLastYear.reduce(
-        (total, appointment) => total + appointment.treatment.cost,
+        (total, appointment) => {
+          const cost = appointment.treatment ? appointment.treatment.cost : 0;
+          return total + cost;
+        },
         0
       );
 

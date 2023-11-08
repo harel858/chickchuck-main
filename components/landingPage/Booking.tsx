@@ -1,12 +1,25 @@
 "use client";
 import Verification from "@components/Verification";
+import { Business, Customer, Treatment, User } from "@prisma/client";
 import { Button } from "@ui/Button";
 import { useSession } from "next-auth/react";
 import React, { Suspense, useEffect, useState } from "react";
-import { BusinessData } from "../../types/types";
+import { BusinessData, UserData } from "../../types/types";
 import Steps from "./finals/Steps";
 
-function Booking({ businessData }: { businessData: BusinessData }) {
+function Booking({
+  businessData,
+}: {
+  businessData: {
+    usersData: UserData[];
+    business: Business & {
+      user: (User & {
+        Treatment: Treatment[];
+      })[];
+      Customer: Customer[];
+    };
+  };
+}) {
   const [loading, setLoading] = useState(true);
   const session = useSession();
 

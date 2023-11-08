@@ -123,8 +123,8 @@ export default function AvailableList({
                 selectedDate.format("DD/MM/YYYY") == day.format("DD/MM/YYYY")
                   ? "bg-slate-900 text-white"
                   : pastDay
-                  ? "bg-orange-200 text-black opacity-80"
-                  : "bg-orange-200 text-black"
+                  ? "bg-slate-200 text-black opacity-80"
+                  : "bg-slate-200 text-black"
               } flex flex-col justify-center items-center gap-1 px-1 py-7 border border-gray-500 hover:text-white hover:bg-slate-900`}
             >
               <p className="text-base font-medium font-sans">

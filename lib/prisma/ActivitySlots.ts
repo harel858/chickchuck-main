@@ -27,7 +27,6 @@ export async function createAvailableSlots(
         businessId: businessId,
       },
     });
-    console.log(res);
 
     return { deleteManySlots: res };
   } catch (slotFailed) {
@@ -108,7 +107,11 @@ export async function getQueuesByDate(
   duration: number
 ) {
   try {
+    console.log("chosenDate", chosenDate);
+
     const formattedDate = dayjs(chosenDate).format("DD/MM/YYYY");
+    console.log("formattedDate", formattedDate);
+
     const slotDuration = 5;
     const slotsNeeded = Math.ceil(duration / slotDuration);
 
@@ -185,7 +188,6 @@ export async function getQueuesByDate(
         }
       }
     }
-    console.log("result", result);
 
     return { availableSlots: result };
   } catch (error) {

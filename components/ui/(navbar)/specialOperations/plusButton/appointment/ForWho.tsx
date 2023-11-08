@@ -54,7 +54,7 @@ const ForWho = ({
       renderInput={(params) => {
         return (
           <TextField
-            error={!isInit.current && !!customerMissing}
+            error={isInit.current && !customerMissing}
             {...params}
             key={params.id}
             placeholder="Select Client"

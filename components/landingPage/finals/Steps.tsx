@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import AvailableList from "../AvailableList";
-import { AppointmentInput, BusinessData } from "../../../types/types";
+import { AppointmentInput, BusinessData, UserData } from "../../../types/types";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
@@ -10,8 +10,21 @@ import ForWhat from "./steps/ForWhat";
 import { Button } from "@ui/Button";
 import { NotificationPlacement } from "antd/es/notification/interface";
 import { notification } from "antd";
+import { Business, Customer, Treatment, User } from "@prisma/client";
 
-function Steps({ businessData }: { businessData: BusinessData }) {
+function Steps({
+  businessData,
+}: {
+  businessData: {
+    usersData: UserData[];
+    business: Business & {
+      user: (User & {
+        Treatment: Treatment[];
+      })[];
+      Customer: Customer[];
+    };
+  };
+}) {
   console.log(
     "businessData.business.activityDays",
     businessData.business.activityDays

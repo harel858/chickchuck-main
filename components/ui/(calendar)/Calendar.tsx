@@ -1,12 +1,19 @@
 "use client";
-import React, { useState, useCallback, useEffect, lazy, Suspense } from "react";
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  lazy,
+  Suspense,
+} from "react";
 import { Table } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AppointmentEvent, ScheduleProps } from "../../../types/types";
 import ListNav from "./ListNav";
 const MemoizedAppointmentList = lazy(() => import("./AppointmentList"));
-const LazySlotCalendar = lazy(() => import("./test"));
+const LazySlotCalendar = lazy(() => import("./SlotCalendar"));
 const SearchResults = lazy(() => import("./SearchResults"));
 dayjs.extend(customParseFormat);
 
@@ -15,78 +22,67 @@ export default function CalendarComponent({
 }: {
   scheduleProps: ScheduleProps;
 }) {
-  const [value, setValue] = useState(() => dayjs());
-  const [selectedValue, setSelectedValue] = useState(() => dayjs());
+  const [value, setValue] = useState(dayjs());
+  const [selectedUser, setSelectedUser] = useState({
+    value: scheduleProps.user.id,
+    label: scheduleProps.user.name,
+  });
+  const [selectedValue, setSelectedValue] = useState(dayjs());
   const [eventsByDate, setEventsByDate] = useState<AppointmentEvent[]>([]);
-  const [currentView, setCurrentView] = useState<"list" | "calendar">("list");
+  const [currentView, setCurrentView] = useState<"list" | "calendar">(
+    "calendar"
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"daily" | "weekly">("weekly");
-  const [isLoading, setIsLoading] = useState(false); // Add isLoading state
 
-  useEffect(() => {
-    setIsLoading(true);
+  const sortedEvents = useMemo(() => {
+    const filteredEvents = scheduleProps.scheduleData.filter(
+      ({ user }) => user.id === selectedUser.value
+    );
+    return filteredEvents[0]?.events.sort(
+      (a, b) => dayjs(a.start).valueOf() - dayjs(b.start).valueOf()
+    );
+  }, [eventsByDate, selectedUser.value]);
 
-    const handleEventsByDate = () => {
-      let filteredEvents: AppointmentEvent[] = [];
-
-      scheduleProps.scheduleData.forEach((item) => {
-        const result: AppointmentEvent[] = item.events.filter((event) => {
-          if (currentView === "list") {
-            return event.date === selectedValue.format("DD/MM/YYYY");
-          } else if (currentView === "calendar") {
-            const startOfWeek = selectedValue.startOf("week");
-            const endOfWeek = selectedValue.endOf("week");
-            const eventDate = dayjs(event.date, "DD/MM/YYYY");
-            return (
-              (eventDate.isAfter(startOfWeek) &&
-                eventDate.isBefore(endOfWeek)) ||
-              eventDate.isSame(startOfWeek) ||
-              eventDate.isSame(endOfWeek)
-            );
-          }
-          return false;
-        });
-        filteredEvents.push(...result);
-      });
-
-      const sortedEvents = [...filteredEvents].sort((a, b) => {
-        return dayjs(a.start).valueOf() - dayjs(b.start).valueOf();
-      });
-      const handleSearch = () => {
-        const allEvents: AppointmentEvent[] = [];
-        scheduleProps.scheduleData.map((item) =>
-          allEvents.push(...item.events)
-        );
-        const filteredEvents = allEvents.filter((event) =>
-          event.customer.name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        setEventsByDate(filteredEvents);
-        return setIsLoading(false); // Set isLoading to false after fetching data
-      };
-
-      if (!searchQuery) {
-        setEventsByDate(sortedEvents);
-        return setIsLoading(false); // Set isLoading to false after fetching data
-      }
-      return handleSearch();
-    };
-
-    handleEventsByDate();
-  }, [selectedValue, scheduleProps, currentView, searchQuery, setSearchQuery]);
-
-  const onSelect = useCallback(
-    (newValue: Dayjs) => {
-      setValue(newValue);
-      setSelectedValue(newValue);
+  const handleUserChange = useCallback(
+    (newValue: { value: string; label: string }) => {
+      setSelectedUser(newValue);
     },
-    [currentView]
+    [selectedUser]
   );
+  const handleSearch = () => {
+    const allEvents = scheduleProps.scheduleData.reduce<AppointmentEvent[]>(
+      (acc, item) => acc.concat(item.events),
+      []
+    );
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
+    const filteredEvents = allEvents.filter((event) =>
+      event.customer.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setEventsByDate(filteredEvents);
   };
 
-  return isLoading ? (
+  useEffect(() => {
+    if (searchQuery) {
+      handleSearch();
+    } else {
+      sortedEvents && setEventsByDate(sortedEvents);
+    }
+  }, [searchQuery, eventsByDate]);
+
+  const onSelect = useCallback((newValue: Dayjs) => {
+    setValue(newValue);
+    setSelectedValue(newValue);
+  }, []);
+
+  const handleSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchQuery(event.target.value);
+    },
+    [searchQuery]
+  );
+
+  const loadingTable = (
     <Table
       size="large"
       loading
@@ -94,89 +90,55 @@ export default function CalendarComponent({
       bordered
       scroll={{ y: 1000 }}
     />
-  ) : (
-    <div className="bg-sky-200/90 p-0 w-full overflow-hidden">
-      <Suspense
-        fallback={
-          <Table
-            size="large"
-            loading
-            pagination={false}
-            bordered
-            scroll={{ y: 1000 }}
-          />
-        }
-      >
+  );
+
+  const calendarOrList =
+    currentView === "list" && !searchQuery ? (
+      <MemoizedAppointmentList
+        value={value}
+        onSelect={onSelect}
+        eventsByDate={sortedEvents || []}
+        business={scheduleProps.business}
+      />
+    ) : currentView === "calendar" && !searchQuery ? (
+      <LazySlotCalendar
+        eventsByDate={sortedEvents || []}
+        scheduleProps={scheduleProps}
+        selectedDate={selectedValue}
+        selectedUser={selectedUser}
+        onSelect={onSelect}
+        handleSearchChange={handleSearchChange}
+        setSelectedUser={handleUserChange}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
+    ) : (
+      <SearchResults
+        business={scheduleProps.business}
+        searchQuery={searchQuery}
+        events={sortedEvents || []}
+      />
+    );
+
+  return (
+    <div className="p-0 w-full overflow-hidden">
+      {/* <Suspense fallback={<>loading...</>}>
         <ListNav
-          setViewMode={setViewMode}
+          scheduleProps={scheduleProps}
           viewMode={viewMode}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
           setSearchQuery={setSearchQuery}
           selectedValue={selectedValue}
-          setCurrentView={setCurrentView}
           currentView={currentView}
           onSelect={onSelect}
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
         />
-      </Suspense>
-      {currentView === "list" && !searchQuery && !isLoading ? (
-        <Suspense
-          fallback={
-            <Table
-              size="large"
-              loading
-              pagination={false}
-              bordered
-              scroll={{ y: 1000 }}
-            />
-          }
-        >
-          <MemoizedAppointmentList
-            value={value}
-            onSelect={onSelect}
-            eventsByDate={eventsByDate}
-            business={scheduleProps.business}
-          />
-        </Suspense>
-      ) : currentView === "calendar" && !searchQuery && !isLoading ? (
-        <Suspense
-          fallback={
-            <Table
-              size="large"
-              loading
-              pagination={false}
-              bordered
-              scroll={{ y: 1000 }}
-            />
-          }
-        >
-          <LazySlotCalendar
-            setViewMode={setViewMode}
-            viewMode={viewMode}
-            eventsByDate={eventsByDate}
-            scheduleProps={scheduleProps}
-            selectedDate={value}
-          />
-        </Suspense>
-      ) : (
-        <Suspense
-          fallback={
-            <Table
-              size="large"
-              loading
-              pagination={false}
-              bordered
-              scroll={{ y: 1000 }}
-            />
-          }
-        >
-          <SearchResults
-            business={scheduleProps.business}
-            searchQuery={searchQuery}
-            events={eventsByDate}
-          />
-        </Suspense>
-      )}
+      </Suspense> */}
+      <Suspense fallback={loadingTable}>{calendarOrList}</Suspense>
     </div>
   );
 }

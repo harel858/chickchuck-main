@@ -8,6 +8,7 @@ import {
   Business,
   Address,
   Appointment,
+  Customer,
 } from "@prisma/client";
 import { Dayjs } from "dayjs";
 
@@ -39,7 +40,7 @@ export type AppointmentEvent = {
   start: string;
   end: string;
   date: string;
-  treatment: Treatment;
+  treatment: Treatment | null;
   customer: Customer;
   appointmentSlot: AppointmentSlot;
   status: AppointmentStatus;
@@ -53,9 +54,12 @@ export type ScheduleData = {
 export type ScheduleProps = {
   scheduleData: ScheduleData[];
   user: User & {
-    Business: Business | null;
+    Business: Business;
+    Treatment: Treatment[];
   };
   business: {
+    id: string;
+    Customers: Customer[];
     openingTime: string;
     closingTime: string;
     activityDays: number[];
@@ -245,7 +249,7 @@ export type CustomerItem = {
   phoneNumber: string;
   UserRole: UserRole;
   appointments: (Appointment & {
-    treatment: Treatment;
+    treatment: Treatment | null;
     appointmentSlot: AppointmentSlot;
   })[];
 };
@@ -312,7 +316,7 @@ export interface NotificationData {
   notification: Notification;
   appointment: Appointment & {
     customer: Customer;
-    treatment: Treatment;
+    treatment: Treatment | null;
     appointmentSlot: AppointmentSlot;
   };
 }

@@ -1,19 +1,24 @@
-.ant-picker-panel {
+/* .ant-picker-panel {
   background-color:  rgb(254 215 170) !important;
   padding: 1rem !important;
-}
+} */
 
- .ant-table-cell-row-hover td{
-  background-color: none !important;
-}
-:where(.css-dev-only-do-not-override-amq5gd).ant-table-wrapper .ant-table-tbody .ant-table-row>.ant-table-cell-row-hover{
-  background-color: rgb(186 230 253 / 0.9) !important;
+/*  .ant-table-cell-row-hover td{
+  background-color: rgba(0,0,0,0.5) !important;
+} */
+:where(.css-dev-only-do-not-override-amq5gd).ant-table-wrapper .ant-table-tbody .ant-table-row>.ant-table-cell-row-hover:hover{
+  background-color: none;
+    color: inherit;
+    /* You can customize this as needed */
+    cursor: default;
+}:where(.css-dev-only-do-not-override-amq5gd).ant-table-wrapper .ant-table-tbody .ant-table-row>.ant-table-cell-row-hover {
+  background: none;
 }
 .ant-picker-calendar {
   display: flex !important;
   flex-direction: column !important;
-  align-items: start !important;
-  justify-content: start !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
   background-color: transparent !important;
   overflow: hidden !important;
 }
@@ -26,8 +31,9 @@
 }
 .custom-row:hover td {
   background: black !important;
+  
 }
-.ant-table-tbody>tr.ant-table-row-level-1:hover>td {
+/* .ant-table-tbody>tr.ant-table-row-level-1:hover>td {
   background: unset;
 }
 
@@ -37,7 +43,7 @@
 .ant-table-tbody>tr.ant-table-row:hover>td {
   background: none !important;
 }
-
+ */
 .ant-picker-calendar-header {
   display: flex !important;
   justify-content: center !important;
@@ -46,13 +52,11 @@
   background-color:  rgb(254 215 170)  !important;
 }
 
-.slotCalendar table {
-  border-bottom-right-radius: 1.5rem !important;
-  border-bottom-left-radius: 1.5rem !important;
-}
+
 
 .slotCalendar table td {
   text-align: center !important;
+  padding: 0 !important;
 }
 
 .slotCalendar table tbody tr:first-child {
@@ -67,12 +71,35 @@
   padding-left: 0 !important;
 }
 
-.slotCalendar th {
-  background-color:  rgb(254 215 170) !important;
-  text-align: center !important;
+.slotCalendar tr > th {
+  background-color: rgb(226 232 240) !important;;
+  text-align: center !important; 
+  color: black !important;
 }
-.ant-picker-panel-layout {
+.todayDate::after{
+content: " " !important;
+display: inline-block !important;
+z-index: 50 !important;
+height: 1rem !important;
+width: 1rem !important;
+margin-left: 0.5em !important;
+border-radius: 50% !important;
+background-color: rgb(254 215 170) !important;
+}
+/* .ant-picker-panel-layout {
   background-color:  rgb(254 215 170) !important;
+} */
+:where(.css-dev-only-do-not-override-amq5gd).ant-picker-focused.ant-picker{
+  background-color: white;
+}
+:where(.css-dev-only-do-not-override-amq5gd).ant-table-wrapper .ant-table-title {
+  background-color: rgb(226 232 240)  !important;
+}
+.ant-table-title{
+    background-color: rgb(226 232 240) !important;
+}
+:where(.css-dev-only-do-not-override-amq5gd).ant-picker:hover{
+  background-color: white;
 }
 .ant-picker-presets {
   background-color:  rgb(254 215 170) !important;
@@ -117,10 +144,11 @@
 .ul::-webkit-scrollbar-thumb:hover {
   background-color: #555;
 }
-@media screen and (max-width: 1200px) {
+/* @media screen and (max-width: 1200px) {
   .slotCalendar table td {
     text-align: center !important;
     padding-right: 5em !important;
     padding-left: 5em !important;
   }
 }
+ */

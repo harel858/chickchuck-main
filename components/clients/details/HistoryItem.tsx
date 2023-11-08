@@ -12,7 +12,7 @@ function HistoryItem({
   appointment,
 }: {
   appointment: Appointment & {
-    treatment: Treatment;
+    treatment: Treatment | null;
     appointmentSlot: AppointmentSlot;
   };
 }) {
@@ -37,7 +37,7 @@ function HistoryItem({
           sx={{ width: "33%", flexShrink: 0 }}
           className="text-xl font-semibold"
         >
-          {appointment.treatment.title}
+          {appointment.treatment?.title}
         </Typography>
         <Typography
           sx={{ width: "33%", flexShrink: 0 }}
@@ -62,7 +62,7 @@ function HistoryItem({
         <div className="flex flex-row justify-between items-center w-full">
           <p className="text-lg font-serif font-semibold">Income</p>
           <p className="text-lg font-semibold  text-gray-500">
-            {appointment.treatment.cost}$
+            {appointment.treatment?.cost}$
           </p>
         </div>
         <div className="flex flex-row justify-between items-center w-full">

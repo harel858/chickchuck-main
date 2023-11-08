@@ -53,7 +53,7 @@ function WithWho({
       renderInput={(params) => {
         return (
           <TextField
-            error={!isInit.current && !!recipientMissing}
+            error={isInit.current && !!recipientMissing}
             {...params}
             label={
               <p className="font-serif text-xl flex justify-center items-center gap-1">
