@@ -12,7 +12,7 @@ function HistoryItem({
   appointment,
 }: {
   appointment: Appointment & {
-    treatment: Treatment | null;
+    treatment: Treatment;
     appointmentSlot: AppointmentSlot;
   };
 }) {

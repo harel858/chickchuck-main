@@ -3,7 +3,7 @@ import { Tabs } from "antd";
 import React from "react";
 import { TbCalendarPlus } from "react-icons/tb";
 import Appointment from "./Appointment";
-
+import CustomBreak from "./CustomBreak";
 function Content({ props }: { props: any }) {
   return (
     <Tabs
@@ -18,7 +18,7 @@ function Content({ props }: { props: any }) {
         {
           title: "Break",
           Icon: <CoffeeOutlined className="text-2xl" />,
-          children: <></>,
+          children: <CustomBreak props={props} />,
         },
       ].map(({ Icon, title, children }, i) => {
         const id = String(i + 1);

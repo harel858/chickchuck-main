@@ -9,6 +9,9 @@ import CalendarComponent from "@ui/(calendar)/Calendar";
 import {
   Appointment,
   AppointmentSlot,
+  Break,
+  Business,
+  CustomAppointment,
   Customer,
   Treatment,
   User,
@@ -37,7 +40,7 @@ const fetchEvents = async (id: string | null | undefined) => {
     //update appointments status
     const appointmentSlots = await prisma.appointmentSlot.findMany({
       where: { businessId: business.id },
-      include: { appointments: true },
+      include: { appointments: true, CustomAppointment: true },
     });
 
     if (user && appointmentSlots) {
@@ -78,7 +81,17 @@ const fetchEvents = async (id: string | null | undefined) => {
       User: User;
       customer: Customer;
       appointmentSlot: AppointmentSlot;
-      treatment: Treatment | null;
+      treatment: Treatment;
+    })[] = [];
+    let customAppointments: (CustomAppointment & {
+      customer: Customer;
+      appointmentSlot: AppointmentSlot;
+      User: User;
+    })[] = [];
+    let breakArr: (Break & {
+      user: User;
+      business: Business;
+      appointmentSlot: AppointmentSlot;
     })[] = [];
     for (let i = 0; i < business?.user.length!; i++) {
       const result = await prisma.appointment.findMany({
@@ -90,8 +103,26 @@ const fetchEvents = async (id: string | null | undefined) => {
           customer: true,
         },
       });
+      const custom = await prisma.customAppointment.findMany({
+        where: { userId: business?.user[i]?.id },
+        include: {
+          User: true,
+          appointmentSlot: true,
+          customer: true,
+        },
+      });
+      const breaks = await prisma.break.findMany({
+        where: { userId: business?.user[i]?.id },
+        include: {
+          appointmentSlot: true,
+          user: true,
+          business: true,
+        },
+      });
 
+      customAppointments.push(...custom);
       appointments.push(...result);
+      breakArr.push(...breaks);
     }
     //return the events of the user
     const events = appointments.map((appointment) => {
@@ -137,11 +168,101 @@ const fetchEvents = async (id: string | null | undefined) => {
         color, // set a default color for all events
       };
     });
+
+    //return the events of the user
+    const customeEvents = customAppointments.map((appointment) => {
+      const { User } = appointment;
+      const { password, ...rest } = User;
+      const slotStart = appointment.appointmentSlot.start;
+      const slotEnd = appointment.appointmentSlot.end;
+      const slotDate = appointment.appointmentSlot.date;
+      const startHour = slotStart.split(":")[0];
+      const startMinute = slotStart.split(":")[1];
+      const endHour = slotEnd.split(":")[0];
+      const endMinute = slotEnd.split(":")[1];
+
+      // Check if slotStart, slotEnd, and slotDate are valid string values
+      const start = dayjs(slotDate, "DD/MM/YYYY")
+        .hour(parseInt(startHour!))
+        .minute(parseInt(startMinute!))
+        .toISOString();
+      const end = dayjs(slotDate, "DD/MM/YYYY")
+        .hour(parseInt(endHour!))
+        .minute(parseInt(endMinute!))
+        .toISOString();
+      const date = dayjs(slotDate, "DD/MM/YYYY").format("DD/MM/YYYY");
+
+      const color =
+        appointment.status === "SCHEDULED"
+          ? "bg-green-600"
+          : appointment.status === "CANCELLED"
+          ? "bg-red-600"
+          : "bg-yellow-500";
+
+      return {
+        id: appointment.id,
+        userId: User.id,
+        title: appointment.Title,
+        recipient: rest,
+        start,
+        end,
+        date,
+        customer: appointment.customer,
+        appointmentSlot: appointment.appointmentSlot,
+        status: appointment.status,
+        color, // set a default color for all events
+      };
+    });
+    //return the events of the user
+    const allbreaks = breakArr.map((breakItem) => {
+      const { user } = breakItem;
+      const { password, ...rest } = user;
+      const slotStart = breakItem.appointmentSlot.start;
+      const slotEnd = breakItem.appointmentSlot.end;
+      const slotDate = breakItem.appointmentSlot.date;
+      const startHour = slotStart.split(":")[0];
+      const startMinute = slotStart.split(":")[1];
+      const endHour = slotEnd.split(":")[0];
+      const endMinute = slotEnd.split(":")[1];
+
+      // Check if slotStart, slotEnd, and slotDate are valid string values
+      const start = dayjs(slotDate, "DD/MM/YYYY")
+        .hour(parseInt(startHour!))
+        .minute(parseInt(startMinute!))
+        .toISOString();
+      const end = dayjs(slotDate, "DD/MM/YYYY")
+        .hour(parseInt(endHour!))
+        .minute(parseInt(endMinute!))
+        .toISOString();
+      const date = dayjs(slotDate, "DD/MM/YYYY").format("DD/MM/YYYY");
+
+      const color = "bg-blue-500/50";
+
+      return {
+        id: breakItem.id,
+        userId: user.id,
+        title: "break",
+        recipient: rest,
+        start,
+        end,
+        date,
+        appointmentSlot: breakItem.appointmentSlot,
+        status: "Break",
+        color, // set a default color for all events
+      };
+    });
+
     // Cast the result to AppointmentEvent[];
     const scheduleData: ScheduleData[] = business.user.map((user) => {
       return {
         user: { ...user, profileSrc: null },
         events: events.filter((event) => event && user.id === event.userId), // Filter events for the specific user
+        customeEvents: customeEvents.filter(
+          (event) => event && user.id === event.userId
+        ), // Filter events for the specific user
+        allbreaks: allbreaks.filter(
+          (event) => event && user.id === event.userId
+        ),
       };
     });
 

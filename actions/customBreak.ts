@@ -1,22 +1,27 @@
-import { prisma } from ".";
-import dayjs from "dayjs";
+"use server";
 
+import { prisma } from "@lib/prisma";
 import { AppointmentStatus, AvailableSlot } from "@prisma/client";
+import dayjs from "dayjs";
+import { revalidatePath } from "next/cache";
 
-export async function createAppointment(
-  userId: string,
-  customerId: string,
-  slots: AvailableSlot[],
-  treatmentId: string,
-  businessId: string,
-  notes: string | null,
-  date: string
-) {
-  const start = slots[0]?.start;
-  const end = slots[slots.length - 1]?.end;
-  if (!start || !end) return { createErr: "not start or end provided" };
+export async function createCustomBreak({
+  businessId,
+  date,
+  slots,
+  userId,
+}: {
+  slots: AvailableSlot[];
+  businessId: string;
+  userId: string;
+  date: string;
+}) {
   try {
-    // Check if appointment slot is already booked
+    const start = slots[0]?.start;
+    const end = slots[slots.length - 1]?.end;
+    if (!start || !end) throw new Error("not start or end provided");
+
+    console.log("data", { businessId, date, slots, userId }); // Check if appointment slot is already booked
     const existingAppointment = await prisma.appointmentSlot.findFirst({
       where: {
         date: dayjs(date).format("DD/MM/YYYY"),
@@ -37,9 +42,8 @@ export async function createAppointment(
 
     if (existingAppointment) {
       // If the appointment slot already exists, return an error or handle it however you like
-      return { existingAppointment };
+      throw new Error("there is appointment slot already exists");
     }
-
     // Create the appointment slot
     const appointmentSlot = await prisma.appointmentSlot.create({
       data: {
@@ -50,19 +54,16 @@ export async function createAppointment(
         business: { connect: { id: businessId } },
         user: { connect: { id: userId } },
       },
-    });
-
-    // Create the appointment
-    const appointment = await prisma.appointment.create({
+    }); // Create the appointment
+    await prisma.break.create({
       data: {
-        User: { connect: { id: userId } },
-        customer: { connect: { id: customerId } },
+        startTime: start,
+        endTime: end,
+        date: dayjs(date).format("DD/MM/YYYY"),
         appointmentSlot: { connect: { id: appointmentSlot.id } },
-        treatment: { connect: { id: treatmentId } },
-        Business: { connect: { id: businessId } },
-        status: AppointmentStatus.SCHEDULED,
+        business: { connect: { id: businessId } },
+        user: { connect: { id: userId } },
       },
-      include: { appointmentSlot: true },
     });
 
     // Update the available slots to reference the appointment slot
@@ -72,11 +73,9 @@ export async function createAppointment(
         data: { AppointmentSlot: { connect: { id: appointmentSlot.id } } },
       });
     }
-
-    return { appointment };
-  } catch (createErr) {
-    console.log(createErr);
-
-    return { createErr };
+    revalidatePath("/schedule");
+  } catch (err) {
+    console.log(err);
+    throw new Error("Internal error");
   }
 }

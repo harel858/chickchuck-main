@@ -36,39 +36,46 @@ export default function CalendarComponent({
   const [viewMode, setViewMode] = useState<"daily" | "weekly">("weekly");
 
   const sortedEvents = useMemo(() => {
-    const filteredEvents = scheduleProps.scheduleData.filter(
-      ({ user }) => user.id === selectedUser.value
+    const selectedUserId = selectedUser.value;
+    const filteredEvents = scheduleProps.scheduleData.find(
+      ({ user }) => user.id === selectedUserId
     );
-    return filteredEvents[0]?.events.sort(
+    const events = filteredEvents
+      ? [
+          ...filteredEvents.events,
+          ...filteredEvents.customeEvents,
+          ...filteredEvents.allbreaks,
+        ]
+      : [];
+    return events.sort(
       (a, b) => dayjs(a.start).valueOf() - dayjs(b.start).valueOf()
     );
-  }, [eventsByDate, selectedUser.value]);
-
-  const handleUserChange = useCallback(
-    (newValue: { value: string; label: string }) => {
-      setSelectedUser(newValue);
-    },
-    [selectedUser]
-  );
-  const handleSearch = () => {
-    const allEvents = scheduleProps.scheduleData.reduce<AppointmentEvent[]>(
-      (acc, item) => acc.concat(item.events),
-      []
-    );
-
-    const filteredEvents = allEvents.filter((event) =>
-      event.customer.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setEventsByDate(filteredEvents);
-  };
+  }, [scheduleProps.scheduleData, selectedUser.value]);
 
   useEffect(() => {
     if (searchQuery) {
       handleSearch();
     } else {
-      sortedEvents && setEventsByDate(sortedEvents);
+      setEventsByDate(sortedEvents);
     }
-  }, [searchQuery, eventsByDate]);
+  }, [searchQuery, sortedEvents]);
+
+  const handleUserChange = useCallback(
+    (newValue: { value: string; label: string }) => {
+      setSelectedUser(newValue);
+    },
+    []
+  );
+
+  const handleSearch = useCallback(() => {
+    const allEvents = scheduleProps.scheduleData.flatMap((item) => item.events);
+    const filteredEvents = allEvents.filter(
+      (event) =>
+        "customer" in event &&
+        event.customer.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setEventsByDate(filteredEvents);
+  }, [scheduleProps.scheduleData, searchQuery]);
 
   const onSelect = useCallback((newValue: Dayjs) => {
     setValue(newValue);
@@ -77,9 +84,11 @@ export default function CalendarComponent({
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
+      console.log("event.target.value", event.target.value);
+
       setSearchQuery(event.target.value);
     },
-    [searchQuery]
+    []
   );
 
   const loadingTable = (
@@ -92,53 +101,49 @@ export default function CalendarComponent({
     />
   );
 
-  const calendarOrList =
-    currentView === "list" && !searchQuery ? (
-      <MemoizedAppointmentList
-        value={value}
-        onSelect={onSelect}
-        eventsByDate={sortedEvents || []}
-        business={scheduleProps.business}
-      />
-    ) : currentView === "calendar" && !searchQuery ? (
-      <LazySlotCalendar
-        eventsByDate={sortedEvents || []}
-        scheduleProps={scheduleProps}
-        selectedDate={selectedValue}
-        selectedUser={selectedUser}
-        onSelect={onSelect}
-        handleSearchChange={handleSearchChange}
-        setSelectedUser={handleUserChange}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
-    ) : (
-      <SearchResults
-        business={scheduleProps.business}
-        searchQuery={searchQuery}
-        events={sortedEvents || []}
-      />
-    );
+  const calendarOrList = (
+    <Suspense fallback={loadingTable}>
+      {currentView === "list" && !searchQuery ? (
+        <MemoizedAppointmentList
+          value={value}
+          onSelect={onSelect}
+          eventsByDate={sortedEvents}
+          business={scheduleProps.business}
+        />
+      ) : currentView === "calendar" && !searchQuery ? (
+        <LazySlotCalendar
+          eventsByDate={sortedEvents}
+          scheduleProps={scheduleProps}
+          selectedDate={selectedValue}
+          selectedUser={selectedUser}
+        />
+      ) : (
+        searchQuery && (
+          <SearchResults
+            business={scheduleProps.business}
+            searchQuery={searchQuery}
+            events={sortedEvents}
+          />
+        )
+      )}
+    </Suspense>
+  );
 
   return (
     <div className="p-0 w-full overflow-hidden">
-      {/* <Suspense fallback={<>loading...</>}>
-        <ListNav
-          scheduleProps={scheduleProps}
-          viewMode={viewMode}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-          setSearchQuery={setSearchQuery}
-          selectedValue={selectedValue}
-          currentView={currentView}
-          onSelect={onSelect}
-          searchQuery={searchQuery}
-          onSearchChange={handleSearchChange}
-          selectedUser={selectedUser}
-          setSelectedUser={setSelectedUser}
-        />
-      </Suspense> */}
-      <Suspense fallback={loadingTable}>{calendarOrList}</Suspense>
+      <ListNav
+        scheduleProps={scheduleProps}
+        viewMode={"weekly"}
+        selectedValue={selectedValue}
+        currentView={"calendar"}
+        onSelect={onSelect}
+        searchQuery={searchQuery}
+        onSearchChange={handleSearchChange}
+        selectedUser={selectedUser}
+        setSearchQuery={setSearchQuery}
+        setSelectedUser={setSelectedUser}
+      />
+      {calendarOrList}
     </div>
   );
 }

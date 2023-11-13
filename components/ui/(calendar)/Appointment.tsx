@@ -18,21 +18,17 @@ function Appointment({ props }: { props: any }) {
   const [customer, setCustomer] = useState<string>("");
   const [service, setService] = useState<string>("");
   const [title, setTitle] = useState("");
-  const [duration, setDuration] = useState("");
+  const [duration, setDuration] = useState(0);
   const [slots, setSlots] = useState<AvailableSlot[]>([]);
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    const treatment = scheduleprops.user.Treatment.find((item) => {
-      console.log("item", item);
-      console.log("service", service);
-
-      return item.id == service;
-    });
+    const treatment = scheduleprops.user.Treatment.find(
+      (item) => item.id == service
+    );
     console.log("treatment", treatment);
 
-    if (!treatment) return;
     const getData = async (date: string, userId: string, duration: number) => {
       try {
         const res = await getQueuesByDate(userId, date, duration, time);
@@ -46,8 +42,12 @@ function Appointment({ props }: { props: any }) {
         return null;
       }
     };
+    if (!treatment) {
+      getData(date, userId, duration);
+      return;
+    }
     getData(date, userId, treatment.duration);
-  }, [service, setService]);
+  }, [service, setService, duration]);
 
   const steps = [
     {
@@ -64,13 +64,17 @@ function Appointment({ props }: { props: any }) {
       title: "For What?",
       content: (
         <SelectService
+          userId={userId}
+          date={date}
           service={service}
           setService={setService}
           user={scheduleprops.user}
           setTitle={setTitle}
           setDuration={setDuration}
+          customer={customer}
           duration={duration}
           title={title}
+          slots={slots}
         />
       ),
     },
@@ -108,6 +112,7 @@ function Appointment({ props }: { props: any }) {
         {current < steps.length - 1 && (
           <Button
             className="bg-blue-600 hover:bg-blue-500 py-2 px-4 rounded-md text-white"
+            disabled={!customer}
             onClick={() => next()}
           >
             Next
@@ -125,8 +130,7 @@ function Appointment({ props }: { props: any }) {
                   service,
                   scheduleprops.business.id,
                   null,
-                  date,
-                  service ? service : title
+                  date
                 )
               );
               message.success("Appointment is created successfully");

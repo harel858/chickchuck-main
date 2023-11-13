@@ -1,4 +1,3 @@
-"use client";
 import classes from "./style.module.css";
 import React from "react";
 import { useRef } from "react";

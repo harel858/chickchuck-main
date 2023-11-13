@@ -10,7 +10,7 @@ export default function History({
   appointments,
 }: {
   appointments: (Appointment & {
-    treatment: Treatment | null;
+    treatment: Treatment;
     appointmentSlot: AppointmentSlot;
   })[];
 }) {
@@ -18,7 +18,7 @@ export default function History({
   const [searchQuery, setSearchQuery] = useState<dayjs.Dayjs | null>(null);
   const [searchResult, setSearchResult] = useState<
     (Appointment & {
-      treatment: Treatment | null;
+      treatment: Treatment;
       appointmentSlot: AppointmentSlot;
     })[]
   >([]);

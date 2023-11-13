@@ -43,11 +43,13 @@ export default function BreakModal({ business }: { business: TeamPageParams }) {
         onCancel={() => {
           setModal1Open(false);
         }}
-        bodyStyle={{
-          background: "rgba(254,215,170,0.7)",
-          borderRadius: "3em",
-          padding: "2em",
-          margin: "0 auto",
+        styles={{
+          body: {
+            background: "rgba(254,215,170,0.7)",
+            borderRadius: "3em",
+            padding: "2em",
+            margin: "0 auto",
+          },
         }}
       >
         <Content

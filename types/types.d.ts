@@ -21,8 +21,7 @@ export type AllUsers = {
   appointments: appointment[];
   treatment: treatment[];
 };
-
-export type AppointmentEvent = {
+export type RegularAppointment = {
   id: string;
   userId: string;
   recipient: {
@@ -40,7 +39,32 @@ export type AppointmentEvent = {
   start: string;
   end: string;
   date: string;
-  treatment: Treatment | null;
+  treatment: Treatment;
+  customer: Customer;
+  appointmentSlot: AppointmentSlot;
+  status: AppointmentStatus;
+  color: string;
+};
+export type AppointmentEvent = RegularAppointment | CustomeEvents | CustomBreak;
+export type CustomeEvents = {
+  id: string;
+  userId: string;
+  title: string;
+  recipient: {
+    name: string;
+    email: string | null;
+    phone: string | null;
+    startActivity: string;
+    endActivity: string;
+    activityDays: number[];
+    UserRole: UserRole;
+    isAdmin: boolean;
+    PremiumKit: PremiumKits;
+    businessId: string | null;
+  };
+  start: string;
+  end: string;
+  date: string;
   customer: Customer;
   appointmentSlot: AppointmentSlot;
   status: AppointmentStatus;
@@ -48,7 +72,36 @@ export type AppointmentEvent = {
 };
 export type ScheduleData = {
   events: AppointmentEvent[];
+  customeEvents: CustomeEvents[];
+  allbreaks: CustomBreak[];
   user: User;
+};
+
+export type CustomBreak = {
+  id: string;
+  userId: string;
+  title: string;
+  start: string;
+  end: string;
+  recipient: {
+    id: string;
+    name: string;
+    email: string | null;
+    phone: string;
+    startActivity: string;
+    endActivity: string;
+    activityDays: number[];
+    TypeOfWage: TypeOfWage;
+    Wage: string | null;
+    UserRole: UserRole;
+    isAdmin: boolean;
+    PremiumKit: PremiumKits;
+    businessId: string;
+  };
+  date: string;
+  appointmentSlot: AppointmentSlot;
+  status: string;
+  color: string;
 };
 
 export type ScheduleProps = {
@@ -249,7 +302,7 @@ export type CustomerItem = {
   phoneNumber: string;
   UserRole: UserRole;
   appointments: (Appointment & {
-    treatment: Treatment | null;
+    treatment: Treatment;
     appointmentSlot: AppointmentSlot;
   })[];
 };
@@ -316,7 +369,7 @@ export interface NotificationData {
   notification: Notification;
   appointment: Appointment & {
     customer: Customer;
-    treatment: Treatment | null;
+    treatment: Treatment;
     appointmentSlot: AppointmentSlot;
   };
 }

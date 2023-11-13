@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { message } from "antd";
 import Content from "./Content";
-import { Modal, Tabs, Tooltip } from "antd";
+import { Modal, Tooltip } from "antd";
 import dayjs from "dayjs";
-import { TbCalendarPlus } from "react-icons/tb";
-import { ClockCircleTwoTone, CoffeeOutlined } from "@ant-design/icons";
+import { ClockCircleTwoTone } from "@ant-design/icons";
 
 function TimeSlot({ props }: { props: any }) {
   const [modalOpen, setModaOpen] = useState(false);
@@ -28,7 +27,7 @@ function TimeSlot({ props }: { props: any }) {
           } `}
           onClick={() => {
             if (validDate) return setModaOpen(true);
-            message.error("somthing went wrong");
+            message.error("Date is not valid");
           }}
         />
       </Tooltip>

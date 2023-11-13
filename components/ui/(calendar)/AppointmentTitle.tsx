@@ -1,16 +1,16 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 import { InputAdornment } from "@mui/material";
-import { IoMdStopwatch } from "react-icons/io";
+import { MdOutlineTitle } from "react-icons/md";
 
-function CustomTreatment({
-  duration,
-  changeDuration,
+function AppointmentTitle({
+  title,
+  changeTitle,
 }: {
-  duration: number;
-  changeDuration: (
+  changeTitle: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
+  title: string;
 }) {
   return (
     <TextField
@@ -18,24 +18,21 @@ function CustomTreatment({
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
-            <IoMdStopwatch />
+            <MdOutlineTitle />
           </InputAdornment>
         ),
         style: { color: "black", fontSize: "1.2em" },
         inputMode: "numeric",
       }}
       variant={"standard"}
-      label={"Appointment Duration"}
-      name={"Appointment Duration"}
+      label={"Appointment Title"}
+      name={"Appointment Title"}
       color={"primary"}
-      value={duration}
-      onChange={changeDuration}
+      value={title}
+      onChange={changeTitle}
       required
-      type={"number"}
+      type={"text"}
       inputProps={{
-        step: "5",
-        pattern: "/^e-[0-9]+$/",
-        min: 0,
         style: {
           color: "black",
           fontSize: "1.2em",
@@ -56,4 +53,4 @@ function CustomTreatment({
   );
 }
 
-export default CustomTreatment;
+export default AppointmentTitle;

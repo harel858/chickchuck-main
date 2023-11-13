@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Modal, Select } from "antd";
+import React, { useCallback, useEffect, useState } from "react";
+import { message, Modal, Select } from "antd";
 import { ScheduleProps } from "types/types";
 import { Button } from "@ui/Button";
 import { BiUserPlus } from "react-icons/bi";
-import Customer from "../(navbar)/specialOperations/plusButton/Customer";
+import Customer from "./CreateUser";
 
 // Usage of DebounceSelect
 interface UserValue {
@@ -39,6 +39,14 @@ const SelectUser = ({
     input: string,
     option?: { label: string; value: string }
   ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+
+  const closeModel = useCallback(() => {
+    setModaOpen(false);
+  }, [modalOpen]);
+
+  const successMessage = useCallback(() => {
+    message.success("User Created Successfully");
+  }, []);
   return (
     <>
       <Select
@@ -84,7 +92,11 @@ const SelectUser = ({
           },
         }}
       >
-        <Customer bussinesId={business?.id} />
+        <Customer
+          bussinesId={business?.id}
+          closeModel={closeModel}
+          successMessage={successMessage}
+        />
       </Modal>
     </>
   );

@@ -11,8 +11,7 @@ export async function createAppointment(
   treatmentId: string,
   businessId: string,
   notes: string | null,
-  date: string,
-  title: string
+  date: string
 ) {
   const start = slots[0]?.start;
   const end = slots[slots.length - 1]?.end;
@@ -57,7 +56,6 @@ export async function createAppointment(
     // Create the appointment
     const appointment = await prisma.appointment.create({
       data: {
-        Title: title,
         User: { connect: { id: userId } },
         customer: { connect: { id: customerId } },
         appointmentSlot: { connect: { id: appointmentSlot.id } },

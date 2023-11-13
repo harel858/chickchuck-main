@@ -1,11 +1,10 @@
 "use client";
-import React, { useState } from "react";
-import { Table, Tooltip } from "antd";
+import React from "react";
+import { Table } from "antd";
 import { motion } from "framer-motion";
 import { ScheduleProps, AppointmentEvent } from "../../../types/types";
 import dayjs, { Dayjs } from "dayjs";
 import CalendarEvent from "./CalendarEvent";
-import ListNav from "./ListNav";
 import CustomRow from "./CustomRow";
 
 const SlotCalendar = ({
@@ -13,11 +12,6 @@ const SlotCalendar = ({
   eventsByDate,
   selectedDate,
   selectedUser,
-  onSelect,
-  handleSearchChange,
-  searchQuery,
-  setSelectedUser,
-  setSearchQuery,
 }: {
   selectedUser: {
     value: string;
@@ -26,13 +20,8 @@ const SlotCalendar = ({
   scheduleProps: ScheduleProps;
   eventsByDate: AppointmentEvent[];
   selectedDate: dayjs.Dayjs;
-  onSelect: (newValue: Dayjs) => void;
-  searchQuery: string;
-  setSelectedUser: (newValue: { value: string; label: string }) => void;
-  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
-  handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
-  const { scheduleData, business, user } = scheduleProps;
+  const { user } = scheduleProps;
   console.log("user", user);
 
   const openingTime = dayjs(user.startActivity);
@@ -125,7 +114,7 @@ const SlotCalendar = ({
             return (
               <div
                 className={`flex justify-center items-center p-0 m-0 absolute top-0 left-0 right-0 w-full h-full z-40 overflow-visible `}
-                style={{ height: `${(eventRowSpan - 1) * 53}px` }}
+                style={{ height: `${(eventRowSpan - 1) * 54.5}px` }}
               >
                 {hours.map((slot, slotIndex) => {
                   if (
@@ -173,18 +162,6 @@ const SlotCalendar = ({
       transition={{ duration: 0.2 }}
       className="overflow-x-auto rounded-b-3xl flex flex-col justify-center items-center"
     >
-      <ListNav
-        scheduleProps={scheduleProps}
-        viewMode={"weekly"}
-        selectedValue={selectedDate}
-        currentView={"calendar"}
-        onSelect={onSelect}
-        searchQuery={searchQuery}
-        onSearchChange={handleSearchChange}
-        selectedUser={selectedUser}
-        setSearchQuery={setSearchQuery}
-        setSelectedUser={setSelectedUser}
-      />
       <Table
         tableLayout="fixed"
         dataSource={hours}

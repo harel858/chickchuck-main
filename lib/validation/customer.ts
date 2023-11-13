@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 interface ReqBody {
-  phoneNumber: number;
+  phoneNumber: string;
   name: string;
 }
 const ReqBodySchema = Joi.object({

@@ -18,7 +18,7 @@ function NotificationComponent({
 }: {
   appointments: (Appointment & {
     customer: Customer;
-    treatment: Treatment | null;
+    treatment: Treatment;
     appointmentSlot: AppointmentSlot;
   })[];
   userId: string;

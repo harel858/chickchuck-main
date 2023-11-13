@@ -48,7 +48,7 @@ function ListNav({
       .format(weekFormat)}`;
 
   return (
-    <div className=" flex justify-between flex-row flex-wrap max-xl:justify-center content-center items-center bg-slate-200 font-extralight w-full relative top-0 py-5 px-10 gap-2 transition-all duration-1000 ease-in-out">
+    <div className="flex justify-between flex-row flex-wrap max-xl:justify-center content-center items-center bg-slate-200 font-extralight w-full relative top-0 py-5 px-10 gap-2 transition-all duration-1000 ease-in-out">
       <div className="flex justify-center align-baseline items-baseline gap-3">
         <motion.div
           className="flex justify-center items-center content-center gap-2 max-md:items-start max-md:justify-start max-md:w-11/12 max-md:flex-wrap"
@@ -89,7 +89,7 @@ function ListNav({
           type="text"
           placeholder="Search clients"
           value={searchQuery}
-          onChange={(e) => onSearchChange}
+          onChange={onSearchChange}
           className="dark:text-white px-2 py-1 text-xl rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
