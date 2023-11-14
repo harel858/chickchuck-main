@@ -16,14 +16,17 @@ function CustomBreak({ props }: { props: any }) {
   const time = props.record.key;
   const [duration, setDuration] = useState<number>(0);
   const [slots, setSlots] = useState<AvailableSlot[]>([]);
+  const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
+    setError("");
     const getData = async (date: string, userId: string, duration: number) => {
       try {
         const res = await getQueuesByDate(userId, date, duration, time);
         console.log("res", res);
         if (res) return setSlots(res);
+        setError("Apparently the break overruns an existing queue");
       } catch (err) {
         console.log(err);
         return;
@@ -42,13 +45,16 @@ function CustomBreak({ props }: { props: any }) {
       <InputNumber
         min={0}
         step={5}
+        size={"large"}
         value={duration}
         onChange={handleInputChange}
         style={{ width: "100%" }}
         prefix={<ClockCircleOutlined />}
       />
+      <p className="text-red-500 text-lg">{error}</p>
       <Button
         isLoading={isPending}
+        disabled={!!error || slots.length === 0}
         onClick={() =>
           startTransition(() =>
             createCustomBreak({ businessId, date, slots, userId })

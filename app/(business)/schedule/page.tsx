@@ -9,6 +9,7 @@ import CalendarComponent from "@ui/(calendar)/Calendar";
 import {
   Appointment,
   AppointmentSlot,
+  AvailableSlot,
   Break,
   Business,
   CustomAppointment,
@@ -80,25 +81,31 @@ const fetchEvents = async (id: string | null | undefined) => {
     let appointments: (Appointment & {
       User: User;
       customer: Customer;
-      appointmentSlot: AppointmentSlot;
+      appointmentSlot: AppointmentSlot & {
+        availableSlots: AvailableSlot[];
+      };
       treatment: Treatment;
     })[] = [];
     let customAppointments: (CustomAppointment & {
       customer: Customer;
-      appointmentSlot: AppointmentSlot;
+      appointmentSlot: AppointmentSlot & {
+        availableSlots: AvailableSlot[];
+      };
       User: User;
     })[] = [];
     let breakArr: (Break & {
       user: User;
       business: Business;
-      appointmentSlot: AppointmentSlot;
+      appointmentSlot: AppointmentSlot & {
+        availableSlots: AvailableSlot[];
+      };
     })[] = [];
     for (let i = 0; i < business?.user.length!; i++) {
       const result = await prisma.appointment.findMany({
         where: { userId: business?.user[i]?.id },
         include: {
           User: true,
-          appointmentSlot: true,
+          appointmentSlot: { include: { availableSlots: true } },
           treatment: true,
           customer: true,
         },
@@ -107,14 +114,14 @@ const fetchEvents = async (id: string | null | undefined) => {
         where: { userId: business?.user[i]?.id },
         include: {
           User: true,
-          appointmentSlot: true,
+          appointmentSlot: { include: { availableSlots: true } },
           customer: true,
         },
       });
       const breaks = await prisma.break.findMany({
         where: { userId: business?.user[i]?.id },
         include: {
-          appointmentSlot: true,
+          appointmentSlot: { include: { availableSlots: true } },
           user: true,
           business: true,
         },
@@ -247,7 +254,8 @@ const fetchEvents = async (id: string | null | undefined) => {
         end,
         date,
         appointmentSlot: breakItem.appointmentSlot,
-        status: "Break",
+        status: "",
+        variant: "BREAK",
         color, // set a default color for all events
       };
     });

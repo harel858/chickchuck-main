@@ -41,7 +41,9 @@ export type RegularAppointment = {
   date: string;
   treatment: Treatment;
   customer: Customer;
-  appointmentSlot: AppointmentSlot;
+  appointmentSlot: AppointmentSlot & {
+    availableSlots: AvailableSlot[];
+  };
   status: AppointmentStatus;
   color: string;
 };
@@ -66,7 +68,9 @@ export type CustomeEvents = {
   end: string;
   date: string;
   customer: Customer;
-  appointmentSlot: AppointmentSlot;
+  appointmentSlot: AppointmentSlot & {
+    availableSlots: AvailableSlot[];
+  };
   status: AppointmentStatus;
   color: string;
 };
@@ -99,8 +103,11 @@ export type CustomBreak = {
     businessId: string;
   };
   date: string;
-  appointmentSlot: AppointmentSlot;
+  appointmentSlot: AppointmentSlot & {
+    availableSlots: AvailableSlot[];
+  };
   status: string;
+  variant: string;
   color: string;
 };
 

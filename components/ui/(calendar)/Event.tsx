@@ -1,32 +1,11 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { AppointmentEvent, BusinessProps } from "../../../types/types";
 import ToolTip from "./ToolTip";
-import { styled } from "@mui/material/styles";
-import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
-const HtmlTooltip = styled(
-  ({
-    handleTooltipClose,
-    className,
-    ...props
-  }: TooltipProps & {
-    handleTooltipClose: (e: MouseEvent | TouchEvent) => void;
-  }) => (
-    <ClickAwayListener onClickAway={handleTooltipClose}>
-      <Tooltip {...props} classes={{ popper: className }} />
-    </ClickAwayListener>
-  )
-)(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    margin: "0",
-    padding: "0",
-    borderRadius: "1.5rem",
-    backgroundColor: "beige",
-  },
-}));
+import { Modal } from "antd";
+import { MdFreeBreakfast } from "react-icons/md";
 
 function Event({
   event,
@@ -38,34 +17,12 @@ function Event({
   i: number;
 }) {
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const [open, setOpen] = React.useState(false);
-  const handleTooltipClose = (e: MouseEvent | TouchEvent) => {
-    if (tooltipRef.current && tooltipRef.current.contains(e.target as Node)) {
-      return; // Don't close if the click is inside the tooltip content
-    }
-    setOpen(false);
-  };
-
-  const handleTooltipOpen = () => {
-    setOpen(true);
-  };
-
+  const [modal1Open, setModal1Open] = useState(false);
   const delay = i * 0.1; // Adjust the delay duration as needed
   const start = dayjs(event.start).format("HH:mm");
   const end = dayjs(event.end).format("HH:mm");
   return (
-    <HtmlTooltip
-      key={event.id}
-      PopperProps={{
-        disablePortal: true,
-      }}
-      title={<ToolTip ref={tooltipRef} business={business} event={event} />}
-      open={open}
-      handleTooltipClose={handleTooltipClose}
-      disableFocusListener
-      disableHoverListener
-      disableTouchListener
-    >
+    <>
       <motion.li
         key={event.id}
         initial={{ opacity: 0, scale: 0.5 }}
@@ -76,7 +33,7 @@ function Event({
           easeInOut: [0, 0.71, 0.2, 1.01],
           delay,
         }}
-        onClick={handleTooltipOpen}
+        onClick={() => setModal1Open(true)}
         className={`w-full hover:bg-gray-900 bg-rose-50/80 text-black cursor-pointer hover:text-white relative px-16 py-7 border-b border-black/50 flex justify-between max-md:flex-col gap-10 items-center`}
       >
         <span
@@ -86,7 +43,9 @@ function Event({
           <p className="font-medium text-xl w-max">
             {"treatment" in event && event.treatment?.title}
           </p>
-          <p className="font-thin text-lg">{event.customer.name}</p>
+          <p className="font-thin text-lg">
+            {"customer" in event && event.customer.name}
+          </p>
         </div>
         <p className="font-extralight text-lg">{event.date}</p>
         <div className="flex flex-col gap-1 justify-center items-center max-md:flex-row">
@@ -95,7 +54,33 @@ function Event({
           <p className="font-extralight text-lg">{end}</p>
         </div>
       </motion.li>
-    </HtmlTooltip>
+      <Modal
+        title={
+          <div className="flex flex-row justify-center items-center gap-2">
+            <h3 className="font-sans text-2xl"> Break Times</h3>
+            <MdFreeBreakfast className="text-4xl" />
+          </div>
+        }
+        className="pt-5"
+        centered
+        open={modal1Open}
+        okButtonProps={{ hidden: true }}
+        cancelButtonProps={{ hidden: true }}
+        onCancel={() => {
+          setModal1Open(false);
+        }}
+        styles={{
+          body: {
+            background: "rgba(254,215,170,0.7)",
+            borderRadius: "3em",
+            padding: "2em",
+            margin: "0 auto",
+          },
+        }}
+      >
+        <ToolTip ref={tooltipRef} business={business} event={event} />
+      </Modal>
+    </>
   );
 }
 

@@ -81,7 +81,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
       <section className="h-screen w-full flex flex-col justify-center items-center relative max-2xl:px-0 max-2xl:m-0 gap-10">
         <Images user={session.user} />
 
-        {children}
+        {/*  {children} */}
       </section>
     </>
   );
