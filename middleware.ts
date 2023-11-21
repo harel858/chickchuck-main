@@ -1,4 +1,8 @@
-import { Ratelimit } from "@upstash/ratelimit";
+export { default } from "next-auth/middleware";
+export const config = {
+  matcher: ["/profile"],
+};
+/* import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { getToken } from "next-auth/jwt";
 import { withAuth } from "next-auth/middleware";
@@ -33,7 +37,9 @@ export default withAuth(
 
     const token = await getToken({ req });
 
-    const isAuth = token?.UserRole === "RECIPIENT";
+    const isAuth = !!token;
+    console.log("isAuth", isAuth);
+    console.log("token", token);
 
     const isAuthPage = pathName.startsWith("/signin");
     const sensetiveRoutes = [
@@ -74,3 +80,4 @@ export const config = {
     "/api/:path*",
   ],
 };
+ */

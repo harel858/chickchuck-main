@@ -17,7 +17,16 @@ function SignInForm() {
     emailORphoneNumber: "",
     password: "",
   });
-
+  const handleGoogle = async () => {
+    try {
+      const res = await signIn("google", {
+        callbackUrl: "http://localhost:3000/createbusinessdetails",
+      });
+      console.log("res", res);
+    } catch (err) {
+      console.log("err", err);
+    }
+  };
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -92,6 +101,9 @@ function SignInForm() {
       {displayInput()}
       <p className="test-red-500">{error ? error : ""}</p>
       <Button isLoading={isLodaing}>Submit</Button>
+      <Button isLoading={isLodaing} type="button" onClick={handleGoogle}>
+        Sign In With Google
+      </Button>
     </form>
   );
 }

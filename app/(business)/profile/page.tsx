@@ -36,13 +36,16 @@ async function fetchUser(email: string | null | undefined) {
 
 async function Page() {
   const session = await getServerSession(authOptions);
+  console.log("session", session);
 
-  const user = await fetchUser(session?.user?.email);
+  /* const user = await fetchUser(session?.user?.email);
   if (!user) return notFound();
-
-  const value = user.business?.businessName.replace(/(\s)(?!\s*$)/g, "-");
-
-  return <Profile user={user as any} link={`http://localhost:3000/${value}`} />;
+ */
+  /*   const value = user.business?.businessName.replace(/(\s)(?!\s*$)/g, "-");
+   */
+  return (
+    <Profile user={session?.user as any} link={`http://localhost:3000/${""}`} />
+  );
 }
 
 export default Page;

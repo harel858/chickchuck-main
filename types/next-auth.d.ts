@@ -20,15 +20,6 @@ declare module "next-auth/jwt" {
 
 declare module "next-auth" {
   interface Session {
-    user: User & {
-      id: UserId;
-      UserRole: "CUSTOMER" | "RECIPIENT";
-      isAdmin: boolean;
-      business: Business;
-      urls: {
-        backgroundImage: string;
-        profileImage: string;
-      } | null;
-    };
+    user: User;
   }
 }

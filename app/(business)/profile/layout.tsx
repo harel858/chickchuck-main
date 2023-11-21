@@ -59,9 +59,10 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
 
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
-  const businessData = await fetchAppointmentSlots(session?.user.id);
-  if (session?.user.UserRole !== "RECIPIENT" || !businessData)
-    return notFound();
+  console.log("session", session);
+
+  const businessData = await fetchAppointmentSlots(session?.user.email!);
+  if (!session?.user || !businessData) return notFound();
   const value = businessData.business?.businessName.replace(
     /(\s)(?!\s*$)/g,
     "-"
@@ -74,13 +75,14 @@ async function Layout({ children }: { children: React.ReactNode }) {
         link={value}
         appointments={businessData.user.appointments}
       />
-      <PlusButton businessData={businessData} />
+      {/*       <PlusButton businessData={businessData} />
+       */}{" "}
       {/* @ts-ignore  */}
       {/*       <VerticalNav user={session.user} />
        */}{" "}
       <section className="h-screen w-full flex flex-col justify-center items-center relative max-2xl:px-0 max-2xl:m-0 gap-10">
-        <Images user={session.user} />
-
+        {/*         <Images user={session.user} />
+         */}
         {/*  {children} */}
       </section>
     </>

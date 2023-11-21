@@ -1,10 +1,11 @@
 import { prisma } from "./prisma";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getCustomer } from "./prisma/customer/customer";
 import { getImage } from "./aws/s3";
 import { signInNew } from "./routes/user/signin";
+import googleProvider from "next-auth/providers/google";
 
 interface UserCredentials {
   emailORphoneNumber: string;
@@ -77,70 +78,65 @@ const configureCustomerLoginProvider = () =>
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
+  secret: process.env.NEXTAUTH_SECRET,
   pages: { signIn: "/signin" },
-  providers: [configureUserLoginProvider(), configureCustomerLoginProvider()],
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
-  callbacks: {
-    async jwt({ token, user }) {
-      const dbUser = await prisma.user.findUnique({
-        where: { id: token.sub },
-        include: { Business: true },
-      });
-      const dbCustomer = await prisma.customer.findUnique({
-        where: { id: token.sub },
-      });
-      if (dbUser) {
-        const business = await prisma.business.findUnique({
-          where: { id: dbUser?.Business?.id },
-          include: { Images: true },
-        });
-        let urls: {
-          backgroundImage: string;
-          profileImage: string;
-        } | null = null;
-        if (business?.Images) {
-          const params = {
-            Bucket: bucketName,
-            Key: {
-              profileImgName: business.Images.profileImgName,
-              backgroundImgName: business.Images.backgroundImgName,
-            },
-          };
-          const res = await getImage(params);
-          urls = res;
-        }
-        return {
-          ...token,
-          urls: urls,
-          business: dbUser.Business,
-          id: dbUser.id,
-          name: dbUser.name,
-          email: dbUser.email,
-          UserRole: dbUser.UserRole,
-          isAdmin: dbUser.isAdmin,
-        };
-      } else if (dbCustomer) {
-        return {
-          ...token,
-          id: dbCustomer.id,
-          name: dbCustomer.name,
-          phoneNumber: dbCustomer.phoneNumber,
-          UserRole: dbCustomer.UserRole,
-          business: null,
-          isAdmin: false,
-          urls: null,
-        };
-      }
+  providers: [
+    googleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      authorization: {
+        params: {
+          scope:
+            "openid https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events ",
+        },
+      },
+      profile(profile, tokens) {
+        console.log("profile", profile);
 
-      token.id = user!.id;
-      return token;
+        return {
+          id: profile.sub,
+          name: `${profile.given_name} ${profile.family_name}`,
+          email: profile.email,
+          image: profile.image,
+        };
+      },
+    }),
+  ],
+  callbacks: {
+    async jwt({ token, account }) {
+      const user = await prisma.user.findUnique({
+        where: { email: token.email! },
+      });
+      console.log("account", account);
+
+      if (account?.access_token) {
+        token.access_token = account.access_token;
+      }
+      return { ...token, user, account };
+    },
+    async signIn(props) {
+      console.log("props", props);
+      /*   // Check if the user is new based on your application logic
+      const isNewUser = true;
+
+      if (isNewUser) {
+        // If the user is new, redirect to the page to create business details
+        return "/createbusinessdetails";
+      }  */
+      // If the user is not new, redirect to the "/schedule" page
+      return true;
     },
     async session({ session, token, user }) {
+      console.log("token", token);
+      console.log("session", session);
+
       if (token && token.id) {
         session.user = token;
       }
-
       return session;
     },
   },
 };
+
+/* 398888172398-5su01j6ookv6isv2pjp0ubleadru7jg7.apps.googleusercontent.com */
