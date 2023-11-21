@@ -33,7 +33,7 @@ function Booking({
   }, [session]);
 
   return (
-    <div className="relative flex flex-col items-center justify-center w-full text-white ">
+    <div className="relative flex flex-col items-center justify-center w-full text-white">
       {loading ? (
         <>loading...</>
       ) : !session?.data?.user ||

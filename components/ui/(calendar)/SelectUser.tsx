@@ -22,7 +22,7 @@ const SelectUser = ({
 }) => {
   const [options, setOptions] = useState<UserValue[]>([]);
   const [modalOpen, setModaOpen] = useState(false);
-
+  console.count(business?.id);
   useEffect(() => {
     const data = business?.Customers.map((customer) => ({
       label: `${customer.name} - ${customer.phoneNumber}`,
@@ -93,7 +93,7 @@ const SelectUser = ({
         }}
       >
         <Customer
-          bussinesId={business?.id}
+          bussinesId={business.id}
           closeModel={closeModel}
           successMessage={successMessage}
         />

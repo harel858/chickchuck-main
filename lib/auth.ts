@@ -112,10 +112,12 @@ export const authOptions: NextAuthOptions = {
         return {
           ...token,
           urls: urls,
+          business: dbUser.Business,
           id: dbUser.id,
           name: dbUser.name,
           email: dbUser.email,
           UserRole: dbUser.UserRole,
+          isAdmin: dbUser.isAdmin,
         };
       } else if (dbCustomer) {
         return {
@@ -124,6 +126,8 @@ export const authOptions: NextAuthOptions = {
           name: dbCustomer.name,
           phoneNumber: dbCustomer.phoneNumber,
           UserRole: dbCustomer.UserRole,
+          business: null,
+          isAdmin: false,
           urls: null,
         };
       }

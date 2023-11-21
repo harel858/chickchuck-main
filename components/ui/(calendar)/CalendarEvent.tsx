@@ -86,7 +86,7 @@ function Event({
             justifyContent: "center",
             alignItems: "center",
             background: "beige",
-            borderRadius: "3em",
+            borderRadius: "1.5rem",
             padding: "2em",
             margin: "0 auto",
           },

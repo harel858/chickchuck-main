@@ -114,7 +114,7 @@ const SlotCalendar = ({
             return (
               <div
                 className={`flex justify-center items-center p-0 m-0 absolute top-0 left-0 right-0 w-full h-full z-40 overflow-visible `}
-                style={{ height: `${(eventRowSpan - 1) * 58}px` }}
+                style={{ height: `${(eventRowSpan - 1) * 55}px` }}
               >
                 {hours.map((slot, slotIndex) => {
                   if (

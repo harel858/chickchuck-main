@@ -3,6 +3,7 @@ import Joi from "joi";
 interface ReqBody {
   phoneNumber: string;
   name: string;
+  bussinesId: string;
 }
 const ReqBodySchema = Joi.object({
   phoneNumber: Joi.number().min(10).required(),

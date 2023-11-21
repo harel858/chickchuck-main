@@ -15,9 +15,12 @@ export async function createNewCustomer({
   bussinesId,
 }: InputData) {
   try {
+    console.log("bussinesId", bussinesId);
+
     const { error } = validateCustomer({
       name,
       phoneNumber,
+      bussinesId,
     });
     if (error) throw new Error(error?.details[0]?.message);
 

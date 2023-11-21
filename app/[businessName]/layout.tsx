@@ -6,6 +6,9 @@ import { prisma } from "@lib/prisma";
 import { LandingPageData } from "types/types";
 import { notFound } from "next/navigation";
 import { Lobster_Two } from "next/font/google";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@lib/auth";
+import Images from "@ui/Images";
 const lobster = Lobster_Two({ weight: ["400"], subsets: ["latin"] });
 
 type LandingPageProps = {
@@ -53,12 +56,18 @@ async function Layout({
   params: { businessName },
 }: LandingPageProps) {
   const business = await getBusiness(businessName);
+  const session = await getServerSession(authOptions);
   if (!business) return notFound();
   return (
     <>
-      <ProfileNav business={business} />
-      <section className="h-screen flex flex-col justify-start items-center gap-8 mt-20">
-        <BackgroundImage business={business} lobster={lobster.className} />
+      {/*       <ProfileNav business={business} />
+       */}{" "}
+      <section className="flex flex-col justify-start items-center gap-5">
+        {session?.user.isAdmin ? (
+          <Images user={session.user} />
+        ) : (
+          <BackgroundImage business={business} lobster={lobster.className} />
+        )}
         {children}
       </section>
     </>

@@ -9,7 +9,8 @@ module.exports = {
   },
   images: {
     domains: [
-      "imgixs3.imgix.net"
+      "imgixs3.imgix.net",
+      "cdn.pixabay.com"
     ],
   },
 };

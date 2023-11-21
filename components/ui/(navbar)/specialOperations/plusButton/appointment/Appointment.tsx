@@ -60,6 +60,8 @@ function Appointment({ businessData }: { businessData: BusinessData }) {
       if (res.status == 200) {
         setLoading(false);
         setSuccessOpen(true);
+        console.log("date", appointmentInput?.date.toISOString());
+        console.log("res.data", res.data);
       }
       // Do something with the response if needed
     } catch (err) {

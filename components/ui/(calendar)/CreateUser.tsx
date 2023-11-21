@@ -2,15 +2,13 @@ import React, { useTransition, useState } from "react";
 import { motion } from "framer-motion";
 import { TextField } from "@mui/material";
 import { Button } from "@ui/Button";
-import axios, { AxiosError } from "axios";
-import { revalidatePath } from "next/cache";
-import { message } from "antd";
 import { createNewCustomer } from "actions/createCustomer";
 
 interface InputData {
   name: string;
   phoneNumber: string;
 }
+
 function Customer({
   bussinesId,
   closeModel,
@@ -160,10 +158,12 @@ function Customer({
           isLoading={isPending}
           onClick={() =>
             startTransition(() =>
-              createNewCustomer({ ...input, bussinesId }).finally(() => {
-                successMessage();
-                closeModel();
-              })
+              createNewCustomer({ ...input, bussinesId: bussinesId }).finally(
+                () => {
+                  successMessage();
+                  closeModel();
+                }
+              )
             )
           }
         >

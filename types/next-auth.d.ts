@@ -9,6 +9,8 @@ declare module "next-auth/jwt" {
     id: UserId;
     UserRole: "CUSTOMER" | "RECIPIENT";
     phoneNumber: string | null;
+    isAdmin: boolean;
+    business: Business;
     urls: {
       backgroundImage: string;
       profileImage: string;
@@ -21,6 +23,8 @@ declare module "next-auth" {
     user: User & {
       id: UserId;
       UserRole: "CUSTOMER" | "RECIPIENT";
+      isAdmin: boolean;
+      business: Business;
       urls: {
         backgroundImage: string;
         profileImage: string;

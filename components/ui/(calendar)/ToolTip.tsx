@@ -2,7 +2,6 @@
 import classes from "./style.module.css";
 import React, { forwardRef } from "react";
 import ButtonsGroup from "./WhatsappButtons";
-import { motion } from "framer-motion";
 import { AppointmentEvent } from "../../../types/types";
 import dayjs from "dayjs";
 import DownloadPDF from "@components/PDF/InovicePDF";
@@ -22,10 +21,11 @@ const ToolTip = forwardRef<
 >(({ event, business }, ref) => {
   const start = dayjs(event.start).format("HH:mm");
   const end = dayjs(event.end).format("HH:mm");
+
   return (
     <div
       ref={ref}
-      className={`flex flex-col gap-5 rounded-2xl ${classes.ToolTip} w-full m-0 p-0`}
+      className={`flex flex-col gap-5 rounded-3xl ${classes.ToolTip} w-full m-0 p-0`}
     >
       <div
         className={`flex justify-center gap-5 ${event.color} bg-opacity-60 text-black rounded-t-2xl w-full px-5 py-3`}
@@ -63,7 +63,7 @@ const ToolTip = forwardRef<
           </p>
           <p className="font-semibold text-xl">
             Date:
-            <span className="font-light text-lg"> {event.date}</span>
+            <span className="font-light text-lg">{event.date}</span>
           </p>
         </div>
       </div>

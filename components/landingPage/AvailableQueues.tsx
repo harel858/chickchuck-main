@@ -117,13 +117,15 @@ export default function AvailableQueues({
     setValidDay(validDay);
 
     const getQueues = async (date: Dayjs) => {
+      console.log("date", date);
+      true;
       setLoading(true);
 
       try {
         let res = await axios.get(
           `/api/slots/slot?chosenDate=${date}&userId=${appointmentInput?.user?.userId}&duration=${appointmentInput?.treatment?.duration}`
         );
-        console.log(res.data);
+        console.log("res.data", res.data);
         setAllQueues(res.data);
       } catch (err) {
         if (err instanceof AxiosError) {
