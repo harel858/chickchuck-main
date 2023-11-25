@@ -19,9 +19,7 @@ function SignInForm() {
   });
   const handleGoogle = async () => {
     try {
-      const res = await signIn("google", {
-        callbackUrl: "http://localhost:3000/createbusinessdetails",
-      });
+      const res = await signIn("google");
       console.log("res", res);
     } catch (err) {
       console.log("err", err);

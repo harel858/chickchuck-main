@@ -59,7 +59,7 @@ model User {
   phone             String?             @unique
   startActivity     String?
   endActivity       String?
-  activityDays      Int[]
+  activityDays      ActivityDays[]
   TypeOfWage        TypeOfWage          @default(HOURLY)
   Wage              String?
   UserRole          UserRole?           @default(RECIPIENT)
@@ -114,6 +114,17 @@ model Document {
   customerId   String
 }
 
+model ActivityDays {
+  id         String    @id @default(uuid())
+  day        Int
+  start      String
+  end        String
+  Business   Business? @relation(fields: [businessId], references: [id])
+  businessId String?
+  User       User?     @relation(fields: [userId], references: [id])
+  userId     String?
+}
+
 model Business {
   id                String              @id @default(uuid())
   businessName      String              @unique
@@ -122,7 +133,7 @@ model Business {
   closingTime       String
   businessImage     String?
   user              User[]
-  activityDays      Int[]
+  activityDays      ActivityDays[]
   Customer          Customer[]
   AvailableSlot     AvailableSlot[]
   Address           Address[]

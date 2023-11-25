@@ -6,12 +6,13 @@
 /*  .ant-table-cell-row-hover td{
   background-color: rgba(0,0,0,0.5) !important;
 } */
-:where(.css-dev-only-do-not-override-amq5gd).ant-table-wrapper .ant-table-tbody .ant-table-row>.ant-table-cell-row-hover:hover{
+/* :where(.css-dev-only-do-not-override-amq5gd).ant-table-wrapper .ant-table-tbody .ant-table-row>.ant-table-cell-row-hover:hover{
   background-color: none;
     color: inherit;
-    /* You can customize this as needed */
     cursor: default;
-}:where(.css-dev-only-do-not-override-amq5gd).ant-table-wrapper .ant-table-tbody .ant-table-row>.ant-table-cell-row-hover {
+} */
+
+:where(.css-dev-only-do-not-override-amq5gd).ant-table-wrapper .ant-table-tbody .ant-table-row>.-row-hover {
   background: none;
 }
 .ant-picker-calendar {

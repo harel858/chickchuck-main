@@ -11,7 +11,7 @@ async function NewUserSignupLayout({
   console.log("session", session);
 
   return (
-    <section className="h-screen w-full flex justify-center items-center">
+    <section className="h-screen w-full flex justify-center items-center overflow-x-hidden">
       {children}
     </section>
   );

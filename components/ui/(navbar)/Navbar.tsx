@@ -26,11 +26,13 @@ function Navbar({
 }: {
   session: Session;
   link: string;
-  appointments: (Appointment & {
-    customer: Customer;
-    treatment: Treatment;
-    appointmentSlot: AppointmentSlot;
-  })[];
+  appointments:
+    | (Appointment & {
+        customer: Customer;
+        treatment: Treatment;
+        appointmentSlot: AppointmentSlot;
+      })[]
+    | any;
 }) {
   const profileImage = session.user.urls?.profileImage;
 

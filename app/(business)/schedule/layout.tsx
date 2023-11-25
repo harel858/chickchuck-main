@@ -1,7 +1,7 @@
 import React from "react";
 import VerticalNav from "@ui/(navbar)/VerticalNav";
 import { getServerSession } from "next-auth";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { authOptions } from "@lib/auth";
 import Navbar from "@ui/(navbar)/Navbar";
 import { UserData } from "types/types";
@@ -58,10 +58,12 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
 
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
+
   const businessData = await fetchAppointmentSlots(session?.user.id);
-  if (session?.user.UserRole !== "RECIPIENT" || !businessData)
-    return notFound();
-  const value = businessData.business?.businessName.replace(
+  console.log("businessData", businessData);
+
+  if (!session) return notFound();
+  const value = businessData?.business?.businessName.replace(
     /(\s)(?!\s*$)/g,
     "-"
   );

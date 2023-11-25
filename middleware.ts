@@ -1,8 +1,8 @@
-export { default } from "next-auth/middleware";
+/* export { default } from "next-auth/middleware";
 export const config = {
   matcher: ["/profile"],
-};
-/* import { Ratelimit } from "@upstash/ratelimit";
+}; */
+import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { getToken } from "next-auth/jwt";
 import { withAuth } from "next-auth/middleware";
@@ -38,10 +38,9 @@ export default withAuth(
     const token = await getToken({ req });
 
     const isAuth = !!token;
-    console.log("isAuth", isAuth);
-    console.log("token", token);
+    console.log("tokenMiddleware", token);
 
-    const isAuthPage = pathName.startsWith("/signin");
+    const isAuthPage = pathName.startsWith("/login");
     const sensetiveRoutes = [
       "/profile",
       "/schedule",
@@ -49,15 +48,22 @@ export default withAuth(
       "/team",
       "/activityTime",
     ];
+    console.log("token.business", token?.business);
+    console.log("isAuth", isAuth);
 
     if (isAuthPage) {
+      if (isAuth && !token.business) {
+        return NextResponse.redirect(
+          new URL("/createbusinessdetails", req.url)
+        );
+      }
       if (isAuth) {
-        return NextResponse.redirect(new URL("/profile", req.url));
+        return NextResponse.redirect(new URL("/schedule", req.url));
       }
       return null;
     }
     if (!isAuth && sensetiveRoutes.some((route) => pathName.startsWith(route)))
-      return NextResponse.redirect(new URL("/signin", req.url));
+      return NextResponse.redirect(new URL("/login", req.url));
   },
   {
     callbacks: {
@@ -75,9 +81,9 @@ export const config = {
     "/treatments",
     "/activityTime",
     "/team",
-    "/signin",
+    "/login",
     "/signup",
     "/api/:path*",
+    "/createbusinessdetails",
   ],
 };
- */

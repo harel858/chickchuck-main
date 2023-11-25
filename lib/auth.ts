@@ -21,7 +21,6 @@ const bucketName = process.env.BUCKET_NAME!;
 const authorizeUserLogin = async (credentials: any, req: any) => {
   try {
     const { emailORphoneNumber, password } = credentials as UserCredentials;
-    console.log(emailORphoneNumber);
 
     const { user, err } = await signInNew(emailORphoneNumber, password);
 
@@ -79,7 +78,7 @@ const configureCustomerLoginProvider = () =>
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
-  pages: { signIn: "/signin" },
+  pages: { signIn: "/signin", newUser: "/createbusinessdetails" },
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   providers: [
     googleProvider({
@@ -88,52 +87,51 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           scope:
-            "openid https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events ",
+            "openid https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar.events ",
         },
       },
       profile(profile, tokens) {
-        console.log("profile", profile);
-
+        /*         const user = await prisma.user.findUnique({
+          where: { email: profile.email! },
+          include: { Business: { include: { Images: true } } },
+        });
+ */
         return {
           id: profile.sub,
           name: `${profile.given_name} ${profile.family_name}`,
           email: profile.email,
           image: profile.image,
+          access_token: profile.access_token,
         };
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
+    async jwt(props) {
+      const { account, token, trigger } = props;
+
       const user = await prisma.user.findUnique({
         where: { email: token.email! },
+        include: { Business: { include: { Images: true } } },
       });
-      console.log("account", account);
-
       if (account?.access_token) {
         token.access_token = account.access_token;
       }
-      return { ...token, user, account };
-    },
-    async signIn(props) {
-      console.log("props", props);
-      /*   // Check if the user is new based on your application logic
-      const isNewUser = true;
 
-      if (isNewUser) {
-        // If the user is new, redirect to the page to create business details
-        return "/createbusinessdetails";
-      }  */
-      // If the user is not new, redirect to the "/schedule" page
-      return true;
+      token.business = user?.Business || null;
+
+      return { ...token, user, account, trigger };
     },
     async session({ session, token, user }) {
-      console.log("token", token);
-      console.log("session", session);
-
-      if (token && token.id) {
-        session.user = token;
-      }
+      session.user = {
+        access_token: token.access_token,
+        id: token.id,
+        business: token.business,
+        urls: token.urls,
+        name: token.name,
+        email: token.email,
+        image: token.picture,
+      };
       return session;
     },
   },
