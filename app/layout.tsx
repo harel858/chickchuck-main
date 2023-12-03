@@ -1,15 +1,30 @@
 import "@styles/globals.css";
 import "antd/dist/reset.css";
 import React from "react";
-import { Roboto } from "next/font/google";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import Providers from "@ui/Providers";
 import { cn } from "@lib/utils";
 import { ServerThemeProvider } from "next-themes";
 
-const inter = Roboto({
+const inter = Inter({
   weight: ["100", "500", "300", "400"],
   subsets: ["latin"],
 });
+export const metadata: Metadata = {
+  title: "PosaPoint - Efficient Queue Management System for Your Business",
+  description:
+    "Optimize your business operations with PosaPoint, a powerful Queue Management System designed to enhance your time management at the point of sale. Streamline customer service, reduce wait times, and boost efficiency.",
+  keywords: [
+    "queue management system",
+    "point of sale",
+    "time management",
+    "business efficiency",
+    "customer service",
+    "queue app",
+    "PosaPoint",
+  ],
+};
 export default function RootLayout({
   children,
 }: {
@@ -17,16 +32,16 @@ export default function RootLayout({
 }) {
   return (
     <ServerThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <html
-        lang="en"
-        className={cn(
-          "text-slate-900 antialiased overflow-x-hidden ",
-          inter.className
-        )}
-      >
-        <body className="min-h-screen bg-slate-200 dark:bg-slate-900 antialiased relative">
+      <html lang="en" className="h-full">
+        <body
+          className={cn(
+            "h-full font-sans bg-slate-200 dark:bg-slate-900 antialiased relative"
+          )}
+        >
           <Providers>
-            <main className="relative m-0 p-0">{children}</main>
+            <main className="relative flex flex-col min-h-screen">
+              <div className="flex-grow flex-1">{children}</div>
+            </main>
           </Providers>
 
           {/* Add the inset box shadow */}

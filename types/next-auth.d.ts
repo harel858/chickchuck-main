@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { Business, Images } from "@prisma/client";
-import type { User, Session } from "next-auth";
+import { Business, Images, User } from "@prisma/client";
+import type { Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
 type UserId = string;
@@ -8,6 +8,7 @@ type UserId = string;
 declare module "next-auth/jwt" {
   interface JWT {
     id: UserId;
+    user: User;
     access_token: string;
     urls: Images;
     business: Business | null;

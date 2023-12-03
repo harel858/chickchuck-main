@@ -16,7 +16,7 @@ function NotificationComponent({
   appointments,
   userId,
 }: {
-  appointments: (Appointment & {
+  appointments?: (Appointment & {
     customer: Customer;
     treatment: Treatment;
     appointmentSlot: AppointmentSlot;
@@ -50,7 +50,7 @@ function NotificationComponent({
         const newNotifications: NotificationData[] = []; // Create a new array
 
         for (let i = 0; i < data.length; i++) {
-          const matchingAppointment = appointments.find(
+          const matchingAppointment = appointments?.find(
             (appointment) => appointment.id === data[i]?.appointmentId
           );
           const notification = data[i];

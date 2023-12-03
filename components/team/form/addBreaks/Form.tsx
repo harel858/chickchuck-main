@@ -30,8 +30,13 @@ function Form({
         const start = dayjs(value?.[0]).format("HH:mm");
         const end = dayjs(value?.[1]).format("HH:mm");
         if (!start || !end) return;
-        startTransition(() => addBreak(start, end, businessId));
-        successNotification("bottom");
+        startTransition(async () => {
+          const res = await addBreak(start, end, businessId);
+          console.log(res);
+          if (res) {
+            successNotification("bottom");
+          }
+        });
       }}
       className="flex flex-col justify-center items-center gap-4"
     >

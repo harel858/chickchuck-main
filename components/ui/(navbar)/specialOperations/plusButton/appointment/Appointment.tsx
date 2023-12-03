@@ -20,7 +20,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function Appointment({ businessData }: { businessData: BusinessData }) {
+function Appointment() {
   const { usersData } = businessData;
 
   // Initialize the state with an object directly

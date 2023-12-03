@@ -9,11 +9,7 @@ import Appointment from "./appointment/Appointment";
 import { BusinessData } from "types/types";
 import { BsCalendarPlusFill, BsFillPersonPlusFill } from "react-icons/bs";
 
-export default function Content({
-  businessData,
-}: {
-  businessData: BusinessData;
-}) {
+export default function Content() {
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -44,10 +40,12 @@ export default function Content({
           </TabList>
         </Box>
         <TabPanel value="1">
-          <Customer bussinesId={businessData.business.id} />
+          {/*           <Customer bussinesId={businessData.business.id} />
+           */}{" "}
         </TabPanel>
         <TabPanel value="2">
-          <Appointment businessData={businessData} />
+          {/*           <Appointment businessData={businessData} />
+           */}{" "}
         </TabPanel>
       </TabContext>
     </Box>

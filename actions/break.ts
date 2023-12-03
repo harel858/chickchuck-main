@@ -26,7 +26,9 @@ export async function addBreak(start: string, end: string, businessId: string) {
         Business: { connect: { id: businessId } },
       },
     });
+
     revalidatePath("/team");
+    return newBreak;
   } catch (err) {
     console.log(err);
     throw new Error("workers Is Already Existed");

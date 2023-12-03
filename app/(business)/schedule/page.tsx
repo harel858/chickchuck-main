@@ -20,7 +20,7 @@ import {
 import { authOptions } from "@lib/auth";
 dayjs.extend(customParseFormat);
 export const revalidate = 60;
-
+/* 
 const fetchEvents = async (id: string | null | undefined) => {
   try {
     if (!id) return null;
@@ -261,7 +261,7 @@ const fetchEvents = async (id: string | null | undefined) => {
     });
 
     // Cast the result to AppointmentEvent[];
-    const scheduleData: ScheduleData[] = business.user.map((user) => {
+    const scheduleData: any = business.user.map((user) => {
       return {
         user: { ...user, profileSrc: null },
         events: events.filter((event) => event && user.id === event.userId), // Filter events for the specific user
@@ -279,9 +279,7 @@ const fetchEvents = async (id: string | null | undefined) => {
       user,
       business: {
         id: business.id,
-        openingTime: business.openingTime,
-        closingTime: business.closingTime,
-        activityDays: business.activityDays,
+
         Customers: business.Customer,
         address: business.Address[0],
       },
@@ -289,16 +287,16 @@ const fetchEvents = async (id: string | null | undefined) => {
   } catch (err) {
     console.log(err);
   }
-};
+}; */
 
 async function ScheduleListPage() {
   const session = await getServerSession(authOptions);
   if (!session) return notFound();
-  const scheduleProps = await fetchEvents(session?.user?.id);
+  /*   const scheduleProps = await fetchEvents(session?.user?.id);
 
   if (!scheduleProps) return notFound();
-
-  return <CalendarComponent scheduleProps={scheduleProps} />;
+ */
+  return <>page</>;
 }
 
 /* export async function generateStaticParams() {

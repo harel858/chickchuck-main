@@ -115,23 +115,24 @@ model Document {
 }
 
 model ActivityDays {
-  id         String    @id @default(uuid())
+  id         String   @id @default(uuid())
   day        Int
   start      String
   end        String
-  Business   Business? @relation(fields: [businessId], references: [id])
-  businessId String?
-  User       User?     @relation(fields: [userId], references: [id])
-  userId     String?
+  Business   Business @relation(fields: [businessId], references: [id])
+  businessId String
+  User       User     @relation(fields: [userId], references: [id])
+  userId     String
 }
 
 model Business {
   id                String              @id @default(uuid())
   businessName      String              @unique
   phone             String              @unique
-  openingTime       String
-  closingTime       String
   businessImage     String?
+  BusinessType      BusinessType
+  LastCalendar      LastCalendar
+  ComeFrom          ComeFrom
   user              User[]
   activityDays      ActivityDays[]
   Customer          Customer[]
@@ -277,4 +278,32 @@ enum PremiumKits {
   Light
   Pro
   ProPlus
+}
+
+enum BusinessType {
+  Barber
+  TATTOO
+  Beautician
+  Manicurist
+  BeautySalon
+  MedicalClinic
+  SpaAndWellnessCenter
+  VeterinaryClinic
+  Trainer
+  DogGroomer
+  Other
+}
+
+enum LastCalendar {
+  PhysicalCalendar
+  GoogleCalendar
+  OtherSystem
+  NONE
+}
+
+enum ComeFrom {
+  InternetAdvertisement
+  GoogleSearch
+  Recommendation
+  anotherBusiness
 }

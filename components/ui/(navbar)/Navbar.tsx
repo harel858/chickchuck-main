@@ -19,22 +19,8 @@ import { CgProfile } from "react-icons/cg";
 import Avatar from "@ui/Avatar";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
-function Navbar({
-  session,
-  appointments,
-  link,
-}: {
-  session: Session;
-  link: string;
-  appointments:
-    | (Appointment & {
-        customer: Customer;
-        treatment: Treatment;
-        appointmentSlot: AppointmentSlot;
-      })[]
-    | any;
-}) {
-  const profileImage = session.user.urls?.profileImage;
+function Navbar({ session, link }: { session: Session; link: string }) {
+  /*   const profileImage = session.user.urls?.profileImage; */
 
   return (
     <nav className="fixed p-0 flex items-center justify-center max-2xl:p-0 backdrop-blur-sm bg-slate-200/70 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-slate-200 dark:border-slate-800 shadow-sm ">
@@ -62,10 +48,11 @@ function Navbar({
           icon={<FaBusinessTime />}
         />
       </ul>
-      <Hamburger user={session.user} />
+      {/*       <Hamburger user={session.user} />
+       */}{" "}
       <div className="flex flex-row justify-between items-center gap-4 absolute right-2">
-        <Notifications appointments={appointments} userId={session.user.id} />
-        <Avatar alt="Profile Img" src={profileImage || undefined} />
+        <Notifications userId={session.user.id} />
+        <Avatar alt="Profile Img" src={undefined} />
       </div>
     </nav>
   );

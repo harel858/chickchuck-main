@@ -18,6 +18,7 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
           include: {
             user: { include: { Treatment: true } },
             Customer: true,
+            activityDays: true,
           },
         },
         appointments: {
@@ -44,7 +45,7 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
         AvailableSlot: user.availableSlots,
         treatments: user.Treatment,
         userId: user.id,
-        activityDays: user.activityDays,
+        activityDays: [],
       });
     }
 
@@ -58,25 +59,18 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
 
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
-
-  const businessData = await fetchAppointmentSlots(session?.user.id);
-  console.log("businessData", businessData);
-
+  console.log("session.user", session);
   if (!session) return notFound();
-  const value = businessData?.business?.businessName.replace(
+  const value = session?.user.business?.businessName.replace(
     /(\s)(?!\s*$)/g,
     "-"
   );
-
+  if (!value) throw new Error("value is missing");
   return (
     <>
       {/* @ts-ignore  */}
-      <Navbar
-        session={session}
-        appointments={businessData.user.appointments}
-        link={value}
-      />
-      <PlusButton businessData={businessData} />
+      <Navbar session={session} link={value} />
+      <PlusButton />
 
       <section className="flex justify-center items-center overflow-hidden">
         <div className="w-full mt-20 overflow-hidden">{children}</div>

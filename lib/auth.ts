@@ -114,23 +114,23 @@ export const authOptions: NextAuthOptions = {
         where: { email: token.email! },
         include: { Business: { include: { Images: true } } },
       });
+      if (!user) throw new Error("user not found");
       if (account?.access_token) {
         token.access_token = account.access_token;
       }
 
       token.business = user?.Business || null;
-
       return { ...token, user, account, trigger };
     },
+
     async session({ session, token, user }) {
+      console.log("tokenAuth", token.user);
+
       session.user = {
+        ...token.user,
         access_token: token.access_token,
-        id: token.id,
         business: token.business,
         urls: token.urls,
-        name: token.name,
-        email: token.email,
-        image: token.picture,
       };
       return session;
     },

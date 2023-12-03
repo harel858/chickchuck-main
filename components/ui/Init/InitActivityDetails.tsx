@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { Space, Table, Switch, TimePicker } from "antd";
+import { Table, Switch, TimePicker } from "antd";
 import dayjs from "dayjs";
 import { ColumnsType } from "antd/es/table";
-import { ActivityDays } from "@prisma/client";
+import { AlignType } from "rc-table/lib/interface";
 
 interface DataType {
   key: number;
@@ -13,7 +13,7 @@ interface DataType {
   isActive: boolean;
 }
 
-interface DayData {
+export interface DayData {
   value: number;
   label: string;
   start: string;
@@ -21,20 +21,13 @@ interface DayData {
   isActive: boolean;
 }
 
-function InitDetails() {
-  const days: DayData[] = [
-    { value: 0, label: "Su", start: "09:00", end: "17:00", isActive: true },
-    { value: 1, label: "Mo", start: "09:00", end: "17:00", isActive: true },
-    { value: 2, label: "Tu", start: "09:00", end: "17:00", isActive: true },
-    { value: 3, label: "We", start: "09:00", end: "17:00", isActive: true },
-    { value: 4, label: "Mo", start: "09:00", end: "17:00", isActive: true },
-    { value: 5, label: "Fr", start: "09:00", end: "17:00", isActive: true },
-    { value: 6, label: "Sa", start: "09:00", end: "17:00", isActive: true },
-  ];
-
-  const [activityDays, setActivityDays] = useState<DayData[]>(days);
-  console.log("activityDays", activityDays);
-
+function InitDetails({
+  setActivityDays,
+  activityDays,
+}: {
+  setActivityDays: React.Dispatch<React.SetStateAction<DayData[]>>;
+  activityDays: DayData[];
+}) {
   const format = "HH:mm";
 
   const setStartTime = (time: dayjs.Dayjs, value: number) => {
@@ -47,6 +40,9 @@ function InitDetails() {
     setActivityDays(newDays);
   };
   const setEndTime = (time: dayjs.Dayjs, value: number) => {
+    const ISOstring = time.toISOString();
+    console.log("ISOstring to time", dayjs(ISOstring).format(format));
+
     const newDays = activityDays.map((currentDay) =>
       currentDay.value === value
         ? { ...currentDay, end: time.toISOString() }
@@ -82,6 +78,7 @@ function InitDetails() {
         title: "Day",
         dataIndex: "Days",
         key: "Days",
+        align: "center" as AlignType,
         render: (text) => (
           <p className="font-semibold font-xl text-black">{text}</p>
         ),
@@ -90,6 +87,7 @@ function InitDetails() {
         title: "Start",
         dataIndex: "start",
         key: "start",
+        align: "center" as AlignType,
         render: (value, day, index) => {
           return (
             <TimePicker
@@ -107,6 +105,7 @@ function InitDetails() {
         title: "End",
         dataIndex: "end",
         key: "end",
+        align: "center" as AlignType,
         render: (value, day, index) => {
           return (
             <TimePicker
@@ -124,12 +123,14 @@ function InitDetails() {
         title: "Active",
         key: "isActive",
         dataIndex: "isActive",
+        align: "center" as AlignType,
         render: (_, record) => {
-          console.log("recnold", record);
+          console.log("record", record);
 
           return (
             <Switch
               checked={record.isActive}
+              className="bg-black/60"
               onChange={(isActive) => onSwitchChange(isActive, record.key)}
             />
           );
@@ -140,11 +141,13 @@ function InitDetails() {
 
   return (
     <Table
-      className="w-full"
+      className="w-10/12 rounded-3xl"
+      sticky
       columns={columns}
       dataSource={data}
-      size={"large"}
+      size={"small"}
       pagination={false}
+      title={() => <h2 className="text-black text-2xl">Business Activity</h2>}
     />
   );
 }
