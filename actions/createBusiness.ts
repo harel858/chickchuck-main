@@ -1,14 +1,26 @@
 "use server";
+import { uploadImage } from "@lib/aws/s3";
 import { prisma } from "@lib/prisma";
 import { TBusinessDetailsValidation } from "@lib/validators/business-details-validation";
 import { DayData } from "@ui/Init/InitActivityDetails";
 import { ServiceInput } from "@ui/Init/InitServices";
+import { UploadFile } from "antd";
+import fs from "fs";
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+const bucketName = process.env.BUCKET_NAME!;
 
 export async function createBusiness(
   email: string,
   businessDetails: TBusinessDetailsValidation,
   activityDays: DayData[],
-  treatments: ServiceInput[]
+  treatments: ServiceInput[],
+  logo: UploadFile<any>[],
+  gallaryList: UploadFile<any>[]
 ) {
   const { businessName, businessPhone, businessType, fromWhere, lastCalendar } =
     businessDetails;
@@ -47,6 +59,27 @@ export async function createBusiness(
         businessId: newBusiness.id,
       })),
     });
+
+    if (!logo[0]?.name) throw new Error("Key is missing");
+
+    // Process form data
+    const params = {
+      Bucket: bucketName,
+      Key: logo[0]?.name,
+      Body: fs.createReadStream(logo[0]?.thumbUrl!),
+      ContentType: logo[0]?.type!,
+    };
+
+    const upload = await uploadImage(params);
+    console.log("upload", upload);
+
+    const created = await prisma.images.update({
+      where: { businessId: newBusiness.id },
+      data: {
+        profileImgName: logo[0]?.name,
+      },
+    });
+    console.log("created", created);
 
     // Connect the new business to the user
     await prisma.user.update({

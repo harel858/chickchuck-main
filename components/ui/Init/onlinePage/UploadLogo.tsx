@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
-import { Modal, Upload } from "antd";
+import { PlusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Modal, Upload, message } from "antd";
 import type { RcFile, UploadProps } from "antd/es/upload";
 import type { UploadFile } from "antd/es/upload/interface";
+const { Dragger } = Upload;
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -12,11 +13,16 @@ const getBase64 = (file: RcFile): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-const App: React.FC = () => {
+const App = ({
+  logo,
+  setLogo,
+}: {
+  setLogo: React.Dispatch<React.SetStateAction<UploadFile<any>[]>>;
+  logo: UploadFile<any>[];
+}) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   const handleCancel = () => setPreviewOpen(false);
 
@@ -31,27 +37,44 @@ const App: React.FC = () => {
       file.name || file.url!.substring(file.url!.lastIndexOf("/") + 1)
     );
   };
+  const handlebeforeUpload = (file: RcFile) => {
+    const isPNG = file.type === "image/png" || "image/jpeg";
+    console.log("file.size", file.size);
 
-  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) =>
-    setFileList(newFileList);
+    if (!isPNG) {
+      message.error(`${file.name} is not a png file`);
+    }
+    return isPNG || Upload.LIST_IGNORE;
+  };
 
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+    console.log("newFileList", newFileList);
+
+    setLogo(newFileList);
+  };
   const uploadButton = (
     <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
+      <PlusCircleOutlined className="text-3xl" />
+      <p style={{ marginTop: 8 }} className="text-xl">
+        {logo.length >= 1 ? "Replace Your Logo" : "Upload Logo"}
+      </p>
     </div>
   );
   return (
     <>
-      <Upload
+      <Dragger
         action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-        listType="picture-circle"
-        fileList={fileList}
+        fileList={logo}
         onPreview={handlePreview}
+        beforeUpload={handlebeforeUpload}
         onChange={handleChange}
+        listType="picture"
+        accept="image/png, image/jpeg"
+        maxCount={1}
+        className={`w-10/12`}
       >
-        {fileList.length >= 1 ? null : uploadButton}
-      </Upload>
+        {uploadButton}
+      </Dragger>
       <Modal
         open={previewOpen}
         title={previewTitle}

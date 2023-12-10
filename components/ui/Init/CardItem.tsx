@@ -59,7 +59,7 @@ const CardItem = ({
   return (
     <>
       <List.Item
-        className="bg-orange-50 border-slate-950"
+        className="bg-orange-50 border-slate-950 w-full border-b"
         actions={[
           <CiTrash
             className="text-2xl hover:text-red-500 cursor-pointer"

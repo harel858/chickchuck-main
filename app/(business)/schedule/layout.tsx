@@ -7,7 +7,7 @@ import Navbar from "@ui/(navbar)/Navbar";
 import { UserData } from "types/types";
 import { prisma } from "@lib/prisma";
 import PlusButton from "@ui/(navbar)/specialOperations/plusButton/PlusButton";
-
+/* 
 const fetchAppointmentSlots = async (id: string | undefined) => {
   if (!id) return null;
   try {
@@ -56,7 +56,7 @@ const fetchAppointmentSlots = async (id: string | undefined) => {
     console.log(err);
   }
 };
-
+ */
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
   console.log("session.user", session);
@@ -66,6 +66,9 @@ async function Layout({ children }: { children: React.ReactNode }) {
     "-"
   );
   if (!value) throw new Error("value is missing");
+
+  console.log("session?.user.business", session?.user.business);
+
   return (
     <>
       {/* @ts-ignore  */}

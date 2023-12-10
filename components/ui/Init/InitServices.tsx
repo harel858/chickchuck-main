@@ -42,12 +42,12 @@ const InitServices = ({
     console.log("service", service);
     setServices([...services, service]);
     setOpen(false);
-    setService(initService);
   }, [service]);
 
   const handleCancel = () => {
     console.log("Clicked cancel button");
     setOpen(false);
+    setService(initService);
   };
 
   return (
@@ -59,6 +59,20 @@ const InitServices = ({
         <span>Add Service</span>
         <PlusOutlined className="text-xl" />
       </Button>
+      <List
+        itemLayout="horizontal"
+        className="w-10/12 max-md:w-full"
+        bordered
+        dataSource={services}
+        renderItem={(item, index) => (
+          <CardItem
+            key={item.title}
+            setServices={setServices}
+            services={services}
+            item={item}
+          />
+        )}
+      />
       <Modal
         title="New Service"
         open={open}
@@ -75,20 +89,6 @@ const InitServices = ({
           handleServicesChange={handleServicesChange}
         />
       </Modal>
-      <List
-        itemLayout="horizontal"
-        className="w-1/3 max-md:w-full"
-        bordered
-        dataSource={services}
-        renderItem={(item, index) => (
-          <CardItem
-            key={item.title}
-            setServices={setServices}
-            services={services}
-            item={item}
-          />
-        )}
-      />
     </div>
   );
 };

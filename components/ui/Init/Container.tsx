@@ -1,6 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState, useTransition } from "react";
-import { Button, message, Steps, theme } from "antd";
+import { useRouter } from "next/navigation";
+import { Button, message, Steps, theme, UploadFile } from "antd";
 import InitActivityDetails, { DayData } from "./InitActivityDetails";
 import InitServices, { ServiceInput } from "./InitServices";
 import BusinessDetailsForm from "./BusinessDetailsForm";
@@ -8,6 +9,8 @@ import type { Session } from "next-auth";
 import { TBusinessDetailsValidation } from "@lib/validators/business-details-validation";
 import OnlinePage from "./onlinePage/OnlinePage";
 import { createBusiness } from "actions/createBusiness";
+import axios from "axios";
+import { RcFile } from "antd/es/upload";
 
 const initDays: DayData[] = [
   { value: 0, label: "Su", start: "09:00", end: "17:00", isActive: true },
@@ -20,6 +23,7 @@ const initDays: DayData[] = [
 ];
 
 const Container = ({ session }: { session: Session }) => {
+  const router = useRouter();
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const [isPending, startTransition] = useTransition();
@@ -28,6 +32,8 @@ const Container = ({ session }: { session: Session }) => {
     useState<TBusinessDetailsValidation | null>(null);
   const [activityDays, setActivityDays] = useState<DayData[]>(initDays);
   const [services, setServices] = useState<ServiceInput[]>([]);
+  const [gallaryList, setGallaryList] = useState<UploadFile[]>([]);
+  const [logo, setLogo] = useState<UploadFile[]>([]);
 
   useEffect(() => {
     // Simulate asynchronous initialization
@@ -68,25 +74,44 @@ const Container = ({ session }: { session: Session }) => {
     },
     {
       title: "Last",
-      content: <OnlinePage />,
+      content: (
+        <OnlinePage
+          fileList={gallaryList}
+          setFileList={setGallaryList}
+          setLogo={setLogo}
+          logo={logo}
+        />
+      ),
     },
   ];
 
   const onDone = async () => {
     console.log("email", session.user.email!);
+    const formData = new FormData();
+    formData.append("userId", session.user.id!);
+    formData.append("businessDetails", JSON.stringify(businessDetails));
+    formData.append("activityDays", JSON.stringify(activityDays));
+    formData.append("services", JSON.stringify(services));
+    formData.append("gallaryList", JSON.stringify(gallaryList));
+    formData.append("logoFile", logo[0]?.originFileObj as File);
+    // Append each file in gallaryList individually
+    gallaryList.forEach((file, index) => {
+      formData.append(`gallaryList[${index}]`, file.originFileObj as File);
+    });
+
+    formData.append(`gallaryLength`, JSON.stringify(gallaryList.length));
 
     try {
       if (!businessDetails) {
         message.error("there are some missing values");
-        return setCurrent(0);
+        return;
       }
-      const res = await createBusiness(
-        session.user.email!,
-        businessDetails,
-        activityDays,
-        services
-      );
-      console.log("res", res);
+
+      const result = await axios.post("/api/business/create", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log("result", result);
+      if (result.status === 200) return router.push("/schedule");
     } catch (err) {
       console.log(err);
     }
@@ -135,7 +160,7 @@ const Container = ({ session }: { session: Session }) => {
             loading={isPending}
             type="primary"
             className="bg-sky-600"
-            onClick={() => startTransition(() => onDone())}
+            onClick={onDone}
           >
             Done
           </Button>

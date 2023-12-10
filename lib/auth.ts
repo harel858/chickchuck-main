@@ -124,8 +124,6 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token, user }) {
-      console.log("tokenAuth", token.user);
-
       session.user = {
         ...token.user,
         access_token: token.access_token,
