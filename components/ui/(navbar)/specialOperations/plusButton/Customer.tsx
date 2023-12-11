@@ -1,11 +1,19 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { TextField } from "@mui/material";
 import { Button } from "@ui/Button";
-import axios, { AxiosError } from "axios";
-import Snackbar from "@mui/material/Snackbar";
+import axios from "axios";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import { revalidatePath } from "next/cache";
+import { useForm } from "react-hook-form";
+import { Form } from "@ui/form";
+import { Input } from "@components/input";
+import { Label } from "@components/label";
+import {
+  customerDetailsValidation,
+  TCustomerDetailsValidation,
+} from "@lib/validators/customerValidation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "@lib/utils";
+import { message } from "antd";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -18,78 +26,31 @@ interface InputData {
   name: string;
   phoneNumber: number | null;
 }
-function Customer({ bussinesId }: { bussinesId: string }) {
-  const [input, setInput] = useState<InputData>({
-    name: "",
-    phoneNumber: null,
+function Customer({ bussinesId }: { bussinesId: string | null }) {
+  const form = useForm<TCustomerDetailsValidation>({
+    resolver: zodResolver(customerDetailsValidation),
   });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = React.useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isLoading, isSubmitting },
+    control,
+  } = form;
 
-  const handleClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
+  const submitForm = async (e: { Name: string; Phone: string }) => {
+    try {
+      const { Name, Phone } = e;
+      const res = await axios.post("/api/customers/create", {
+        phoneNumber: Phone,
+        name: Name,
+        bussinesId,
+      });
+      message.success(`${Name} is created as your new client`);
+    } catch (err) {
+      console.log(err);
+      message.error("internal error");
     }
-
-    setOpen(false);
   };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    console.log(input);
-
-    // Validate and ensure only numeric characters are entered
-    if (name === "phoneNumber" && !/^\d*$/.test(value)) {
-      return; // Don't update the state if non-numeric characters are entered
-    }
-
-    setInput((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const submitForm = useCallback(
-    async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      e.preventDefault();
-      setError("");
-      setLoading(true);
-      if (!input.name || !input.phoneNumber) {
-        setLoading(false);
-        return setError("missing values");
-      }
-      try {
-        const res = await axios.post("/api/customers/create", {
-          ...input,
-          bussinesId,
-        });
-
-        if (res.status === 200) {
-          setLoading(false);
-          setOpen(true);
-          revalidatePath("/schedule");
-          return;
-        }
-      } catch (err: any) {
-        console.log(err);
-
-        if (err instanceof AxiosError) {
-          if (err.response?.status === 409 || err.response?.status === 400) {
-            setError(err.response.data);
-            setLoading(false);
-            return;
-          }
-        }
-        setLoading(false);
-        return;
-      }
-    },
-    [input]
-  );
-
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.5 }}
@@ -101,85 +62,64 @@ function Customer({ bussinesId }: { bussinesId: string }) {
       }}
       className="w-full"
     >
-      <form className="flex flex-col items-center gap-4 mt-4 w-full relative">
-        <h2 className={`text-slate-900 font-normal font-serif text-2xl`}>
-          Create A Customer
-        </h2>
-        <div className="flex flex-col items-center gap-4 mt-4 w-10/12 max-2xl:w-full pb-5">
-          <TextField
-            id="outlined-basic"
-            label="Enter Name"
-            name="name"
-            onChange={handleChange}
-            error={Boolean(error)}
-            variant="filled"
-            InputProps={{
-              style: { color: "black", fontSize: "1.2em" },
-              inputMode: "numeric",
-            }}
-            InputLabelProps={{
-              style: {
-                fontSize: "1.1em",
-                fontWeight: "500",
-                color: "black",
-              },
-            }}
-            sx={{
-              width: "100%",
-              borderRadius: "4px",
-              ":after": { border: "4px solid white" },
-              ...(error && { boxShadow: "0px 0px 0px 2px red" }),
-            }}
-          />
-
-          <TextField
-            id="outlined-basic"
-            label="Phone Number"
-            name="phoneNumber"
-            variant="filled"
-            onChange={handleChange}
-            error={Boolean(error)}
-            InputProps={{
-              style: {
-                color: "black",
-                fontSize: "1.2em",
-              },
-            }}
-            InputLabelProps={{
-              style: {
-                fontSize: "1.1em",
-                fontWeight: "500",
-                color: "black",
-              },
-            }}
-            sx={{
-              width: "100%",
-              borderRadius: "4px",
-              ":after": { border: "4px solid white" },
-              ...(error && { boxShadow: "0px 0px 0px 2px red" }),
-            }}
-          />
-        </div>
-        <p className="text-red-500">{error}</p>
-        <Button
-          variant="default"
-          className="w-max bg-sky-600 hover:bg-slate-900 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"
-          isLoading={loading}
-          onClick={submitForm}
+      <Form {...form}>
+        <form
+          className="flex flex-col items-center gap-4 mt-4 w-full relative"
+          onSubmit={handleSubmit(submitForm)}
         >
-          Create
-        </Button>
-      </form>
-      <Snackbar
-        open={open}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          This is a success message!
-        </Alert>
-      </Snackbar>
+          <h2 className={`text-slate-900 font-normal font-serif text-2xl`}>
+            Create A Customer
+          </h2>
+          <div className="flex flex-col items-center gap-4 mt-4 w-10/12 max-2xl:w-full pb-5">
+            <div
+              key={"Name"}
+              className="flex flex-col justify-center items-center gap-2"
+            >
+              <Label htmlFor={"Name"}>{"Enter Name"}</Label>
+              <Input
+                style={{ width: "15rem" }} // Set the specific width here
+                {...register("Name")}
+                className={cn({
+                  "focus-visible:ring-red-500": errors["Name"],
+                })}
+                placeholder={"Enter Name"}
+              />
+              {errors?.["Name"] && (
+                <p className="text-sm text-red-500">
+                  {errors["Name"]?.message}
+                </p>
+              )}
+            </div>
+            <div
+              key={"Phone"}
+              className="flex flex-col justify-center items-center gap-2"
+            >
+              <Label htmlFor={"Phone"}>{"Enter Phone Number"}</Label>
+              <Input
+                style={{ width: "15rem" }} // Set the specific width here
+                {...register("Phone")}
+                className={cn({
+                  "focus-visible:ring-red-500": errors["Phone"],
+                })}
+                placeholder={"Enter Phone"}
+              />
+              {errors?.["Phone"] && (
+                <p className="text-sm text-red-500">
+                  {errors["Phone"]?.message}
+                </p>
+              )}
+            </div>
+          </div>
+          <Button
+            variant="default"
+            className="w-max bg-sky-600 hover:bg-slate-900 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"
+            isLoading={isSubmitting}
+            type="submit"
+          >
+            Create
+          </Button>
+        </form>
+      </Form>
     </motion.div>
   );
 }

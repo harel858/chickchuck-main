@@ -73,7 +73,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
     <>
       {/* @ts-ignore  */}
       <Navbar session={session} link={value} />
-      <PlusButton />
+      <PlusButton session={session} />
 
       <section className="flex justify-center items-center overflow-hidden">
         <div className="w-full mt-20 overflow-hidden">{children}</div>

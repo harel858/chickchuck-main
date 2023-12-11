@@ -108,27 +108,58 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt(props) {
-      const { account, token, trigger } = props;
+      const { account, token } = props;
 
-      const user = await prisma.user.findUnique({
-        where: { email: token.email! },
-        include: { Business: { include: { Images: true } } },
-      });
-      if (!user) throw new Error("user not found");
-      if (account?.access_token) {
-        token.access_token = account.access_token;
+      try {
+        let logo: string | null = "";
+
+        const user = await prisma.user.findUnique({
+          where: { email: token.email! },
+          include: { Business: { include: { Images: true } } },
+        });
+
+        if (!user) {
+          throw new Error("user not found");
+        }
+
+        if (user.Business?.Images && user.Business?.Images.length > 0) {
+          await Promise.all(
+            user.Business.Images.map(async (item) => {
+              if (item.profileImgName) {
+                const param = {
+                  Bucket: bucketName,
+                  Key: item.profileImgName,
+                };
+                const image = await getImage(param);
+                logo = image;
+              }
+            })
+          );
+        }
+
+        if (logo) {
+          token.logo = logo;
+        }
+
+        if (account?.access_token) {
+          token.access_token = account.access_token;
+        }
+
+        token.business = user?.Business || null;
+        return { ...token, logo, user, account };
+      } catch (err) {
+        console.error(err);
+        return props.token;
       }
-
-      token.business = user?.Business || null;
-      return { ...token, user, account, trigger };
     },
 
     async session({ session, token, user }) {
+      console.log("token.logoi", token.logo);
       session.user = {
         ...token.user,
         access_token: token.access_token,
         business: token.business,
-        urls: token.urls,
+        logo: token.logo,
       };
       return session;
     },

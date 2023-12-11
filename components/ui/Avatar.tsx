@@ -24,6 +24,7 @@ const Avatar: React.FC<AvatarProps> = ({ src, alt, className, style }) => {
     console.log({ imgIxUrl });
     imgIxUrl.searchParams.set("auto", "format");
     imgIxUrl.searchParams.set("auto", "compress");
+    imgIxUrl.searchParams.set("q", "75");
     return imgIxUrl.href;
   };
   return (
@@ -33,8 +34,9 @@ const Avatar: React.FC<AvatarProps> = ({ src, alt, className, style }) => {
       loader={imgIxLoader}
       src={src || DEFAULT_AVATAR_SRC}
       alt={alt}
+      priority
       className={`rounded-full ${className}`}
-      style={style}
+      style={{ ...style, objectFit: "contain" }}
     />
   );
 };

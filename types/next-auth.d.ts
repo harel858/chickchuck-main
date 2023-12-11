@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Business, Images, User } from "@prisma/client";
+import { Business, User } from "@prisma/client";
 import type { Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
@@ -10,7 +10,7 @@ declare module "next-auth/jwt" {
     id: UserId;
     user: User;
     access_token: string;
-    urls: Images;
+    logo: string | null;
     business: Business | null;
     trigger: "signIn" | "update" | "signUp" | undefined;
   }
@@ -21,7 +21,7 @@ declare module "next-auth" {
     user: User & {
       id: UserId;
       access_token: string;
-      urls: Images;
+      logo: string | null;
       business: Business | null;
     };
   }

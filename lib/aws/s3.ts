@@ -16,6 +16,10 @@ interface getParams {
   Bucket: string;
   Key: { profileImgName: string | null; backgroundImgName: string | null };
 }
+interface getParam {
+  Bucket: string;
+  Key: string | null;
+}
 
 const bucketRegion = process.env.BUCKET_REGION!;
 const accessKey = process.env.ACCESS_KEY!;
@@ -70,36 +74,17 @@ export const getImages = async (paramsArray: getParams[]) => {
   }
 };
 
-export const getImage = async (params: getParams) => {
-  if (!params.Key.backgroundImgName && !params.Key.profileImgName) return null;
+export const getImage = async (params: getParam) => {
+  if (!params.Key) return null;
   try {
-    const urls = {
-      backgroundImage: "",
-      profileImage: "",
-    };
-    if (params.Key.backgroundImgName) {
-      const command = new GetObjectCommand({
-        ...params,
-        Key: `uploads/${params.Key.backgroundImgName}`,
-      });
-      const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-      console.log({ url });
+    const command = new GetObjectCommand({
+      ...params,
+      Key: `uploads/${params.Key}`,
+    });
+    const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+    console.log("ulr", url);
 
-      urls.backgroundImage = url;
-    }
-    if (params.Key.profileImgName) {
-      const command = new GetObjectCommand({
-        ...params,
-        Key: `uploads/${params.Key.profileImgName}`,
-      });
-      const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-      console.log({ url });
-
-      urls.profileImage = url;
-    }
-    console.log({ urls });
-
-    return urls;
+    return url;
   } catch (err) {
     console.log(err);
     return null;
