@@ -67,6 +67,7 @@ const BusinessDetailsForm = ({
     },
     { label: "How did you hear about us?", name: "fromWhere" },
   ];
+
   return (
     <>
       <h1 className="text-2xl text-black">Lets Set Up Your Calendar </h1>

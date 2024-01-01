@@ -210,7 +210,8 @@ model Treatment {
   cost             Int
   duration         Int
   advancePayment   Int? // New field for advance payment amount
-  user             User[]
+  user             User               @relation(fields: [userId], references: [id])
+  userId           String
   business         Business           @relation(fields: [businessId], references: [id])
   businessId       String
   appointments     Appointment[]

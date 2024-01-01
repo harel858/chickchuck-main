@@ -1,4 +1,5 @@
 "use server";
+import { prisma } from "@lib/prisma";
 import { bussinessById } from "@lib/prisma/bussiness/getUnique";
 import { createCustomer } from "@lib/prisma/customer/customer";
 import validateCustomer from "@lib/validation/customer";
@@ -7,7 +8,7 @@ import { revalidatePath } from "next/cache";
 interface InputData {
   name: string;
   phoneNumber: string;
-  bussinesId: string;
+  bussinesId: string | null;
 }
 export async function createNewCustomer({
   name,
@@ -22,30 +23,15 @@ export async function createNewCustomer({
       phoneNumber,
       bussinesId,
     });
-    if (error) throw new Error(error?.details[0]?.message);
+    if (error || !bussinesId) throw new Error(error?.details[0]?.message);
 
-    const business = await bussinessById(bussinesId);
-
-    if (!business) throw new Error("business is not found");
-
-    const matchingCustomer = business.Customer?.find(
-      (customer) => customer.phoneNumber === phoneNumber
-    );
-
-    if (matchingCustomer)
-      throw new Error(`User with this phone number is already existed`);
-
-    const { newCustomer, createCustomerErr } = await createCustomer(
-      name,
-      phoneNumber,
-      bussinesId
-    );
-
-    if (!newCustomer || createCustomerErr)
-      throw new Error(`faild to create new customer`);
+    const res = await prisma.business.update({
+      where: { id: bussinesId },
+      data: { Customer: { create: { name, phoneNumber } } },
+    });
 
     revalidatePath("/schedule");
-    return;
+    return res;
   } catch (err) {
     console.log(err);
     return;

@@ -4,9 +4,6 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import Customer from "./Customer";
-import Appointment from "./appointment/Appointment";
-import { BusinessData } from "types/types";
 import { BsCalendarPlusFill, BsFillPersonPlusFill } from "react-icons/bs";
 
 export default function Content() {

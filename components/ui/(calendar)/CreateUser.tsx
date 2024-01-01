@@ -40,47 +40,6 @@ function Customer({
     setInput((prev) => ({ ...prev, [name]: value }));
   };
 
-  /*   const submitForm = useCallback(
-    async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      e.preventDefault();
-      setError("");
-      setLoading(true);
-      if (!input.name || !input.phoneNumber) {
-        setLoading(false);
-        return setError("missing values");
-      }
-      try {
-        const res = await axios.post("/api/customers/create", {
-          ...input,
-          bussinesId,
-        });
-
-        if (res.status === 200) {
-          const custommerId = res.data.id as string;
-          setLoading(false);
-          setCustomer(custommerId);
-          successMessage();
-          closeModel();
-          revalidatePath("/schedule");
-          return;
-        }
-      } catch (err: any) {
-        console.log(err);
-
-        if (err instanceof AxiosError) {
-          if (err.response?.status === 409 || err.response?.status === 400) {
-            setError(err.response.data);
-            setLoading(false);
-            return;
-          }
-        }
-        setLoading(false);
-        return;
-      }
-    },
-    [input]
-  ); */
-
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.5 }}

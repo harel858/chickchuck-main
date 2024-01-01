@@ -6,11 +6,15 @@ export const createCustomer = async (
   bussinesId: string
 ) => {
   try {
-    const newCustomer = await prisma.customer.create({
+    const newCustomer = await prisma.business.update({
+      where: { id: bussinesId },
       data: {
-        name,
-        phoneNumber,
-        Business: { connect: { id: bussinesId } },
+        Customer: {
+          create: {
+            name,
+            phoneNumber,
+          },
+        },
       },
     });
 

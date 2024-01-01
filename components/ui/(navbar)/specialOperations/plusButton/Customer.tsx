@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { Form } from "@ui/form";
 import { Input } from "@components/input";
 import { Label } from "@components/label";
+
 import {
   customerDetailsValidation,
   TCustomerDetailsValidation,
@@ -14,6 +15,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@lib/utils";
 import { message } from "antd";
+import { createNewCustomer } from "actions/createCustomer";
+import { useRouter } from "next/navigation";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -26,7 +29,15 @@ interface InputData {
   name: string;
   phoneNumber: number | null;
 }
-function Customer({ bussinesId }: { bussinesId: string | null }) {
+function Customer({
+  bussinesId,
+  handleCancel,
+}: {
+  bussinesId: string | null;
+  handleCancel?: () => void;
+}) {
+  console.log("bussinesId", bussinesId);
+
   const form = useForm<TCustomerDetailsValidation>({
     resolver: zodResolver(customerDetailsValidation),
   });
@@ -40,12 +51,14 @@ function Customer({ bussinesId }: { bussinesId: string | null }) {
   const submitForm = async (e: { Name: string; Phone: string }) => {
     try {
       const { Name, Phone } = e;
-      const res = await axios.post("/api/customers/create", {
-        phoneNumber: Phone,
+      const res = await createNewCustomer({
         name: Name,
-        bussinesId,
+        phoneNumber: Phone,
+        bussinesId: bussinesId,
       });
-      message.success(`${Name} is created as your new client`);
+      console.log("res", res);
+      handleCancel && handleCancel();
+      message.success(`${Name} הוסף לרשימה`);
     } catch (err) {
       console.log(err);
       message.error("internal error");

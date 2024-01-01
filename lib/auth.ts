@@ -1,5 +1,6 @@
 import { prisma } from "./prisma";
 import { NextAuthOptions } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getCustomer } from "./prisma/customer/customer";
@@ -75,6 +76,47 @@ const configureCustomerLoginProvider = () =>
     authorize: authorizeCustomerLogin,
   });
 
+async function refreshAccessToken(token: JWT) {
+  try {
+    const url =
+      "https://oauth2.googleapis.com/token?" +
+      new URLSearchParams({
+        clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+        grant_type: "refresh_token",
+        refresh_token: token?.refresh_token,
+      });
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      method: "POST",
+    });
+
+    const refreshedTokens: any = await response.json();
+    console.log("refreshedTokens", refreshedTokens);
+
+    if (!response.ok) {
+      throw refreshedTokens;
+    }
+
+    return {
+      ...token,
+      access_token: refreshedTokens.access_token,
+      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+      refresh_token: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    };
+  }
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
@@ -87,36 +129,43 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           scope:
-            "openid https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar.events ",
+            "openid https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly",
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
         },
       },
       profile(profile, tokens) {
-        /*         const user = await prisma.user.findUnique({
-          where: { email: profile.email! },
-          include: { Business: { include: { Images: true } } },
-        });
- */
+        console.log("profile", profile);
+        console.log("tokens", tokens);
+
         return {
           id: profile.sub,
           name: `${profile.given_name} ${profile.family_name}`,
           email: profile.email,
           image: profile.image,
-          access_token: profile.access_token,
         };
       },
     }),
   ],
   callbacks: {
     async jwt(props) {
-      const { account, token } = props;
+      const { token, user } = props;
+      console.log("props", props);
 
       try {
         let logo: string | null = "";
 
         const user = await prisma.user.findUnique({
           where: { email: token.email! },
-          include: { Business: { include: { Images: true } } },
+          include: {
+            Business: { include: { Images: true, Customer: true } },
+            Treatment: true,
+            activityDays: true,
+            accounts: true,
+          },
         });
+        console.log("user.tretment", user?.Treatment);
 
         if (!user) {
           throw new Error("user not found");
@@ -136,17 +185,47 @@ export const authOptions: NextAuthOptions = {
             })
           );
         }
-
-        if (logo) {
-          token.logo = logo;
-        }
-
-        if (account?.access_token) {
-          token.access_token = account.access_token;
-        }
+        ``;
 
         token.business = user?.Business || null;
-        return { ...token, logo, user, account };
+        token.Customer = user?.Business?.Customer || [];
+        token.activityDays = user.activityDays;
+        token.treatments = user.Treatment;
+        token.user = user;
+        token.logo = logo;
+        /*        token.access_token = user.accounts[0]?.access_token || "";
+        token.refresh_token = user.accounts[0]?.refresh_token || ""; */
+        console.log("token9999", token);
+        console.log("user", user);
+
+        if (props.account?.expires_at && user) {
+          return {
+            ...token,
+            accessToken: token.accessToken,
+            accessTokenExpires: Date.now() + props.account.expires_at * 1000,
+            refreshToken: token.refresh_token,
+          };
+        }
+        /* 
+        const newToken = {
+          ...token,
+          user,
+          logo,
+          activityDays: user.activityDays,
+          treatments: user.Treatment,
+          account: user.accounts[0],
+          refreshToken: user.accounts[0]?.refresh_token || "",
+        } as JWT; */
+
+        // Return previous token if the access token has not expired yet
+        /*         if (Date.now() < token.accessTokenExpires) {
+          console.log("token22", token);
+
+          return token;
+        }
+ */
+        // Access token has expired, try to update it
+        return refreshAccessToken(token);
       } catch (err) {
         console.error(err);
         return props.token;
@@ -154,11 +233,13 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token, user }) {
-      console.log("token.logoi", token.logo);
       session.user = {
         ...token.user,
+        activityDays: token.activityDays,
         access_token: token.access_token,
         business: token.business,
+        Customer: token.Customer,
+        treatments: token.treatments,
         logo: token.logo,
       };
       return session;

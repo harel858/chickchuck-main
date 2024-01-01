@@ -93,6 +93,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
                 cost: +service.price,
                 duration: +service.duration,
                 title: service.title,
+                userId,
               })),
             },
           },
@@ -125,6 +126,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       await prisma.user.update({
         where: { id: userId },
         data: {
+          /*           Treatment: { createMany: { data } }, */
           activityDays: {
             createMany: {
               data: activityDays.map((day) => ({

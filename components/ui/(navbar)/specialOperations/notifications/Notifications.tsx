@@ -34,7 +34,7 @@ function NotificationComponent({
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };
-  useEffect(() => {
+  /* useEffect(() => {
     // Initialize the WebSocket when the component mounts
     webSocketRef.current = new WebSocket(
       `wss://bjkn2zeka0.execute-api.eu-west-1.amazonaws.com/production/?userId=${userId}`
@@ -78,7 +78,7 @@ function NotificationComponent({
       }
     };
   }, []); // An empty dependency array ensures this effect runs only once when the component mounts
-  const NOTIFICATION_LENGTH = notifications.filter(
+ */ const NOTIFICATION_LENGTH = notifications.filter(
     (item) => item.notification.read
   ).length;
 
