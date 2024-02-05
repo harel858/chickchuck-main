@@ -13,18 +13,39 @@ import {
 } from "@lib/validators/AppointmentValidation";
 import { useForm } from "react-hook-form";
 import { Form } from "@ui/form";
-import Customer from "../Customer";
+import AddCustomer from "../Customer";
+import {
+  Account,
+  ActivityDays,
+  Business,
+  Customer,
+  Treatment,
+  User,
+} from "@prisma/client";
 
 const AppointmentSteps = ({
   session,
   handleCancel2,
+  user,
+  business,
 }: {
   session: Session;
-  handleCancel2: () => void;
+  business: Business & {
+    Customer: Customer[];
+  };
+  handleCancel2?: () => void;
+  user: User & {
+    accounts: Account[];
+    Treatment: Treatment[];
+    activityDays: ActivityDays[];
+    Customer: Customer[];
+  };
 }) => {
+  console.log("session", session);
+
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
-  const [modalOpen, setModaOpen] = useState(false);
+  const [isNewClient, setIsNewClient] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const form = useForm<TAppointmentValidation>({
     resolver: zodResolver(appointmentValidation),
@@ -97,6 +118,11 @@ const AppointmentSteps = ({
           dateTime: data.slot.end, // Date.toISOString() ->
           timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // America/Los_Angeles
         },
+        extendedProperties: {
+          private: {
+            treatmentId: data.Service.value,
+          },
+        },
       };
       const res = await fetch(
         "https://www.googleapis.com/calendar/v3/calendars/primary/events",
@@ -104,7 +130,7 @@ const AppointmentSteps = ({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer " + `${session.user.access_token}`,
+            Authorization: `Bearer ${session.user.access_token}`,
           },
           body: JSON.stringify(event),
         }
@@ -116,7 +142,7 @@ const AppointmentSteps = ({
           // Add other default values for your form fields
         });
         setCurrent(0);
-        handleCancel2();
+        handleCancel2 && handleCancel2();
         return message.success("The appointment was created successfully");
       }
       message.error("Internal error");
@@ -134,13 +160,13 @@ const AppointmentSteps = ({
     setCurrent(current - 1);
   };
 
-  const handleOk = useCallback(() => {
+  /*  const handleOk = useCallback(() => {
     setModaOpen(false);
   }, []);
 
   const handleCancel = useCallback(() => {
     setModaOpen(false);
-  }, [modalOpen]);
+  }, [modalOpen]); */
 
   const steps = [
     {
@@ -156,16 +182,19 @@ const AppointmentSteps = ({
             label={"For who?"}
             key={"For Who"}
             session={session}
+            user={user}
+            business={business}
+            isNewClient={isNewClient}
           />
           <Button
-            onClick={() => setModaOpen(true)}
+            onClick={() => setIsNewClient((prev) => !prev)}
             className="text-blue-500"
             variant={"link"}
             type="button"
           >
             New Customer?
           </Button>
-          <Modal
+          {/* <Modal
             title="New Client"
             open={modalOpen}
             onOk={handleOk}
@@ -176,11 +205,8 @@ const AppointmentSteps = ({
             confirmLoading={true}
             onCancel={handleCancel}
           >
-            <Customer
-              handleCancel={handleCancel}
-              bussinesId={session.user.business?.id || null}
-            />
-          </Modal>
+            <AddCustomer handleCancel={handleCancel} business={business} />
+          </Modal> */}
         </div>
       ),
     },
@@ -188,6 +214,7 @@ const AppointmentSteps = ({
       title: "Second",
       content: (
         <AppointmentField
+          business={business}
           getValues={getValues}
           errors={errors}
           register={register}
@@ -196,6 +223,8 @@ const AppointmentSteps = ({
           label={"Pick A Service"}
           key={"Pick A Service"}
           session={session}
+          user={user}
+          isNewClient={isNewClient}
         />
       ),
     },
@@ -203,6 +232,7 @@ const AppointmentSteps = ({
       title: "Last",
       content: (
         <AppointmentField
+          business={business}
           errors={errors}
           register={register}
           control={control}
@@ -211,6 +241,8 @@ const AppointmentSteps = ({
           label={"When Do You Want"}
           key={"When Do You Want"}
           session={session}
+          user={user}
+          isNewClient={isNewClient}
         />
       ),
     },

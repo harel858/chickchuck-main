@@ -1,20 +1,16 @@
 import React from "react";
 import dayjs from "dayjs";
 import { Button } from "@ui/Button";
-import { FormDescription, FormField, FormItem, FormMessage } from "@ui/form";
-import { Control, FieldErrors } from "react-hook-form";
+import { FormField, FormItem, FormMessage } from "@ui/form";
+import { Control, FieldErrors, UseFormGetValues } from "react-hook-form";
 import { TAppointmentValidation } from "@lib/validators/AppointmentValidation";
 import { motion } from "framer-motion";
 import { FaRegCalendarTimes } from "react-icons/fa";
 import { Session } from "next-auth";
+
 interface SlotProps {
   start: string;
   end: string;
-}
-
-interface DataProps {
-  value: string;
-  label: string;
 }
 
 interface SlotsProps {
@@ -22,18 +18,20 @@ interface SlotsProps {
   errors: FieldErrors<TAppointmentValidation>;
   session: Session;
   control: Control<TAppointmentValidation>;
-  data: {
-    Service: DataProps;
-    Client: DataProps;
-    Date: string;
-    slot: SlotProps;
-  };
+  getValues: UseFormGetValues<TAppointmentValidation>;
 }
 
-function Slots({ slotsByDay, errors, data, control, session }: SlotsProps) {
-  const isPastDate = dayjs().isAfter(dayjs(data.Date));
-  const isToday = dayjs().isSame(dayjs(data.Date), "date");
-  console.log("dayjs(data.Date)", dayjs(data.Date).format("DD/MM/YYYY"));
+function Slots({
+  slotsByDay,
+  errors,
+  getValues,
+  control,
+  session,
+}: SlotsProps) {
+  const selectedSlot = getValues().slot;
+
+  const isPastDate = dayjs().isAfter(dayjs(getValues().Date));
+  const isToday = dayjs().isSame(dayjs(getValues().Date), "date");
 
   return (
     <div className="w-full max-h-44 p-2 overflow-hidden flex flex-wrap justify-around items-center gap-1">
@@ -60,7 +58,8 @@ function Slots({ slotsByDay, errors, data, control, session }: SlotsProps) {
           const end = dayjs(slot.end).format("HH:mm");
 
           const isSlotSelected =
-            slot?.start === data?.slot?.start && slot?.end === data?.slot?.end;
+            selectedSlot?.start === slot.start &&
+            selectedSlot?.end === slot.end;
 
           return (
             <FormField
@@ -73,14 +72,15 @@ function Slots({ slotsByDay, errors, data, control, session }: SlotsProps) {
                     key={`${start}-${end}`}
                     variant={"default"}
                     className={`${
-                      isSlotSelected ? "bg-slate-700" : "bg-slate-950"
-                    } w-max text-white hover:bg-slate-700 rounded-lg border border-black`}
+                      isSlotSelected
+                        ? "bg-slate-700 text-white"
+                        : "bg-slate-950 text-black"
+                    } w-max hover:bg-slate-700 rounded-lg border border-black`}
                     onClick={() => field.onChange(slot)}
                     type={"button"}
                   >
                     {start} - {end}
                   </Button>
-                  <FormDescription />
                   <FormMessage />
                 </FormItem>
               )}

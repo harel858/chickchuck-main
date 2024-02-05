@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import dayjs from "dayjs";
-import { CreateUser } from "types/types";
 import { prisma } from ".";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
@@ -10,47 +9,25 @@ export async function getAllUsers() {
   return { users };
 }
 
-export async function createUser({
-  name,
-  email,
-  phone,
-  password,
-  businessName,
-}: CreateUser) {
-  const openingTime = dayjs().set("hour", 9).set("minute", 0).set("second", 0);
-  const closingTime = dayjs().set("hour", 17).set("minute", 0).set("second", 0);
-
+export const getUserAccount = async (userId: string) => {
   try {
-    const newBusiness = await prisma.business.create({
-      data: {
-        businessName,
-        activityDays: [0, 1, 2, 3, 4, 5],
-        phone,
-        openingTime: openingTime.toISOString(),
-        closingTime: closingTime.toISOString(),
+    const res = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        accounts: true,
+        Treatment: true,
+        activityDays: true,
+        Customer: true,
+        Business: { include: { Customer: true } },
       },
     });
-    const newUser = await prisma?.user.create({
-      data: {
-        name,
-        email: email.toLocaleLowerCase(),
-        phone,
-        startActivity: openingTime.toISOString(),
-        endActivity: closingTime.toISOString(),
-        activityDays: [0, 1, 2, 3, 4, 5],
-        password,
-        isAdmin: true,
-        Business: { connect: { businessName: newBusiness.businessName } },
-      },
-    });
-
-    if (newBusiness && newUser) return newUser.id;
-    return null;
-  } catch (err) {
+    return res;
+  } catch (err: any) {
     console.log(err);
-    return null;
+    throw new Error(err);
   }
-}
+};
+
 export async function getUserByEmail(emailORphoneNumber: string) {
   try {
     console.log("emailORphoneNumber", emailORphoneNumber);
@@ -82,32 +59,6 @@ export async function getIdByEmail(email: string) {
   }
 }
 
-export async function updateActivityTime(
-  id: string,
-  startActivity: string,
-  endActivity: string
-) {
-  try {
-    const updated = await prisma.business.update({
-      where: {
-        id,
-      },
-      data: {
-        openingTime: startActivity,
-        closingTime: endActivity,
-      },
-    });
-    const response = await prisma.business.findUnique({
-      where: { id },
-      select: { user: true },
-    });
-    return { response };
-  } catch (error) {
-    console.log(error);
-    return { error };
-  }
-}
-
 export async function updateUserActivityTime(
   id: string,
   startActivity: string,
@@ -133,44 +84,6 @@ export async function updateUserActivityTime(
   } catch (error) {
     console.log(error);
     return { error };
-  }
-}
-export async function updateActivityDays(id: string, activityDays: number[]) {
-  try {
-    const updateDaysSuccess = await prisma.business.update({
-      where: {
-        id,
-      },
-      data: {
-        activityDays,
-      },
-    });
-
-    return { updateDaysSuccess };
-  } catch (updateDaysFailed) {
-    console.log(updateDaysFailed);
-    return { updateDaysFailed };
-  }
-}
-
-export async function updateUserActivityDays(
-  id: string,
-  activityDays: number[]
-) {
-  try {
-    const updateDaysSuccess = await prisma.user.update({
-      where: {
-        id,
-      },
-      data: {
-        activityDays,
-      },
-    });
-
-    return { updateDaysSuccess };
-  } catch (updateDaysFailed) {
-    console.log(updateDaysFailed);
-    return { updateDaysFailed };
   }
 }
 
@@ -224,7 +137,7 @@ export async function signIn(emailORphoneNumber: string, pass: string) {
       return {
         error: { message: `User not found` },
       };
-    let verify = await bcrypt.compare(pass, userExist.password);
+    let verify = await bcrypt.compare(pass, userExist.password!);
 
     if (!verify)
       return {
@@ -240,14 +153,12 @@ export async function signIn(emailORphoneNumber: string, pass: string) {
   }
 }
 const userOperations = {
-  createUser,
   getUserByEmail,
   getAllUsers,
-  updateActivityTime,
-  updateActivityDays,
   getByBusinessName,
   getById,
   signIn,
   getAdminById,
+  getUserAccount,
 };
 export default userOperations;

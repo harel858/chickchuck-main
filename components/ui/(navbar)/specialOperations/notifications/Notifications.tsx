@@ -1,86 +1,98 @@
-"use client";
-import {
-  Appointment,
-  AppointmentSlot,
-  Customer,
-  Treatment,
-} from "@prisma/client";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Button } from "@ui/Button";
 import { Popover } from "antd";
-import { useState, useEffect, useRef } from "react";
 import { GrNotification } from "react-icons/gr";
-import { Notification, NotificationData } from "types/types";
+import { Session } from "next-auth";
 import NotificationList from "./notificationList";
+import { calendar_v3 } from "googleapis";
 
-function NotificationComponent({
-  appointments,
-  userId,
-}: {
-  appointments?: (Appointment & {
-    customer: Customer;
-    treatment: Treatment;
-    appointmentSlot: AppointmentSlot;
-  })[];
+interface NotificationComponentProps {
   userId: string;
-}) {
-  const [notifications, setNotifications] = useState<NotificationData[]>([]);
+  session: Session;
+  scheduleProps: calendar_v3.Schema$Events | null;
+}
+
+interface Notification {
+  read: boolean;
+  // Add other properties as needed
+}
+function NotificationComponent({
+  userId,
+  session,
+  scheduleProps,
+}: NotificationComponentProps) {
+  scheduleProps?.items;
+
+  const [notifications, setNotifications] = useState<
+    calendar_v3.Schema$Event[]
+  >(scheduleProps?.items || []);
+  console.log("notifications[0]", notifications[0]);
+
   const webSocketRef = useRef<WebSocket | null>(null);
   const [open, setOpen] = useState(false);
 
-  const hide = () => {
-    setOpen(false);
+  const hidePopover = () => setOpen(false);
+
+  const handleOpenChange = (newOpen: boolean) => setOpen(newOpen);
+
+  const handleWebSocketOpen = (event: Event) => {
+    console.log("WebSocket connection opened:", event);
   };
 
-  const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen);
+  const handleWebSocketMessage = useCallback(
+    (e: MessageEvent<any>) => {
+      console.log("notifications", e);
+
+      const newNotifications = JSON.parse(
+        e.data
+      ) as calendar_v3.Schema$Events[];
+      console.log("newNotifications", newNotifications);
+
+      // Check for duplicates based on etag
+      const filteredNewNotifications = newNotifications.filter(
+        (newNotification) =>
+          !notifications.some(
+            (notification) => notification.etag === newNotification.etag
+          )
+      );
+
+      // Handle your notifications update logic here
+
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        ...filteredNewNotifications,
+      ]);
+    },
+    [notifications]
+  );
+
+  const createWebSocketUrl = () => {
+    return `wss://bjkn2zeka0.execute-api.eu-west-1.amazonaws.com/production/?userId=${userId}`;
   };
-  /* useEffect(() => {
-    // Initialize the WebSocket when the component mounts
-    webSocketRef.current = new WebSocket(
-      `wss://bjkn2zeka0.execute-api.eu-west-1.amazonaws.com/production/?userId=${userId}`
-    );
 
-    // Handle incoming WebSocket messages
-    webSocketRef.current.onmessage = (event) => {
-      const data = JSON.parse(event.data) as Notification[];
-      console.log("data", data);
+  useEffect(() => {
+    try {
+      const wsUrl = createWebSocketUrl();
+      webSocketRef.current = new WebSocket(wsUrl);
 
-      // Check if the received data is a valid notification
-      if (data && data.length > 0) {
-        const newNotifications: NotificationData[] = []; // Create a new array
-
-        for (let i = 0; i < data.length; i++) {
-          const matchingAppointment = appointments?.find(
-            (appointment) => appointment.id === data[i]?.appointmentId
-          );
-          const notification = data[i];
-
-          if (matchingAppointment && notification) {
-            newNotifications.push({
-              notification: notification,
-              appointment: matchingAppointment,
-            });
-          }
-        }
-
-        // Update the state with the new notifications
-        setNotifications((prevNotifications) => [
-          ...prevNotifications,
-          ...newNotifications,
-        ]);
-      }
-    };
-
-    return () => {
-      // Clean up the WebSocket when the component unmounts
+      webSocketRef.current.onopen = handleWebSocketOpen;
+      webSocketRef.current.onmessage = handleWebSocketMessage;
+      webSocketRef.current.onerror = (event) => {
+        console.error("WebSocket error:", event);
+      };
+    } catch (error) {
+      console.error("WebSocket initialization error:", error);
+    }
+    /*     return () => {
       if (webSocketRef.current) {
         webSocketRef.current.close();
       }
-    };
-  }, []); // An empty dependency array ensures this effect runs only once when the component mounts
- */ const NOTIFICATION_LENGTH = notifications.filter(
-    (item) => item.notification.read
-  ).length;
+    }; */
+  }, []);
+
+  /*   const unreadNotificationCount = notifications.filter((item) => !item).length;
+   */
+  console.log("notifications", notifications);
 
   return (
     <Popover
@@ -94,13 +106,13 @@ function NotificationComponent({
         <Button
           variant="ghost"
           size="sm"
-          onClick={hide}
+          onClick={hidePopover}
           className="relative transition-all ease-in-out duration-300 hover:scale-125"
         >
           <GrNotification className="text-3xl" />
           {notifications.length > 0 && (
             <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs">
-              {NOTIFICATION_LENGTH}
+              {notifications.length}
             </span>
           )}
         </Button>

@@ -30,7 +30,7 @@ async function Page() {
   const session = await getServerSession(authOptions);
   const user = await fetchUser(session?.user?.email);
   if (!user?.Business) return notFound();
-  return <Services user={user} />;
+  return <Services />;
 }
 
 export default Page;

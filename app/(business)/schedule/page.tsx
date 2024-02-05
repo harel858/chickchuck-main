@@ -2,47 +2,89 @@ import React from "react";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@lib/auth";
-import Calendar from "@ui/googleCalendar/Calendar";
+import { prisma } from "@lib/prisma";
+import SyncfusionCalendar from "@ui/calendar/SyncfusionCalendar";
+import { v4 as uuidv4 } from "uuid";
+import { getUserAccount } from "@lib/prisma/users";
+import { Account, Customer } from "@prisma/client";
+import { setupGoogleCalendarClient } from "@lib/google/client";
+import { OAuth2Client } from "google-auth-library";
+import { calendar_v3 } from "googleapis";
 
-async function fetchEvents(access_token: string) {
-  try {
-    const res = await fetch(
-      "https://www.googleapis.com/calendar/v3/calendars/primary/events",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + `${access_token}`,
-        },
-      }
-    );
-    console.log("res", res);
-
-    const result: any = await res.json();
-    console.log("result", result);
-
-    return result;
-  } catch (err: any) {
-    console.log("err", err);
-    return null;
+async function fetchWatch(
+  account: Account,
+  googleClient: {
+    auth: OAuth2Client;
+    calendar: calendar_v3.Calendar;
+    calendarId: string;
   }
+) {
+  const { auth, calendar, calendarId } = googleClient;
+  const watchExpired = account?.watchExpired;
+  const isExpired =
+    watchExpired && +watchExpired < Math.floor(Date.now() / 1000);
+
+  if (isExpired) {
+    const expirationTime = Math.floor(Date.now() / 1000) + 6 * 24 * 60 * 60;
+    const uuid = uuidv4();
+    try {
+      const result = await calendar.events.watch({
+        calendarId,
+        auth,
+        requestBody: {
+          id: uuid,
+          type: "web_hook",
+          address: `https://7a0a-2a00-a041-3a02-cf00-b8d6-c46a-2745-fb0f.ngrok-free.app/api/google/notifications?userId=${account.userId}`,
+          expiration: `${expirationTime * 1000}`,
+        },
+      });
+
+      const newWatch: any = result;
+      await prisma.account.update({
+        where: { id: account.id },
+        data: {
+          watchExpired: newWatch.expiration,
+        },
+      });
+    } catch (error) {
+      console.error("Error while fetching watch request:", error);
+      return null;
+    }
+  }
+
+  return watchExpired;
 }
 
 async function ScheduleListPage() {
   const session = await getServerSession(authOptions);
-  if (!session?.user.access_token) return notFound();
-  const scheduleProps = await fetchEvents(session?.user?.access_token);
-  console.log("scheduleProps", scheduleProps);
+  console.log("session?.user.access_token", session?.user.access_token);
 
-  /*   if (!scheduleProps) return notFound();
+  if (!session?.user.access_token) {
+    return notFound();
+  }
+
+  const googleClient = setupGoogleCalendarClient(session?.user.access_token);
+  const publicKey = await googleClient.auth.getIapPublicKeys();
+
+  const user = await getUserAccount(session?.user.id);
+
+  if (!user?.accounts[0] || !user.Business) {
+    return notFound();
+  }
+
+  await fetchWatch(user.accounts[0], googleClient);
+  const { Business, ...rest } = user;
+  /*   const clients: Customer[] = user.Customer.map((item) => ({}));
    */
-  return <Calendar res={scheduleProps} />;
+  /*   const scheduleProps = await fetchEvents(googleClient, user.accounts[0]?.id);
+   */
+
+  return (
+    <SyncfusionCalendar
+      session={session}
+      business={user.Business}
+      user={rest}
+    />
+  );
 }
-
-/* export async function generateStaticParams() {
-  const users = await prisma.user.findMany();
-  const params = users?.map((user) => ({ id: user.id.toString() }));
-
-  return params;
-} */
-
 export default ScheduleListPage;

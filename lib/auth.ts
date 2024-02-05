@@ -7,6 +7,7 @@ import { getCustomer } from "./prisma/customer/customer";
 import { getImage } from "./aws/s3";
 import { signInNew } from "./routes/user/signin";
 import googleProvider from "next-auth/providers/google";
+import { setupGoogleCalendarClient } from "./google/client";
 
 interface UserCredentials {
   emailORphoneNumber: string;
@@ -76,13 +77,20 @@ const configureCustomerLoginProvider = () =>
     authorize: authorizeCustomerLogin,
   });
 
-async function refreshAccessToken(token: JWT) {
+async function refreshAccessToken(
+  token: JWT & {
+    accountId: string;
+  }
+) {
   try {
+    console.log("token", token.refresh_token);
+
     const url =
       "https://oauth2.googleapis.com/token?" +
       new URLSearchParams({
         clientId: process.env.GOOGLE_CLIENT_ID ?? "",
         clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+
         grant_type: "refresh_token",
         refresh_token: token?.refresh_token,
       });
@@ -93,6 +101,7 @@ async function refreshAccessToken(token: JWT) {
       },
       method: "POST",
     });
+    console.log("response", response.ok);
 
     const refreshedTokens: any = await response.json();
     console.log("refreshedTokens", refreshedTokens);
@@ -100,7 +109,10 @@ async function refreshAccessToken(token: JWT) {
     if (!response.ok) {
       throw refreshedTokens;
     }
-
+    await prisma.account.update({
+      where: { id: token.accountId },
+      data: { access_token: token.access_token },
+    });
     return {
       ...token,
       access_token: refreshedTokens.access_token,
@@ -129,7 +141,7 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           scope:
-            "openid https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly",
+            "openid https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events.readonly",
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
@@ -137,7 +149,7 @@ export const authOptions: NextAuthOptions = {
       },
       profile(profile, tokens) {
         console.log("profile", profile);
-        console.log("tokens", tokens);
+        console.log("profile", profile);
 
         return {
           id: profile.sub,
@@ -151,7 +163,6 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt(props) {
       const { token, user } = props;
-      console.log("props", props);
 
       try {
         let logo: string | null = "";
@@ -165,7 +176,6 @@ export const authOptions: NextAuthOptions = {
             accounts: true,
           },
         });
-        console.log("user.tretment", user?.Treatment);
 
         if (!user) {
           throw new Error("user not found");
@@ -187,16 +197,11 @@ export const authOptions: NextAuthOptions = {
         }
         ``;
 
-        token.business = user?.Business || null;
-        token.Customer = user?.Business?.Customer || [];
-        token.activityDays = user.activityDays;
-        token.treatments = user.Treatment;
+        token.businessId = user?.Business?.id || "";
         token.user = user;
         token.logo = logo;
         /*        token.access_token = user.accounts[0]?.access_token || "";
         token.refresh_token = user.accounts[0]?.refresh_token || ""; */
-        console.log("token9999", token);
-        console.log("user", user);
 
         if (props.account?.expires_at && user) {
           return {
@@ -206,26 +211,13 @@ export const authOptions: NextAuthOptions = {
             refreshToken: token.refresh_token,
           };
         }
-        /* 
-        const newToken = {
-          ...token,
-          user,
-          logo,
-          activityDays: user.activityDays,
-          treatments: user.Treatment,
-          account: user.accounts[0],
-          refreshToken: user.accounts[0]?.refresh_token || "",
-        } as JWT; */
 
-        // Return previous token if the access token has not expired yet
-        /*         if (Date.now() < token.accessTokenExpires) {
-          console.log("token22", token);
-
-          return token;
-        }
- */
         // Access token has expired, try to update it
-        return refreshAccessToken(token);
+        return refreshAccessToken({
+          ...token,
+          refresh_token: user.accounts[0]?.refresh_token!,
+          accountId: user.accounts[0]?.id!,
+        });
       } catch (err) {
         console.error(err);
         return props.token;
@@ -233,16 +225,21 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token, user }) {
-      session.user = {
-        ...token.user,
-        activityDays: token.activityDays,
-        access_token: token.access_token,
-        business: token.business,
-        Customer: token.Customer,
-        treatments: token.treatments,
-        logo: token.logo,
+      console.log("session.user", session.user);
+      console.log("token.account", token);
+
+      return {
+        ...session,
+        user: {
+          email: token.email,
+          name: token.user.name,
+          id: token.user.id,
+          accountId: token.accountId,
+          image: token.logo || undefined,
+          access_token: token.access_token,
+          businessId: token.businessId,
+        },
       };
-      return session;
     },
   },
 };

@@ -17,6 +17,7 @@ import { cn } from "@lib/utils";
 import { message } from "antd";
 import { createNewCustomer } from "actions/createCustomer";
 import { useRouter } from "next/navigation";
+import { Business, Customer } from "@prisma/client";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -30,13 +31,15 @@ interface InputData {
   phoneNumber: number | null;
 }
 function Customer({
-  bussinesId,
+  business,
   handleCancel,
 }: {
-  bussinesId: string | null;
+  business: Business & {
+    Customer: Customer[];
+  };
   handleCancel?: () => void;
 }) {
-  console.log("bussinesId", bussinesId);
+  console.log("business", business);
 
   const form = useForm<TCustomerDetailsValidation>({
     resolver: zodResolver(customerDetailsValidation),
@@ -54,9 +57,9 @@ function Customer({
       const res = await createNewCustomer({
         name: Name,
         phoneNumber: Phone,
-        bussinesId: bussinesId,
+        bussinesId: business.id,
       });
-      console.log("res", res);
+      console.log("createNewCustomer", res);
       handleCancel && handleCancel();
       message.success(`${Name} הוסף לרשימה`);
     } catch (err) {

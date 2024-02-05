@@ -109,6 +109,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
             createMany: {
               data: activityDays.map((day) => ({
                 day: day.value,
+                isActive: day.isActive,
                 start: day.start,
                 end: day.end,
               })),
@@ -133,6 +134,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
                 day: day.value,
                 start: day.start,
                 end: day.end,
+                isActive: day.isActive,
               })),
             },
           },

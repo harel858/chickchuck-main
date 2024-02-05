@@ -9,6 +9,8 @@ import {
   AppointmentSlot,
   Customer,
   Treatment,
+  User,
+  Account,
 } from "@prisma/client";
 import NavBarItem from "./NavBarItem";
 import { FaBusinessTime } from "react-icons/fa";
@@ -17,10 +19,21 @@ import { AiOutlineSchedule } from "react-icons/ai";
 import { RiCoinsLine, RiTeamLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import Avatar from "@ui/Avatar";
+import { calendar_v3 } from "googleapis";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
-function Navbar({ session, link }: { session: Session; link: string }) {
-  const profileImage = session.user.logo;
+function Navbar({
+  session,
+  scheduleProps,
+  user,
+  link,
+}: {
+  session: Session;
+  link: string;
+  scheduleProps: calendar_v3.Schema$Events | null;
+  user: User & { accounts: Account[] };
+}) {
+  const profileImage = session.user.image;
   console.log("session", session);
 
   return (
@@ -52,7 +65,11 @@ function Navbar({ session, link }: { session: Session; link: string }) {
       {/*       <Hamburger user={session.user} />
        */}{" "}
       <div className="flex flex-row justify-between items-center gap-4 absolute right-2">
-        <Notifications userId={session.user.id} />
+        <Notifications
+          scheduleProps={scheduleProps}
+          session={session}
+          userId={session.user.id}
+        />
         <Avatar alt="Profile Img" src={profileImage} />
       </div>
     </nav>

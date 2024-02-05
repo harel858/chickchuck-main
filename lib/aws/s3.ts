@@ -82,7 +82,6 @@ export const getImage = async (params: getParam) => {
       Key: `uploads/${params.Key}`,
     });
     const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-    console.log("ulr", url);
 
     return url;
   } catch (err) {

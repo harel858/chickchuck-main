@@ -12,6 +12,13 @@ import { FieldType } from "../FormField";
 import DateCalendar from "./DateCalendar";
 import Slots from "./Slots";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import {
+  Account,
+  ActivityDays,
+  Customer,
+  Treatment,
+  User,
+} from "@prisma/client";
 dayjs.extend(customParseFormat);
 
 const DateField = ({
@@ -22,6 +29,7 @@ const DateField = ({
   label,
   name,
   register,
+  user,
 }: {
   getValues: UseFormGetValues<TAppointmentValidation>;
   label: FieldType["label"];
@@ -30,6 +38,12 @@ const DateField = ({
   register: UseFormRegister<TAppointmentValidation>;
   errors: FieldErrors<TAppointmentValidation>;
   session: Session;
+  user: User & {
+    accounts: Account[];
+    Treatment: Treatment[];
+    activityDays: ActivityDays[];
+    Customer: Customer[];
+  };
 }) => {
   const data = getValues();
   const [slots, setSlots] = useState<{ start: string; end: string }[]>([]);
@@ -67,7 +81,7 @@ const DateField = ({
       console.log("freebusy", result);
 
       if (res.status === 200) {
-        const treatment = session.user.treatments.find(
+        const treatment = user.Treatment.find(
           (item) => item.id === data.Service.value
         );
         const durationInMinutes = treatment?.duration || 0;
@@ -93,8 +107,8 @@ const DateField = ({
     const startOfMonth = dayjs(month).startOf("month");
     const endOfMonth = dayjs(month).endOf("month");
     let currentSlotStart = startOfMonth;
-    const startTime = session.user.activityDays[currentSlotStart.day()]?.start;
-    const endTime = session.user.activityDays[currentSlotStart.day()]?.end;
+    const startTime = user.activityDays[currentSlotStart.day()]?.start;
+    const endTime = user.activityDays[currentSlotStart.day()]?.end;
     while (currentSlotStart.isBefore(endOfMonth)) {
       const currentSlotEnd = currentSlotStart.add(5, "minutes");
 
@@ -124,8 +138,14 @@ const DateField = ({
 
   const getSlotsByDay = useCallback(
     (selectedDate: Dayjs, allSlots: { start: string; end: string }[]) => {
-      if (allSlots.length <= 0) return [];
-      const day = session.user.activityDays.find(
+      console.log("what day is picked?", user.activityDays[selectedDate.day()]);
+
+      if (
+        allSlots.length <= 0 ||
+        !user.activityDays[selectedDate.day()]?.isActive
+      )
+        return [];
+      const day = user.activityDays.find(
         (item) => item.day === dayjs(selectedDate).day()
       );
 
@@ -135,7 +155,7 @@ const DateField = ({
       });
 
       const availableSlots = [];
-      const treatment = session.user.treatments.find(
+      const treatment = user.Treatment.find(
         (item) => item.id === data.Service.value
       );
       const durationInMinutes = treatment?.duration || 0;
@@ -188,6 +208,7 @@ const DateField = ({
   return (
     <div className="w-full flex flex-col justify-center items-center gap-7">
       <DateCalendar
+        user={user}
         control={control}
         data={data}
         errors={errors}
@@ -204,7 +225,7 @@ const DateField = ({
         errors={errors}
         slotsByDay={slotsByDay}
         session={session}
-        data={data}
+        getValues={getValues}
       />
     </div>
   );

@@ -28,6 +28,7 @@ export async function createNewCustomer({
     const res = await prisma.business.update({
       where: { id: bussinesId },
       data: { Customer: { create: { name, phoneNumber } } },
+      include: { Customer: true },
     });
 
     revalidatePath("/schedule");

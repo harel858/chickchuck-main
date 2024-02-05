@@ -21,8 +21,11 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncToken         String?
+  resourceId        String?
+  channelId         String?
+  watchExpired      String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -119,6 +122,7 @@ model ActivityDays {
   day        Int
   start      String
   end        String
+  isActive   Boolean
   Business   Business? @relation(fields: [businessId], references: [id])
   businessId String?
   User       User?     @relation(fields: [userId], references: [id])

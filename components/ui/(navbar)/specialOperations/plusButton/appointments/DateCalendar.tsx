@@ -1,4 +1,11 @@
 import { TAppointmentValidation } from "@lib/validators/AppointmentValidation";
+import {
+  Account,
+  ActivityDays,
+  Customer,
+  Treatment,
+  User,
+} from "@prisma/client";
 import { FormDescription, FormField, FormItem, FormMessage } from "@ui/form";
 import { DatePicker } from "antd";
 import dayjs, { Dayjs } from "dayjs";
@@ -48,9 +55,16 @@ type DatePickerProps = {
 
   errors: FieldErrors<TAppointmentValidation>;
   session: Session;
+  user: User & {
+    accounts: Account[];
+    Treatment: Treatment[];
+    activityDays: ActivityDays[];
+    Customer: Customer[];
+  };
 };
 
 function DateCalendar({
+  user,
   control,
   errors,
   getSlotsByDay,
@@ -110,7 +124,7 @@ function DateCalendar({
       const result = (await res.json()) as any;
       console.log("result", result);
       if (res.status === 200) {
-        const treatment = session.user.treatments.find(
+        const treatment = user.Treatment.find(
           (item) => item.id === data.Service.value
         );
 

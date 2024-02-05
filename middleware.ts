@@ -48,11 +48,11 @@ export default withAuth(
       "/team",
       "/activityTime",
     ];
-    console.log("token.business", token?.business);
+    console.log("token.business", token?.businessId);
     console.log("isAuth", isAuth);
 
     if (isAuthPage) {
-      if (isAuth && !token.business) {
+      if (isAuth && !token.businessId) {
         return NextResponse.redirect(
           new URL("/createbusinessdetails", req.url)
         );

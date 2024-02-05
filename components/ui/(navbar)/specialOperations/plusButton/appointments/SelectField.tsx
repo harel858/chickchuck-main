@@ -4,6 +4,14 @@ import { Select } from "antd";
 import { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import { FieldType } from "../FormField";
 import { Session } from "next-auth";
+import {
+  Account,
+  ActivityDays,
+  Business,
+  Customer,
+  Treatment,
+  User,
+} from "@prisma/client";
 
 const SelectField = ({
   control,
@@ -12,6 +20,8 @@ const SelectField = ({
   label,
   session,
   errors,
+  business,
+  user,
 }: {
   label: FieldType["label"];
   control: Control<TAppointmentValidation>;
@@ -19,14 +29,25 @@ const SelectField = ({
   register: UseFormRegister<TAppointmentValidation>;
   errors: FieldErrors<TAppointmentValidation>;
   session: Session;
+  user: User & {
+    accounts: Account[];
+    Treatment: Treatment[];
+    activityDays: ActivityDays[];
+    Customer: Customer[];
+  };
+  business: Business & {
+    Customer: Customer[];
+  };
 }) => {
+  console.log("user", user);
+
   const selectOptions =
     name === "Client"
-      ? session.user.Customer.map((item) => ({
+      ? business.Customer.map((item) => ({
           value: item.id,
           label: item.name,
         }))
-      : session.user.treatments.map((item) => ({
+      : user.Treatment.map((item) => ({
           value: item.id,
           label: item.title,
         }));

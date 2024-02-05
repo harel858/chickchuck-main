@@ -3,11 +3,37 @@ import React, { useCallback, useState } from "react";
 import { PlusOutlined, UserAddOutlined } from "@ant-design/icons";
 import { TbCalendarPlus } from "react-icons/tb";
 import { FloatButton, Modal } from "antd";
-import Customer from "./Customer";
+import AddCustomer from "./Customer";
 import AppointmentSteps from "./appointments/newAppointment";
 import { Session } from "next-auth";
+import {
+  Account,
+  ActivityDays,
+  Business,
+  Customer,
+  Treatment,
+  User,
+} from "@prisma/client";
+import { calendar_v3 } from "googleapis";
 
-const PlusButton = ({ session }: { session: Session }) => {
+const PlusButton = ({
+  session,
+  user,
+  business,
+}: {
+  session: Session;
+  business: Business & {
+    Customer: Customer[];
+  };
+  user: User & {
+    accounts: Account[];
+    Treatment: Treatment[];
+    activityDays: ActivityDays[];
+    Customer: Customer[];
+  };
+}) => {
+  console.log("user", user);
+
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -63,7 +89,7 @@ const PlusButton = ({ session }: { session: Session }) => {
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
       >
-        <Customer bussinesId={session.user.businessId} />
+        <AddCustomer business={business} />
       </Modal>
 
       <Modal
@@ -75,7 +101,12 @@ const PlusButton = ({ session }: { session: Session }) => {
         confirmLoading={true}
         onCancel={handleCancel2}
       >
-        <AppointmentSteps handleCancel2={handleCancel2} session={session} />
+        <AppointmentSteps
+          user={user}
+          business={business}
+          handleCancel2={handleCancel2}
+          session={session}
+        />
       </Modal>
     </>
   );

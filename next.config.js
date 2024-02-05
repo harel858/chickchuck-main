@@ -3,6 +3,9 @@ module.exports = {
   experimental: {
     taint:true,    
   },
+/*   api: {
+    bodyParser: false,
+  }, */
   compiler: {
     // Enables the styled-components SWC transform
     styledComponents: true
