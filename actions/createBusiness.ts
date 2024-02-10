@@ -1,5 +1,5 @@
 "use server";
-import { uploadImage } from "@lib/aws/s3";
+import { uploadImages } from "@lib/aws/s3";
 import { prisma } from "@lib/prisma";
 import { TBusinessDetailsValidation } from "@lib/validators/business-details-validation";
 import { DayData } from "@ui/Init/InitActivityDetails";
@@ -26,6 +26,17 @@ export async function createBusiness(
     businessDetails;
 
   try {
+    // Process form data
+    const params = {
+      Bucket: bucketName,
+      Key: logo[0]?.name,
+      Body: fs.createReadStream(logo[0]?.thumbUrl!),
+      ContentType: logo[0]?.type!,
+    };
+
+    const upload = await uploadImages([params]);
+    console.log("upload", upload);
+
     // Create a new business and associate it with the user
     const newBusiness = await prisma.business.create({
       data: {
@@ -35,6 +46,13 @@ export async function createBusiness(
         ComeFrom: fromWhere,
         LastCalendar: lastCalendar,
         user: { connect: { email } },
+        Images: {
+          createMany: {
+            data: {
+              profileImgName: logo[0]?.name,
+            },
+          },
+        },
       },
       include: { user: true },
     });
@@ -47,6 +65,7 @@ export async function createBusiness(
         end: day.end,
         businessId: newBusiness.id,
         userId: newBusiness.user[0]?.id!,
+        isActive: day.isActive,
       })),
     });
 
@@ -57,29 +76,12 @@ export async function createBusiness(
         cost: +treatment.price,
         duration: +treatment.duration,
         businessId: newBusiness.id,
+        userId: newBusiness.user[0]?.id!,
+        advancePayment: 0,
       })),
     });
 
     if (!logo[0]?.name) throw new Error("Key is missing");
-
-    // Process form data
-    const params = {
-      Bucket: bucketName,
-      Key: logo[0]?.name,
-      Body: fs.createReadStream(logo[0]?.thumbUrl!),
-      ContentType: logo[0]?.type!,
-    };
-
-    const upload = await uploadImage(params);
-    console.log("upload", upload);
-
-    const created = await prisma.images.update({
-      where: { businessId: newBusiness.id },
-      data: {
-        profileImgName: logo[0]?.name,
-      },
-    });
-    console.log("created", created);
 
     // Connect the new business to the user
     await prisma.user.update({

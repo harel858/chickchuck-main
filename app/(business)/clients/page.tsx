@@ -93,8 +93,7 @@ async function getBusinessCustomers(userId: string | undefined) {
 async function Page() {
   const session = await getServerSession(authOptions);
   const customersData = await getBusinessCustomers(session?.user.id);
-  if (!customersData || session?.user.UserRole === "CUSTOMER")
-    return notFound();
+  if (!customersData) return notFound();
   return <Clients customers={customersData.customers} />;
 }
 

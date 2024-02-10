@@ -1,4 +1,4 @@
-"use client";
+/* "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { BreakTime, Business, Treatment, User } from "@prisma/client";
 import AddMember from "./AddMember";
@@ -41,8 +41,6 @@ function TeamManeger({ business }: { business: TeamPageParams }) {
     },
     [searchQuery, setSearchQuery]
   );
-  console.log("business.openingTime.hour", dayjs(business.openingTime).hour());
-  console.log("business.openingTime.hour", dayjs(business.openingTime));
 
   return (
     <>
@@ -63,7 +61,7 @@ function TeamManeger({ business }: { business: TeamPageParams }) {
             />
           </div>
         </div>
-        <div className="flex h-full w-full items-stretch max-xl:items-center justify-center max-xl:flex-col">
+          <div className="flex h-full w-full items-stretch max-xl:items-center justify-center max-xl:flex-col">
           {(business.user.length === 1 &&
             business.user[0]?.isAdmin &&
             !searchQuery) ||
@@ -109,3 +107,6 @@ function TeamManeger({ business }: { business: TeamPageParams }) {
 }
 
 export default TeamManeger;
+ */
+
+export {};

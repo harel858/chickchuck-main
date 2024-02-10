@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { ProfilePageData } from "types/types";
-import BussinessActivity from "./BussinessActivity/BussinessActivity/BussinessActivity";
-import UniqueLink from "@ui/UniqueLink";
+/* import BussinessActivity from "./BussinessActivity/BussinessActivity/BussinessActivity";
+ */ import UniqueLink from "@ui/UniqueLink";
 import BussinessAddress from "@ui/BussinessProfile/bussinessAddresses/bussinessAddress";
 import { useSession } from "next-auth/react";
 

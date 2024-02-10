@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+/* import React, { useState } from "react";
 import { Modal } from "antd";
 import { Button } from "@ui/Button";
 import { BreakTime, Treatment, User } from "@prisma/client";
@@ -69,3 +69,6 @@ export default function DetailsButton({
     </>
   );
 }
+ */
+
+export {};

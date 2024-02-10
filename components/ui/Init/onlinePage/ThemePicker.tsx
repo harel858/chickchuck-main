@@ -1,4 +1,4 @@
-"use client";
+/* "use client";
 import React, { useMemo, useState } from "react";
 import { Button, ColorPicker, theme } from "antd";
 import type { Color } from "antd/es/color-picker";
@@ -20,3 +20,5 @@ const ThemePicker: React.FC = () => {
 };
 
 export default ThemePicker;
+ */
+export {};

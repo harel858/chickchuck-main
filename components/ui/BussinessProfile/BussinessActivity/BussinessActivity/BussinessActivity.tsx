@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+/* import React, { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { ProfilePageData, Slots } from "../../../../../types/types";
 import ActivityDays from "./ActivityDays";
@@ -63,3 +63,5 @@ export default function BusinessActivity({ user }: { user: ProfilePageData }) {
     </div>
   );
 }
+ */
+export {};

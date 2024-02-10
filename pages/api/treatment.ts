@@ -43,18 +43,21 @@ export default async function handler(
       const business = await bussinessById(businessId);
       if (!business?.id) return res.status(500).json(`business not found`);
 
-      const { newTreatment } = await createTreatment({
+      /*     const { newTreatment } = await createTreatment({
         title,
         cost: +cost,
         duration: +duration,
         documentName,
         advancePayment: +advancePayment,
         business,
-      });
+      }); */
 
-      if (!newTreatment) return res.status(500).json(`something went wrong`);
+      /*   if (!newTreatment) */ return res
+        .status(500)
+        .json(`something went wrong`);
 
-      return res.status(201).json(newTreatment);
+      /*       return res.status(201).json(newTreatment);
+       */
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);

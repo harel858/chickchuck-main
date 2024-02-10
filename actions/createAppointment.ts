@@ -18,8 +18,8 @@ type EventProps = {
   };
   extendedProperties: {
     private: {
-      treatmentId: string | undefined;
-      customerId: string | undefined;
+      treatmentId: string;
+      customerId: string;
     };
   };
 };
@@ -36,7 +36,9 @@ export async function createAppointment(
       calendarId: calendarId,
       requestBody: {
         ...eventProps,
-        extendedProperties: { private: { ...eventProps.extendedProperties } },
+        extendedProperties: {
+          private: { ...eventProps.extendedProperties.private },
+        },
       },
     });
     revalidatePath("/schedule");

@@ -1,15 +1,10 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import dayjs from "dayjs";
+/* import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
   createUserAvailableSlots,
   getQueuesByMonth,
 } from "@lib/prisma/ActivitySlots";
-import {
-  getById,
-  updateUserActivityDays,
-  updateUserActivityTime,
-} from "@lib/prisma/users";
+import { getById, updateUserActivityTime } from "@lib/prisma/users";
 import { Slots } from "types/types";
 
 type SlotBody = {
@@ -116,3 +111,5 @@ export default async function handler(
   res.setHeader("Allow", ["GET", "POST"]);
   res.status(425).end(`method ${req.method} is not allowed.`);
 }
+ */
+export {};

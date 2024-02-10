@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import fs from "fs";
-import { uploadImage } from "@lib/aws/s3";
+import { uploadImages } from "@lib/aws/s3";
 import { createProfileImages, updateProfileImages } from "@lib/prisma/images";
 import { getById } from "@lib/prisma/users";
 import { bussinessById } from "@lib/prisma/bussiness/getUnique";
@@ -56,7 +56,7 @@ export default async function handler(
         }
 
         if (type == "PROFILE") {
-          const upload = await uploadImage(params);
+          const upload = await uploadImages([params]);
           if (!upload) return res.status(500).json("s3 bucket err");
           const result = await updateProfileImages({
             fileName: imageSrc.newFilename,
@@ -68,7 +68,7 @@ export default async function handler(
           return res.status(201).json({ message: result });
         }
         if (type == "BACKGROUND") {
-          const upload = await uploadImage(params);
+          const upload = await uploadImages([params]);
           if (!upload) return res.status(500).json("s3 bucket err");
           const result = await updateProfileImages({
             fileName: imageSrc.newFilename,

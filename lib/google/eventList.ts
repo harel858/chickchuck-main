@@ -16,6 +16,9 @@ export async function fetchEvents(
     const response = await calendar.events.list({
       calendarId,
       auth,
+      fields: "items(*)", // Include extendedProperties
+      /*       privateExtendedProperty: ["treatmentId", "customerId"],
+       */
     });
     const result = response;
     const newSyncToken = result.data.nextSyncToken;

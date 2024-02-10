@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+/* import React, { ReactNode } from "react";
 import { notification, Tabs } from "antd";
 import { FaBusinessTime, FaRegUserCircle } from "react-icons/fa";
 import UserActivity from "./UserActivity";
@@ -75,3 +75,6 @@ export default function UserDetails({
     />
   );
 }
+ */
+
+export {};

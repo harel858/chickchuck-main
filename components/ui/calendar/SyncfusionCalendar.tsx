@@ -13,12 +13,13 @@ import {
   DragAndDrop,
   EventSettingsModel,
 } from "@syncfusion/ej2-react-schedule";
+import { ButtonComponent } from "@syncfusion/ej2-react-buttons";
 import { DataManager, UrlAdaptor } from "@syncfusion/ej2-data";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
 import "./schedule-component.css";
 import NewEvent from "./NewEvent";
-import AppointmentSteps from "@ui/(navbar)/specialOperations/plusButton/appointments/newAppointment";
+import EditEvent from "./EditEvent";
 import {
   Account,
   ActivityDays,
@@ -60,9 +61,7 @@ const RecurrenceEvents = ({
   };
 }) => {
   const scheduleObj = useRef<ScheduleComponent>(null);
-  const additionalEventData = useRef<AdditionData | null>(null); // Accumulate additional data
   let newEvent: any = null;
-  const router = useRouter();
   const dataManagerConfig = {
     url: `http://localhost:3000/api/google/events?id=${session.user.accountId}`,
     headers: [{ Authorization: `Bearer ${session.user.access_token}` }],
@@ -71,6 +70,8 @@ const RecurrenceEvents = ({
     crossDomain: true,
   };
   const dataManager = new DataManager(dataManagerConfig);
+
+  const [editEvent, setEditEvent] = useState<string | null>(null);
 
   const [eventSettings, setEventSettings] = useState<EventSettingsModel>({
     dataSource: dataManager,
@@ -113,10 +114,14 @@ const RecurrenceEvents = ({
         }
         scheduleData.push({
           Id: event.id,
+          status: event.status,
           Subject: event.summary,
+          descripition: event.description,
           StartTime: new Date(start),
           EndTime: new Date(end),
+          isBlock: true,
           IsAllDay: !event.start.dateTime,
+          ExtendedProperties: event.extendedProperties, // Include extended properties
         });
       }
     }
@@ -128,8 +133,23 @@ const RecurrenceEvents = ({
       applyCategoryColor(args, scheduleObj.current.currentView);
   };
   const onPopupOpen = (args: any) => {
+    console.log("args", args);
+
+    const startTime = new Date(args.StartTime); // Convert to Date object
+    const currentTime = new Date(); // Current time
+
+    // Check if the start time is in the past
+    if (startTime < currentTime) {
+      args.cancel = true; // Cancel the opening of the popup
+      return; // Exit the function
+    }
+
     if (args.type === "Editor") {
       let statusElement = args.element.querySelector("#EventType");
+      let footerElement = args.element.querySelector(
+        ".e-footer-content"
+      ) as HTMLElement;
+      if (footerElement) footerElement.className = "hidden";
       if (statusElement) {
         statusElement.setAttribute("name", "EventType");
       }
@@ -139,7 +159,7 @@ const RecurrenceEvents = ({
   const editorTemplate = useCallback((props: any) => {
     console.log("props", props);
 
-    return props !== undefined ? (
+    return props !== undefined && !props?.Guid ? (
       <NewEvent
         scheduleObj={scheduleObj}
         props={props}
@@ -148,44 +168,55 @@ const RecurrenceEvents = ({
         user={user}
       />
     ) : (
-      router.refresh()
+      <EditEvent
+        scheduleObj={scheduleObj}
+        props={props}
+        business={business}
+        session={session}
+        user={user}
+        setEditEvent={setEditEvent}
+        editEvent={editEvent}
+      />
     );
   }, []);
   const onActionBegin = (args: any): void => {
     console.log("args", args);
 
     if (args.requestType === "eventCreate") {
-      // Modify the args.data to include additional information for event creation
-      /*    args.data.CustomField = newEvent; */ // Add your additional field here
-
-      // You can also modify other properties as needed
-      // args.data.AnotherField = 'Another Value';
-
-      // Accumulate additional data for the API call
       const eventData = {
         id: args.data.Id,
         subject: args.data.Subject,
-        // Add other properties as needed
         customField: newEvent,
       };
-      /*  additionalEventData.push(eventData); */
       args.addedRecords = eventData;
     }
   };
 
+  const onCellClick = (args: any) => {
+    scheduleObj.current?.openEditor(args, "Add");
+  };
+  const onEventClick = (args: any) => {
+    if (!args.event.RecurrenceRule) {
+      scheduleObj.current?.openEditor(args.event, "Save");
+    } else {
+      scheduleObj.current?.quickPopup.openRecurrenceAlert();
+    }
+  };
   return (
     <div className="schedule-control-section">
       <div className="col-lg-9 control-section">
         <div className="control-wrapper">
           <ScheduleComponent
             width="100%"
-            height="88.5vh"
+            height="87vh"
             selectedDate={new Date()}
+            eventClick={onEventClick}
             ref={scheduleObj}
             eventSettings={eventSettings}
             eventRendered={onEventRendered}
             dataBinding={onDataBinding}
             popupOpen={onPopupOpen}
+            cellClick={onCellClick}
             editorTemplate={editorTemplate}
             showQuickInfo={false}
             actionBegin={onActionBegin}

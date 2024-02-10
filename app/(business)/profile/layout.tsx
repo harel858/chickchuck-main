@@ -1,89 +1,128 @@
 import React from "react";
 import VerticalNav from "@ui/(navbar)/VerticalNav";
+import { OAuth2Client } from "google-auth-library";
 import { getServerSession } from "next-auth";
-import { notFound } from "next/navigation";
 import { authOptions } from "@lib/auth";
-import Images from "@ui/Images";
+import { notFound, redirect } from "next/navigation";
 import Navbar from "@ui/(navbar)/Navbar";
-import { prisma } from "@lib/prisma";
 import { UserData } from "types/types";
+import { prisma } from "@lib/prisma";
 import PlusButton from "@ui/(navbar)/specialOperations/plusButton/PlusButton";
+import { getUserAccount } from "@lib/prisma/users";
+import axios from "axios";
+import { calendar_v3 } from "googleapis";
+import { Account } from "@prisma/client";
+import { v4 as uuidv4 } from "uuid";
+import { setupGoogleCalendarClient } from "@lib/google/client";
 
-const fetchAppointmentSlots = async (id: string | undefined) => {
-  if (!id) return null;
+async function fetchWatch(
+  account: Account,
+  googleClient: {
+    auth: OAuth2Client;
+    calendar: calendar_v3.Calendar;
+    calendarId: string;
+  }
+) {
+  const { auth, calendar, calendarId } = googleClient;
+  const watchExpired = account?.watchExpired;
+  const isExpired =
+    watchExpired && +watchExpired < Math.floor(Date.now() / 1000);
+
+  if (isExpired) {
+    const expirationTime = Math.floor(Date.now() / 1000) + 6 * 24 * 60 * 60;
+    const uuid = uuidv4();
+    try {
+      const result = await calendar.events.watch({
+        calendarId,
+        auth,
+        requestBody: {
+          id: uuid,
+          type: "web_hook",
+          address: `https://7a0a-2a00-a041-3a02-cf00-b8d6-c46a-2745-fb0f.ngrok-free.app/api/google/notifications?userId=${account.userId}`,
+          expiration: `${expirationTime * 1000}`,
+        },
+      });
+
+      const newWatch: any = result;
+      return newWatch.expiration;
+    } catch (error) {
+      console.error("Error while fetching watch request:", error);
+      return null;
+    }
+  }
+
+  return watchExpired;
+}
+
+async function fetchEvents(
+  googleClient: {
+    auth: OAuth2Client;
+    calendar: calendar_v3.Calendar;
+    calendarId: string;
+  },
+  expired: string,
+  accountId: string
+) {
   try {
-    const user = await prisma.user.findUnique({
-      where: { id },
-      include: {
-        Business: {
-          include: {
-            user: { include: { Treatment: true } },
-            Customer: true,
-          },
-        },
-        appointments: {
-          include: { customer: true, treatment: true, appointmentSlot: true },
-        },
+    const { auth, calendar, calendarId } = googleClient;
+
+    const response = await calendar.events.list({
+      calendarId,
+      auth,
+    });
+    const result = response;
+    const newSyncToken = result.data.nextSyncToken;
+
+    await prisma.account.update({
+      where: { id: accountId },
+      data: {
+        syncToken: newSyncToken,
+        watchExpired: expired,
       },
     });
-    if (!user || !user.Business) return null;
-    const { Business } = user;
-    let usersData: UserData[] = [];
-    for (let i = 0; i < Business.user.length; i++) {
-      const user = await prisma.user.findUnique({
-        where: { id: Business.user[i]?.id },
-        include: {
-          Treatment: true,
-          availableSlots: { orderBy: [{ start: "asc" }] },
-        },
-      });
 
-      if (!user) return null;
-
-      usersData.push({
-        name: user.name,
-        AvailableSlot: user.availableSlots,
-        treatments: user.Treatment,
-        userId: user.id,
-        activityDays: user.activityDays,
-      });
-    }
-
-    console.log("UsersData", usersData);
-
-    return { usersData, business: Business, user };
-  } catch (err) {
-    console.log(err);
+    return result.data;
+  } catch (error) {
+    console.error("Error while fetching events:", error);
+    return null;
   }
-};
+}
 
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
-  console.log("session", session);
 
-  const businessData = await fetchAppointmentSlots(session?.user.email!);
-  if (!session?.user || !businessData) return notFound();
-  const value = businessData.business?.businessName.replace(
-    /(\s)(?!\s*$)/g,
-    "-"
+  if (!session?.user.access_token) {
+    return notFound();
+  }
+
+  const googleClient = setupGoogleCalendarClient(session?.user.access_token);
+  const user = await getUserAccount(session?.user.id);
+  console.log("user?.accounts[0]", user?.accounts[0]);
+
+  if (!user?.accounts[0]) {
+    return notFound();
+  }
+
+  const watchExpired = await fetchWatch(user.accounts[0], googleClient);
+
+  const scheduleProps = await fetchEvents(
+    googleClient,
+    watchExpired,
+    user.accounts[0]?.id
   );
-
   return (
     <>
-      <Navbar
-        session={session}
-        link={value}
-        appointments={businessData.user.appointments}
-      />
-      {/*       <PlusButton businessData={businessData} />
-       */}{" "}
       {/* @ts-ignore  */}
-      {/*       <VerticalNav user={session.user} />
-       */}{" "}
-      <section className="h-screen w-full flex flex-col justify-center items-center relative max-2xl:px-0 max-2xl:m-0 gap-10">
-        {/*         <Images user={session.user} />
-         */}
-        {/*  {children} */}
+      <Navbar
+        user={user}
+        scheduleProps={scheduleProps}
+        session={session}
+        link={""}
+      />
+      <PlusButton business={user.Business!} user={user} session={session} />
+
+      <section className="flex justify-center items-center overflow-hidden">
+        <div className="w-full mt-20 overflow-hidden">{children}</div>
       </section>
     </>
   );

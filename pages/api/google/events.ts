@@ -38,9 +38,16 @@ export default async function handler(
     }
     const googleClient = setupGoogleCalendarClient(accessToken);
     const scheduleProps = await fetchEvents(googleClient, accountId);
+    console.log("scheduleProps", scheduleProps);
 
-    if (!scheduleProps)
-      return res.status(500).json({ message: "fetch Events failed" });
+    if (!scheduleProps || scheduleProps?.status !== 200)
+      return res
+        .status(
+          scheduleProps?.status && scheduleProps?.status !== 200
+            ? scheduleProps.status
+            : 500
+        )
+        .json({ message: "fetch Events failed" });
 
     return res
       .status(200)

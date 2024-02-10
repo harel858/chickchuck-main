@@ -27,18 +27,19 @@ const fetchAppointmentSlots = async (businessName: string) => {
         include: {
           Treatment: true,
           availableSlots: { orderBy: [{ start: "asc" }] },
+          activityDays: true,
         },
       });
 
       if (!user) return null;
 
-      usersData.push({
+      /*    usersData.push({
         name: user.name,
         AvailableSlot: user.availableSlots,
         treatments: user.Treatment,
         userId: user.id,
         activityDays: user.activityDays,
-      });
+      }); */
     }
     console.log("UsersData", usersData);
     return { usersData, business };

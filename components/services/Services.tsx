@@ -11,21 +11,22 @@ import { RiCoinsLine } from "react-icons/ri";
 
 function Services({
   user,
+  Business,
 }: {
   user: User & {
-    Business: Business & {
-      RequiredDocument: RequiredDocument[];
-    };
     Treatment: (Treatment & {
-      RequiredDocument: RequiredDocument[];
+      RequiredDocument?: RequiredDocument[];
     })[];
+  };
+  Business: Business & {
+    RequiredDocument?: RequiredDocument[];
   };
 }) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState<
     (Treatment & {
-      RequiredDocument: RequiredDocument[];
+      RequiredDocument?: RequiredDocument[];
     })[]
   >([]);
   console.log(user);
@@ -61,11 +62,11 @@ function Services({
           <div className="flex flex-row gap-4 justify-center items-center">
             <AddServices
               businessId={user.businessId!}
-              bussinesDocs={user.Business?.RequiredDocument || []}
+              bussinesDocs={Business?.RequiredDocument || []}
             />
             <AddRequiredDocuments
               businessId={user.businessId!}
-              docs={user.Business?.RequiredDocument || []}
+              docs={Business?.RequiredDocument || []}
             />
           </div>
           <SearchService
@@ -86,7 +87,7 @@ function Services({
                 key={treatment.id}
                 i={i}
                 treatment={treatment}
-                bussinesDocs={user.Business.RequiredDocument}
+                bussinesDocs={Business.RequiredDocument}
               />
             ))}
           </ul>
@@ -99,7 +100,7 @@ function Services({
                 key={treatment.id}
                 i={i}
                 treatment={treatment}
-                bussinesDocs={user.Business.RequiredDocument}
+                bussinesDocs={Business.RequiredDocument}
               />
             ))}
           </ul>

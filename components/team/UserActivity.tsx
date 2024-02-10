@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+/* import React, { useCallback, useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import ActivityDays from "./UserActivityDays";
 import ActivityTimePicker from "./ActivityTimePicker";
@@ -24,7 +24,7 @@ export default function UserActivity({
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const initialActivityDays = user.activityDays;
-  // Use object destructuring for state variables
+
   const [error, setError] = useState<string>("");
   const [startActivity, setStartActivity] = useState<Dayjs>(
     dayjs(user.startActivity)
@@ -108,3 +108,5 @@ export default function UserActivity({
     </div>
   );
 }
+ */
+export {};

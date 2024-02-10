@@ -3,8 +3,8 @@ import { prisma } from "@lib/prisma";
 import { authOptions } from "@lib/auth";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
-import TeamManeger from "@components/team/TeamManeger";
-export const revalidate = 0;
+/* import TeamManeger from "@components/team/TeamManeger";
+ */ export const revalidate = 0;
 
 async function fetchUser(email: string | null | undefined) {
   try {
@@ -41,7 +41,7 @@ async function Page() {
 
   const business = await fetchUser(session?.user?.email);
   if (!business) return notFound();
-  return <TeamManeger business={business} />;
+  return <></>;
 }
 
 export default Page;

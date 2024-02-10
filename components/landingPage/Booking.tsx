@@ -34,7 +34,7 @@ function Booking({
 
   return (
     <div className="relative flex flex-col items-center justify-center w-full text-white">
-      {loading ? (
+      {/* {loading ? (
         <>loading...</>
       ) : !session?.data?.user ||
         session?.data?.user.UserRole === "RECIPIENT" ? (
@@ -43,7 +43,7 @@ function Booking({
         <Suspense fallback={<>loading...</>}>
           <Steps businessData={businessData} />
         </Suspense>
-      )}
+      )} */}
     </div>
   );
 }

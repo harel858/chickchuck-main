@@ -21,10 +21,7 @@ const bucketName = process.env.BUCKET_NAME!;
 
 async function getBusiness(params: string) {
   const value = params.replace(/-/g, " ");
-  let urls: {
-    backgroundImage: string;
-    profileImage: string;
-  } | null = null;
+  let urls: string | null = null;
   try {
     const business = await prisma.business.findUnique({
       where: { businessName: value },
@@ -35,16 +32,16 @@ async function getBusiness(params: string) {
       const params = {
         Bucket: bucketName,
         Key: {
-          profileImgName: business.Images.profileImgName,
-          backgroundImgName: business.Images.backgroundImgName,
+          profileImgName: business.Images[0]?.profileImgName || "",
+          backgroundImgName: business.Images[0]?.backgroundImgName || "",
         },
       };
-      const res = await getImage(params);
-      urls = res;
+      /*  const res = await getImage(params);
+      urls = res; */
     }
     const result = { ...business, Images: urls };
     const { id, ...rest } = result;
-    return rest as LandingPageData;
+    return rest;
   } catch (err) {
     console.log(err);
     return null;
@@ -63,11 +60,11 @@ async function Layout({
       {/*       <ProfileNav business={business} />
        */}{" "}
       <section className="flex flex-col justify-start items-center gap-5">
-        {session?.user.isAdmin ? (
+        {/* {session?.user.isAdmin ? (
           <Images user={session.user} />
         ) : (
           <BackgroundImage business={business} lobster={lobster.className} />
-        )}
+        )} */}
         {children}
       </section>
     </>

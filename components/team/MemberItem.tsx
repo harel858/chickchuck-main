@@ -1,4 +1,4 @@
-"use client";
+/* "use client";
 import React from "react";
 import { motion } from "framer-motion";
 import DetailsButton from "./DetailsButton";
@@ -49,3 +49,6 @@ export default function MemberItem({
     </motion.li>
   );
 }
+ */
+
+export {};

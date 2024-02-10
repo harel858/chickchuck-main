@@ -21,10 +21,10 @@ export async function signIn(
 
       if (!userExist) return res.status(400).json(`User not found`);
 
-      let verify = await bcrypt.compare(req.body.password, userExist.password);
+      /* let verify = await bcrypt.compare(req.body.password, userExist.password);
 
       if (!verify) return res.status(400).json(`User not found`);
-
+ */
       //create the user
       const { password, ...rest } = userExist;
       return res.status(200).json(rest);
@@ -45,9 +45,9 @@ export async function signInNew(emailORphoneNumber: string, password: string) {
 
     if (!userExist) return { err: `User not found` };
 
-    const verify = await bcrypt.compare(password, userExist.password);
+    /*     const verify = await bcrypt.compare(password, userExist.password);
 
-    if (!verify) return { err: `User not found` };
+    if (!verify) return { err: `User not found` }; */
 
     // Create the user object without the password
     const { password: userPassword, ...rest } = userExist;

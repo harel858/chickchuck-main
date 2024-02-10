@@ -9,9 +9,9 @@ function DeleteButton({
   treatment,
 }: {
   treatment: Treatment & {
-    RequiredDocument: RequiredDocument[];
+    RequiredDocument?: RequiredDocument[];
   };
-  bussinesDocs: RequiredDocument[];
+  bussinesDocs?: RequiredDocument[];
 }) {
   const confirm = () => {
     deleteService(treatment.id);

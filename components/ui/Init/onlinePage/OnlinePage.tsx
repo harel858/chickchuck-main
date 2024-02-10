@@ -1,7 +1,7 @@
 import React from "react";
 import { UploadFile } from "antd";
-import ThemePicker from "./ThemePicker";
-import UploadGallery from "./uploadGallery";
+/* import ThemePicker from "./ThemePicker";
+ */ import UploadGallery from "./uploadGallery";
 import UploadLogo from "./UploadLogo";
 
 function OnlinePage({
@@ -19,7 +19,8 @@ function OnlinePage({
     <div className="w-full flex flex-col justify-center items-center gap-5">
       <UploadLogo logo={logo} setLogo={setLogo} />
       <UploadGallery fileList={fileList} setFileList={setFileList} />
-      <ThemePicker />
+      {/*       <ThemePicker />
+       */}{" "}
     </div>
   );
 }

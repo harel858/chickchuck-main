@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
-  createUser,
   getAllUsers,
   getUserByEmail,
   getByBusinessName,
@@ -54,17 +53,17 @@ export default async function handler(
       if (userExist) return res.status(400).json(`user already exist`);
 
       //create the user
-      const newUser = await createUser({
+      /*   const newUser = await createUser({
         name,
         email,
         phone,
         password: hashedPassword,
         businessName,
-      });
+      }); */
 
-      if (!newUser) return res.status(500).json("user creation failed");
-
-      return res.status(201).json(newUser);
+      /*       if (!newUser) return res.status(500).json("user creation failed");
+       */
+      return res.status(201).json("function canceled");
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);

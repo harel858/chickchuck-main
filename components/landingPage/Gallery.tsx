@@ -1,6 +1,6 @@
 "use client";
-import "./gallery.css";
-import React from "react";
+/* import "./gallery.css";
+ */ import React from "react";
 import { Image } from "antd";
 import { Session } from "next-auth";
 
@@ -12,8 +12,8 @@ const Gallery = ({ session }: { session: Session }) => {
           console.log(`current index: ${current}, prev index: ${prev}`),
       }}
     >
-      <Image width={500} src={session.user?.urls?.backgroundImage} />
-      <Image width={500} src={session.user?.urls?.profileImage} />
+      {/*   <Image width={500} src={session.user?.image!} />
+      <Image width={500} src={session.user?.urls?.profileImage} /> */}
       <Image
         width={500}
         src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"

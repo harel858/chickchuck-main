@@ -114,7 +114,7 @@ export async function getAdminById(id: any) {
   try {
     const userExist = await prisma?.user.findUnique({
       where: { id },
-      include: { Business: true },
+      include: { Business: true, activityDays: true },
     });
     if (userExist?.isAdmin) return userExist;
     return null;

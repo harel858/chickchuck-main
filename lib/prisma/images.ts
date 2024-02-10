@@ -39,7 +39,7 @@ export const updateProfileImages = async (params: {
 }) => {
   const { fileName, type, businessId } = params;
   try {
-    if (type == "PROFILE") {
+    /*   if (type == "PROFILE") {
       const created = await prisma.images.update({
         where: { businessId },
         data: {
@@ -47,8 +47,8 @@ export const updateProfileImages = async (params: {
         },
       });
       return created;
-    }
-    if (type == "BACKGROUND") {
+    } */
+    /* if (type == "BACKGROUND") {
       const created = await prisma.images.update({
         where: { businessId },
         data: {
@@ -56,7 +56,7 @@ export const updateProfileImages = async (params: {
         },
       });
       return created;
-    }
+    } */
     return null;
   } catch (err) {
     console.log(err);

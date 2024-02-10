@@ -16,7 +16,7 @@
 /* Style the scrollbar track when hovering over it */
 .scrollbarCustom::-webkit-scrollbar-track {
     background: #f1f1f1;
-    /* Set the background color of the track */
+    /* Set the background color of the track */ 
 }
 
 /* If you want to hide the scrollbar when not hovering */

@@ -26,7 +26,7 @@ function AdvanceFeatures({
   errors: ErrorData;
   serviceFormData: ServiceFormData;
   treatmentDocs?: RequiredDocument[];
-  bussinesDocs: RequiredDocument[];
+  bussinesDocs?: RequiredDocument[];
 }) {
   const [expanded, setExpanded] = React.useState<string | false>(
     initOpen || false

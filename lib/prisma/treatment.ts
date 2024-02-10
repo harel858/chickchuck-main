@@ -38,13 +38,13 @@ export const createTreatment = async ({
       user: { connect: users.map((user) => ({ id: user.id })) },
       business: { connect: { id: businessId } },
     };
-
+    /* 
     const newTreatment = await prisma.treatment.create({
-      data: treatmentData,
+      data: {treatmentData},
       include: { RequiredDocument: true },
     });
-
-    return { newTreatment };
+ */
+    return null;
   } catch (error) {
     console.error("Error creating treatment:", error);
     throw error;

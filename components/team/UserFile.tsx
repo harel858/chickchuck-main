@@ -23,7 +23,7 @@ function UserFile({
 }) {
   const initialFormData = {
     salary: user.Wage,
-    "phone Number": user.phone,
+    "phone Number": user.phone || "",
     email: user.email ? user.email : "",
     services: user.Treatment,
   };

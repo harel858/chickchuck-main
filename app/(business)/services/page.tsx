@@ -13,8 +13,8 @@ const fetchUser = async (email: string | null | undefined) => {
     const user = await prisma.user.findUnique({
       where: { email },
       include: {
-        Treatment: { include: { RequiredDocument: true } },
         Business: { include: { RequiredDocument: true } },
+        Treatment: { include: { RequiredDocument: true } },
       },
     });
     if (!user || !user.Business) return null;
@@ -29,8 +29,8 @@ const fetchUser = async (email: string | null | undefined) => {
 async function Page() {
   const session = await getServerSession(authOptions);
   const user = await fetchUser(session?.user?.email);
-  if (!user?.Business) return notFound();
-  return <Services />;
+  if (!user || !user.Business) return notFound();
+  return <Services user={user} Business={user.Business} />;
 }
 
 export default Page;

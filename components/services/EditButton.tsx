@@ -56,9 +56,9 @@ export default function DetailsButton({
   bussinesDocs,
 }: {
   treatment: Treatment & {
-    RequiredDocument: RequiredDocument[];
+    RequiredDocument?: RequiredDocument[];
   };
-  bussinesDocs: RequiredDocument[];
+  bussinesDocs?: RequiredDocument[];
 }) {
   const [api, contextHolder] = notification.useNotification();
 

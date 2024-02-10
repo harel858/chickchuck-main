@@ -11,9 +11,9 @@ export default function ClientItem({
 }: {
   i: number;
   treatment: Treatment & {
-    RequiredDocument: RequiredDocument[];
+    RequiredDocument?: RequiredDocument[];
   };
-  bussinesDocs: RequiredDocument[];
+  bussinesDocs?: RequiredDocument[];
 }) {
   return (
     <motion.li

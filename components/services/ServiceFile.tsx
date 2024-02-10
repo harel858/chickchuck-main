@@ -22,9 +22,9 @@ function Form({
   successMessage,
 }: {
   treatment: Treatment & {
-    RequiredDocument: RequiredDocument[];
+    RequiredDocument?: RequiredDocument[];
   };
-  bussinesDocs: RequiredDocument[];
+  bussinesDocs?: RequiredDocument[];
   handleClose: () => void;
   successMessage: () => void;
 }) {

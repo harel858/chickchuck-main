@@ -25,11 +25,6 @@ function Steps({
     };
   };
 }) {
-  console.log(
-    "businessData.business.activityDays",
-    businessData.business.activityDays
-  );
-
   const { usersData } = businessData;
   // Get the user session
   const { data: session } = useSession();
@@ -108,14 +103,14 @@ function Steps({
             treatmentMissing={treatmentMissing} // Use the combined state
           />
         </div>
-        <AvailableList
+        {/*  <AvailableList
           appointmentInput={appointmentInput}
           setAppointmentInput={setAppointmentInput}
           usersData={usersData}
           businessActivityDays={businessData.business.activityDays}
           setTreatmentMissing={setTreatmentMissing}
           setRecipientMissing={setRecipientMissing}
-        />
+        /> */}
         <div className="flex flex-col justify-center items-center gap-1">
           {recipientMissing && treatmentMissing ? (
             <p className="text-red-500 font-serif text-lg font-medium">

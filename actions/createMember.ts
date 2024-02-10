@@ -16,7 +16,7 @@ export async function createMember(
 
     const business = await prisma.business.findUnique({
       where: { id: businessId },
-      include: { Treatment: true },
+      include: { Treatment: true, activityDays: true },
     });
     const exist = await prisma.user.findUnique({
       where: { phone: phoneNumber },
@@ -26,9 +26,17 @@ export async function createMember(
       data: {
         name,
         phone: phoneNumber,
-        startActivity: business.openingTime,
-        endActivity: business.closingTime,
-        activityDays: business.activityDays,
+        email: "",
+        activityDays: {
+          create: business.activityDays.map((day) => ({
+            day: day.day,
+            start: day.start,
+            end: day.end,
+            isActive: day.isActive,
+            businessId: businessId,
+            Business: { connect: { id: businessId } },
+          })),
+        },
         password: hashedPassword,
         Treatment: {
           connect: business.Treatment.map((item) => ({ id: item.id })),

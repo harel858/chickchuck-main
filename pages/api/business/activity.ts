@@ -9,8 +9,8 @@ import {
 import {
   getAdminById,
   getById,
-  updateActivityDays,
-  updateActivityTime,
+  /*   updateActivityDays,
+  updateActivityTime, */
 } from "@lib/prisma/users";
 
 type SlotBody = {
@@ -34,17 +34,17 @@ export default async function handler(
       if (!userExist?.Business) return res.status(500).json(`user not found`);
       const { Business } = userExist;
 
-      const activityDaysChanged =
+      /*    const activityDaysChanged =
         JSON.stringify(activityDays.sort()) !==
-        JSON.stringify(Business.activityDays.sort());
+        JSON.stringify(Business.activityDays.sort()); */
 
-      if (activityDaysChanged) {
+      /*    if (activityDaysChanged) {
         const { updateDaysFailed, updateDaysSuccess } =
           await updateActivityDays(Business.id, activityDays);
 
         if (updateDaysFailed || !updateDaysSuccess)
           return res.status(500).json(`update Days Failed`);
-      }
+      } */
       /* 
       const { createdSlots, slotFailed } = await createAvailableSlots(
         availableSlots,
@@ -54,14 +54,14 @@ export default async function handler(
       if (slotFailed || !createdSlots)
         return res.status(500).json(`Create Available Slots Failed`); */
 
-      const { response, error } = await updateActivityTime(
+      /*    const { response, error } = await updateActivityTime(
         Business.id,
         startActivity,
         endActivity
-      );
-      if (error || !response) return res.status(500).json(`update Time Failed`);
+      ); */
+      /*    if (error || !response) return res.status(500).json(`update Time Failed`);
 
-      return res.status(200).json({ response, error });
+      return res.status(200).json({ response, error }); */
     } catch (err) {
       return res.status(500).json(err);
     }

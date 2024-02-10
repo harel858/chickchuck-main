@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { message, Steps, theme } from "antd";
 import { AdditionData } from "./SyncfusionCalendar";
 import { Button } from "@ui/Button";
@@ -39,8 +39,9 @@ const NewEvent = ({
     Customer: Customer[];
   };
 }) => {
-  const [isNewClient, setIsNewClient] = useState(false);
   const { token } = theme.useToken();
+  const [isPending, startTransition] = useTransition();
+  const [isNewClient, setIsNewClient] = useState(false);
   const [current, setCurrent] = useState(0);
   const [event, setEvent] = useState<AdditionData | null>(null);
   const [newClient, setNewClient] = useState<{
@@ -62,7 +63,7 @@ const NewEvent = ({
   useEffect(() => {
     const customersList = business.Customer.map((item) => ({
       value: item.id,
-      label: item.name,
+      label: `${item.name} - ${item.phoneNumber}`,
     }));
     const servicesList = user.Treatment.map((item) => ({
       value: item.id,
@@ -170,12 +171,15 @@ const NewEvent = ({
           },
           extendedProperties: {
             private: {
-              treatmentId: event?.service?.value,
-              customerId: event?.customer?.value,
+              treatmentId: event?.service?.value || "",
+              customerId: event?.customer?.value || "",
             },
           },
         };
-        await createAppointment(session.user.access_token, eventProps);
+        startTransition(
+          async () =>
+            await createAppointment(session.user.access_token, eventProps)
+        );
         message.success(`${event?.customer?.label}נקבע תור ל`);
         closeEditorTemplate();
       }
@@ -243,6 +247,7 @@ const NewEvent = ({
               onClick={onSubmit}
               className={`bg-sky-600 w-full`}
               size="lg"
+              isLoading={isPending}
             >
               Done
             </Button>
