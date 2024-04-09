@@ -1,66 +1,82 @@
-import { notFound } from "next/navigation";
 import React from "react";
+import { notFound } from "next/navigation";
 import { prisma } from "@lib/prisma";
-import Booking from "../../components/landingPage/Booking";
-import { UserData } from "types/types";
-import Gallery from "@components/landingPage/Gallery";
+import AppointmentSteps from "@components/AppointmentSteps";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@lib/auth";
+import NavButtons from "@ui/NavButtons";
+import { getImages2 } from "@lib/aws/s3";
+import Images from "@ui/Images";
+import BackgroundImage from "@components/landingPage/BackgroundImage";
+
 type LandingPageProps = {
   params: {
     businessName: string;
   };
 };
+const bucketName = process.env.BUCKET_NAME!;
 
-const fetchAppointmentSlots = async (businessName: string) => {
+async function getBusiness(params: string) {
+  const value = decodeURIComponent(
+    params?.replace(/\-/g, " ") // Replace hyphens with whitespace
+  );
+
+  let urls: {
+    profileUrls: string;
+    backgroundUrls: string[];
+  } | null = null;
   try {
-    const value = businessName.replace(/-/g, " ").replace(/%60/g, "`");
     const business = await prisma.business.findUnique({
       where: { businessName: value },
-      include: { user: { include: { Treatment: true } }, Customer: true },
+      include: {
+        Images: true,
+        Treatment: true,
+        activityDays: true,
+        user: { include: { accounts: true, activityDays: true } },
+      },
     });
-    if (!business) return null;
-    let usersData: UserData[] = [];
-    for (let i = 0; i < business.user.length; i++) {
-      const user = await prisma.user.findUnique({
-        where: { id: business.user[i]?.id },
-        include: {
-          Treatment: true,
-          availableSlots: { orderBy: [{ start: "asc" }] },
-          activityDays: true,
+    if (!business?.user) return null;
+
+    if (business?.Images) {
+      const params = business.Images.map((element) => ({
+        Bucket: bucketName,
+        Key: {
+          profileImgName: element?.profileImgName || "",
+          backgroundImgName: element?.backgroundImgName || "",
         },
-      });
-
-      if (!user) return null;
-
-      /*    usersData.push({
-        name: user.name,
-        AvailableSlot: user.availableSlots,
-        treatments: user.Treatment,
-        userId: user.id,
-        activityDays: user.activityDays,
-      }); */
+      }));
+      const res = await getImages2(params);
+      urls = res;
     }
-    console.log("UsersData", usersData);
-    return { usersData, business };
+    const result = { ...business, urls };
+    const { id, ...rest } = result;
+    return { business, urls };
   } catch (err) {
     console.log(err);
+    return null;
   }
-};
-
+}
 export default async function LandingPage({
   params: { businessName },
 }: LandingPageProps) {
-  const businessData = await fetchAppointmentSlots(businessName);
+  const result = await getBusiness(businessName);
+
   const session = await getServerSession(authOptions);
 
-  console.log("userData", businessData);
-
-  if (!businessData || !session) return notFound();
-
+  if (!result) return notFound();
+  const { business, urls } = result;
   return (
-    <div className="w-1/2 flex flex-row overflow-hidden bg-black rounded-3xl">
-      <Gallery session={session} />
-    </div>
+    <>
+      {session?.user.isAdmin ? (
+        <Images urls={urls} session={session} />
+      ) : (
+        <BackgroundImage urls={urls} />
+      )}
+      <NavButtons business={business} />
+      <AppointmentSteps
+        business={business}
+        freeBusy={business.user[0]?.accounts[0]?.access_token || ""}
+      />
+    </>
   );
 }

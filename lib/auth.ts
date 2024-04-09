@@ -8,8 +8,9 @@ import { getImage } from "./aws/s3";
 import { signInNew } from "./routes/user/signin";
 import googleProvider from "next-auth/providers/google";
 import { setupGoogleCalendarClient } from "./google/client";
+const bucketName = process.env.BUCKET_NAME!;
 
-interface UserCredentials {
+/* interface UserCredentials {
   emailORphoneNumber: string;
   password: string;
 }
@@ -18,7 +19,6 @@ interface CustomerCredentials {
   phoneNumber: string;
   bussinesId: string;
 }
-const bucketName = process.env.BUCKET_NAME!;
 
 const authorizeUserLogin = async (credentials: any, req: any) => {
   try {
@@ -76,21 +76,20 @@ const configureCustomerLoginProvider = () =>
     },
     authorize: authorizeCustomerLogin,
   });
-
+ */
 async function refreshAccessToken(
   token: JWT & {
     accountId: string;
   }
 ) {
   try {
-    console.log("token", token.refresh_token);
+    console.log("token", token);
 
     const url =
       "https://oauth2.googleapis.com/token?" +
       new URLSearchParams({
         clientId: process.env.GOOGLE_CLIENT_ID ?? "",
         clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-
         grant_type: "refresh_token",
         refresh_token: token?.refresh_token,
       });
@@ -101,7 +100,6 @@ async function refreshAccessToken(
       },
       method: "POST",
     });
-    console.log("response", response.ok);
 
     const refreshedTokens: any = await response.json();
     console.log("refreshedTokens", refreshedTokens);
@@ -149,7 +147,7 @@ export const authOptions: NextAuthOptions = {
       },
       profile(profile, tokens) {
         console.log("profile", profile);
-        console.log("profile", profile);
+        console.log("tokens", tokens);
 
         return {
           id: profile.sub,
@@ -200,6 +198,7 @@ export const authOptions: NextAuthOptions = {
         token.businessId = user?.Business?.id || "";
         token.user = user;
         token.logo = logo;
+        token.businessName = user.Business?.businessName || "";
         /*        token.access_token = user.accounts[0]?.access_token || "";
         token.refresh_token = user.accounts[0]?.refresh_token || ""; */
 
@@ -225,9 +224,6 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token, user }) {
-      console.log("session.user", session.user);
-      console.log("token.account", token);
-
       return {
         ...session,
         user: {
@@ -238,6 +234,8 @@ export const authOptions: NextAuthOptions = {
           image: token.logo || undefined,
           access_token: token.access_token,
           businessId: token.businessId,
+          businessName: token.businessName,
+          isAdmin: token.user.isAdmin,
         },
       };
     },

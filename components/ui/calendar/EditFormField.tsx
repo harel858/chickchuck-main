@@ -4,9 +4,10 @@ import { ScheduleComponent } from "@syncfusion/ej2-react-schedule";
 import { Select, TimePicker } from "antd";
 import dayjs from "dayjs";
 import React from "react";
-import { EditData, EditProps } from "./EditEvent";
+import { EditData } from "./EditEvent";
 import TextArea from "antd/es/input/TextArea";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { EditProps } from "types/types";
 dayjs.extend(customParseFormat);
 
 function EditFormField({
@@ -93,11 +94,12 @@ function EditFormField({
         placeholder="maxLength is 255"
         className="focus:bg-white bg-white !important w-10/12"
         maxLength={255}
+        value={event?.descripition}
         onChange={(e) => {
           const {
             target: { value },
           } = e;
-          event && setEvent({ ...event, description: value });
+          event && setEvent({ ...event, descripition: value });
         }}
       />
     </div>

@@ -6,11 +6,19 @@ import SearchClient from "@components/clients/SearchClient";
 import { CustomerItem } from "types/types";
 import LargeHeading from "@ui/LargeHeading";
 import { CgProfile } from "react-icons/cg";
+import { Session } from "next-auth";
+import { Customer } from "@prisma/client";
 
-function Clients({ customers }: { customers: CustomerItem[] }) {
+function Clients({
+  customers,
+  session,
+}: {
+  customers: Customer[];
+  session: Session;
+}) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResult, setSearchResult] = useState<CustomerItem[]>([]);
+  const [searchResult, setSearchResult] = useState<Customer[]>([]);
   useEffect(() => {
     if (!searchQuery) return;
     const handleSearch = () => {
@@ -53,7 +61,12 @@ function Clients({ customers }: { customers: CustomerItem[] }) {
             className={`flex gap-4 flex-1 w-full flex-row flex-wrap justify-evenly content-center items-center overflow-x-hidden rounded-bl-3xl rounded-br-3xl `}
           >
             {customers.map((customer, i) => (
-              <ClientItem key={customer.id} i={i} customer={customer} />
+              <ClientItem
+                session={session}
+                key={customer.id}
+                i={i}
+                customer={customer}
+              />
             ))}
           </ul>
         ) : (
@@ -61,7 +74,12 @@ function Clients({ customers }: { customers: CustomerItem[] }) {
             className={`flex gap-4 flex-1 w-full flex-row flex-wrap justify-evenly content-center items-center overflow-x-hidden rounded-bl-3xl rounded-br-3xl `}
           >
             {searchResult.map((customer, i) => (
-              <ClientItem key={customer.id} i={i} customer={customer} />
+              <ClientItem
+                session={session}
+                key={customer.id}
+                i={i}
+                customer={customer}
+              />
             ))}
           </ul>
         )}

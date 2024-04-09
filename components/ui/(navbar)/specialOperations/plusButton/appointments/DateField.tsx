@@ -145,6 +145,7 @@ const DateField = ({
         !user.activityDays[selectedDate.day()]?.isActive
       )
         return [];
+
       const day = user.activityDays.find(
         (item) => item.day === dayjs(selectedDate).day()
       );
@@ -185,8 +186,11 @@ const DateField = ({
           });
 
           if (
-            isSlotAvailable &&
-            dayjs(currentSlotEnd.format("HH:mm"), "HH:mm").isBefore(
+            (isSlotAvailable &&
+              dayjs(currentSlotEnd.format("HH:mm"), "HH:mm").isBefore(
+                dayjs(day?.end, "HH:mm")
+              )) ||
+            dayjs(currentSlotEnd.format("HH:mm"), "HH:mm").isSame(
               dayjs(day?.end, "HH:mm")
             )
           )

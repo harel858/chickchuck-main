@@ -1,5 +1,4 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import { Vonage } from "@vonage/server-sdk";
 import {
   createCustomer,
@@ -7,6 +6,7 @@ import {
   updateCustomer,
 } from "../../../lib/prisma/customer/customer";
 import { VerificationData } from "../../../types/types";
+import { Customer } from "@prisma/client";
 
 const vonage = new (Vonage as any)({
   apiKey: `${process.env.API_KEY}`,
@@ -17,61 +17,54 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method == "POST") {
-    try {
-      const { request_id, code, phoneNumber, name, bussinesId } =
-        req.body as VerificationData;
+  if (req.method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
 
-      const { customer, getCustomerErr } = await getCustomer(
-        phoneNumber,
-        bussinesId
-      );
-      console.log("customer", customer);
-      console.log("getCustomerErr", getCustomerErr);
+  try {
+    const { request_id, code, phoneNumber, name, bussinesId } =
+      req.body as VerificationData;
 
-      if (getCustomerErr) return res.status(500).json(getCustomerErr);
+    const check = await vonage.verify.check(request_id, code);
+    console.log(`check: ${JSON.stringify(check)}`);
 
-      if (customer && customer.name !== name)
+    if (+check.status !== 0) {
+      return res.status(400).json("Wrong verification code");
+    }
+
+    let customer: Customer | null = null;
+    const { existCustomer, getCustomerErr } = await getCustomer(
+      phoneNumber,
+      bussinesId
+    );
+    console.log("existCustomer", existCustomer);
+
+    if (existCustomer) {
+      customer = existCustomer;
+      if (existCustomer.name !== name) {
         await updateCustomer(name, phoneNumber);
-
-      if (customer) return res.status(200).json(customer);
-
+        customer = existCustomer;
+      }
+    } else {
       const { newCustomer, createCustomerErr } = await createCustomer(
         name,
         phoneNumber,
         bussinesId
       );
-      if (!newCustomer || createCustomerErr) {
-        return res.status(500).json(`faild`);
-      }
-      return res.status(200).json(newCustomer);
-
-      /*  const check = await vonage.verify.check(request_id, code);
-      console.log(`check: ${JSON.stringify(check)}`);
-      console.log(check);
-
-      if (check.status == 0) {
-        const cancel = await vonage.verify.cancel(request_id);
-        console.log(`cancel: ${JSON.stringify(cancel)}`);
-
-        if(customer) return res.status(200).json(customer)
-
-        const { newCustomer, createCustomerErr } = await createCustomer(
-          name,
-          phoneNumber
-        );
-        if (!newCustomer || createCustomerErr) {
-          return res.status(500).json(`faild`);
-        }
-        return res.status(200).json(newCustomer);
-      }
-      return res.status(400).json(`wrong number`); */
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json(err);
+      customer = newCustomer || null;
     }
-  }
 
-  res.setHeader("Allow", ["GET", "POST"]);
-  res.status(425).end(`method ${req.method} is not allowed.`);
+    await vonage.verify.cancel(request_id);
+    console.log(`Request canceled successfully`);
+
+    if (customer) {
+      return res.status(200).json(customer);
+    } else {
+      return res.status(500).json("Internal Server Error");
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json("Internal Server Error");
+  }
 }

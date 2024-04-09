@@ -37,7 +37,6 @@ const AppointmentField = ({
   user,
   getValues,
   business,
-  isNewClient,
 }: {
   label: FieldType["label"];
   control: Control<TAppointmentValidation>;
@@ -52,14 +51,11 @@ const AppointmentField = ({
     activityDays: ActivityDays[];
     Customer: Customer[];
   };
-  isNewClient: boolean;
   business: Business & {
     Customer: Customer[];
   };
 }) => {
-  return name === "Client" && isNewClient ? (
-    <AddCustomer business={business} />
-  ) : (
+  return (
     <div className="flex flex-col justify-center items-center gap-5 w-full">
       <Label key={label} className="text-black">
         {label}

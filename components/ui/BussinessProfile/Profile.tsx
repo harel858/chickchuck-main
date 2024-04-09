@@ -1,22 +1,44 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ProfilePageData } from "types/types";
-/* import BussinessActivity from "./BussinessActivity/BussinessActivity/BussinessActivity";
- */ import UniqueLink from "@ui/UniqueLink";
-import BussinessAddress from "@ui/BussinessProfile/bussinessAddresses/bussinessAddress";
-import { useSession } from "next-auth/react";
+import { AndroidOutlined, AppleOutlined } from "@ant-design/icons";
+import { Tabs, TabsProps } from "antd";
+import { Session } from "next-auth";
+import { ActivityDays, Business } from "@prisma/client";
+import Accordion from "./Accordion";
+import { MdBusinessCenter } from "react-icons/md";
 
-function Profile({ link, user }: { link: string; user: any }) {
-  const { data } = useSession();
-  console.log("data", data);
-
+const Profile = ({
+  link,
+  user,
+  session,
+  business,
+}: {
+  business: Business & { activityDays: ActivityDays[] };
+  link: string;
+  user: any;
+  session: Session;
+}) => {
+  const items: TabsProps["items"] = [
+    {
+      key: "0",
+      label: `הגדרות עסק`,
+      children: <Accordion business={business} />,
+    },
+    {
+      key: "1",
+      label: `מנוי`,
+      children: <></>,
+    },
+  ];
   return (
-    <div className="flex flex-col justify-center flex-wrap items-center gap-10 m-0 max-2xl:mt-20 w-full">
-      <UniqueLink link={link} />
-      {/*  <BussinessActivity user={user} />
-      <BussinessAddress user={user} /> */}
+    <div className="flex justify-center items-center mt-10">
+      <Tabs
+        defaultActiveKey="0"
+        className="max-md:w-full w-1/2 bg-white px-2 pb-10 rounded-2xl"
+        items={items}
+      />
     </div>
   );
-}
+};
 
 export default Profile;

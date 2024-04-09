@@ -1,8 +1,29 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { setupGoogleCalendarClient } from "@lib/google/client";
+import { updateGoogleCalendarEvent } from "@lib/google/updateEvent";
+import { EventProps } from "actions/createAppointment";
+import { deleteAppointment } from "actions/deleteAppointment";
+import { deleteGoogleCalendarEvent } from "@lib/google/deleteEvent";
 type ResponseData = {
   message: string;
 };
+export type DeleteBody = {
+  EndTime: string;
+  ExtendedProperties: {
+    private: {
+      customerId: string;
+      treatmentId: string;
+    };
+  };
+  Guid: string;
+  Id: string;
+  IsAllDay: boolean;
+  StartTime: string;
+  Subject: string;
+  descripition: string;
+  status: string;
+};
+
 const tableName = process.env.DynamoTableName!;
 export default async function handler(
   req: NextApiRequest,
@@ -56,9 +77,31 @@ export default async function handler(
     }
 
     if (req.body.changed !== null && req.body.changed.length > 0) {
+      console.log("req.body", req.body.changed[0]);
+      const data = req.body.changed[0] as EventProps & {
+        id: string;
+      };
+      const googleClient = setupGoogleCalendarClient(bearer);
+      const updateEvent = await updateGoogleCalendarEvent(
+        googleClient,
+        req.body
+      );
+      return res
+        .status(200)
+        .json({ message: JSON.stringify({ reqBody: req.body, updateEvent }) });
     }
 
     if (req.body.deleted !== null && req.body.deleted.length > 0) {
+      console.log("req.body", req.body.changed[0]);
+      const data = req.body.deleted[0] as DeleteBody;
+      const googleClient = setupGoogleCalendarClient(token);
+      const deletedEvent = await deleteGoogleCalendarEvent(
+        googleClient,
+        data.Id
+      );
+      return res
+        .status(200)
+        .json({ message: JSON.stringify({ reqBody: deletedEvent }) });
     }
 
     return res.status(200).json({ message: req.body });

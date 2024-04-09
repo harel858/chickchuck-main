@@ -287,17 +287,15 @@ export interface CreateUser {
 }
 
 export interface LandingPageData {
-  Images: {
-    backgroundImage: string;
-    profileImage: string;
-  } | null;
+  Images: any;
+  Address: Address[];
   businessName: string;
   phone: string;
-  openingTime: string | null;
-  closingTime: string | null;
   businessImage: string | null;
-  activityDays: number[];
-  Address: Address[];
+  BusinessType: BusinessType;
+  LastCalendar: LastCalendar;
+  ComeFrom: ComeFrom;
+  urls: string[];
 }
 
 export type CustomerItem = {
@@ -380,3 +378,55 @@ export interface NotificationData {
     appointmentSlot: AppointmentSlot;
   };
 }
+
+export type EditProps = {
+  EndTime: string;
+  ExtendedProperties: {
+    private: {
+      customerId: string;
+      treatmentId: string;
+    };
+  };
+  Guid: string;
+  Id: string;
+  IsAllDay: boolean;
+  StartTime: string;
+  Subject: string;
+  descripition: string;
+  status: string;
+};
+
+export type EditEventProps = {
+  EndTime: string;
+  ExtendedProperties: {
+    private: {
+      customerId: string;
+      treatmentId: string;
+    };
+  };
+  Guid: string;
+  Id: string;
+  IsAllDay: boolean;
+  StartTime: string;
+  Subject: string;
+  description: string;
+  status: string;
+};
+export type UpdateEventProps = {
+  summary: string | undefined;
+  description: string | undefined;
+  start: {
+    dateTime: Date;
+    timeZone: string;
+  };
+  end: {
+    dateTime: Date;
+    timeZone: string;
+  };
+  extendedProperties: {
+    private: {
+      treatmentId: string;
+      customerId: string;
+    };
+  };
+};

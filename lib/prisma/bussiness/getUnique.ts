@@ -6,7 +6,11 @@ export async function bussinessById(id: string) {
   try {
     const business = await prisma.business.findUnique({
       where: { id },
-      include: { Images: true, user: true, Customer: true },
+      include: {
+        Images: { where: { profileImgName: { not: null } } },
+        user: true,
+        Customer: true,
+      },
     });
     return business;
   } catch (err) {

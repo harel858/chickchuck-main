@@ -2,7 +2,7 @@
 import React, { useCallback, useState } from "react";
 import { PlusOutlined, UserAddOutlined } from "@ant-design/icons";
 import { TbCalendarPlus } from "react-icons/tb";
-import { FloatButton, Modal } from "antd";
+import { FloatButton, Modal, theme } from "antd";
 import AddCustomer from "./Customer";
 import AppointmentSteps from "./appointments/newAppointment";
 import { Session } from "next-auth";
@@ -14,7 +14,7 @@ import {
   Treatment,
   User,
 } from "@prisma/client";
-import { calendar_v3 } from "googleapis";
+import { motion } from "framer-motion";
 
 const PlusButton = ({
   session,
@@ -37,7 +37,7 @@ const PlusButton = ({
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [confirmLoading2, setConfirmLoading2] = useState(false);
+  const { token } = theme.useToken();
 
   const handleOk = useCallback(() => {
     setOpen(false);
@@ -56,6 +56,16 @@ const PlusButton = ({
     console.log("Clicked cancel button");
     setOpen2(false);
   }, [setOpen2]);
+
+  const contentStyle: React.CSSProperties = {
+    textAlign: "center",
+    width: "100%",
+    color: token.colorTextTertiary,
+    backgroundColor: "rgb(203 213 225)",
+    borderRadius: token.borderRadiusLG,
+    border: `1px dashed ${token.colorBorder}`,
+    marginTop: 16,
+  };
 
   return (
     <>
@@ -89,7 +99,27 @@ const PlusButton = ({
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
       >
-        <AddCustomer business={business} />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 0.5,
+            delay: 0.2,
+            ease: [0, 0.71, 0.2, 1.01],
+          }}
+          className="w-full py-5"
+        >
+          <div
+            style={contentStyle}
+            className="flex justify-center items-center py-5"
+          >
+            <AddCustomer
+              handleCancel={handleCancel}
+              isHidden={false}
+              business={business}
+            />
+          </div>
+        </motion.div>
       </Modal>
 
       <Modal

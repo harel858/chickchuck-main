@@ -14,6 +14,7 @@ export const config = {
     bodyParser: false,
   },
 };
+
 const bucketName = process.env.BUCKET_NAME!;
 
 type ReqBody = {
@@ -22,78 +23,69 @@ type ReqBody = {
   activityDays: DayData[];
   treatments: ServiceInput[];
   logo: UploadFile<any>[];
-  gallaryList: UploadFile<any>[];
+  galleryList: UploadFile<any>[];
 };
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
-    let businessCreated: Business | null = null;
     const form = new formidable.IncomingForm({ multiples: false });
     form.parse(req, async (error, fields, files) => {
       if (error) return res.status(400).json({ error });
 
-      const logo = files.logoFile as formidable.File;
+      const userId = fields.userId as string;
+      const businessDetails = JSON.parse(
+        fields.businessDetails as string
+      ) as TBusinessDetailsValidation;
+      const activityDays = JSON.parse(
+        fields.activityDays as string
+      ) as DayData[];
+      const treatments = JSON.parse(
+        fields.services as string
+      ) as ServiceInput[];
 
-      const logoParams: UploadParams = {
-        Bucket: bucketName,
-        Key: logo?.newFilename,
-        Body: fs.createReadStream(logo.filepath),
-        ContentType: logo.mimetype!,
-      };
+      const uploadParams: UploadParams[] = [];
+      const logo = files.logoFile as formidable.File | null;
 
-      const gallaryLength = fields.gallaryLength as string;
-      const uploadParams: UploadParams[] = [logoParams];
-      for (let i = 0; i < +gallaryLength; i++) {
-        const item = files[`gallaryList[${i}]`] as formidable.File;
+      if (logo) {
+        const logoParams: UploadParams = {
+          Bucket: bucketName,
+          Key: logo.newFilename,
+          Body: fs.createReadStream(logo.filepath),
+          ContentType: logo.mimetype!,
+        };
+        uploadParams.push(logoParams);
+      }
+
+      const galleryLength = Number(fields.galleryLength);
+      for (let i = 0; i < galleryLength; i++) {
+        const item = files[`galleryList[${i}]`] as formidable.File;
         const uploadParam: UploadParams = {
           Bucket: bucketName,
-          Key: item?.newFilename,
+          Key: item.newFilename,
           Body: fs.createReadStream(item.filepath),
           ContentType: item.mimetype!,
         };
         uploadParams.push(uploadParam);
       }
+
       const uploadedImages = await uploadImages(uploadParams);
-
       if (!uploadedImages)
-        return res.status(400).json("uploadedImages fail to create");
-
-      const userId = fields.userId as string;
-
-      const activityDays = JSON.parse(
-        fields.activityDays as string
-      ) as DayData[];
-
-      const businessDetails = JSON.parse(
-        fields.businessDetails as string
-      ) as TBusinessDetailsValidation;
-
-      const treatments = JSON.parse(
-        fields.services as string
-      ) as ServiceInput[];
-
-      const {
-        businessName,
-        businessPhone,
-        businessType,
-        fromWhere,
-        lastCalendar,
-      } = businessDetails;
+        return res.status(400).json("Failed to upload images.");
 
       const newBusiness = await prisma.business.create({
         data: {
-          businessName,
-          phone: businessPhone,
-          BusinessType: businessType,
-          ComeFrom: fromWhere,
-          LastCalendar: lastCalendar,
+          businessName: businessDetails.businessName,
+          phone: businessDetails.businessPhone,
+          BusinessType: businessDetails.businessType,
+          ComeFrom: businessDetails.fromWhere,
+          LastCalendar: businessDetails.lastCalendar,
+          Address: businessDetails.businessAddress,
           Treatment: {
             createMany: {
               data: treatments.map((service) => ({
                 cost: +service.price,
                 duration: +service.duration,
                 title: service.title,
-                userId,
               })),
             },
           },
@@ -124,10 +116,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
           Treatment: true,
         },
       });
+
       await prisma.user.update({
         where: { id: userId },
         data: {
-          /*           Treatment: { createMany: { data } }, */
+          isAdmin: true,
           activityDays: {
             createMany: {
               data: activityDays.map((day) => ({
@@ -138,14 +131,19 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
               })),
             },
           },
+          Treatment: {
+            connect: newBusiness.Treatment.map((service) => ({
+              id: service.id,
+            })),
+          },
         },
       });
+
       console.log("newBusiness", newBusiness);
-      businessCreated = newBusiness;
+      return res.json(newBusiness);
     });
-    return res.json(businessCreated);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return res.status(500).json("Internal server error");
   }
 }

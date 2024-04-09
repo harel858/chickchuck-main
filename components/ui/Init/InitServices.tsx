@@ -42,6 +42,7 @@ const InitServices = ({
     console.log("service", service);
     setServices([...services, service]);
     setOpen(false);
+    setService(initService); // Reset service state to initial state
   }, [service]);
 
   const handleCancel = () => {

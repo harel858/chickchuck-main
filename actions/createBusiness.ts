@@ -22,8 +22,14 @@ export async function createBusiness(
   logo: UploadFile<any>[],
   gallaryList: UploadFile<any>[]
 ) {
-  const { businessName, businessPhone, businessType, fromWhere, lastCalendar } =
-    businessDetails;
+  const {
+    businessName,
+    businessPhone,
+    businessType,
+    fromWhere,
+    lastCalendar,
+    businessAddress,
+  } = businessDetails;
 
   try {
     // Process form data
@@ -43,6 +49,7 @@ export async function createBusiness(
         businessName,
         phone: businessPhone,
         BusinessType: businessType,
+        Address: businessAddress,
         ComeFrom: fromWhere,
         LastCalendar: lastCalendar,
         user: { connect: { email } },

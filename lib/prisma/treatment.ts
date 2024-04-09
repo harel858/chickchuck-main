@@ -7,10 +7,7 @@ type CreateData = {
   duration: number;
   documentName: RequiredDocument[];
   advancePayment: number;
-  business: Business & {
-    user: User[];
-    Images: Images | null;
-  };
+  business: Business & { user: User[] };
 };
 
 export const createTreatment = async ({
@@ -21,7 +18,7 @@ export const createTreatment = async ({
   advancePayment,
   business,
 }: CreateData) => {
-  const { id: businessId, user: users } = business;
+  const { id: businessId, user: businessUsers } = business;
 
   try {
     const treatmentData = {
@@ -35,16 +32,15 @@ export const createTreatment = async ({
               connect: documentName.map((doc) => ({ id: doc.id })),
             }
           : {},
-      user: { connect: users.map((user) => ({ id: user.id })) },
       business: { connect: { id: businessId } },
+      user: { connect: businessUsers.map((user) => ({ id: user.id })) }, // Connecting to all users
     };
-    /* 
+
     const newTreatment = await prisma.treatment.create({
-      data: {treatmentData},
-      include: { RequiredDocument: true },
+      data: treatmentData,
     });
- */
-    return null;
+
+    return newTreatment;
   } catch (error) {
     console.error("Error creating treatment:", error);
     throw error;

@@ -75,7 +75,7 @@ function InitDetails({
   const columns: ColumnsType<DataType> = React.useMemo(() => {
     return [
       {
-        title: "Day",
+        title: "יום",
         dataIndex: "Days",
         key: "Days",
         align: "center" as AlignType,
@@ -84,7 +84,7 @@ function InitDetails({
         ),
       },
       {
-        title: "Start",
+        title: "התחלה",
         dataIndex: "start",
         key: "start",
         align: "center" as AlignType,
@@ -102,7 +102,7 @@ function InitDetails({
         },
       },
       {
-        title: "End",
+        title: "סיום",
         dataIndex: "end",
         key: "end",
         align: "center" as AlignType,
@@ -120,7 +120,7 @@ function InitDetails({
         },
       },
       {
-        title: "Active",
+        title: "פעיל",
         key: "isActive",
         dataIndex: "isActive",
         align: "center" as AlignType,
@@ -141,13 +141,15 @@ function InitDetails({
 
   return (
     <Table
-      className="w-10/12 rounded-3xl"
+      className="rounded-3xl"
       sticky
       columns={columns}
       dataSource={data}
       size={"small"}
       pagination={false}
-      title={() => <h2 className="text-black text-2xl">Business Activity</h2>}
+      title={() => (
+        <h2 className="text-black text-2xl text-center">זמני פעילות</h2>
+      )}
     />
   );
 }

@@ -31,7 +31,7 @@ export default function ClientItem({
         <p className="font-sans font-semibold text-2xl w-max">
           {treatment.title}
         </p>
-        <DetailsButton treatment={treatment} bussinesDocs={bussinesDocs} />
+        <DetailsButton treatment={treatment} />
       </div>
       <div className="flex flex-row gap-1 justify-between items-center w-full">
         <p className="font-semibold text-xl text-green-600">

@@ -1,4 +1,5 @@
 "use client";
+import "./schedule-component.css";
 import React, { useState, useRef, useCallback } from "react";
 import {
   ScheduleComponent,
@@ -7,17 +8,13 @@ import {
   Day,
   Week,
   Month,
-  EventRenderedArgs,
   Inject,
   Resize,
   DragAndDrop,
   EventSettingsModel,
 } from "@syncfusion/ej2-react-schedule";
-import { ButtonComponent } from "@syncfusion/ej2-react-buttons";
 import { DataManager, UrlAdaptor } from "@syncfusion/ej2-data";
-import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
-import "./schedule-component.css";
 import NewEvent from "./NewEvent";
 import EditEvent from "./EditEvent";
 import {
@@ -28,21 +25,13 @@ import {
   Treatment,
   User,
 } from "@prisma/client";
+import { Browser, Internationalization, extend } from "@syncfusion/ej2-base";
+import dayjs from "dayjs";
+
 export type AdditionData = {
   service?: { label: string; value: string };
   customer?: { label: string; value: string };
 };
-function applyCategoryColor(args: any, currentView: any) {
-  let categoryColor = args.data.CategoryColor;
-  if (!args.element || !categoryColor) {
-    return;
-  }
-  if (currentView === "Agenda") {
-    args.element.firstChild.style.borderLeftColor = categoryColor;
-  } else {
-    args.element.style.backgroundColor = categoryColor;
-  }
-}
 
 const RecurrenceEvents = ({
   session,
@@ -52,6 +41,7 @@ const RecurrenceEvents = ({
   session: Session;
   business: Business & {
     Customer: Customer[];
+    Treatment: Treatment[];
   };
   user: User & {
     accounts: Account[];
@@ -61,20 +51,17 @@ const RecurrenceEvents = ({
   };
 }) => {
   const scheduleObj = useRef<ScheduleComponent>(null);
-  let newEvent: any = null;
-  const dataManagerConfig = {
-    url: `http://localhost:3000/api/google/events?id=${session.user.accountId}`,
-    headers: [{ Authorization: `Bearer ${session.user.access_token}` }],
-    adaptor: new UrlAdaptor(),
-    crudUrl: "http://localhost:3000/api/google/crud",
-    crossDomain: true,
+  const getTimeString = (value: any) => {
+    return dayjs(value).format("h:mm");
   };
-  const dataManager = new DataManager(dataManagerConfig);
-
-  const [editEvent, setEditEvent] = useState<string | null>(null);
-
   const [eventSettings, setEventSettings] = useState<EventSettingsModel>({
-    dataSource: dataManager,
+    dataSource: new DataManager({
+      url: `http://localhost:3000/api/google/events?id=${session.user.accountId}`,
+      headers: [{ Authorization: `Bearer ${session.user.access_token}` }],
+      adaptor: new UrlAdaptor(),
+      crudUrl: "http://localhost:3000/api/google/crud",
+      crossDomain: true,
+    }),
     editFollowingEvents: true,
     includeFiltersInQuery: true,
     fields: {
@@ -100,8 +87,6 @@ const RecurrenceEvents = ({
         Record<string, any>[]
       >[]) || [];
     let scheduleData: Record<string, any>[] = [];
-    console.log("items", items);
-
     if (items.length > 0) {
       for (const event of items) {
         let when: string = event.start.dateTime as string;
@@ -119,7 +104,6 @@ const RecurrenceEvents = ({
           descripition: event.description,
           StartTime: new Date(start),
           EndTime: new Date(end),
-          isBlock: true,
           IsAllDay: !event.start.dateTime,
           ExtendedProperties: event.extendedProperties, // Include extended properties
         });
@@ -128,79 +112,75 @@ const RecurrenceEvents = ({
     e.result = scheduleData;
   };
 
-  const onEventRendered = (args: EventRenderedArgs): void => {
-    scheduleObj.current &&
-      applyCategoryColor(args, scheduleObj.current.currentView);
-  };
   const onPopupOpen = (args: any) => {
-    console.log("args", args);
-
-    const startTime = new Date(args.StartTime); // Convert to Date object
-    const currentTime = new Date(); // Current time
-
-    // Check if the start time is in the past
-    if (startTime < currentTime) {
+    if (!args?.data?.Guid && args?.type === "QuickInfo") {
       args.cancel = true; // Cancel the opening of the popup
       return; // Exit the function
     }
-
-    if (args.type === "Editor") {
-      let statusElement = args.element.querySelector("#EventType");
-      let footerElement = args.element.querySelector(
-        ".e-footer-content"
-      ) as HTMLElement;
-      if (footerElement) footerElement.className = "hidden";
-      if (statusElement) {
-        statusElement.setAttribute("name", "EventType");
-      }
-    }
   };
 
-  const editorTemplate = useCallback((props: any) => {
-    console.log("props", props);
-
-    return props !== undefined && !props?.Guid ? (
-      <NewEvent
-        scheduleObj={scheduleObj}
-        props={props}
-        business={business}
-        session={session}
-        user={user}
-      />
-    ) : (
-      <EditEvent
-        scheduleObj={scheduleObj}
-        props={props}
-        business={business}
-        session={session}
-        user={user}
-        setEditEvent={setEditEvent}
-        editEvent={editEvent}
-      />
-    );
-  }, []);
-  const onActionBegin = (args: any): void => {
-    console.log("args", args);
-
-    if (args.requestType === "eventCreate") {
-      const eventData = {
-        id: args.data.Id,
-        subject: args.data.Subject,
-        customField: newEvent,
-      };
-      args.addedRecords = eventData;
-    }
-  };
+  const editorTemplate = useCallback(
+    (props: any) => {
+      return props !== undefined && !props?.Guid ? (
+        <NewEvent
+          scheduleObj={scheduleObj}
+          props={props}
+          business={business}
+          session={session}
+          user={user}
+        />
+      ) : (
+        <EditEvent
+          scheduleObj={scheduleObj}
+          props={props}
+          business={business}
+          session={session}
+          user={user}
+        />
+      );
+    },
+    [session, business, user]
+  );
 
   const onCellClick = (args: any) => {
-    scheduleObj.current?.openEditor(args, "Add");
-  };
-  const onEventClick = (args: any) => {
-    if (!args.event.RecurrenceRule) {
-      scheduleObj.current?.openEditor(args.event, "Save");
-    } else {
-      scheduleObj.current?.quickPopup.openRecurrenceAlert();
+    const startTime = new Date(args?.startTime); // Convert to Date object
+    const currentTime = new Date(); // Current time
+    if (startTime < currentTime || args?.isAllDay) {
+      args.cancel = true; // Cancel the opening of the popup
+      return; // Exit the function
     }
+    scheduleObj.current?.openEditor(args, "Add");
+    scheduleObj.current?.closeQuickInfoPopup();
+  };
+  const eventTemplate = (props: any) => {
+    console.log("eventTemplateProps", props);
+
+    return (
+      <div
+        className="template-wrap"
+        style={{ background: props.SecondaryColor }}
+      >
+        <div
+          className="subject flex flex-row flex-wrap justify-around items-center"
+          style={{ background: props.PrimaryColor }}
+        >
+          <p className="font-semibold">
+            {props?.ExtendedProperties?.private?.customerName || ""}{" "}
+          </p>
+          <p className="font-semibold">
+            {getTimeString(props.StartTime)} -{getTimeString(props.EndTime)}
+          </p>
+        </div>
+        {/*   <div className="time" style={{ background: props.PrimaryColor }}>
+          Time: {getTimeString(props.StartTime)} -{getTimeString(props.EndTime)}
+        </div> */}
+        {/*  <div className="event-description">{props.Description}</div>
+        <div
+          className="footer"
+          style={{ background: props.PrimaryColor }}
+        ></div> */}
+      </div>
+    );
   };
   return (
     <div className="schedule-control-section">
@@ -208,22 +188,20 @@ const RecurrenceEvents = ({
         <div className="control-wrapper">
           <ScheduleComponent
             width="100%"
-            height="87vh"
+            height="88vh"
             selectedDate={new Date()}
-            eventClick={onEventClick}
             ref={scheduleObj}
             eventSettings={eventSettings}
-            eventRendered={onEventRendered}
             dataBinding={onDataBinding}
             popupOpen={onPopupOpen}
             cellClick={onCellClick}
             editorTemplate={editorTemplate}
-            showQuickInfo={false}
-            actionBegin={onActionBegin}
+            editorFooterTemplate={() => <></>}
+            showQuickInfo={true}
           >
             <ViewsDirective>
               <ViewDirective option="Day" />
-              <ViewDirective option="Week" />
+              <ViewDirective eventTemplate={eventTemplate} option="Week" />
               <ViewDirective option="Month" />
             </ViewsDirective>
             <Inject services={[Day, Week, Month, Resize, DragAndDrop]} />

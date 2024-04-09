@@ -1,6 +1,6 @@
 "use client";
-import React, { useCallback, useState } from "react";
-import { message, Modal, Steps, theme } from "antd";
+import React, { useState, useTransition } from "react";
+import { message, Steps, theme } from "antd";
 import { Session } from "next-auth";
 import { motion } from "framer-motion";
 import { Button } from "@ui/Button";
@@ -22,6 +22,9 @@ import {
   Treatment,
   User,
 } from "@prisma/client";
+import axios from "axios";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { createAppointment } from "actions/createAppointment";
 
 const AppointmentSteps = ({
   session,
@@ -41,12 +44,10 @@ const AppointmentSteps = ({
     Customer: Customer[];
   };
 }) => {
-  console.log("session", session);
-
+  const [isPending, startTransition] = useTransition();
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const [isNewClient, setIsNewClient] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
   const form = useForm<TAppointmentValidation>({
     resolver: zodResolver(appointmentValidation),
     defaultValues: {
@@ -61,55 +62,12 @@ const AppointmentSteps = ({
     getValues,
   } = form;
   const data = getValues();
-
-  const getAvailableTimeSlots = (
-    durationInMinutes: number,
-    month: string,
-    busySlots: { start: string; end: string }[]
-  ) => {
-    const availableSlots = [];
-    const startOfMonth = dayjs(month).startOf("month");
-    const endOfMonth = dayjs(month).endOf("month");
-
-    let currentSlotStart = startOfMonth;
-
-    // Loop through the month in slots of the specified duration
-    while (currentSlotStart.isBefore(endOfMonth)) {
-      const currentSlotEnd = currentSlotStart.add(durationInMinutes, "minutes");
-
-      // Check if the current slot is not within any busy slot
-      const isSlotAvailable = busySlots.every((busySlot) => {
-        const busyStart = dayjs(busySlot.start);
-        const busyEnd = dayjs(busySlot.end);
-        return (
-          currentSlotEnd.isBefore(busyStart) ||
-          currentSlotEnd.isSame(busyStart) ||
-          currentSlotStart.isAfter(busyEnd) ||
-          currentSlotStart.isSame(busyEnd)
-        );
-      });
-
-      if (isSlotAvailable) {
-        availableSlots.push({
-          start: currentSlotStart.toISOString(),
-          end: currentSlotEnd.toISOString(),
-        });
-      }
-
-      // Move to the next slot
-      currentSlotStart = currentSlotStart.add(durationInMinutes, "minutes");
-    }
-
-    return availableSlots;
-  };
-
   const onSubmit = async (data: TAppointmentValidation) => {
-    console.log("data", data);
-
     try {
-      const event = {
+      const customerName = data?.Client?.label.split(" - ")[0];
+      const eventProps = {
         summary: data.Client.label,
-        description: data.Service.label,
+        description: "",
         start: {
           dateTime: data.slot.start, // Date.toISOString() ->
           timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // America/Los_Angeles
@@ -120,35 +78,27 @@ const AppointmentSteps = ({
         },
         extendedProperties: {
           private: {
-            treatmentId: data.Service.value,
+            treatmentId: data?.Service?.value || "",
+            customerId: data?.Client?.value || "",
+            customerName: customerName || "",
           },
         },
       };
-      const res = await fetch(
-        "https://www.googleapis.com/calendar/v3/calendars/primary/events",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.user.access_token}`,
-          },
-          body: JSON.stringify(event),
-        }
+      startTransition(
+        async () =>
+          await createAppointment(session.user.access_token, eventProps)
       );
-      const result: any = await res.json();
-      if (result.id) {
-        form.reset({
-          Date: dayjs().toISOString(),
-          // Add other default values for your form fields
-        });
-        setCurrent(0);
-        handleCancel2 && handleCancel2();
-        return message.success("The appointment was created successfully");
-      }
-      message.error("Internal error");
+
+      form.reset({
+        Date: dayjs().toISOString(),
+        // Add other default values for your form fields
+      });
+      setCurrent(0);
+      handleCancel2 && handleCancel2();
+      return message.success("The appointment was created successfully");
     } catch (err: any) {
-      console.log("err", err);
       message.error("Internal error");
+      console.log("err", err);
     }
   };
 
@@ -159,15 +109,7 @@ const AppointmentSteps = ({
   const prev = () => {
     setCurrent(current - 1);
   };
-
-  /*  const handleOk = useCallback(() => {
-    setModaOpen(false);
-  }, []);
-
-  const handleCancel = useCallback(() => {
-    setModaOpen(false);
-  }, [modalOpen]); */
-
+  const switchIsNewClient = () => setIsNewClient((prev) => !prev);
   const steps = [
     {
       title: "For Who?",
@@ -184,29 +126,15 @@ const AppointmentSteps = ({
             session={session}
             user={user}
             business={business}
-            isNewClient={isNewClient}
           />
           <Button
-            onClick={() => setIsNewClient((prev) => !prev)}
-            className="text-blue-500"
+            onClick={switchIsNewClient}
+            className="text-blue-500 focus:ring-0 focus:ring-offset-0"
             variant={"link"}
             type="button"
           >
-            New Customer?
+            {!isNewClient ? "?לקוח/ה חדש/ה" : "?לקוח קיים"}
           </Button>
-          {/* <Modal
-            title="New Client"
-            open={modalOpen}
-            onOk={handleOk}
-            okButtonProps={{
-              className: "hidden",
-            }}
-            cancelButtonProps={{ className: "hidden" }}
-            confirmLoading={true}
-            onCancel={handleCancel}
-          >
-            <AddCustomer handleCancel={handleCancel} business={business} />
-          </Modal> */}
         </div>
       ),
     },
@@ -224,7 +152,6 @@ const AppointmentSteps = ({
           key={"Pick A Service"}
           session={session}
           user={user}
-          isNewClient={isNewClient}
         />
       ),
     },
@@ -242,7 +169,6 @@ const AppointmentSteps = ({
           key={"When Do You Want"}
           session={session}
           user={user}
-          isNewClient={isNewClient}
         />
       ),
     },
@@ -272,58 +198,79 @@ const AppointmentSteps = ({
       className="w-full py-5"
     >
       <Steps current={current} items={items} />
-
-      <Form {...form}>
-        <form
-          className="flex flex-col justify-center items-center gap-4 mt-4 w-full relative"
-          onSubmit={handleSubmit(onSubmit)}
+      {isNewClient ? (
+        <div
+          style={contentStyle}
+          className="flex flex-col justify-center items-center py-5"
         >
-          <div
-            style={contentStyle}
-            className="flex justify-center items-center py-5"
+          <AddCustomer
+            isHidden={true}
+            handleCancel={switchIsNewClient}
+            business={business}
+          />
+          <Button
+            onClick={switchIsNewClient}
+            className="text-blue-500 focus:ring-0 focus:ring-offset-0"
+            variant={"link"}
+            type="button"
           >
-            {steps[current]?.content}
-          </div>
-          <div className="flex justify-center items-center gap-3 w-full">
-            {current > 0 && (
-              <Button
-                className={`w-full hover:ring-1 hover:ring-sky-600 hover:text-sky-600`}
-                variant={"ghost"}
-                onClick={() => prev()}
-              >
-                Previous
-              </Button>
-            )}
-            {current == steps.length - 1 ? (
-              <Button
-                type={"submit"}
-                onSubmit={handleSubmit(onSubmit)}
-                className={`bg-sky-600 w-full`}
-                size="lg"
-                disabled={
-                  (current === 2 && !data.Date) || (current === 2 && !data.slot)
-                }
-                isLoading={isSubmitting}
-              >
-                Done
-              </Button>
-            ) : (
-              <Button
-                onClick={next}
-                type={"button"}
-                className={`bg-sky-600 w-full`}
-                size="lg"
-                disabled={
-                  (current === 0 && !data.Client) ||
-                  (current === 1 && !data.Service)
-                }
-              >
-                Next
-              </Button>
-            )}
-          </div>
-        </form>
-      </Form>
+            {!isNewClient ? "?לקוח/ה חדש/ה" : "?לקוח קיים"}
+          </Button>
+        </div>
+      ) : (
+        <Form {...form}>
+          <form
+            className="flex flex-col justify-center items-center gap-4 mt-4 w-full relative"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <div
+              style={contentStyle}
+              className="flex justify-center items-center py-5"
+            >
+              {steps[current]?.content}
+            </div>
+            <div className="flex justify-center items-center gap-3 w-full">
+              {current > 0 && (
+                <Button
+                  className={`w-full hover:ring-1 hover:ring-sky-600 hover:text-sky-600`}
+                  variant={"ghost"}
+                  onClick={() => prev()}
+                >
+                  Previous
+                </Button>
+              )}
+              {current == steps.length - 1 ? (
+                <Button
+                  type={"submit"}
+                  onSubmit={handleSubmit(onSubmit)}
+                  className={`bg-sky-600 w-full`}
+                  size="lg"
+                  disabled={
+                    (current === 2 && !data.Date) ||
+                    (current === 2 && !data.slot)
+                  }
+                  isLoading={isSubmitting}
+                >
+                  Done
+                </Button>
+              ) : (
+                <Button
+                  onClick={next}
+                  type={"button"}
+                  className={`bg-sky-600 w-full`}
+                  size="lg"
+                  disabled={
+                    (current === 0 && !data.Client) ||
+                    (current === 1 && !data.Service)
+                  }
+                >
+                  Next
+                </Button>
+              )}
+            </div>
+          </form>
+        </Form>
+      )}
     </motion.div>
   );
 };

@@ -27,17 +27,17 @@ const FormFields = ({
           placeholder={label}
           onChange={handleServicesChange}
           name={name}
-          defaultValue={value}
+          value={value}
         />
       ) : (
         <Input
           style={{ width: "15rem" }} // Set the specific width here
           type="number"
+          value={value}
           min={0}
           name={name}
           step={name === "duration" ? 5 : undefined}
           placeholder={label}
-          defaultValue={value}
           onChange={handleServicesChange}
         />
       )}

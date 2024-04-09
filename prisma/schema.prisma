@@ -51,33 +51,29 @@ model VerificationToken {
 }
 
 model User {
-  id                String              @id @default(cuid())
-  name              String
-  email             String              @unique
-  emailVerified     DateTime?           @map("email_verified")
-  image             String?
-  accounts          Account[]
-  sessions          Session[]
-  password          String?
-  phone             String?             @unique
-  startActivity     String?
-  endActivity       String?
-  activityDays      ActivityDays[]
-  TypeOfWage        TypeOfWage          @default(HOURLY)
-  Wage              String?
-  UserRole          UserRole?           @default(RECIPIENT)
-  appointments      Appointment[]
-  availableSlots    AvailableSlot[]
-  appointmentSlots  AppointmentSlot[]
-  Treatment         Treatment[]
-  isAdmin           Boolean?
-  PremiumKit        PremiumKits         @default(Light)
-  Business          Business?           @relation(fields: [businessId], references: [id])
-  businessId        String?
-  Customer          Customer[]
-  BreakTime         BreakTime[]
-  CustomAppointment CustomAppointment[]
-  Break             Break[]
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  emailVerified DateTime?      @map("email_verified")
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  password      String?
+  phone         String?        @unique
+  startActivity String?
+  endActivity   String?
+  activityDays  ActivityDays[]
+  TypeOfWage    TypeOfWage     @default(HOURLY)
+  Wage          String?
+  UserRole      UserRole?      @default(RECIPIENT)
+  Treatment     Treatment[]
+  isAdmin       Boolean?
+  PremiumKit    PremiumKits    @default(Light)
+  Business      Business?      @relation(fields: [businessId], references: [id])
+  businessId    String?
+  Customer      Customer[]
+  BreakTime     BreakTime[]
+  Break         Break[]
 
   @@map("users")
 }
@@ -99,13 +95,12 @@ model RequiredDocument {
 }
 
 model BreakTime {
-  id            String          @id @default(uuid())
-  StartTime     String
-  EndTime       String
-  AvailableSlot AvailableSlot[]
-  user          User[]
-  Business      Business        @relation(fields: [businessId], references: [id])
-  businessId    String
+  id         String   @id @default(uuid())
+  StartTime  String
+  EndTime    String
+  user       User[]
+  Business   Business @relation(fields: [businessId], references: [id])
+  businessId String
 }
 
 model Document {
@@ -130,82 +125,34 @@ model ActivityDays {
 }
 
 model Business {
-  id                String              @id @default(uuid())
-  businessName      String              @unique
-  phone             String              @unique
-  businessImage     String?
-  BusinessType      BusinessType
-  LastCalendar      LastCalendar
-  ComeFrom          ComeFrom
-  user              User[]
-  activityDays      ActivityDays[]
-  Customer          Customer[]
-  AvailableSlot     AvailableSlot[]
-  Address           Address[]
-  Appointment       Appointment[]
-  AppointmentSlot   AppointmentSlot[]
-  Images            Images[]
-  blockedCustomers  Customer[]          @relation("BlockedCustomers")
-  Treatment         Treatment[]
-  RequiredDocument  RequiredDocument[]
-  BreakTime         BreakTime[]
-  CustomAppointment CustomAppointment[]
-  Break             Break[]
-}
-
-model Address {
-  id         String   @id @default(uuid())
-  city       String
-  street     String
-  zipcode    String?
-  Business   Business @relation(fields: [businessId], references: [id])
-  businessId String
-}
-
-model Appointment {
-  id                String            @id @default(uuid())
-  customer          Customer          @relation(fields: [customerId], references: [id])
-  customerId        String
-  appointmentSlot   AppointmentSlot   @relation(fields: [appointmentSlotId], references: [id])
-  appointmentSlotId String            @unique
-  treatment         Treatment         @relation(fields: [treatmentId], references: [id])
-  treatmentId       String
-  status            AppointmentStatus
-  notes             String?
-  createdAt         DateTime          @default(now())
-  User              User              @relation(fields: [userId], references: [id])
-  userId            String
-  Business          Business          @relation(fields: [businessId], references: [id])
-  businessId        String
-}
-
-model CustomAppointment {
-  id                String            @id @default(uuid())
-  Title             String
-  customer          Customer          @relation(fields: [customerId], references: [id])
-  customerId        String
-  appointmentSlot   AppointmentSlot   @relation(fields: [appointmentSlotId], references: [id])
-  appointmentSlotId String            @unique
-  status            AppointmentStatus
-  notes             String?
-  createdAt         DateTime          @default(now())
-  User              User              @relation(fields: [userId], references: [id])
-  userId            String
-  Business          Business          @relation(fields: [businessId], references: [id])
-  businessId        String
+  id               String             @id @default(uuid())
+  businessName     String             @unique
+  phone            String             @unique
+  businessImage    String?
+  BusinessType     BusinessType
+  LastCalendar     LastCalendar
+  ComeFrom         ComeFrom
+  user             User[]
+  activityDays     ActivityDays[]
+  Customer         Customer[]
+  Address          String
+  Images           Images[]
+  blockedCustomers Customer[]         @relation("BlockedCustomers")
+  Treatment        Treatment[]
+  RequiredDocument RequiredDocument[]
+  BreakTime        BreakTime[]
+  Break            Break[]
 }
 
 model Customer {
-  id                String              @id @default(uuid())
+  id                String     @id @default(uuid())
   name              String
-  phoneNumber       String              @unique
-  UserRole          UserRole            @default(CUSTOMER)
+  phoneNumber       String     @unique
+  UserRole          UserRole   @default(CUSTOMER)
   User              User[]
-  appointments      Appointment[]
   Business          Business[]
-  blockedByBusiness Business[]          @relation("BlockedCustomers")
+  blockedByBusiness Business[] @relation("BlockedCustomers")
   Documents         Document[]
-  CustomAppointment CustomAppointment[]
 }
 
 model Treatment {
@@ -214,53 +161,22 @@ model Treatment {
   cost             Int
   duration         Int
   advancePayment   Int? // New field for advance payment amount
-  user             User               @relation(fields: [userId], references: [id])
-  userId           String
+  user             User[]
   business         Business           @relation(fields: [businessId], references: [id])
   businessId       String
-  appointments     Appointment[]
   RequiredDocument RequiredDocument[]
 }
 
-model AvailableSlot {
-  id              String            @id @default(uuid())
-  start           String
-  end             String
-  user            User              @relation(fields: [userId], references: [id])
-  userId          String
-  AppointmentSlot AppointmentSlot[]
-  Business        Business?         @relation(fields: [businessId], references: [id])
-  businessId      String?
-  BreakTime       BreakTime?        @relation(fields: [breakTimeId], references: [id])
-  breakTimeId     String?
-}
-
 model Break {
-  id                String          @id @default(uuid())
+  id                String   @id @default(uuid())
   startTime         String
   endTime           String
   date              String
-  user              User            @relation(fields: [userId], references: [id])
+  user              User     @relation(fields: [userId], references: [id])
   userId            String
-  appointmentSlot   AppointmentSlot @relation(fields: [appointmentSlotId], references: [id])
-  appointmentSlotId String          @unique
-  business          Business        @relation(fields: [businessId], references: [id])
+  appointmentSlotId String   @unique
+  business          Business @relation(fields: [businessId], references: [id])
   businessId        String
-}
-
-model AppointmentSlot {
-  id                String             @id @default(uuid())
-  start             String
-  end               String
-  date              String
-  business          Business           @relation(fields: [businessId], references: [id])
-  user              User               @relation(fields: [userId], references: [id])
-  availableSlots    AvailableSlot[]
-  appointments      Appointment[]
-  userId            String
-  businessId        String
-  CustomAppointment CustomAppointment?
-  Break             Break?
 }
 
 enum AppointmentStatus {

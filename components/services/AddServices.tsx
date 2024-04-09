@@ -1,110 +1,102 @@
 "use client";
-import React, { Suspense, useCallback } from "react";
-import Form from "./Form/Form";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import React, {
+  ChangeEvent,
+  useCallback,
+  useState,
+  useTransition,
+} from "react";
+import { List, message, Modal } from "antd";
 import { Button } from "@ui/Button";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import { RequiredDocument } from "@prisma/client";
-import { message } from "antd";
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
-
-export interface DialogTitleProps {
-  id: string;
-  children?: React.ReactNode;
-  onClose: () => void;
-}
-
-function BootstrapDialogTitle(props: DialogTitleProps) {
-  const { children, onClose, ...other } = props;
-
-  return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-      {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </DialogTitle>
-  );
-}
-export default function AddServices({
-  businessId,
-  bussinesDocs,
-}: {
+import { PlusCircleTwoTone, PlusOutlined } from "@ant-design/icons";
+import ServiceForm, { ServiceFieldType } from "@ui/Init/ServiceForm";
+import { User } from "@prisma/client";
+import createService from "actions/createService";
+type NewService = {
+  title: string;
+  duration: number;
+  price: number;
   businessId: string;
-  bussinesDocs: RequiredDocument[];
-}) {
-  const [open, setOpen] = React.useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
+  users: User[];
+};
+export type ServiceInput = {
+  title: string;
+  duration: number;
+  price: number;
+};
+const initService: ServiceInput = { duration: 0, price: 0, title: "" };
+const InitServices = ({
+  users,
+  businessId,
+}: {
+  users: User[];
+  businessId: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const [service, setService] = useState<ServiceInput>(initService);
 
-  const successMessage = useCallback(() => {
-    messageApi.success("Hello, Ant Design!");
-  }, [messageApi]);
-
-  const handleClickOpen = useCallback(() => {
+  const showModal = () => {
     setOpen(true);
-  }, [setOpen, open]);
-  const handleClose = useCallback(() => {
+  };
+  const handleServicesChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const {
+        target: { name, value },
+      } = e;
+      console.log("service", service);
+
+      setService({ ...service, [name]: value });
+    },
+    [service]
+  );
+  const handleOk = useCallback(async () => {
+    const params: NewService = { ...service, businessId, users };
+    try {
+      console.log("service", service);
+      setOpen(false);
+      setService(initService);
+      startTransition(async () => await createService(params));
+      message.success("שירות נוסף בהצלחה");
+    } catch (err: any) {
+      console.log(err);
+      message.error("שגיאה בעת הוספת שירות, אנא פנה לתמיכה");
+    }
+  }, [service]);
+
+  const handleCancel = () => {
+    console.log("Clicked cancel button");
     setOpen(false);
-  }, [open]);
+    setService(initService);
+  };
 
   return (
-    <>
-      {contextHolder}
+    <div className="flex flex-col justify-center items-center gap-3 w-full">
       <Button
-        onClick={handleClickOpen}
-        className="flex flex-row-reverse justify-center items-center gap-2 text-xl font-medium text-black bg-slate-100 hover:text-white"
+        className="flex justify-center items-center gap-1 bg-white text-black hover:bg-slate-950 hover:text-white"
+        onClick={showModal}
       >
-        New Service
-        <AiOutlinePlusCircle className="text-3xl" />
+        <span>הוסף שירות</span>
+        <PlusOutlined className="text-xl" />
       </Button>
-      <BootstrapDialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
+      <Modal
+        title="New Service"
         open={open}
+        onOk={handleOk}
+        okButtonProps={{
+          className: "bg-blue-600",
+          disabled: !service.duration || !service.price || !service.title,
+        }}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
       >
-        <BootstrapDialogTitle
-          id="customized-dialog-title"
-          onClose={handleClose}
-        >
-          Create New Service
-        </BootstrapDialogTitle>
-        <DialogContent sx={{ background: "rgb(241,245,249)" }} dividers>
-          <Suspense fallback={<>loading...</>}>
-            <Form
-              successMessage={successMessage}
-              closeDialog={handleClose}
-              businessId={businessId}
-              bussinesDocs={bussinesDocs}
-            />
-          </Suspense>
-        </DialogContent>
-        <DialogActions></DialogActions>
-      </BootstrapDialog>
-    </>
+        <ServiceForm
+          service={service}
+          handleServicesChange={handleServicesChange}
+        />
+      </Modal>
+    </div>
   );
-}
+};
+
+export default InitServices;

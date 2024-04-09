@@ -8,9 +8,20 @@ interface AvatarProps {
   alt: string;
   className?: string;
   style?: React.CSSProperties;
+  width?: number;
+  height?: number;
+  onClick?: React.MouseEventHandler<HTMLImageElement> | undefined;
 }
 
-const Avatar: React.FC<AvatarProps> = ({ src, alt, className, style }) => {
+const Avatar: React.FC<AvatarProps> = ({
+  src,
+  alt,
+  className,
+  style,
+  height,
+  width,
+  onClick,
+}) => {
   console.log({ src });
 
   const imgIxLoader = ({ src }: ImageLoaderProps) => {
@@ -29,9 +40,10 @@ const Avatar: React.FC<AvatarProps> = ({ src, alt, className, style }) => {
   };
   return (
     <Image
-      width={50}
-      height={50}
+      width={width || 50}
+      height={height || 50}
       loader={imgIxLoader}
+      onClick={onClick}
       src={src || DEFAULT_AVATAR_SRC}
       alt={alt}
       priority

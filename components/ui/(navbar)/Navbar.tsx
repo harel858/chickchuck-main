@@ -2,16 +2,8 @@
 import React from "react";
 import Notifications from "./specialOperations/notifications/Notifications";
 import { Session } from "next-auth";
-import Hamburger from "./(responsiveNav)/Hamburger";
 import { Lobster_Two } from "next/font/google";
-import {
-  Appointment,
-  AppointmentSlot,
-  Customer,
-  Treatment,
-  User,
-  Account,
-} from "@prisma/client";
+import { User, Account, Customer } from "@prisma/client";
 import NavBarItem from "./NavBarItem";
 import { FaBusinessTime } from "react-icons/fa";
 import { FiExternalLink } from "react-icons/fi";
@@ -27,21 +19,28 @@ function Navbar({
   scheduleProps,
   user,
   link,
+  watchExpired,
+  customers,
 }: {
   session: Session;
   link: string;
   scheduleProps: calendar_v3.Schema$Events | null;
   user: User & { accounts: Account[] };
+  watchExpired: any;
+  customers: Customer[];
 }) {
-  const profileImage = session.user.image;
-  console.log("session", session);
+  console.log("watchExpired", watchExpired);
 
+  const profileImage = session.user.image;
+  const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-"); // Replace whitespace with hyphens
+  /*     ?.replace(/[^\w\-]+/g, ""); // Remove or replace non-alphanumeric characters except hyphens
+   */
   return (
-    <nav className="fixed p-0 flex items-center justify-center max-2xl:p-0 backdrop-blur-sm bg-slate-200/70 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-slate-200 dark:border-slate-800 shadow-sm ">
+    <nav className="fixed p-0 flex items-center justify-center max-2xl:p-0 backdrop-blur-sm bg-slate-300 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-slate-200 dark:border-slate-800 shadow-sm ">
       <ul className="max-xl:hidden h-full flex flex-row justify-between items-center align-between text-md text-white dark:text-white">
         <NavBarItem
           title={"Online Profile"}
-          link={link}
+          link={formattedBusinessName}
           icon={<FiExternalLink />}
         />
         <NavBarItem
@@ -62,13 +61,12 @@ function Navbar({
           icon={<FaBusinessTime />}
         />
       </ul>
-      {/*       <Hamburger user={session.user} />
-       */}{" "}
       <div className="flex flex-row justify-between items-center gap-4 absolute right-2">
         <Notifications
           scheduleProps={scheduleProps}
           session={session}
           userId={session.user.id}
+          customers={customers}
         />
         <Avatar alt="Profile Img" src={profileImage} />
       </div>

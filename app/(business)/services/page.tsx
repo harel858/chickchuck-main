@@ -1,36 +1,37 @@
-import { authOptions } from "@lib/auth";
+import React from "react";
 import { prisma } from "@lib/prisma";
+import { authOptions } from "@lib/auth";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
-import React from "react";
 import Services from "@components/services/Services";
 export const revalidate = 0;
 
-const fetchUser = async (email: string | null | undefined) => {
+async function fetchUser(businessId: string | null | undefined) {
   try {
-    if (!email) return null;
+    if (!businessId) return null;
+    const business = await prisma.business.findUnique({
+      where: { id: businessId },
 
-    const user = await prisma.user.findUnique({
-      where: { email },
       include: {
-        Business: { include: { RequiredDocument: true } },
-        Treatment: { include: { RequiredDocument: true } },
+        user: { include: { activityDays: true } },
+        Treatment: true,
       },
     });
-    if (!user || !user.Business) return null;
 
-    return user;
-  } catch (err) {
-    console.log(err);
+    if (!business) return null;
+
+    return business;
+  } catch (error) {
+    console.log(error);
     return null;
   }
-};
+}
 
 async function Page() {
   const session = await getServerSession(authOptions);
-  const user = await fetchUser(session?.user?.email);
-  if (!user || !user.Business) return notFound();
-  return <Services user={user} Business={user.Business} />;
+  const business = await fetchUser(session?.user?.businessId);
+  if (!business?.user || !session?.user.isAdmin) return notFound();
+  return <Services business={business} session={session} />;
 }
 
 export default Page;

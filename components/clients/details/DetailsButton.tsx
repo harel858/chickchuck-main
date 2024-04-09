@@ -1,95 +1,98 @@
-"use client";
-import React, { lazy, Suspense, useCallback } from "react";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import React, { useCallback, useEffect } from "react";
 import { CustomerItem } from "types/types";
+import { Modal } from "antd";
+import { BiEdit } from "react-icons/bi";
+import axios from "axios";
+import { Session } from "next-auth";
+import CustomerCard from "./customerCard";
+import { HistoryOutlined } from "@ant-design/icons";
 import { Button } from "@ui/Button";
-
-const Content = lazy(() => import("./Content"));
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
+import { Customer } from "@prisma/client";
 
 export interface DialogTitleProps {
   id: string;
   children?: React.ReactNode;
   onClose: () => void;
 }
-
-function BootstrapDialogTitle(props: DialogTitleProps) {
-  const { children, onClose, ...other } = props;
-
-  return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-      {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </DialogTitle>
-  );
-}
+/* 
+const items: DescriptionsProps["items"] = [
+  {
+    key: "1",
+    label: "UserName",
+    children: "Zhou Maomao",
+  },
+  {
+    key: "2",
+    label: "Telephone",
+    children: "1810000000",
+  },
+  {
+    key: "3",
+    label: "Live",
+    children: "Hangzhou, Zhejiang",
+  },
+  {
+    key: "4",
+    label: "Remark",
+    children: "empty",
+  },
+  {
+    key: "5",
+    label: "Address",
+    children: "No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China",
+  },
+]; */
 export default function DetailsButton({
   customer,
+  session,
+  closePopover,
 }: {
-  customer: CustomerItem;
+  customer: Customer;
+  session: Session;
+  closePopover?: () => void;
 }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
+    closePopover && closePopover();
     setOpen(true);
   };
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, [open]);
 
   return (
     <>
       <Button
+        variant={"ghost"}
         onClick={handleClickOpen}
         className="group-hover:bg-slate-100 group-hover:text-black"
       >
-        Details
+        <HistoryOutlined className="text-xl" />
       </Button>
-      <BootstrapDialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
+      <Modal
+        title={
+          <div className="flex flex-row justify-center items-center gap-2">
+            <h3 className="text-2xl">{customer.name}</h3>
+            <BiEdit className="text-4xl" />
+          </div>
+        }
+        className="pt-5 "
+        centered
         open={open}
+        okButtonProps={{ hidden: true }}
+        cancelButtonProps={{ hidden: true }}
+        onCancel={() => {
+          setOpen(false);
+        }}
+        width={800} // Set the width to 800 pixels, adjust as needed
+        styles={{
+          body: {
+            background: "rgba(254,215,170,0.7)",
+            borderRadius: "3em",
+            padding: "2em 1em",
+          },
+        }}
       >
-        <BootstrapDialogTitle
-          id="customized-dialog-title"
-          onClose={handleClose}
-        >
-          Customer Details
-        </BootstrapDialogTitle>
-        <DialogContent className="bg-slate-100" dividers>
-          <Suspense fallback={<>loading...</>}>
-            <Content customer={customer} />
-          </Suspense>
-        </DialogContent>
-        <DialogActions></DialogActions>
-      </BootstrapDialog>
+        <CustomerCard customer={customer} session={session} />
+      </Modal>
     </>
   );
 }

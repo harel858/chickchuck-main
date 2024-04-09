@@ -31,7 +31,8 @@ export async function createNewCustomer({
       include: { Customer: true },
     });
 
-    revalidatePath("/schedule");
+    console.log("res", res);
+    revalidatePath("/");
     return res;
   } catch (err) {
     console.log(err);

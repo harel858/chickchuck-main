@@ -1,62 +1,45 @@
 "use server";
-
-import { prisma } from "@lib/prisma";
-import { AppointmentStatus } from "@prisma/client";
+import { DeleteBody } from "@api/google/crud";
+import { setupGoogleCalendarClient } from "@lib/google/client";
+import { deleteGoogleCalendarEvent } from "@lib/google/deleteEvent";
+import { calendar_v3 } from "googleapis";
 import { revalidatePath } from "next/cache";
-import { AppointmentEvent } from "types/types";
+import { OAuth2Client } from "google-auth-library";
 
-export async function deleteAppointment(event: AppointmentEvent) {
+export type EventProps = {
+  summary: string | undefined;
+  description: string | undefined;
+  start: {
+    dateTime: string;
+    timeZone: string;
+  };
+  end: {
+    dateTime: string;
+    timeZone: string;
+  };
+  extendedProperties: {
+    private: {
+      treatmentId: string;
+      customerId: string;
+    };
+  };
+};
+
+export async function deleteAppointment(
+  googleClient: {
+    auth: OAuth2Client;
+    calendar: calendar_v3.Calendar;
+    calendarId: string;
+  },
+  eventProps: DeleteBody
+) {
   try {
-    let appointment;
-    if ("variant" in event) {
-      appointment = await prisma.break.findUnique({
-        where: { id: event.id },
-        include: { appointmentSlot: { include: { availableSlots: true } } },
-      });
-    } else if ("title" in event) {
-      appointment = await prisma.customAppointment.findUnique({
-        where: { id: event.id },
-        include: { appointmentSlot: { include: { availableSlots: true } } },
-      });
-    } else {
-      appointment = await prisma.appointment.findUnique({
-        where: { id: event.id },
-        include: { appointmentSlot: { include: { availableSlots: true } } },
-      });
-    }
-
-    if (!appointment) throw new Error("no appointment found");
-
-    const slots = appointment?.appointmentSlot.availableSlots;
-
-    // Update the available slots to disconnect the appointment slot
-    for (let i = 0; i < slots.length; i++) {
-      await prisma.availableSlot.update({
-        where: { id: slots[i]?.id },
-        data: {
-          AppointmentSlot: {
-            disconnect: { id: appointment.appointmentSlot.id },
-          },
-        },
-      });
-    }
-    // Delete the appointment
-    if ("variant" in event) {
-      await prisma.break.delete({
-        where: { id: event.id },
-      });
-    } else if ("title" in event) {
-      await prisma.customAppointment.delete({
-        where: { id: event.id },
-      });
-    } else {
-      await prisma.appointment.delete({
-        where: { id: event.id },
-      });
-    }
-    revalidatePath("/schedule");
-  } catch (err) {
-    console.log(err);
-    throw new Error("internal error");
+    const { Id, ...rest } = eventProps;
+    const deletedEvent = await deleteGoogleCalendarEvent(googleClient, Id);
+    /*     revalidatePath("/schedule");
+     */ return deletedEvent;
+  } catch (error) {
+    console.error(error);
+    throw new Error("An error occurred while creating the appointment");
   }
 }

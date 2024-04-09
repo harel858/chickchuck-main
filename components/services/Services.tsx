@@ -2,40 +2,40 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ServiceItem from "./ServiceItem";
 import NoServices from "./NoServices";
+
 import AddServices from "./AddServices";
 import SearchService from "./SearchService";
-import AddRequiredDocuments from "./requiredDocuments/AddRequiredDocuments";
 import LargeHeading from "@ui/LargeHeading";
-import { Business, RequiredDocument, Treatment, User } from "@prisma/client";
-import { RiCoinsLine } from "react-icons/ri";
-
-function Services({
-  user,
+import {
+  ActivityDays,
   Business,
+  RequiredDocument,
+  Treatment,
+  User,
+} from "@prisma/client";
+import { RiCoinsLine } from "react-icons/ri";
+import { Session } from "next-auth";
+import { TeamOutlined } from "@ant-design/icons";
+import { FaClock } from "react-icons/fa";
+function Services({
+  session,
+  business,
 }: {
-  user: User & {
-    Treatment: (Treatment & {
-      RequiredDocument?: RequiredDocument[];
-    })[];
-  };
-  Business: Business & {
-    RequiredDocument?: RequiredDocument[];
+  session: Session;
+  business: Business & {
+    Treatment: Treatment[];
+    user: (User & { activityDays: ActivityDays[] })[];
   };
 }) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResult, setSearchResult] = useState<
-    (Treatment & {
-      RequiredDocument?: RequiredDocument[];
-    })[]
-  >([]);
-  console.log(user);
+  const [searchResult, setSearchResult] = useState<Treatment[]>([]);
 
   useEffect(() => {
     if (!searchQuery) return;
     const handleSearch = () => {
       setLoading(true);
-      const filteredEvents = user.Treatment.filter((treatment) =>
+      const filteredEvents = business.Treatment.filter((treatment) =>
         treatment.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setSearchResult(filteredEvents);
@@ -56,52 +56,40 @@ function Services({
     <div className="flex flex-col justify-center items-center gap-10 p-0 pt-5 w-full max-lg:w-full">
       <div className="w-11/12 flex flex-col justify-center items-center gap-10">
         <LargeHeading className="flex flex-row justify-center items-center gap-2">
-          My Services <RiCoinsLine />
-        </LargeHeading>
-        <div className="w-full flex flex-row justify-between items-center gap-10 max-lg:flex-col">
+          <RiCoinsLine />
+          שירותי העסק
+        </LargeHeading>{" "}
+        <SearchService
+          onSearchChange={onSearchChange}
+          searchQuery={searchQuery}
+        />
+        <div className="w-full flex flex-row-reverse justify-between items-center gap-10 max-lg:flex-col">
           <div className="flex flex-row gap-4 justify-center items-center">
-            <AddServices
-              businessId={user.businessId!}
-              bussinesDocs={Business?.RequiredDocument || []}
-            />
-            <AddRequiredDocuments
+            <AddServices users={business.user} businessId={business.id} />
+            {/*   <AddRequiredDocuments
               businessId={user.businessId!}
               docs={Business?.RequiredDocument || []}
-            />
+            /> */}
           </div>
-          <SearchService
-            onSearchChange={onSearchChange}
-            searchQuery={searchQuery}
-          />
         </div>
       </div>
       <div className="flex h-full w-full items-stretch max-xl:items-center justify-center max-xl:flex-col">
-        {(user.Treatment?.length === 0 && !searchQuery) || !user.Treatment ? (
+        {business.user?.length === 0 && !searchQuery ? (
           <NoServices title={"You don't have any services yet"} />
-        ) : !searchQuery && user.Treatment?.length > 0 ? (
+        ) : !searchQuery && business.user?.length > 0 ? (
           <ul
             className={`flex gap-4 flex-1 w-full flex-row flex-wrap justify-evenly content-center items-center overflow-x-hidden rounded-bl-3xl rounded-br-3xl `}
           >
-            {user.Treatment.map((treatment, i) => (
-              <ServiceItem
-                key={treatment.id}
-                i={i}
-                treatment={treatment}
-                bussinesDocs={Business.RequiredDocument}
-              />
+            {business.Treatment?.map((Treatment, i) => (
+              <ServiceItem key={Treatment.id} i={i} treatment={Treatment} />
             ))}
           </ul>
         ) : (
           <ul
             className={`flex gap-4 flex-1 w-full flex-row flex-wrap justify-evenly content-center items-center overflow-x-hidden rounded-bl-3xl rounded-br-3xl `}
           >
-            {searchResult.map((treatment, i) => (
-              <ServiceItem
-                key={treatment.id}
-                i={i}
-                treatment={treatment}
-                bussinesDocs={Business.RequiredDocument}
-              />
+            {searchResult.map((Treatment, i) => (
+              <ServiceItem key={Treatment.id} i={i} treatment={Treatment} />
             ))}
           </ul>
         )}

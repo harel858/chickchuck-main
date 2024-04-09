@@ -18,7 +18,7 @@ export const getUserAccount = async (userId: string) => {
         Treatment: true,
         activityDays: true,
         Customer: true,
-        Business: { include: { Customer: true } },
+        Business: { include: { Customer: true, Treatment: true } },
       },
     });
     return res;
@@ -56,34 +56,6 @@ export async function getIdByEmail(email: string) {
     return userExist?.id;
   } catch (err) {
     return null;
-  }
-}
-
-export async function updateUserActivityTime(
-  id: string,
-  startActivity: string,
-  endActivity: string,
-  breaksId: string[]
-) {
-  try {
-    const updated = await prisma.user.update({
-      where: {
-        id,
-      },
-      data: {
-        startActivity,
-        endActivity,
-        BreakTime: { connect: breaksId.map((item) => ({ id: item })) },
-      },
-    });
-    const response = await prisma.user.findUnique({
-      where: { id },
-      select: { availableSlots: true },
-    });
-    return { response };
-  } catch (error) {
-    console.log(error);
-    return { error };
   }
 }
 

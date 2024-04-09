@@ -15,10 +15,11 @@ import {
 } from "@prisma/client";
 import { Session } from "next-auth";
 import { ScheduleComponent } from "@syncfusion/ej2-react-schedule";
-import NewCustomer from "./NewCustomer";
+import AddCustomer from "@ui/(navbar)/specialOperations/plusButton/Customer";
 import LargeHeading from "@ui/LargeHeading";
 import { createNewCustomer } from "actions/createCustomer";
 import { createAppointment } from "actions/createAppointment";
+import { useRouter } from "next/navigation";
 const NewEvent = ({
   props,
   business,
@@ -31,6 +32,7 @@ const NewEvent = ({
   session: Session;
   business: Business & {
     Customer: Customer[];
+    Treatment: Treatment[];
   };
   user: User & {
     accounts: Account[];
@@ -39,6 +41,8 @@ const NewEvent = ({
     Customer: Customer[];
   };
 }) => {
+  console.log("customers23", business.Customer);
+
   const { token } = theme.useToken();
   const [isPending, startTransition] = useTransition();
   const [isNewClient, setIsNewClient] = useState(false);
@@ -60,17 +64,30 @@ const NewEvent = ({
       label: string;
     }[]
   >([]);
+  console.log("customersList", business.Customer);
+
   useEffect(() => {
     const customersList = business.Customer.map((item) => ({
       value: item.id,
       label: `${item.name} - ${item.phoneNumber}`,
     }));
-    const servicesList = user.Treatment.map((item) => ({
+    const servicesList = business.Treatment.map((item) => ({
       value: item.id,
       label: item.title,
     }));
     setCustomers(customersList);
     setServices(servicesList);
+
+    // Save props to localStorage if it exists
+    if (props?.StartTime) {
+      console.log("saved");
+      localStorage.setItem("newEventProps", JSON.stringify(props));
+    }
+
+    /*    // Cleanup function to remove props from localStorage
+    return () => {
+      localStorage.removeItem("newEventProps");
+    }; */
   }, []);
   const closeEditorTemplate = () => {
     if (scheduleObj.current) {
@@ -78,31 +95,8 @@ const NewEvent = ({
     }
   };
 
-  const createNewClient = async (e: { Name: string; Phone: string }) => {
-    try {
-      const { Name, Phone } = e;
-      const res = await createNewCustomer({
-        name: Name,
-        phoneNumber: Phone,
-        bussinesId: business.id,
-      });
-
-      const customersList = res?.Customer.map((item) => ({
-        value: item.id,
-        label: item.name,
-      }));
-      console.log("createNewCustomer", res);
-      customersList && setCustomers([...customersList]);
-      message.success(`${Name} הוסף לרשימה`);
-    } catch (err) {
-      console.log(err);
-      message.error("internal error");
-    }
-  };
   const next = () => {
-    if (isNewClient && current === 0) {
-      createNewClient({ Name: newClient.name, Phone: newClient.phone });
-    }
+    if (isNewClient && current === 0) return setIsNewClient((prev) => !prev);
     setCurrent(current + 1);
   };
 
@@ -147,20 +141,33 @@ const NewEvent = ({
   };
 
   const onSubmit = async (_e: React.FormEvent<HTMLButtonElement>) => {
+    console.count("clicked");
+    console.log("props", props);
+
+    let propsToUse = props; // Initialize with props if available
+
+    // If props is not available, retrieve it from localStorage
+    if (!propsToUse?.StartTime) {
+      const storedProps = localStorage.getItem("newEventProps");
+      if (storedProps) {
+        propsToUse = JSON.parse(storedProps);
+      }
+    }
+
     try {
-      const service = user.Treatment.find(
+      const service = business.Treatment.find(
         (item) => item.id === event?.service?.value
       );
 
       if (service) {
-        const startTime = new Date(props?.StartTime);
+        const startTime = new Date(propsToUse?.StartTime);
         const endTime = new Date(
           startTime.getTime() + service.duration * 60000
         ); // Convert duration to milliseconds
-
+        const customerName = event?.customer?.label.split(" - ")[0];
         const eventProps = {
-          summary: event?.customer?.label,
-          description: event?.service?.label,
+          summary: event?.service?.label,
+          description: "",
           start: {
             dateTime: startTime.toISOString(),
             timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -173,6 +180,7 @@ const NewEvent = ({
             private: {
               treatmentId: event?.service?.value || "",
               customerId: event?.customer?.value || "",
+              customerName: customerName || "",
             },
           },
         };
@@ -180,9 +188,11 @@ const NewEvent = ({
           async () =>
             await createAppointment(session.user.access_token, eventProps)
         );
-        message.success(`${event?.customer?.label}נקבע תור ל`);
+        message.success(`נקבע תור ל${customerName}`);
         closeEditorTemplate();
       }
+      // Remove props from localStorage after submission
+      localStorage.removeItem("newEventProps");
     } catch (err) {
       console.log(err);
     }
@@ -207,23 +217,25 @@ const NewEvent = ({
           className="flex flex-col justify-center items-center py-5"
         >
           <LargeHeading className="text-xl" size={"sm"}>
-            {isNewClient && current === 0
-              ? "new client"
-              : !isNewClient && current === 0
+            {!isNewClient && current === 0
               ? "choose client"
               : current === 1
               ? "choose a service"
               : ""}
           </LargeHeading>
           {isNewClient && current === 0 ? (
-            <NewCustomer newClient={newClient} setNewClient={setNewClient} />
+            <AddCustomer
+              handleCancel={next}
+              isHidden={false}
+              business={business}
+            />
           ) : (
             steps[current]?.content
           )}
           {current === 0 && (
             <Button
               onClick={() => setIsNewClient((prev) => !prev)}
-              className="text-blue-500"
+              className="text-blue-500 focus:ring-0 focus:ring-offset-0"
               variant={"link"}
               type="button"
             >

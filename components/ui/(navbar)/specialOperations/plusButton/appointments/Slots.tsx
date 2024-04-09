@@ -73,9 +73,9 @@ function Slots({
                     variant={"default"}
                     className={`${
                       isSlotSelected
-                        ? "bg-slate-700 text-white"
-                        : "bg-slate-950 text-black"
-                    } w-max hover:bg-slate-700 rounded-lg border border-black`}
+                        ? "bg-orange-200 text-black"
+                        : "bg-orange-50 text-black"
+                    } w-max hover:bg-orange-200 rounded-lg border border-black/50`}
                     onClick={() => field.onChange(slot)}
                     type={"button"}
                   >

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { ScheduleComponent } from "@syncfusion/ej2-react-schedule";
 import { Session } from "next-auth";
 import {
@@ -11,33 +11,20 @@ import {
 } from "@prisma/client";
 import { motion } from "framer-motion";
 import LargeHeading from "@ui/LargeHeading";
-import { theme } from "antd";
+import { message, theme } from "antd";
 import { Button } from "@ui/Button";
 import EditFormField from "./EditFormField";
-
-export type EditProps = {
-  EndTime: string;
-  ExtendedProperties: {
-    private: {
-      customerId: string;
-      treatmentId: string;
-    };
-  };
-  Guid: string;
-  Id: string;
-  IsAllDay: boolean;
-  StartTime: string;
-  Subject: string;
-  description: string;
-  status: string;
-};
+import { EditProps } from "types/types";
+import { DataManager, Query } from "@syncfusion/ej2-data";
+import { EventProps } from "actions/createAppointment";
+import { updateEvent } from "actions/updateEvent";
 
 export type EditData = {
   service: { label: string; value: string };
   customer: { label: string; value: string };
   StartTime: string;
   EndTime: string;
-  description: string;
+  descripition: string;
 };
 
 function EditEvent({
@@ -46,7 +33,6 @@ function EditEvent({
   session,
   user,
   scheduleObj,
-  setEditEvent,
 }: {
   scheduleObj: React.RefObject<ScheduleComponent>;
   props: EditProps;
@@ -60,17 +46,15 @@ function EditEvent({
     activityDays: ActivityDays[];
     Customer: Customer[];
   };
-  setEditEvent: React.Dispatch<React.SetStateAction<string | null>>;
-  editEvent: string | null;
 }) {
+  const [isPending, startTransition] = useTransition();
   const [customers, setCustomers] = useState<
     { value: string; label: string }[]
   >([]);
   const [services, setServices] = useState<{ value: string; label: string }[]>(
     []
   );
-  const [event, setEvent] = useState<EditData | null>(null);
-  console.log("event", event);
+  const [editEvent, setEditEvent] = useState<EditData | null>(null);
 
   useEffect(() => {
     const customersList = business.Customer.map((item) => ({
@@ -90,7 +74,7 @@ function EditEvent({
     setCustomers(customersList);
     setServices(servicesList);
     // Only update the event state if it has changed
-    if (
+    /*   if (
       JSON.stringify(event) !==
       JSON.stringify({
         customer: customer!,
@@ -99,16 +83,17 @@ function EditEvent({
         EndTime: props.EndTime,
         description: props.description,
       })
-    ) {
-      setEvent({
-        customer: customer!,
-        service: service!,
-        StartTime: props.StartTime,
-        EndTime: props.EndTime,
-        description: props.description,
-      });
-    }
+    ) { */
+    setEditEvent({
+      customer: customer!,
+      service: service!,
+      StartTime: props.StartTime,
+      EndTime: props.EndTime,
+      descripition: props.descripition || "",
+    });
+    /*  } */
   }, [props, business.Customer, user.Treatment]);
+  console.log("editEvent", editEvent);
 
   const { token } = theme.useToken();
 
@@ -120,6 +105,45 @@ function EditEvent({
     borderRadius: token.borderRadiusLG,
     border: `1px dashed ${token.colorBorder}`,
     marginTop: 16,
+  };
+
+  const closeEditorTemplate = () => {
+    if (scheduleObj.current) {
+      scheduleObj.current.closeEditor();
+    }
+  };
+
+  const onSaveUpdate = (props: EditProps) => {
+    let data = new DataManager(
+      scheduleObj?.current?.getCurrentViewEvents()
+    ).executeLocal(new Query().where("RecurrenceID", "equal", props.Id));
+    console.log("data", data);
+
+    const eventProps: EventProps & { id: string } = {
+      id: props.Id,
+      summary: editEvent?.customer?.label || "",
+      description: editEvent?.descripition || "",
+      start: {
+        dateTime: editEvent?.StartTime || "",
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      },
+      end: {
+        dateTime: editEvent?.EndTime || "",
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      },
+      extendedProperties: {
+        private: {
+          treatmentId: editEvent?.service?.value || "",
+          customerId: editEvent?.customer?.value || "",
+          customerName: editEvent?.customer?.value.split("-")[0] || "",
+        },
+      },
+    };
+    startTransition(
+      async () => await updateEvent(session.user.access_token, eventProps)
+    );
+    message.success(`${eventProps?.summary}נערך התור ל`);
+    closeEditorTemplate();
   };
 
   return (
@@ -146,13 +170,14 @@ function EditEvent({
             services={services}
             scheduleObj={scheduleObj}
             props={props}
-            setEvent={setEvent}
-            event={event}
+            setEvent={setEditEvent}
+            event={editEvent}
           />
         </div>
         <Button
           className={`w-full hover:ring-1 hover:ring-sky-600 hover:text-sky-600`}
           variant={"default"}
+          onClick={() => onSaveUpdate(props)}
         >
           Save
         </Button>

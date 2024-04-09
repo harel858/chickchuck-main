@@ -1,61 +1,32 @@
 "use server";
+
 import { prisma } from "@lib/prisma";
-import { RequiredDocument } from "@prisma/client";
+import { User } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
-export async function updateService(
-  e: FormData,
-  requiredDocument: RequiredDocument[],
-  id: string
-) {
-  console.log(e);
-
-  const title = e.get("title")?.toString();
-  const cost = e.get("cost")?.toString();
-  const duration = e.get("duration")?.toString();
-  const advancePayment = e.get("advance Payment")?.toString();
-  console.log({ title, cost, duration, advancePayment, requiredDocument });
-
+type NewService = {
+  title: string;
+  duration: number;
+  price: number;
+  treatmentId: string;
+};
+export default async function editService({
+  duration,
+  price,
+  title,
+  treatmentId,
+}: NewService) {
   try {
-    // Check for missing values and invalid input
-    if (
-      !title ||
-      !cost ||
-      !duration ||
-      !advancePayment ||
-      isNaN(+cost) ||
-      isNaN(+duration) ||
-      +duration <= 0 ||
-      isNaN(+advancePayment)
-    ) {
-      throw new Error("Invalid input data");
-    }
-
-    const existingTreatment = await prisma.treatment.findUnique({
-      where: { id },
-      include: { RequiredDocument: true },
-    });
-
-    if (!existingTreatment) {
-      throw new Error("Service not found");
-    }
-
-    const updatedTreatment = await prisma.treatment.update({
-      where: { id },
+    const newTreatment = await prisma.treatment.update({
+      where: { id: treatmentId },
       data: {
-        title,
-        cost: +cost,
-        advancePayment: +advancePayment,
+        cost: +price,
         duration: +duration,
-        RequiredDocument: {
-          connect: requiredDocument.map((doc) => ({ id: doc.id })),
-        },
+        title,
       },
-      include: { RequiredDocument: true },
     });
     revalidatePath("/services");
-  } catch (error) {
-    console.error(error);
-    throw new Error("An error occurred while updating the service");
+  } catch (err: any) {
+    throw new Error(err);
   }
 }

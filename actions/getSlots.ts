@@ -1,48 +1,40 @@
 "use server";
-import { prisma } from "@lib/prisma";
-import dayjs from "dayjs";
 
-export async function getQueuesByDate(
-  userId: string,
-  dateVal: string,
-  duration: number,
-  time: any
-) {
+import { setupGoogleCalendarClient } from "@lib/google/client";
+import dayjs, { Dayjs } from "dayjs";
+
+export const fetchEventsByDate = async (
+  selectedDateIOS: string,
+  access_token: string
+) => {
   try {
-    const date = dayjs(dateVal);
-    const format = "HH:mm";
-    const timeParts = time.split(":"); // Split the time string into hours and minutes
-    const hours = Number(timeParts[0]);
-    const minutes = Number(timeParts[1]);
-
-    const timePlus25Minutes = dayjs(date)
-      .set("hours", hours)
-      .set("minutes", minutes + duration);
-    const endTime = timePlus25Minutes.format(format);
-
-    const slotDuration = 5;
-    const slotsNeeded = Math.ceil(duration / slotDuration);
-    const formattedDate = date.format("DD/MM/YYYY");
-    const availableSlots = await prisma.availableSlot.findMany({
-      where: {
-        userId,
-        start: { gte: time },
-        end: { lte: endTime },
-        NOT: {
-          AppointmentSlot: {
-            some: {
-              date: formattedDate,
-            },
-          },
-        },
+    const googleClient = setupGoogleCalendarClient(access_token);
+    const { auth, calendar, calendarId } = googleClient;
+    const date = dayjs(selectedDateIOS);
+    const startOfMonth = dayjs(date).startOf("month").toISOString();
+    const endOfMonth = dayjs(date).endOf("month").toISOString();
+    const response = await calendar.freebusy.query({
+      auth: auth,
+      requestBody: {
+        timeMin: startOfMonth,
+        timeMax: endOfMonth,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        groupExpansionMax: 1,
+        calendarExpansionMax: 50,
+        items: [{ id: calendarId }],
       },
-      orderBy: { start: "asc" },
     });
-    console.log("availableSlots", availableSlots);
-    if (availableSlots.length < slotsNeeded) return null;
-    return availableSlots;
-  } catch (error) {
-    console.log(error);
-    return null;
+    console.log("response", response);
+
+    return response.data;
+  } catch (err: any) {
+    console.log(err);
   }
-}
+};
+/* {
+      calendarId: calendarId,
+      timeMin: date.startOf("month").toISOString(),
+      timeMax: date.endOf("month").toISOString(),
+      singleEvents: true,
+      orderBy: "startTime",
+    } */

@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import fs from "fs";
 import { uploadImages } from "@lib/aws/s3";
-import { createProfileImages, updateProfileImages } from "@lib/prisma/images";
+import { createProfileImage, updateProfileImages } from "@lib/prisma/images";
 import { getById } from "@lib/prisma/users";
 import { bussinessById } from "@lib/prisma/bussiness/getUnique";
 export const config = {
@@ -34,7 +34,6 @@ export default async function handler(
           return res.status(500).json("user not found");
         const business = await bussinessById(userExist.Business.id);
         if (!business) return res.status(500).json("business not found");
-
         console.log("imageSrc.newFilename", imageSrc.newFilename);
 
         // Process form data
@@ -45,15 +44,14 @@ export default async function handler(
           ContentType: imageSrc.mimetype!,
         };
 
-        if (!business.Images) {
-          const { created, err } = await createProfileImages({
-            fileName: imageSrc.newFilename,
-            businessId: business.id,
-            type,
-          });
+        /*   if (!business.Images || business.Images.length === 0) {
+          const created = await createProfileImage(
+            imageSrc.newFilename,
+            business.id
+          );
           if (!created || err) return res.status(500).json("creation error");
           if (created) return res.status(201).json(created);
-        }
+        } */
 
         if (type == "PROFILE") {
           const upload = await uploadImages([params]);
@@ -62,6 +60,7 @@ export default async function handler(
             fileName: imageSrc.newFilename,
             businessId: business.id,
             type,
+            imagesId: business.Images[0]?.id || "",
           });
           if (!result) return res.status(500).json("prisma err");
           // Send the response
@@ -74,6 +73,7 @@ export default async function handler(
             fileName: imageSrc.newFilename,
             businessId: business.id,
             type,
+            imagesId: business.Images[0]?.id || "",
           });
           if (!result) return res.status(500).json("prisma err");
           // Send the response

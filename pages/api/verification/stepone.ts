@@ -17,18 +17,21 @@ export default async function handler(
       const { name, phoneNumber, code, request_id } =
         req.body as VerificationData;
       if (!phoneNumber && !name) return res.status(400).json(`missing values`);
-      return res.status(200).json({ request_id: "1234", phoneNumber });
-      /*  const sendSms = await vonage.verify.start({
+      console.log("phoneNumber", phoneNumber);
+
+      const sendSms = await vonage.verify.start({
         number: phoneNumber,
         brand: "Vonage",
       });
-      console.log(sendSms);
+
+      console.log("sendSms", sendSms);
 
       if (sendSms.status === `0`)
-        return res.status(200).json({request_id:sendSms.request_id,
-        phoneNumber});
+        return res
+          .status(200)
+          .json({ request_id: sendSms.request_id, phoneNumber });
 
-      return res.status(500).json(`something went wrong`); */
+      return res.status(500).json(`something went wrong`);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);

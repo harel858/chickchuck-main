@@ -1,126 +1,112 @@
-// Verification Component
 "use client";
-import React, { useState, useMemo } from "react";
-import { motion } from "framer-motion";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepButton from "@mui/material/StepButton";
-import Typography from "@mui/material/Typography";
-import StepOne from "./landingPage/verification/stepOne";
-import StepTwo from "./landingPage/verification/stepTwo";
-import { BusinessData, UserData, VerificationData } from "../types/types";
-import { Business, Customer, Treatment, User } from "@prisma/client";
+import React from "react";
+import { useForm } from "react-hook-form";
+import {
+  TUserValidation,
+  UserValidation,
+} from "@lib/validators/userValidation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form } from "@ui/form";
+import { Button } from "@ui/Button";
+import FormField from "./FormField";
+import dayjs from "dayjs";
+import { Treatment } from "@prisma/client";
+import { calendar_v3 } from "googleapis";
+import axios from "axios";
 
-export default function Verification({
-  businessData,
+export interface FieldType {
+  label: "שם מלא" | "מספר פלאפון";
+  name: "fullName" | "phoneNumber";
+}
+
+const BusinessDetailsForm = ({
+  selectedService,
+  selectedSlot,
+  onSetCustomerInput,
 }: {
-  businessData: {
-    usersData: UserData[];
-    business: Business & {
-      user: (User & {
-        Treatment: Treatment[];
-      })[];
-      Customer: Customer[];
-    };
-  };
-}) {
-  const [activeStep, setActiveStep] = useState(0);
-  const [input, setInput] = useState<VerificationData>({
-    name: "",
-    phoneNumber: "",
-    request_id: "",
-    code: "",
-    bussinesId: businessData.business.id,
+  selectedService: Treatment | null;
+  selectedSlot: calendar_v3.Schema$TimePeriod | null;
+  onSetCustomerInput: (
+    input: {
+      fullName: string;
+      phoneNumber: string;
+    } & {
+      request_id: string;
+    }
+  ) => void;
+}) => {
+  const form = useForm<TUserValidation>({
+    resolver: zodResolver(UserValidation),
   });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = form;
 
-  const [completed, setCompleted] = React.useState<{
-    [k: number]: boolean;
-  }>({});
+  const onSubmit = async (data: TUserValidation) => {
+    try {
+      const result = await axios.post("/api/verification/stepone", {
+        name: data.fullName,
+        phoneNumber: data.phoneNumber,
+      });
+      const request_id = result.data.request_id;
+      console.log("result", result);
 
-  const handleChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-      const { name, value } = event.target;
+      console.log("request_id", request_id);
 
-      if (name === "phoneNumber") {
-        const onlyDigits = value.replace(/\D/g, "");
-        setInput((prevInput) => ({
-          ...prevInput,
-          [name]: onlyDigits,
-        }));
-      } else {
-        setInput((prevInput) => ({
-          ...prevInput,
-          [name]: value,
-        }));
-      }
-    },
-    [input]
-  );
-
-  const steps = useMemo(
-    () => [
-      {
-        label: <h4 className="text-slate-900">Enter Your details</h4>,
-        content: (
-          <StepOne
-            input={input}
-            setInput={setInput}
-            handleChange={handleChange}
-            handleNext={handleNext}
-          />
-        ),
-      },
-      {
-        label: <h4 className="text-black">Verify code</h4>,
-        content: (
-          <StepTwo
-            handleChange={handleChange}
-            input={input}
-            setInput={setInput}
-            handleNext={handleNext}
-          />
-        ),
-      },
-    ],
-    [input]
-  );
-
-  function handleNext() {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  }
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+      onSetCustomerInput({ ...data, request_id: request_id });
+    } catch (err: any) {
+      console.log(typeof err);
+      console.log("err", err);
+    }
   };
-
-  const handleStep = (step: number) => () => {
-    setActiveStep(step);
-  };
+  const formType: FieldType[] = [
+    { label: "שם מלא", name: "fullName" },
+    { label: "מספר פלאפון", name: "phoneNumber" },
+  ];
 
   return (
-    <div className="w-1/2 max-md:w-full flex justify-center content-center items-center p-5 bg-slate-100 rounded-xl max-xl:rounded-t-none shadow-sm shadow-black border-x border-b border-gray-500">
-      <div className="w-full">
-        <Stepper sx={{ color: "black" }} activeStep={activeStep}>
-          {steps.map((step, index) => (
-            <Step key={index} completed={completed[index]}>
-              <StepButton color="inherit" onClick={handleStep(index)}>
-                {step.label}
-              </StepButton>
-            </Step>
-          ))}
-        </Stepper>
-        <div className="flex flex-col justify-center items-center">
-          {activeStep >= 2 ? (
-            <React.Fragment>
-              <Typography sx={{ mt: 2, mb: 1 }}>
-                All steps completed - you&apos;re finished
-              </Typography>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>{steps[activeStep]?.content}</React.Fragment>
-          )}
-        </div>
+    <div className="flex flex-col justify-center items-center p-5">
+      <h1 className="text-2xl text-black">סיכום</h1>
+      <p className="text-xl text-black text-center">
+        תור ל{selectedService?.title} בתאריך{" "}
+        {dayjs(selectedSlot?.start).format("DD/MM/YYYY")} בשעה{" "}
+        {dayjs(selectedSlot?.start).format("HH:mm")}
+      </p>
+      <div className="flex flex-col justify-center items-center w-full">
+        <Form {...form}>
+          <form
+            className="flex flex-col justify-center items-center gap-5"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <div className="flex flex-col justify-center items-center gap-2">
+              {formType.map(({ label, name }) => {
+                return (
+                  <FormField
+                    errors={errors}
+                    register={register}
+                    control={control}
+                    name={name}
+                    label={label}
+                    key={label}
+                  />
+                );
+              })}
+            </div>
+            <Button
+              className="bg-blue-600 text-2xl fixed bottom-10 w-1/3 max-md:w-full transition-all ease-in-out duration-300"
+              type="submit"
+              size="lg"
+            >
+              המשך
+            </Button>
+          </form>
+        </Form>
       </div>
     </div>
   );
-}
+};
+
+export default BusinessDetailsForm;

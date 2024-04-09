@@ -1,13 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@ui/Button";
-import axios from "axios";
-import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { useForm } from "react-hook-form";
 import { Form } from "@ui/form";
 import { Input } from "@components/input";
 import { Label } from "@components/label";
-
 import {
   customerDetailsValidation,
   TCustomerDetailsValidation,
@@ -16,42 +13,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@lib/utils";
 import { message } from "antd";
 import { createNewCustomer } from "actions/createCustomer";
-import { useRouter } from "next/navigation";
-import { Business, Customer } from "@prisma/client";
+import { Business } from "@prisma/client";
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-interface InputData {
-  name: string;
-  phoneNumber: number | null;
-}
-function Customer({
+function AddCustomer({
   business,
   handleCancel,
+  isHidden,
 }: {
-  business: Business & {
-    Customer: Customer[];
-  };
+  business: Business;
   handleCancel?: () => void;
+  isHidden: boolean;
 }) {
-  console.log("business", business);
-
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<TCustomerDetailsValidation>({
     resolver: zodResolver(customerDetailsValidation),
   });
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isLoading, isSubmitting },
+    formState: { errors },
     control,
   } = form;
 
   const submitForm = async (e: { Name: string; Phone: string }) => {
+    setIsLoading(true);
     try {
       const { Name, Phone } = e;
       const res = await createNewCustomer({
@@ -60,9 +46,13 @@ function Customer({
         bussinesId: business.id,
       });
       console.log("createNewCustomer", res);
-      handleCancel && handleCancel();
       message.success(`${Name} הוסף לרשימה`);
+      if (res) {
+        handleCancel && handleCancel();
+        setIsLoading(false);
+      }
     } catch (err) {
+      setIsLoading(false);
       console.log(err);
       message.error("internal error");
     }
@@ -79,10 +69,7 @@ function Customer({
       className="w-full"
     >
       <Form {...form}>
-        <form
-          className="flex flex-col items-center gap-4 mt-4 w-full relative"
-          onSubmit={handleSubmit(submitForm)}
-        >
+        <form className="flex flex-col items-center gap-4 mt-4 w-full relative">
           <h2 className={`text-slate-900 font-normal font-serif text-2xl`}>
             Create A Customer
           </h2>
@@ -128,9 +115,10 @@ function Customer({
           </div>
           <Button
             variant="default"
-            className="w-max bg-sky-600 hover:bg-slate-900 dark:bg-sky-800 text-xl rounded-xl max-2xl:w-11/12 tracking-widest"
-            isLoading={isSubmitting}
-            type="submit"
+            className="w-max bg-sky-600 hover:bg-slate-900 dark:bg-sky-800 text-xl rounded-lg max-2xl:w-11/12 tracking-widest"
+            isLoading={isLoading}
+            type="button"
+            onClick={handleSubmit(submitForm)}
           >
             Create
           </Button>
@@ -140,4 +128,4 @@ function Customer({
   );
 }
 
-export default Customer;
+export default AddCustomer;

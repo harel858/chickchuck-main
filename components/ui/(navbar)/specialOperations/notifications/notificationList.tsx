@@ -1,100 +1,110 @@
-import classes from "./style/list.module.css";
-import React, { useState } from "react";
-import { Avatar, List, Modal } from "antd";
-import { NotificationData } from "types/types";
-import { BiEdit } from "react-icons/bi";
+import React from "react";
+import { Button, List } from "antd";
+import { User } from "lucide-react";
+import dayjs from "dayjs";
 import { calendar_v3 } from "googleapis";
-
-function getNotificationTitle(
-  notification: calendar_v3.Schema$Events & { status?: string }
-) {
-  const status = notification!.status;
-  const summary = notification.summary;
-
-  switch (status) {
-    case "confirmed":
-      return `${summary} just made a confirmed appointment`;
-    case "tentative":
-      return `${summary} just made a tentative appointment`;
-    case "cancelled":
-      return `${summary}'s appointment has been cancelled`;
-  }
-}
-
-function NotificationList({
+import {
+  CheckCircleTwoTone,
+  CloseCircleOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
+import { Session } from "next-auth";
+import DetailsButton from "@components/clients/details/DetailsButton";
+import { Customer } from "@prisma/client";
+const NotificationList = ({
   notifications,
+  session,
+  customers,
+  closePopover,
 }: {
-  notifications: calendar_v3.Schema$Events[];
-}) {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [current, setCurrent] = useState(0);
+  notifications: calendar_v3.Schema$Event[] | undefined;
+  session: Session;
+  customers: Customer[];
+  closePopover: () => void;
+}) => {
+  const getTitleByStatus = (
+    status: calendar_v3.Schema$Event["status"],
+    name: string | undefined,
+    summary: string | null | undefined
+  ) => {
+    switch (status) {
+      case "confirmed":
+        return (
+          <>
+            <CheckCircleTwoTone className="text-xl" />
+            {name} קבע/ה תור ל{summary}
+          </>
+        );
+      case "pending":
+        return "Pending Event";
+      case "cancelled":
+        return (
+          <>
+            <CloseCircleOutlined className="text-xl text-red-500" />
+            {""} {name} ביטל/ה תור ל{summary}
+          </>
+        );
+      default:
+        return "Unknown Event";
+    }
+  };
+
+  // Reverse the notifications array
+  const reversedNotifications = notifications
+    ? [...notifications].reverse()
+    : [];
 
   return (
-    <>
-      {notifications.length > 0 ? (
-        <List
-          className={`max-h-96 overflow-x-hidden overflow-y-auto w-96 ${classes.scrollbarCustom}`}
-          itemLayout="horizontal"
-          dataSource={notifications}
-          renderItem={(notification, index) => {
-            console.log("notificationList", notification);
-
-            const title = getNotificationTitle(notification);
-
-            console.log("title", title);
-            if (!title) return <></>;
-            return (
-              <>
-                <List.Item
-                  /* onClick={() => setModalOpen(true)} */
-                  className={`hover:bg-gray-200 cursor-pointer`}
-                >
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar
-                        src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`}
-                      />
-                    }
-                    title={<p className="font-bold text-md">{title}</p>}
-                    description={`${notification.description}`}
+    <div
+      id="scrollableDiv"
+      style={{
+        height: 400,
+        width: "50vw",
+        overflow: "auto",
+        padding: "0 16px",
+        border: "1px solid rgba(140, 140, 140, 0.35)",
+      }}
+    >
+      <List
+        dataSource={reversedNotifications}
+        renderItem={(item) => {
+          const customer = customers.find(
+            (customer) =>
+              customer.id === item.extendedProperties?.private?.customerId
+          );
+          const customerName = item.extendedProperties?.private?.customerName;
+          const startTime = dayjs(item.start?.dateTime).format("hh:mm");
+          const endTime = dayjs(item.end?.dateTime).format("hh:mm");
+          const formatDate = dayjs(item.end?.dateTime).format("DD/MM/YYYY");
+          return customer ? (
+            <List.Item key={item.id}>
+              <List.Item.Meta
+                avatar={
+                  <DetailsButton
+                    closePopover={closePopover}
+                    session={session}
+                    customer={customer}
                   />
-                </List.Item>
-                <Modal
-                  title={
-                    <div className="flex flex-row justify-center items-center gap-2">
-                      <h3 className="text-2xl">New Appointment</h3>
-                      <BiEdit className="text-4xl" />
-                    </div>
-                  }
-                  className="pt-5"
-                  centered
-                  open={modalOpen}
-                  okButtonProps={{ hidden: true }}
-                  cancelButtonProps={{ hidden: true }}
-                  onCancel={() => {
-                    setModalOpen(false);
-                    setCurrent(0);
-                  }}
-                  styles={{
-                    body: {
-                      background: "rgba(254,215,170,0.7)",
-                      borderRadius: "3em",
-                      padding: "2em",
-                      margin: "0 auto",
-                    },
-                  }}
-                >
-                  <div>content</div>
-                </Modal>
-              </>
-            );
-          }}
-        />
-      ) : (
-        <p>You Have No Notifications Yet</p>
-      )}
-    </>
+                }
+                title={
+                  <div style={{ textAlign: "right", direction: "rtl" }}>
+                    {getTitleByStatus(item.status, customerName, item.summary)}
+                  </div>
+                }
+                description={
+                  <div style={{ textAlign: "right" }}>
+                    {startTime} - {endTime}, {formatDate}
+                  </div>
+                }
+              />
+            </List.Item>
+          ) : (
+            <></>
+          );
+        }}
+      />
+    </div>
   );
-}
+};
 
 export default NotificationList;

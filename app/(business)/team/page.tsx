@@ -3,33 +3,22 @@ import { prisma } from "@lib/prisma";
 import { authOptions } from "@lib/auth";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
-/* import TeamManeger from "@components/team/TeamManeger";
- */ export const revalidate = 0;
+import TeamManeger from "@ui/team/TeamManeger";
+export const revalidate = 0;
 
-async function fetchUser(email: string | null | undefined) {
+async function fetchUser(businessId: string | null | undefined) {
   try {
-    if (!email) return null;
-    const user = await prisma.user.findUnique({
-      where: { email },
+    if (!businessId) return null;
+    const business = await prisma.business.findUnique({
+      where: { id: businessId },
       include: {
-        Business: {
-          include: {
-            user: { include: { Treatment: true, BreakTime: true } },
-            Treatment: true,
-            BreakTime: true,
-          },
-        },
+        user: { include: { activityDays: true } },
       },
     });
-    if (!user?.isAdmin) return null;
-    const business = await prisma.business.findUnique({
-      where: { id: user?.Business?.id },
-    });
 
-    if (!user || !business) return null;
+    if (!business) return null;
 
-    const { Business, ...rest } = user;
-    return Business;
+    return business;
   } catch (error) {
     console.log(error);
     return null;
@@ -38,10 +27,9 @@ async function fetchUser(email: string | null | undefined) {
 
 async function Page() {
   const session = await getServerSession(authOptions);
-
-  const business = await fetchUser(session?.user?.email);
-  if (!business) return notFound();
-  return <></>;
+  const business = await fetchUser(session?.user?.businessId);
+  if (!business?.user || !session?.user.isAdmin) return notFound();
+  return <TeamManeger business={business} session={session} />;
 }
 
 export default Page;

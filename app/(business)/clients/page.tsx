@@ -16,74 +16,12 @@ async function getBusinessCustomers(userId: string | undefined) {
       include: {
         Business: {
           include: {
-            Customer: {
-              include: {
-                appointments: {
-                  include: { treatment: true, appointmentSlot: true },
-                },
-                blockedByBusiness: true,
-              },
-            },
+            Customer: true,
           },
         },
       },
     });
-    if (!user?.Business) return null;
-    const { Business } = user;
-
-    const thisYear = dayjs().year();
-
-    const customersWithIncome = Business.Customer.map((customer) => {
-      const appointmentsLastYear = customer.appointments.filter(
-        (appointment) =>
-          appointment.status === "COMPLETED" &&
-          dayjs(appointment?.appointmentSlot?.date, "DD/MM/YYYY").year() ===
-            thisYear
-      );
-
-      const uniqueDates = appointmentsLastYear.reduce(
-        (unique: number[], next) => {
-          const date = dayjs(next.appointmentSlot.date, "DD/MM/YYY").month();
-
-          if (!unique.includes(date)) {
-            unique.push(date);
-          }
-
-          return unique;
-        },
-        []
-      );
-
-      const totalIncomeLastYear = appointmentsLastYear.reduce(
-        (total, appointment) => {
-          const cost = appointment.treatment ? appointment.treatment.cost : 0;
-          return total + cost;
-        },
-        0
-      );
-
-      const averageMonthlyIncome = uniqueDates.length
-        ? totalIncomeLastYear /
-          (uniqueDates.length > 1
-            ? dayjs().month() - Math.min(...uniqueDates)
-            : 1)
-        : 0;
-
-      return {
-        ...customer,
-        blockedByBusiness: customer.blockedByBusiness.some(
-          (business) => business.id === Business.id
-        ),
-        average_monthly_income: averageMonthlyIncome,
-        BusinessId: Business.id,
-      };
-    });
-
-    return {
-      customers: customersWithIncome.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      ),
-    };
+    return user?.Business?.Customer;
   } catch (err) {
     console.log(err);
     return null;
@@ -93,8 +31,8 @@ async function getBusinessCustomers(userId: string | undefined) {
 async function Page() {
   const session = await getServerSession(authOptions);
   const customersData = await getBusinessCustomers(session?.user.id);
-  if (!customersData) return notFound();
-  return <Clients customers={customersData.customers} />;
+  if (!customersData || !session) return notFound();
+  return <Clients session={session} customers={customersData} />;
 }
 
 export default Page;

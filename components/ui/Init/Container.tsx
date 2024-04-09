@@ -26,7 +26,7 @@ const Container = ({ session }: { session: Session }) => {
   const router = useRouter();
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
-  const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
   const [stepsInitialized, setStepsInitialized] = useState(false);
   const [businessDetails, setBusinessDetails] =
     useState<TBusinessDetailsValidation | null>(null);
@@ -86,7 +86,11 @@ const Container = ({ session }: { session: Session }) => {
   ];
 
   const onDone = async () => {
-    console.log("email", session.user.email!);
+    setIsLoading(true);
+    if (!businessDetails) {
+      message.error("there are some missing values");
+      return;
+    }
     const formData = new FormData();
     formData.append("userId", session.user.id!);
     formData.append("businessDetails", JSON.stringify(businessDetails));
@@ -111,8 +115,12 @@ const Container = ({ session }: { session: Session }) => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("result", result);
-      if (result.status === 200) return router.push("/schedule");
+      if (result.status === 200) {
+        return router.push("/schedule");
+      }
+      setIsLoading(false);
     } catch (err) {
+      setIsLoading(false);
       console.log(err);
     }
   };
@@ -157,7 +165,7 @@ const Container = ({ session }: { session: Session }) => {
         )}
         {current === steps.length - 1 && (
           <Button
-            loading={isPending}
+            loading={isLoading}
             type="primary"
             className="bg-sky-600"
             onClick={onDone}

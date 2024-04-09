@@ -38,7 +38,6 @@ export default withAuth(
     const token = await getToken({ req });
 
     const isAuth = !!token;
-    console.log("tokenMiddleware", token);
 
     const isAuthPage = pathName.startsWith("/login");
     const sensetiveRoutes = [
@@ -48,8 +47,6 @@ export default withAuth(
       "/team",
       "/activityTime",
     ];
-    console.log("token.business", token?.businessId);
-    console.log("isAuth", isAuth);
 
     if (isAuthPage) {
       if (isAuth && !token.businessId) {

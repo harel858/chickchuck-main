@@ -1,11 +1,10 @@
 "use server";
 import { setupGoogleCalendarClient } from "@lib/google/client";
 import { prisma } from "@lib/prisma";
-import { AppointmentStatus, AvailableSlot } from "@prisma/client";
 import { AdditionData } from "@ui/calendar/SyncfusionCalendar";
 import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
-type EventProps = {
+export type EventProps = {
   summary: string | undefined;
   description: string | undefined;
   start: {
@@ -20,6 +19,7 @@ type EventProps = {
     private: {
       treatmentId: string;
       customerId: string;
+      customerName: string;
     };
   };
 };

@@ -53,21 +53,106 @@ export const uploadImages = async (paramsArray: UploadParams[]) => {
 
 export const getImages = async (paramsArray: getParams[]) => {
   try {
-    let urls: string[] = [];
+    let profileUrls: string[] = [];
+    let backgroundUrls: string[] = [];
+
     for (let i = 0; i < paramsArray.length; i++) {
       const params = paramsArray[i];
       if (!params || !params.Key) {
         throw new Error("Key is missing");
       }
-      const command = new GetObjectCommand({
-        ...params,
-        Key: `uploads/${params.Key}`,
-      });
-      const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-      console.log({ url });
-      urls.push(url);
+      const profileImgKey = params.Key.profileImgName
+        ? `uploads/${params.Key.profileImgName}`
+        : null;
+      const backgroundImgKey = params.Key.backgroundImgName
+        ? `uploads/${params.Key.backgroundImgName}`
+        : null;
+
+      if (profileImgKey) {
+        const profileCommand = new GetObjectCommand({
+          ...params,
+          Key: profileImgKey,
+        });
+        const profileUrl = await getSignedUrl(s3, profileCommand, {
+          expiresIn: 3600,
+        });
+        profileUrls.push(profileUrl);
+      }
+
+      if (backgroundImgKey) {
+        const backgroundCommand = new GetObjectCommand({
+          ...params,
+          Key: backgroundImgKey,
+        });
+        const backgroundUrl = await getSignedUrl(s3, backgroundCommand, {
+          expiresIn: 3600,
+        });
+        backgroundUrls.push(backgroundUrl);
+      }
     }
-    return urls;
+    return { profileUrls, backgroundUrls };
+  } catch (err) {
+    console.log(err);
+    throw new Error("internal error");
+  }
+};
+const imgIxLoader = (src: string) => {
+  const url = new URL(src);
+  console.log("url.pathname", url.pathname);
+
+  const imgIxName = url.pathname.split("/").pop();
+
+  const imgIxUrl = new URL("https://imgixs3.imgix.net");
+  imgIxUrl.pathname = `/${imgIxName}`;
+  console.log({ imgIxUrl });
+  imgIxUrl.searchParams.set("auto", "format");
+  imgIxUrl.searchParams.set("auto", "compress");
+  imgIxUrl.searchParams.set("q", "75");
+  return imgIxUrl.href;
+};
+export const getImages2 = async (paramsArray: getParams[]) => {
+  try {
+    let profileUrls: string = "";
+    let backgroundUrls: string[] = [];
+
+    for (let i = 0; i < paramsArray.length; i++) {
+      const params = paramsArray[i];
+      if (!params || !params.Key) {
+        throw new Error("Key is missing");
+      }
+      const profileImgKey = params.Key.profileImgName
+        ? `uploads/${params.Key.profileImgName}`
+        : null;
+      const backgroundImgKey = params.Key.backgroundImgName
+        ? `uploads/${params.Key.backgroundImgName}`
+        : null;
+
+      if (profileImgKey) {
+        const profileCommand = new GetObjectCommand({
+          ...params,
+          Key: profileImgKey,
+        });
+        const profileUrl = await getSignedUrl(s3, profileCommand, {
+          expiresIn: 3600,
+        });
+        const url = imgIxLoader(profileUrl);
+        profileUrls = url;
+      }
+
+      if (backgroundImgKey) {
+        const backgroundCommand = new GetObjectCommand({
+          ...params,
+          Key: backgroundImgKey,
+        });
+        const backgroundUrl = await getSignedUrl(s3, backgroundCommand, {
+          expiresIn: 3600,
+        });
+        const url = imgIxLoader(backgroundUrl);
+
+        backgroundUrls.push(url);
+      }
+    }
+    return { profileUrls, backgroundUrls };
   } catch (err) {
     console.log(err);
     throw new Error("internal error");

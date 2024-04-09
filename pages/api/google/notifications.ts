@@ -1,12 +1,10 @@
-import { getDataByUserId, updateItemData } from "@lib/aws/Dynamo";
+import { getDataByUserId } from "@lib/aws/Dynamo";
 import send from "@lib/aws/webSocketMessage";
 import { prisma } from "@lib/prisma";
 import { getUserAccount } from "@lib/prisma/users";
-import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Auth, google } from "googleapis";
 import { setupGoogleCalendarClient } from "@lib/google/client";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 const calendar = google.calendar("v3");
 type ResponseData = {
   message: string;
@@ -17,6 +15,8 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   try {
+    console.log("started");
+
     const userId = req.query.userId as string;
     const record = await getDataByUserId(userId, tableName);
     const user = await getUserAccount(userId);

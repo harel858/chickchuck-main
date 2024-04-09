@@ -35,7 +35,7 @@ export default function RootLayout({
       <html lang="en" className="h-full">
         <body
           className={cn(
-            "h-full font-sans bg-slate-200 dark:bg-slate-900 antialiased relative"
+            "h-full font-sans bg-slate-300 dark:bg-slate-900 antialiased relative"
           )}
         >
           <Providers>

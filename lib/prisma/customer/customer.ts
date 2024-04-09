@@ -1,3 +1,4 @@
+import { Customer } from "@prisma/client";
 import { prisma } from "..";
 
 export const createCustomer = async (
@@ -6,16 +7,8 @@ export const createCustomer = async (
   bussinesId: string
 ) => {
   try {
-    const newCustomer = await prisma.business.update({
-      where: { id: bussinesId },
-      data: {
-        Customer: {
-          create: {
-            name,
-            phoneNumber,
-          },
-        },
-      },
+    const newCustomer = await prisma.customer.create({
+      data: { name, phoneNumber, Business: { connect: { id: bussinesId } } },
     });
 
     return { newCustomer };
@@ -28,29 +21,22 @@ export const createCustomer = async (
 
 export const getCustomer = async (phoneNumber: string, businessId: string) => {
   try {
-    const customer = await prisma.customer.findUnique({
-      where: { phoneNumber },
-      select: {
-        appointments: true,
-        id: true,
-        name: true,
-        phoneNumber: true,
-        UserRole: true,
+    const existCustomer = await prisma.customer.findUnique({
+      where: { phoneNumber: phoneNumber },
+      include: {
         Business: true,
       },
     });
 
-    if (!customer) {
-      return { error: "Customer not found" };
-    }
-
     // Check if relation exists with this business
-    const exist = customer.Business.some((item) => item.id === businessId);
+    const exist = existCustomer?.Business.some(
+      (item) => item.id === businessId
+    );
 
     if (!exist) {
       // Create the relation with the business
       const updatedCustomer = await prisma.customer.update({
-        where: { id: customer.id },
+        where: { id: existCustomer?.id },
         data: {
           Business: {
             connect: { id: businessId },
@@ -58,10 +44,10 @@ export const getCustomer = async (phoneNumber: string, businessId: string) => {
         },
       });
 
-      return { customer: updatedCustomer };
+      return { existCustomer: updatedCustomer };
     }
 
-    return { customer };
+    return { existCustomer };
   } catch (getCustomerErr) {
     console.log(getCustomerErr);
 

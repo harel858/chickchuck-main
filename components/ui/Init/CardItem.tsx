@@ -1,16 +1,8 @@
 import React, { ChangeEvent, useCallback, useState } from "react";
-import { Card, Col, List, Modal, Row } from "antd";
+import { List, Modal } from "antd";
 import { ServiceInput } from "./InitServices";
-import { Button } from "@ui/Button";
 import { CiEdit, CiTrash } from "react-icons/ci";
-import { FaRegTrashAlt } from "react-icons/fa";
-import ServiceForm, { ServiceFieldType } from "./ServiceForm";
-import {
-  EditOutlined,
-  DeleteOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+import ServiceForm from "./ServiceForm";
 
 const CardItem = ({
   item,
@@ -39,6 +31,7 @@ const CardItem = ({
     },
     [service]
   );
+
   const handleOk = useCallback(() => {
     // Find the index of the current service in the services array
     const index = services.findIndex((s) => s.title === item.title);
@@ -56,6 +49,14 @@ const CardItem = ({
     }
   }, [service, services, setServices]);
 
+  const handleDelete = () => {
+    // Filter out the item being deleted
+    const filteredServices = services.filter((s) => s.title !== item.title);
+
+    // Update the state with the filtered array
+    setServices(filteredServices);
+  };
+
   return (
     <>
       <List.Item
@@ -63,6 +64,7 @@ const CardItem = ({
         actions={[
           <CiTrash
             className="text-2xl hover:text-red-500 cursor-pointer"
+            onClick={handleDelete}
             key="delete"
           />,
           <CiEdit
@@ -82,10 +84,6 @@ const CardItem = ({
         title="Edit Service"
         open={open}
         onOk={handleOk}
-        okButtonProps={{
-          className: "bg-blue-600",
-          disabled: !item.duration || !item.price || !item.title,
-        }}
         onCancel={handleCancel}
       >
         <ServiceForm
