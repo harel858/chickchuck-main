@@ -26,6 +26,7 @@ const NewEvent = ({
   session,
   user,
   scheduleObj,
+  ConferenceId,
 }: {
   scheduleObj: React.RefObject<ScheduleComponent>;
   props: any;
@@ -40,6 +41,7 @@ const NewEvent = ({
     activityDays: ActivityDays[];
     Customer: Customer[];
   };
+  ConferenceId: string;
 }) => {
   console.log("customers23", business.Customer);
 
@@ -181,6 +183,7 @@ const NewEvent = ({
               treatmentId: event?.service?.value || "",
               customerId: event?.customer?.value || "",
               customerName: customerName || "",
+              conferenceId: ConferenceId,
             },
           },
         };

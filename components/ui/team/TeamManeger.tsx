@@ -2,7 +2,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import TeamItem from "./TeamItem";
 import NoMembers from "./NoMembers";
-
 import AddMember from "./AddMember";
 import SearchMember from "./SearchMember";
 import LargeHeading from "@ui/LargeHeading";
@@ -63,7 +62,11 @@ function TeamManeger({
         />
         <div className="w-full flex flex-row-reverse justify-between items-center gap-10 max-lg:flex-col">
           <div className="flex flex-row gap-4 justify-center items-center">
-            <AddMember users={business.user} businessId={business.id} />
+            <AddMember
+              session={session}
+              users={business.user}
+              businessId={business.id}
+            />
             {/*   <AddRequiredDocuments
               businessId={user.businessId!}
               docs={Business?.RequiredDocument || []}

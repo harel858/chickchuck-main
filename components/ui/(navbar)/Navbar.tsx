@@ -43,23 +43,33 @@ function Navbar({
           link={formattedBusinessName}
           icon={<FiExternalLink />}
         />
-        <NavBarItem
-          title={"Schedule"}
-          link={`/schedule`}
-          icon={<AiOutlineSchedule />}
-        />
-        <NavBarItem
-          title={"Services"}
-          link={`/services`}
-          icon={<RiCoinsLine />}
-        />
-        <NavBarItem title={"Clients"} link={"/clients"} icon={<CgProfile />} />
-        <NavBarItem title={"Team"} link={"/team"} icon={<RiTeamLine />} />
-        <NavBarItem
-          title={"Bussiness Profile"}
-          link={`/profile`}
-          icon={<FaBusinessTime />}
-        />
+        {session.user.isAdmin ? (
+          <>
+            <NavBarItem
+              title={"Schedule"}
+              link={`/schedule`}
+              icon={<AiOutlineSchedule />}
+            />
+            <NavBarItem
+              title={"Services"}
+              link={`/services`}
+              icon={<RiCoinsLine />}
+            />
+            <NavBarItem
+              title={"Clients"}
+              link={"/clients"}
+              icon={<CgProfile />}
+            />
+            <NavBarItem title={"Team"} link={"/team"} icon={<RiTeamLine />} />
+            <NavBarItem
+              title={"Bussiness Profile"}
+              link={`/profile`}
+              icon={<FaBusinessTime />}
+            />
+          </>
+        ) : (
+          <></>
+        )}
       </ul>
       <div className="flex flex-row justify-between items-center gap-4 absolute right-2">
         <Notifications

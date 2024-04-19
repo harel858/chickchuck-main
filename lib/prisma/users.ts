@@ -11,24 +11,34 @@ export async function getAllUsers() {
 
 export const getUserAccount = async (userId: string) => {
   try {
-    const res = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
         accounts: true,
         Treatment: true,
         activityDays: true,
         Customer: true,
-        Business: { include: { Customer: true, Treatment: true } },
+        Business: { include: { user: true, Customer: true, Treatment: true } },
       },
     });
-    return res;
+    if (
+      user?.UserRole === "TEAMMEATE" &&
+      user?.accounts.length === 0 &&
+      user.accountId
+    ) {
+      const account = await prisma.account.findUnique({
+        where: { id: user?.accountId },
+      });
+      account && user.accounts.push(account);
+    }
+    return user;
   } catch (err: any) {
     console.log(err);
     throw new Error(err);
   }
 };
 
-export async function getUserByEmail(emailORphoneNumber: string) {
+export async function getUserByPhone(emailORphoneNumber: string) {
   try {
     console.log("emailORphoneNumber", emailORphoneNumber);
 
@@ -42,6 +52,23 @@ export async function getUserByEmail(emailORphoneNumber: string) {
     });
 
     return userExist;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+export async function updateUserByPhone(phone: string, password: string) {
+  try {
+    console.log("phone", phone);
+
+    const userUpdated = await prisma?.user.update({
+      where: {
+        phone,
+      },
+      data: { password },
+    });
+
+    return userUpdated;
   } catch (err) {
     console.error(err);
     return null;
@@ -70,18 +97,6 @@ export async function getByBusinessName(businessName: any) {
   }
 }
 
-export async function getById(id: any) {
-  try {
-    const userExist = await prisma?.user.findUnique({
-      where: { id },
-      include: { Business: true, BreakTime: true },
-    });
-    return { userExist };
-  } catch (err) {
-    return { err };
-  }
-}
-
 export async function getAdminById(id: any) {
   try {
     const userExist = await prisma?.user.findUnique({
@@ -103,7 +118,7 @@ export async function signIn(emailORphoneNumber: string, pass: string) {
       error: { message: `Check the details you provided are correct.` },
     };
   try {
-    const userExist = await getUserByEmail(emailORphoneNumber);
+    const userExist = await getUserByPhone(emailORphoneNumber);
 
     if (!userExist)
       return {
@@ -125,10 +140,9 @@ export async function signIn(emailORphoneNumber: string, pass: string) {
   }
 }
 const userOperations = {
-  getUserByEmail,
+  getUserByPhone,
   getAllUsers,
   getByBusinessName,
-  getById,
   signIn,
   getAdminById,
   getUserAccount,

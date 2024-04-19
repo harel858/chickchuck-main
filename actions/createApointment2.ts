@@ -20,6 +20,7 @@ export type EventProps = {
       treatmentId: string;
       customerId: string;
       customerName: string;
+      conferenceId: string;
     };
   };
 };

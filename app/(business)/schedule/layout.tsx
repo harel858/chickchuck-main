@@ -93,6 +93,7 @@ async function fetchEvents(
 
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
+  console.log("session", session);
 
   if (!session?.user.access_token) {
     return notFound();

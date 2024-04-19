@@ -1,9 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { signIn } from "next-auth/react";
-import { Button } from "@ui/Button";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import { CredentialsSignInButton, GoogleSignInButton } from "@ui/authButtons";
+import Icons from "@ui/Icons";
+import SignInMember from "@components/memberSignIn/SignInMember";
+import { Button } from "@ui/Button";
+import { RiTeamFill } from "react-icons/ri";
+import { Modal } from "antd";
+import SignInSteps from "@components/memberSignIn/signinmembers";
 type signInData = {
   emailORphoneNumber: string;
   password: string;
@@ -13,18 +19,12 @@ function SignInForm() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [isLodaing, setIsLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<signInData>({
     emailORphoneNumber: "",
     password: "",
   });
-  const handleGoogle = async () => {
-    try {
-      const res = await signIn("google");
-      console.log("res", res);
-    } catch (err) {
-      console.log("err", err);
-    }
-  };
+
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -68,41 +68,47 @@ function SignInForm() {
       }); */
     }
   };
-  const displayInput = () => {
-    const data: any = ["emailORphoneNumber", "password"];
-    return (
-      <div className="w-11/12">
-        {data?.map(
-          (item: keyof signInData, _index: number, _array: string[]) => (
-            <label key={_index}>
-              {item !== "password" ? "Email Or Phone Number" : item}
-              <input
-                className="w-full py-3 rounded-xl border border-gray-500 focus:outline-none focus:border-2 dark:focus:border-white/80 focus:border-black/80 transition duration-300 transform scale-95 hover:scale-100"
-                type={item === "emailORphoneNumber" ? "text" : "password"}
-                name={item}
-                required
-                value={formData[item]}
-                onChange={handleChange}
-              />
-            </label>
-          )
-        )}
-      </div>
-    );
-  };
+  const handleOk = useCallback(() => {
+    setOpen(false);
+  }, []);
+
+  const handleCancel = useCallback(() => {
+    console.log("Clicked cancel button");
+    setOpen(false);
+  }, [setOpen]);
 
   return (
-    <form
-      className="flex flex-col items-center gap-3 w-1/3 py-4 rounded-lg bg-white/20"
-      onSubmit={handleSubmit}
-    >
-      {displayInput()}
-      <p className="test-red-500">{error ? error : ""}</p>
-      <Button isLoading={isLodaing}>Submit</Button>
-      <Button isLoading={isLodaing} type="button" onClick={handleGoogle}>
-        Sign In With Google
-      </Button>
-    </form>
+    <>
+      <div className="container relative flex pt-20 flex-col items-center justify-center lg:px-0">
+        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+          <div className="flex flex-col items-center space-y-2 text-center">
+            <Icons.logo className="h-20 w-20" />
+            <h1 className="text-2xl font-semibold tracking-tight">
+              .קוויקיו, תן ליומן להתמלא
+            </h1>
+          </div>
+          <GoogleSignInButton />
+          <Button
+            onClick={() => setOpen(true)}
+            className="w-full flex items-center font-semibold justify-center h-14 px-6 mt-4 text-xl transition-colors duration-300 bg-white border-2 border-black text-black rounded-lg focus:shadow-outline hover:bg-slate-200"
+          >
+            <RiTeamFill className="text-5xl" />
+            <span className="ml-4"> התחבר כאיש צוות</span>
+          </Button>
+        </div>
+      </div>
+      <Modal
+        open={open}
+        onOk={handleOk}
+        className="z-0"
+        okButtonProps={{ className: "hidden" }}
+        cancelButtonProps={{ className: "hidden" }}
+        confirmLoading={true}
+        onCancel={handleCancel}
+      >
+        <SignInSteps />
+      </Modal>
+    </>
   );
 }
 

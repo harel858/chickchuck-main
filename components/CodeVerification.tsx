@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@ui/form";
 import { Button } from "@ui/Button";
 import dayjs from "dayjs";
-import { Customer, Treatment } from "@prisma/client";
+import { Customer, Treatment, User } from "@prisma/client";
 import { calendar_v3 } from "googleapis";
 import axios from "axios";
 import { Label } from "./label";
@@ -27,6 +27,7 @@ const BusinessDetailsForm = ({
   freeBusy,
   handleNext,
   bussinesId,
+  selectedUser,
 }: {
   selectedService: Treatment | null;
   selectedSlot: calendar_v3.Schema$TimePeriod | null;
@@ -41,6 +42,7 @@ const BusinessDetailsForm = ({
   freeBusy: string;
   handleNext: () => void;
   bussinesId: string;
+  selectedUser: User;
 }) => {
   const [isPending, startTransition] = useTransition();
 
@@ -82,6 +84,7 @@ const BusinessDetailsForm = ({
               treatmentId: selectedService?.id || "",
               customerId: client.id || "",
               customerName: client.name || "",
+              conferenceId: selectedUser.calendarId || "primary",
             },
           },
         };
@@ -102,7 +105,7 @@ const BusinessDetailsForm = ({
     <div className="flex flex-col justify-center items-center p-5">
       <h1 className="text-2xl text-black">סיכום</h1>
       <p className="text-xl text-black text-center">
-        תור ל{selectedService?.title} בתאריך{" "}
+        תור אצל {selectedUser.name} ל{selectedService?.title} בתאריך{" "}
         {dayjs(selectedSlot?.start).format("DD/MM/YYYY")} בשעה{" "}
         {dayjs(selectedSlot?.start).format("HH:mm")}
       </p>

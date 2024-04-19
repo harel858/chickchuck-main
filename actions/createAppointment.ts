@@ -20,6 +20,7 @@ export type EventProps = {
       treatmentId: string;
       customerId: string;
       customerName: string;
+      conferenceId: string;
     };
   };
 };
@@ -28,9 +29,14 @@ export async function createAppointment(
   access_token: string,
   eventProps: EventProps
 ) {
+  console.log("extendedProperties", {
+    ...eventProps.extendedProperties.private,
+  });
+
   try {
     const googleClient = setupGoogleCalendarClient(access_token);
-    const { auth, calendar, calendarId } = googleClient;
+    const { auth, calendar } = googleClient;
+    const calendarId = eventProps.extendedProperties.private.conferenceId;
     calendar.events.insert({
       auth: auth,
       calendarId: calendarId,

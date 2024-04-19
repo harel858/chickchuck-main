@@ -7,7 +7,6 @@ const vonage = new (Vonage as any)({
   apiKey: `${process.env.API_KEY}`,
   apiSecret: `${process.env.API_SECRET}`,
 });
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

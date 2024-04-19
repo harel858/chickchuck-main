@@ -8,31 +8,49 @@ export async function fetchEvents(
     calendar: calendar_v3.Calendar;
     calendarId: string;
   },
-  accountId: string
+  accountId: string,
+  calendarIds: string[] // Change to array of calendar IDs
 ) {
   try {
-    const { auth, calendar, calendarId } = googleClient;
+    const { auth, calendar } = googleClient;
 
-    const response = await calendar.events.list({
-      calendarId,
-      auth,
-      fields: "items(*)", // Include extendedProperties
-      /*       privateExtendedProperty: ["treatmentId", "customerId"],
-       */
-    });
-    const result = response;
-    const newSyncToken = result.data.nextSyncToken;
+    const allEvents: calendar_v3.Schema$Event[] = [];
 
-    await prisma.account.update({
-      where: { id: accountId },
-      data: {
-        syncToken: newSyncToken,
-      },
-    });
+    // Loop through each calendar ID and fetch events
+    for (let i = 0; i < calendarIds.length; i++) {
+      const calendarId = calendarIds[i];
+      const response = await calendar.events.list({
+        calendarId,
+        auth,
+        fields: "items(*)",
+        /*      privateExtendedProperty: [
+          "treatmentId",
+          "customerId",
+          "conferenceId",
+          "customerName",
+        ], */
+      });
 
-    return result;
-  } catch (error) {
-    console.error("Error while fetching events:", error);
-    return null;
+      // Check if response data and items exist
+      if (response.data && response.data.items) {
+        // Add events from this calendar to the result
+        allEvents.push(...response.data.items);
+      }
+
+      // Update sync token for the user
+      if (i === calendarIds.length) {
+        const newSyncToken = response.data.nextSyncToken;
+        await prisma.account.update({
+          where: { id: accountId },
+          data: {
+            syncToken: newSyncToken,
+          },
+        });
+      }
+    }
+
+    return allEvents;
+  } catch (error: any) {
+    throw new Error("Error while fetching events:", error);
   }
 }

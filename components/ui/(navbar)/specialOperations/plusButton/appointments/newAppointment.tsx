@@ -22,8 +22,7 @@ import {
   Treatment,
   User,
 } from "@prisma/client";
-import axios from "axios";
-import { revalidatePath, revalidateTag } from "next/cache";
+
 import { createAppointment } from "actions/createAppointment";
 
 const AppointmentSteps = ({

@@ -5,6 +5,7 @@ import MobileStepperMUI from "./MobileStepperMUI";
 import ServicesList from "./ServicesList";
 import ChooseDate from "./ChooseDate";
 import Verification from "./Verification";
+import UserList from "./UserList";
 import SlotsList from "./SlotsList";
 import CodeVerification from "./CodeVerification";
 import ThankYouPage from "./ThankYouPage";
@@ -37,10 +38,25 @@ export default function AppointmentSteps({
     React.useState<Treatment | null>(null);
   const [selectedDate, setSelectedDate] = React.useState<Dayjs>(dayjs());
   const [slots, setSlots] = React.useState<calendar_v3.Schema$TimePeriod[]>([]);
+  const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
   const [slotsForMonth, setSlotsForMonth] = React.useState<Record<
     string,
     calendar_v3.Schema$TimePeriod[]
   > | null>(null);
+  const handleNext = useCallback(() => {
+    if (activeStep === 0 && business.user.length < 2)
+      return setActiveStep((prevActiveStep) => prevActiveStep + 2);
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  }, [setActiveStep, activeStep]);
+
+  const onSelectedUser = useCallback(
+    (user: User) => {
+      setSelectedUser(user);
+      handleNext();
+    },
+    [selectedUser, setSelectedUser]
+  );
   const [customerInput, setCustomerInput] = useState<
     (TUserValidation & { request_id: string }) | null
   >(null);
@@ -75,6 +91,7 @@ export default function AppointmentSteps({
     (service: Treatment) => setSelectedService(service),
     [selectedService, setSelectedService]
   );
+
   const onSelectedDate = useCallback(
     (date: Dayjs) => {
       if (
@@ -90,9 +107,6 @@ export default function AppointmentSteps({
     },
     [selectedDate, setSelectedDate]
   );
-  const handleNext = useCallback(() => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  }, [setActiveStep, activeStep]);
 
   const handleBack = useCallback(() => {
     if (activeStep > 1) setActiveStep(1);
@@ -101,12 +115,22 @@ export default function AppointmentSteps({
 
   const steps = [
     {
-      title: "סוג השירות",
+      title: "?מה בא לך",
       content: (
         <ServicesList
           services={business.Treatment}
           onSelectedService={onSelectedService}
           selectedService={selectedService}
+        />
+      ),
+    },
+    {
+      title: "?אצל מי",
+      content: (
+        <UserList
+          users={business.user}
+          onSelectedUser={onSelectedUser}
+          selectedUser={selectedUser}
         />
       ),
     },
@@ -123,11 +147,12 @@ export default function AppointmentSteps({
           allSlots={slots}
           onSlotsForMonth={onSlotsForMonth}
           slotsForMonth={slotsForMonth}
+          calendarId={selectedUser?.calendarId || "primary"}
         />
       ),
     },
     {
-      title: "אימות",
+      title: "אימות קצרצר",
       content: (
         <SlotsList
           slotsForMonth={slotsForMonth}
@@ -144,6 +169,7 @@ export default function AppointmentSteps({
           selectedService={selectedService}
           selectedSlot={selectedSlot}
           onSetCustomerInput={onSetCustomerInput}
+          selectedUser={selectedUser || business.user[0]!}
         />
       ),
     },
@@ -157,6 +183,7 @@ export default function AppointmentSteps({
           freeBusy={freeBusy}
           handleNext={handleNext}
           bussinesId={business.id}
+          selectedUser={selectedUser || business.user[0]!}
         />
       ),
     },
@@ -166,6 +193,7 @@ export default function AppointmentSteps({
         <ThankYouPage
           selectedService={selectedService}
           selectedSlot={selectedSlot}
+          selectedUser={selectedUser || business.user[0]!}
         />
       ),
     },

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import { User } from "@prisma/client";
-import { getUserByEmail } from "@lib/prisma/users";
+import { getUserByPhone } from "@lib/prisma/users";
 
 export async function signIn(
   req: NextApiRequest,
@@ -41,7 +41,7 @@ export async function signInNew(emailORphoneNumber: string, password: string) {
   if (!emailORphoneNumber || !password) return { err: `Missing Inputs.` };
   try {
     // Validate user
-    const userExist = await getUserByEmail(emailORphoneNumber);
+    const userExist = await getUserByPhone(emailORphoneNumber);
 
     if (!userExist) return { err: `User not found` };
 

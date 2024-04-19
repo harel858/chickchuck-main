@@ -3,80 +3,56 @@ import { NextAuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getCustomer } from "./prisma/customer/customer";
 import { getImage } from "./aws/s3";
-import { signInNew } from "./routes/user/signin";
 import googleProvider from "next-auth/providers/google";
-import { setupGoogleCalendarClient } from "./google/client";
+import { getUserByPhone, updateUserByPhone } from "./prisma/users";
+import bcrypt from "bcrypt";
+import findUserByPhone from "actions/findUserByPhone";
+
 const bucketName = process.env.BUCKET_NAME!;
 
-/* interface UserCredentials {
-  emailORphoneNumber: string;
+type UserCredentials = {
+  phone: string;
   password: string;
-}
+  confirmPassword: string;
+};
+const authorizeUserSignUp = async (credentials: any, req: any) => {
+  console.log("req", req);
+  console.log("credentials", credentials);
 
-interface CustomerCredentials {
-  phoneNumber: string;
-  bussinesId: string;
-}
-
-const authorizeUserLogin = async (credentials: any, req: any) => {
   try {
-    const { emailORphoneNumber, password } = credentials as UserCredentials;
+    const { phone, password } = credentials as UserCredentials;
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const { user, err } = await signInNew(emailORphoneNumber, password);
-
-    if (!user || err) throw new Error(err || "user not found");
+    const user = await updateUserByPhone(phone, hashedPassword);
 
     return user;
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
-    return null;
+    throw new Error(err);
   }
 };
+const authorizeUserSignIn = async (credentials: any, req: any) => {
+  console.log("req", req);
+  console.log("credentials", credentials);
 
-const authorizeCustomerLogin = async (credentials: any, req: any) => {
   try {
-    const { phoneNumber, bussinesId } = credentials as CustomerCredentials;
-    const { customer, getCustomerErr } = await getCustomer(
-      phoneNumber,
-      bussinesId
-    );
+    const { phone, password, confirmPassword } = credentials as UserCredentials;
 
-    if (getCustomerErr || !customer) throw new Error("Customer log in Fail");
+    const user = await findUserByPhone(phone);
+    if (user?.password) {
+      let verify = await bcrypt.compare(password, user.password);
 
-    return customer;
-  } catch (err) {
-    console.log(err);
+      if (!verify) return null;
+      return user;
+    }
     return null;
+  } catch (err: any) {
+    console.log(err);
+    throw new Error(err);
   }
 };
 
-const configureUserLoginProvider = () =>
-  CredentialsProvider({
-    name: "User Login",
-    id: "User Login",
-    credentials: {
-      email: { label: "Email", type: "text", placeholder: "Email" },
-      password: { label: "Password", type: "password" },
-    },
-    authorize: authorizeUserLogin,
-  });
-
-const configureCustomerLoginProvider = () =>
-  CredentialsProvider({
-    name: "Customer Login",
-    id: "Customer Login",
-    credentials: {
-      phoneNumber: {
-        label: "Phone Number",
-        type: "text",
-        placeholder: "Phone Number",
-      },
-    },
-    authorize: authorizeCustomerLogin,
-  });
- */
 async function refreshAccessToken(
   token: JWT & {
     accountId: string;
@@ -133,6 +109,31 @@ export const authOptions: NextAuthOptions = {
   pages: { signIn: "/signin", newUser: "/createbusinessdetails" },
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   providers: [
+    CredentialsProvider({
+      name: "Sign Up",
+      type: "credentials",
+      credentials: {
+        phone: {
+          label: "Phone",
+          type: "phone",
+        },
+        password: { label: "Password", type: "password" },
+        confirmPassword: { label: "Confirm Password", type: "password" },
+      },
+      authorize: authorizeUserSignUp,
+    }),
+    CredentialsProvider({
+      name: "Sign In",
+      type: "credentials",
+      credentials: {
+        phone: {
+          label: "Phone",
+          type: "phone",
+        },
+        password: { label: "Password", type: "password" },
+      },
+      authorize: authorizeUserSignIn,
+    }),
     googleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
@@ -145,28 +146,46 @@ export const authOptions: NextAuthOptions = {
           response_type: "code",
         },
       },
-      profile(profile, tokens) {
-        console.log("profile", profile);
-        console.log("tokens", tokens);
+      async profile(profile, tokens) {
+        try {
+          console.log("profile", profile);
+          console.log("tokens", tokens);
 
-        return {
-          id: profile.sub,
-          name: `${profile.given_name} ${profile.family_name}`,
-          email: profile.email,
-          image: profile.image,
-        };
+          return {
+            id: profile.sub,
+            name: `${profile.given_name} ${profile.family_name}`,
+            email: profile.email,
+            image: profile.image,
+          };
+        } catch (err: any) {
+          console.log(err);
+          throw new Error(err);
+        }
       },
     }),
   ],
   callbacks: {
     async jwt(props) {
-      const { token, user } = props;
+      console.log("props", props);
+      const { account, token, user, profile, session, trigger } = props;
 
       try {
+        /*         if (trigger === "signUp" && token) {
+          // Link user and account if it's a new sign-in
+          await prisma.user.update({
+            where: { id: token?.sub },
+            data: {
+              accounts: {
+                connect: { userId: token?.sub },
+              },
+            },
+          });
+        }
+ */
         let logo: string | null = "";
 
-        const user = await prisma.user.findUnique({
-          where: { email: token.email! },
+        let user = await prisma.user.findUnique({
+          where: { id: token.sub! },
           include: {
             Business: { include: { Images: true, Customer: true } },
             Treatment: true,
@@ -174,9 +193,19 @@ export const authOptions: NextAuthOptions = {
             accounts: true,
           },
         });
-
         if (!user) {
           throw new Error("user not found");
+        }
+
+        if (
+          user?.UserRole === "TEAMMEATE" &&
+          user?.accounts.length === 0 &&
+          user.accountId
+        ) {
+          const account = await prisma.account.findUnique({
+            where: { id: user?.accountId },
+          });
+          account && user.accounts.push(account);
         }
 
         if (user.Business?.Images && user.Business?.Images.length > 0) {
@@ -202,11 +231,11 @@ export const authOptions: NextAuthOptions = {
         /*        token.access_token = user.accounts[0]?.access_token || "";
         token.refresh_token = user.accounts[0]?.refresh_token || ""; */
 
-        if (props.account?.expires_at && user) {
+        if (account?.expires_at && user) {
           return {
             ...token,
             accessToken: token.accessToken,
-            accessTokenExpires: Date.now() + props.account.expires_at * 1000,
+            accessTokenExpires: Date.now() + account.expires_at * 1000,
             refreshToken: token.refresh_token,
           };
         }
@@ -219,7 +248,7 @@ export const authOptions: NextAuthOptions = {
         });
       } catch (err) {
         console.error(err);
-        return props.token;
+        return token;
       }
     },
 
@@ -241,5 +270,3 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
-
-/* 398888172398-5su01j6ookv6isv2pjp0ubleadru7jg7.apps.googleusercontent.com */

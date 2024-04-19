@@ -14,6 +14,7 @@ const ChooseDate = ({
   onSlots,
   onSlotsForMonth,
   slotsForMonth,
+  calendarId,
 }: {
   onSelectedDate: (date: Dayjs) => void;
   selectedDate: dayjs.Dayjs;
@@ -26,13 +27,18 @@ const ChooseDate = ({
     slots: Record<string, calendar_v3.Schema$TimePeriod[]>
   ) => void;
   slotsForMonth: Record<string, calendar_v3.Schema$TimePeriod[]> | null;
+  calendarId: string;
 }) => {
   const [loading, isLoading] = useState(true);
   const prevSelectedDate = useRef<Dayjs | null>(null);
   useEffect(() => {
     const fetchEventsForMonth = async (date: Dayjs) => {
       try {
-        const response = await fetchEventsByDate(date.toISOString(), freeBusy);
+        const response = await fetchEventsByDate(
+          date.toISOString(),
+          freeBusy,
+          calendarId
+        );
         const res = response?.calendars?.primary?.busy;
         const isoDate = selectedDate.toISOString();
         const generatedSlots = getAvailableTimeSlots(isoDate);

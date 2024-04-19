@@ -9,22 +9,21 @@ import { RequiredDocument, Treatment, User } from "@prisma/client";
 import createService from "actions/createService";
 import { useForm } from "react-hook-form";
 import {
-  BusinessDetailsValidation,
-  TBusinessDetailsValidation,
-} from "@lib/validators/business-details-validation";
+  MemberValidation,
+  TMemberValidation,
+} from "@lib/validators/memberDetails";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Session } from "next-auth";
 
 const AddMember = ({
   users,
   businessId,
+  session,
 }: {
   businessId: string;
   users: User[];
+  session: Session;
 }) => {
-  const form = useForm<TBusinessDetailsValidation>({
-    resolver: zodResolver(BusinessDetailsValidation),
-  });
-
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
@@ -32,18 +31,10 @@ const AddMember = ({
     setOpen(true);
   };
 
-  const handleOk = useCallback(async () => {
-    try {
-    } catch (err) {
-      // Reset service state to initial state
-      console.log(err);
-    }
-  }, []);
-
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     console.log("Clicked cancel button");
     setOpen(false);
-  };
+  }, [setOpen, open]);
 
   return (
     <div className="flex flex-col justify-center items-center gap-3 w-full">
@@ -51,22 +42,27 @@ const AddMember = ({
         className="flex justify-center items-center gap-1 bg-white text-black hover:bg-slate-950 hover:text-white"
         onClick={showModal}
       >
-        {" "}
         <PlusOutlined className="text-xl" />
         <span>הוסף חבר צוות</span>
       </Button>
 
       <Modal
-        title="New Service"
+        title="איש צוות חדש"
         open={open}
-        onOk={handleOk}
         okButtonProps={{
-          className: "bg-blue-600",
+          hidden: true,
         }}
+        cancelButtonProps={{ hidden: false }}
+        cancelText="סגור"
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
       >
-        <MemberForm />
+        <MemberForm
+          handleCancel={handleCancel}
+          session={session}
+          businessId={businessId}
+          users={users}
+        />
       </Modal>
     </div>
   );

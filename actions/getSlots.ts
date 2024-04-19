@@ -5,11 +5,12 @@ import dayjs, { Dayjs } from "dayjs";
 
 export const fetchEventsByDate = async (
   selectedDateIOS: string,
-  access_token: string
+  access_token: string,
+  calendarId: string
 ) => {
   try {
     const googleClient = setupGoogleCalendarClient(access_token);
-    const { auth, calendar, calendarId } = googleClient;
+    const { auth, calendar } = googleClient;
     const date = dayjs(selectedDateIOS);
     const startOfMonth = dayjs(date).startOf("month").toISOString();
     const endOfMonth = dayjs(date).endOf("month").toISOString();

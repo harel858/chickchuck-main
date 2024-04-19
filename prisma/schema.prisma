@@ -10,7 +10,7 @@ datasource db {
 
 model Account {
   id                String  @id @default(cuid())
-  userId            String  @map("user_id")
+  userId            String  @unique @map("user_id")
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
@@ -53,7 +53,7 @@ model VerificationToken {
 model User {
   id            String         @id @default(cuid())
   name          String
-  email         String         @unique
+  email         String?        @unique
   emailVerified DateTime?      @map("email_verified")
   image         String?
   accounts      Account[]
@@ -72,8 +72,8 @@ model User {
   Business      Business?      @relation(fields: [businessId], references: [id])
   businessId    String?
   Customer      Customer[]
-  BreakTime     BreakTime[]
-  Break         Break[]
+  calendarId    String?
+  accountId     String?
 
   @@map("users")
 }
@@ -91,15 +91,6 @@ model RequiredDocument {
   name       String
   treatment  Treatment[]
   Business   Business    @relation(fields: [businessId], references: [id])
-  businessId String
-}
-
-model BreakTime {
-  id         String   @id @default(uuid())
-  StartTime  String
-  EndTime    String
-  user       User[]
-  Business   Business @relation(fields: [businessId], references: [id])
   businessId String
 }
 
@@ -140,8 +131,6 @@ model Business {
   blockedCustomers Customer[]         @relation("BlockedCustomers")
   Treatment        Treatment[]
   RequiredDocument RequiredDocument[]
-  BreakTime        BreakTime[]
-  Break            Break[]
 }
 
 model Customer {
@@ -167,18 +156,6 @@ model Treatment {
   RequiredDocument RequiredDocument[]
 }
 
-model Break {
-  id                String   @id @default(uuid())
-  startTime         String
-  endTime           String
-  date              String
-  user              User     @relation(fields: [userId], references: [id])
-  userId            String
-  appointmentSlotId String   @unique
-  business          Business @relation(fields: [businessId], references: [id])
-  businessId        String
-}
-
 enum AppointmentStatus {
   SCHEDULED
   CANCELLED
@@ -188,6 +165,7 @@ enum AppointmentStatus {
 enum UserRole {
   CUSTOMER
   RECIPIENT
+  TEAMMEATE
 }
 
 enum TypeOfWage {

@@ -10,6 +10,11 @@ import { Account, Customer } from "@prisma/client";
 import { setupGoogleCalendarClient } from "@lib/google/client";
 import { OAuth2Client } from "google-auth-library";
 import { calendar_v3 } from "googleapis";
+export type DataSource = {
+  Text: string;
+  Id: string;
+  Color?: string;
+};
 
 async function ScheduleListPage() {
   const session = await getServerSession(authOptions);
@@ -30,12 +35,22 @@ async function ScheduleListPage() {
    */
   /*   const scheduleProps = await fetchEvents(googleClient, user.accounts[0]?.id);
    */
+  const result: DataSource[] = user.Business.user.map((user) => ({
+    Text: user.name,
+    Id: user.calendarId ? user.calendarId : "primary",
+    Color: undefined,
+  }));
+  const calendarsId: string[] = user.Business.user.map((user) =>
+    user.calendarId ? user.calendarId : "primary"
+  );
 
   return (
     <SyncfusionCalendar
       session={session}
       business={user.Business}
-      user={rest}
+      resourceData={result}
+      calendarsIds={calendarsId}
+      user={user}
     />
   );
 }

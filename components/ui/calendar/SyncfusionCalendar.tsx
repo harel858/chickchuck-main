@@ -1,6 +1,6 @@
 "use client";
 import "./schedule-component.css";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import {
   ScheduleComponent,
   ViewsDirective,
@@ -12,6 +12,8 @@ import {
   Resize,
   DragAndDrop,
   EventSettingsModel,
+  ResourcesDirective,
+  ResourceDirective,
 } from "@syncfusion/ej2-react-schedule";
 import { DataManager, UrlAdaptor } from "@syncfusion/ej2-data";
 import { Session } from "next-auth";
@@ -25,8 +27,10 @@ import {
   Treatment,
   User,
 } from "@prisma/client";
-import { Browser, Internationalization, extend } from "@syncfusion/ej2-base";
 import dayjs from "dayjs";
+import { AnyARecord } from "dns";
+import { UserOutlined } from "@ant-design/icons";
+import { DataSource } from "@app/(business)/schedule/page";
 
 export type AdditionData = {
   service?: { label: string; value: string };
@@ -37,26 +41,34 @@ const RecurrenceEvents = ({
   session,
   business,
   user,
+  resourceData,
+  calendarsIds,
 }: {
   session: Session;
   business: Business & {
     Customer: Customer[];
     Treatment: Treatment[];
+    user: User[];
   };
+  calendarsIds: string[];
   user: User & {
     accounts: Account[];
     Treatment: Treatment[];
     activityDays: ActivityDays[];
     Customer: Customer[];
   };
+  resourceData: DataSource[];
 }) => {
   const scheduleObj = useRef<ScheduleComponent>(null);
   const getTimeString = (value: any) => {
     return dayjs(value).format("h:mm");
   };
+  console.log("calendarsIds", calendarsIds);
   const [eventSettings, setEventSettings] = useState<EventSettingsModel>({
     dataSource: new DataManager({
-      url: `http://localhost:3000/api/google/events?id=${session.user.accountId}`,
+      url: `http://localhost:3000/api/google/events?id=${
+        session.user.accountId
+      }&calendarsIds=${JSON.stringify(calendarsIds)}`,
       headers: [{ Authorization: `Bearer ${session.user.access_token}` }],
       adaptor: new UrlAdaptor(),
       crudUrl: "http://localhost:3000/api/google/crud",
@@ -66,10 +78,10 @@ const RecurrenceEvents = ({
     includeFiltersInQuery: true,
     fields: {
       id: "Id",
-      subject: { name: "Subject" },
+      subject: { name: "Subject", title: "Conference Name" },
       isAllDay: { name: "IsAllDay" },
       location: { name: "Location" },
-      description: { name: "Description" },
+      description: { name: "Description", title: "Summary" },
       startTime: { name: "StartTime" },
       endTime: { name: "EndTime" },
       startTimezone: { name: "StartTimezone" },
@@ -80,12 +92,21 @@ const RecurrenceEvents = ({
     },
   });
 
+  console.log("eventSettings.dataSource", eventSettings.dataSource);
+
+  const getEmployeeName = (value: any) => {
+    return value.resourceData
+      ? value.resourceData[value.resource.textField]
+      : value.resourceName;
+  };
+
   const onDataBinding = (e: Record<string, any>): void => {
     const items: Record<string, any>[] =
       (JSON.parse(e.actual.message) as Record<
         string,
         Record<string, any>[]
       >[]) || [];
+
     let scheduleData: Record<string, any>[] = [];
     if (items.length > 0) {
       for (const event of items) {
@@ -97,6 +118,11 @@ const RecurrenceEvents = ({
           start = event.start.date as string;
           end = event.end.date as string;
         }
+        console.log("event", event);
+        const conferenceId = event?.extendedProperties?.private?.conferenceId
+          ? event.extendedProperties.private.conferenceId
+          : "primary";
+
         scheduleData.push({
           Id: event.id,
           status: event.status,
@@ -105,10 +131,13 @@ const RecurrenceEvents = ({
           StartTime: new Date(start),
           EndTime: new Date(end),
           IsAllDay: !event.start.dateTime,
+          ConferenceId: [conferenceId],
           ExtendedProperties: event.extendedProperties, // Include extended properties
         });
       }
     }
+    console.log("scheduleData", scheduleData);
+
     e.result = scheduleData;
   };
 
@@ -121,6 +150,12 @@ const RecurrenceEvents = ({
 
   const editorTemplate = useCallback(
     (props: any) => {
+      console.log("editorTemplateprops", props);
+      if (!props.ConferenceId) return;
+
+      const ConferenceId = props.ConferenceId[0] as string;
+      console.log("ConferenceId", ConferenceId);
+
       return props !== undefined && !props?.Guid ? (
         <NewEvent
           scheduleObj={scheduleObj}
@@ -128,6 +163,7 @@ const RecurrenceEvents = ({
           business={business}
           session={session}
           user={user}
+          ConferenceId={ConferenceId}
         />
       ) : (
         <EditEvent
@@ -171,14 +207,25 @@ const RecurrenceEvents = ({
             {getTimeString(props.StartTime)} -{getTimeString(props.EndTime)}
           </p>
         </div>
-        {/*   <div className="time" style={{ background: props.PrimaryColor }}>
-          Time: {getTimeString(props.StartTime)} -{getTimeString(props.EndTime)}
-        </div> */}
-        {/*  <div className="event-description">{props.Description}</div>
-        <div
-          className="footer"
-          style={{ background: props.PrimaryColor }}
-        ></div> */}
+      </div>
+    );
+  };
+
+  const resourceHeaderTemplate = (props: any) => {
+    console.log("props", props);
+
+    return (
+      <div className="template-wrap flex justify-center items-center flex-wrap gap-2">
+        <div className={"resource-image "}>
+          <UserOutlined className="text-2xl" />
+        </div>
+        <div className="resource-details">
+          <div className="resource-name font-bold text-xl">
+            {getEmployeeName(props)}
+          </div>
+          {/*           <div className="resource-designation">חבר צוות</div>
+           */}{" "}
+        </div>
       </div>
     );
   };
@@ -198,7 +245,21 @@ const RecurrenceEvents = ({
             editorTemplate={editorTemplate}
             editorFooterTemplate={() => <></>}
             showQuickInfo={true}
+            resourceHeaderTemplate={resourceHeaderTemplate}
+            group={{ allowGroupEdit: true, resources: ["Conferences"] }}
           >
+            <ResourcesDirective>
+              <ResourceDirective
+                field="ConferenceId"
+                title="Attendees"
+                name="Conferences"
+                allowMultiple={true}
+                dataSource={resourceData}
+                textField="Text"
+                idField="Id"
+                colorField="Color"
+              />
+            </ResourcesDirective>
             <ViewsDirective>
               <ViewDirective option="Day" />
               <ViewDirective eventTemplate={eventTemplate} option="Week" />
