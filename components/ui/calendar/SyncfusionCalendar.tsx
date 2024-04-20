@@ -188,8 +188,6 @@ const RecurrenceEvents = ({
     scheduleObj.current?.closeQuickInfoPopup();
   };
   const eventTemplate = (props: any) => {
-    console.log("eventTemplateProps", props);
-
     return (
       <div
         className="template-wrap"
