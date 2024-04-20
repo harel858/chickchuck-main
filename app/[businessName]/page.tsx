@@ -1,6 +1,5 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import { prisma } from "@lib/prisma";
 import AppointmentSteps from "@components/AppointmentSteps";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@lib/auth";
@@ -8,6 +7,7 @@ import NavButtons from "@ui/NavButtons";
 import { getImages2 } from "@lib/aws/s3";
 import Images from "@ui/Images";
 import BackgroundImage from "@components/landingPage/BackgroundImage";
+import { prisma } from "@lib/prisma";
 
 type LandingPageProps = {
   params: {
@@ -32,7 +32,7 @@ async function getBusiness(params: string) {
         Images: true,
         Treatment: true,
         activityDays: true,
-        user: { include: { accounts: true, activityDays: true } },
+        user: { include: { activityDays: true } },
       },
     });
     if (!business?.user) return null;
@@ -48,8 +48,8 @@ async function getBusiness(params: string) {
       const res = await getImages2(params);
       urls = res;
     }
-    const result = { ...business, urls };
-    const { id, ...rest } = result;
+    /*  const result = { ...business, urls };
+    const { id, ...rest } = result; */
     return { business, urls };
   } catch (err) {
     console.log(err);
@@ -75,7 +75,7 @@ export default async function LandingPage({
       <NavButtons business={business} />
       <AppointmentSteps
         business={business}
-        freeBusy={business.user[0]?.accounts[0]?.access_token || ""}
+        freeBusy={session?.user.access_token || ""}
       />
     </>
   );

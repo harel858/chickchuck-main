@@ -8,7 +8,7 @@ export default async function handler(
 ) {
   if (req.method == "GET") {
     try {
-      const { id } = req.query;
+      const id = req.query.id as string;
 
       if (!id) return res.status(500).json("server Error");
       const { userExist, err } = await getById(id);

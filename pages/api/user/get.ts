@@ -10,7 +10,8 @@ export default async function handler(
 ) {
   if (req.method == "GET" && req.query.email && req.query.password) {
     try {
-      const { email, password } = req.query;
+      const email = req.query.email as string;
+      const password = req.query.password as string;
       console.log(email);
 
       if (!email || !password) return res.status(500).json("server Error");
@@ -26,7 +27,7 @@ export default async function handler(
 
   if (req.method == "GET" && req.query.id) {
     try {
-      const { id } = req.query;
+      const id = req.query.id as string;
 
       if (!id) return res.status(500).json("server Error");
       const { userExist, err } = await getById(id);

@@ -1,13 +1,8 @@
 import React from "react";
-import { Button, List } from "antd";
-import { User } from "lucide-react";
+import { List } from "antd";
 import dayjs from "dayjs";
 import { calendar_v3 } from "googleapis";
-import {
-  CheckCircleTwoTone,
-  CloseCircleOutlined,
-  EditOutlined,
-} from "@ant-design/icons";
+import { CheckCircleTwoTone, CloseCircleOutlined } from "@ant-design/icons";
 import { Session } from "next-auth";
 import DetailsButton from "@components/clients/details/DetailsButton";
 import { Customer } from "@prisma/client";

@@ -1,13 +1,4 @@
 import React, { ReactNode } from "react";
-import { prisma } from "@lib/prisma";
-import { notFound } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@lib/auth";
-import { getImages, getImages2 } from "@lib/aws/s3";
-import ProfileNav from "@ui/(navbar)/ProfileNav";
-import Images from "@ui/Images";
-import BackgroundImage from "@components/landingPage/BackgroundImage";
-
 type LandingPageProps = {
   children: ReactNode;
   params: {

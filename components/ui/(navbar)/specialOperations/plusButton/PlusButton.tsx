@@ -24,6 +24,7 @@ const PlusButton = ({
   session: Session;
   business: Business & {
     Customer: Customer[];
+    user: User[];
   };
   user: User & {
     accounts: Account[];

@@ -38,6 +38,24 @@ export const getUserAccount = async (userId: string) => {
   }
 };
 
+export async function getById(userId: string) {
+  try {
+    const userExist = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        accounts: true,
+        Treatment: true,
+        activityDays: true,
+        Customer: true,
+        Business: { include: { user: true, Customer: true, Treatment: true } },
+      },
+    });
+    return { userExist };
+  } catch (err: any) {
+    return { err };
+  }
+}
+
 export async function getUserByPhone(emailORphoneNumber: string) {
   try {
     console.log("emailORphoneNumber", emailORphoneNumber);
@@ -146,5 +164,6 @@ const userOperations = {
   signIn,
   getAdminById,
   getUserAccount,
+  getById,
 };
 export default userOperations;

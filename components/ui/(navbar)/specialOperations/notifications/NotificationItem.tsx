@@ -1,5 +1,4 @@
 import React from "react";
-import { Appointment } from "@prisma/client";
 import updateItem from "actions/updateNotification";
 import { Notification, NotificationData } from "types/types";
 

@@ -33,6 +33,7 @@ function EditEvent({
   session,
   user,
   scheduleObj,
+  conferenceId,
 }: {
   scheduleObj: React.RefObject<ScheduleComponent>;
   props: EditProps;
@@ -46,6 +47,7 @@ function EditEvent({
     activityDays: ActivityDays[];
     Customer: Customer[];
   };
+  conferenceId: string;
 }) {
   const [isPending, startTransition] = useTransition();
   const [customers, setCustomers] = useState<
@@ -136,11 +138,13 @@ function EditEvent({
           treatmentId: editEvent?.service?.value || "",
           customerId: editEvent?.customer?.value || "",
           customerName: editEvent?.customer?.value.split("-")[0] || "",
+          conferenceId: conferenceId || "primary",
         },
       },
     };
     startTransition(
-      async () => await updateEvent(session.user.access_token, eventProps)
+      async () =>
+        await updateEvent(session.user.access_token, eventProps, conferenceId)
     );
     message.success(`${eventProps?.summary}נערך התור ל`);
     closeEditorTemplate();

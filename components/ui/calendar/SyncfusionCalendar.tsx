@@ -172,6 +172,7 @@ const RecurrenceEvents = ({
           business={business}
           session={session}
           user={user}
+          conferenceId={ConferenceId}
         />
       );
     },

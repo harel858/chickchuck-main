@@ -37,6 +37,7 @@ const AppointmentField = ({
   user,
   getValues,
   business,
+  selectedUser,
 }: {
   label: FieldType["label"];
   control: Control<TAppointmentValidation>;
@@ -54,6 +55,7 @@ const AppointmentField = ({
   business: Business & {
     Customer: Customer[];
   };
+  selectedUser: User | null;
 }) => {
   return (
     <div className="flex flex-col justify-center items-center gap-5 w-full">
@@ -81,6 +83,7 @@ const AppointmentField = ({
           register={register}
           session={session}
           user={user}
+          selectedUser={selectedUser}
         />
       )}
     </div>

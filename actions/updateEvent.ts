@@ -1,9 +1,5 @@
 "use server";
 import { setupGoogleCalendarClient } from "@lib/google/client";
-import { prisma } from "@lib/prisma";
-import { AppointmentStatus, AvailableSlot } from "@prisma/client";
-import { AdditionData } from "@ui/calendar/SyncfusionCalendar";
-import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
 export type EventProps = {
   summary: string | undefined;
@@ -27,12 +23,13 @@ export type EventProps = {
 
 export async function updateEvent(
   access_token: string,
-  eventProps: EventProps & { id: string }
+  eventProps: EventProps & { id: string },
+  calendarId: string
 ) {
   try {
     const { id, ...rest } = eventProps;
     const googleClient = setupGoogleCalendarClient(access_token);
-    const { auth, calendar, calendarId } = googleClient;
+    const { auth, calendar } = googleClient;
     calendar.events.update({
       auth: auth,
       calendarId: calendarId,

@@ -2,13 +2,7 @@
 import React from "react";
 import { LandingPageData } from "types/types";
 import { Button } from "@ui/Button";
-import {
-  Address,
-  Business,
-  BusinessType,
-  ComeFrom,
-  LastCalendar,
-} from "@prisma/client";
+import { Business, BusinessType, ComeFrom, LastCalendar } from "@prisma/client";
 import { GetResult } from "@prisma/client/runtime";
 
 function ProfileNav({
@@ -16,7 +10,6 @@ function ProfileNav({
 }: {
   business: {
     Images: any;
-    Address: Address[];
     businessName: string;
     phone: string;
     businessImage: string | null;

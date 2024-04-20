@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useTransition } from "react";
+import React, { useCallback, useState, useTransition } from "react";
 import { message, Steps, theme } from "antd";
 import { Session } from "next-auth";
 import { motion } from "framer-motion";
@@ -24,6 +24,7 @@ import {
 } from "@prisma/client";
 
 import { createAppointment } from "actions/createAppointment";
+import UserList from "@components/UserList";
 
 const AppointmentSteps = ({
   session,
@@ -34,6 +35,7 @@ const AppointmentSteps = ({
   session: Session;
   business: Business & {
     Customer: Customer[];
+    user: User[];
   };
   handleCancel2?: () => void;
   user: User & {
@@ -47,12 +49,27 @@ const AppointmentSteps = ({
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const [isNewClient, setIsNewClient] = useState(false);
+  const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
+
   const form = useForm<TAppointmentValidation>({
     resolver: zodResolver(appointmentValidation),
     defaultValues: {
       Date: dayjs().toISOString(),
     },
   });
+  const next = () => {
+    if (current === 0 && business.user.length < 2)
+      return setCurrent((prevActiveStep) => prevActiveStep + 2);
+
+    setCurrent(current + 1);
+  };
+  const onSelectedUser = useCallback(
+    (user: User) => {
+      setSelectedUser(user);
+      next();
+    },
+    [selectedUser, setSelectedUser]
+  );
   const {
     register,
     handleSubmit,
@@ -80,6 +97,7 @@ const AppointmentSteps = ({
             treatmentId: data?.Service?.value || "",
             customerId: data?.Client?.value || "",
             customerName: customerName || "",
+            conferenceId: selectedUser?.calendarId || "primary",
           },
         },
       };
@@ -99,10 +117,6 @@ const AppointmentSteps = ({
       message.error("Internal error");
       console.log("err", err);
     }
-  };
-
-  const next = () => {
-    setCurrent(current + 1);
   };
 
   const prev = () => {
@@ -125,6 +139,7 @@ const AppointmentSteps = ({
             session={session}
             user={user}
             business={business}
+            selectedUser={selectedUser}
           />
           <Button
             onClick={switchIsNewClient}
@@ -135,6 +150,16 @@ const AppointmentSteps = ({
             {!isNewClient ? "?לקוח/ה חדש/ה" : "?לקוח קיים"}
           </Button>
         </div>
+      ),
+    },
+    {
+      title: "?אצל מי",
+      content: (
+        <UserList
+          users={business.user}
+          onSelectedUser={onSelectedUser}
+          selectedUser={selectedUser}
+        />
       ),
     },
     {
@@ -151,6 +176,7 @@ const AppointmentSteps = ({
           key={"Pick A Service"}
           session={session}
           user={user}
+          selectedUser={selectedUser}
         />
       ),
     },
@@ -168,6 +194,7 @@ const AppointmentSteps = ({
           key={"When Do You Want"}
           session={session}
           user={user}
+          selectedUser={selectedUser}
         />
       ),
     },

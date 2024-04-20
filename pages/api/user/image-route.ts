@@ -3,7 +3,7 @@ import formidable from "formidable";
 import fs from "fs";
 import { uploadImages } from "@lib/aws/s3";
 import { createProfileImage, updateProfileImages } from "@lib/prisma/images";
-import { getById } from "@lib/prisma/users";
+import { getUserAccount } from "@lib/prisma/users";
 import { bussinessById } from "@lib/prisma/bussiness/getUnique";
 export const config = {
   api: {
@@ -29,9 +29,8 @@ export default async function handler(
         const userId = fields.userId as string;
         const type = fields.type as "PROFILE" | "BACKGROUND";
 
-        const { userExist, err } = await getById(userId);
-        if (!userExist?.Business || err)
-          return res.status(500).json("user not found");
+        const userExist = await getUserAccount(userId);
+        if (!userExist?.Business) return res.status(500).json("user not found");
         const business = await bussinessById(userExist.Business.id);
         if (!business) return res.status(500).json("business not found");
         console.log("imageSrc.newFilename", imageSrc.newFilename);

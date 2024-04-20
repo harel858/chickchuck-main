@@ -228,8 +228,8 @@ export const authOptions: NextAuthOptions = {
         token.user = user;
         token.logo = logo;
         token.businessName = user.Business?.businessName || "";
-        /*        token.access_token = user.accounts[0]?.access_token || "";
-        token.refresh_token = user.accounts[0]?.refresh_token || ""; */
+        token.access_token = user.accounts[0]?.access_token || "";
+        token.refresh_token = user.accounts[0]?.refresh_token || "";
 
         if (account?.expires_at && user) {
           return {

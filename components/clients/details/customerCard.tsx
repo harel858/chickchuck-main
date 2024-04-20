@@ -2,7 +2,6 @@ import React, { ReactNode, useEffect, useState } from "react";
 import axios from "axios";
 import { Session } from "next-auth";
 import { Table, TableColumnsType } from "antd";
-import { CustomerItem } from "types/types";
 import { calendar_v3 } from "googleapis";
 import DescriptionForm from "./DescriptionForm";
 import dayjs from "dayjs";

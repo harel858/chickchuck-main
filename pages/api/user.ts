@@ -2,9 +2,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
   getAllUsers,
-  getUserByEmail,
   getByBusinessName,
   getById,
+  getUserByPhone,
   signIn,
 } from "../../lib/prisma/users";
 import bcrypt from "bcrypt";
@@ -48,7 +48,7 @@ export default async function handler(
       const hashedPassword = await bcrypt.hash(password, 10);
 
       //check if user exist
-      const userExist = await getUserByEmail(email);
+      const userExist = await getUserByPhone(email);
 
       if (userExist) return res.status(400).json(`user already exist`);
 
@@ -104,7 +104,7 @@ export default async function handler(
 
   if (req.method == "GET" && req.query.id) {
     try {
-      const { id } = req.query;
+      const id = req.query.id as string;
 
       if (!id) return res.status(500).json("server Error");
       const { userExist, err } = await getById(id);

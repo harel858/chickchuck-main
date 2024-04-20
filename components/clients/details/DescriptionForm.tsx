@@ -17,7 +17,8 @@ const DescriptionForm = ({
     item?.description || ""
   );
   const [isPending, startTransition] = useTransition();
-
+  const calendarId =
+    item?.extendedProperties?.private?.conferenceId || "primary";
   const eventProps = {
     id: item.id || "",
     summary: item?.summary || "",
@@ -35,6 +36,7 @@ const DescriptionForm = ({
         customerId: item?.extendedProperties?.private?.customerId || "",
         treatmentId: item?.extendedProperties?.private?.treatmentId || "",
         customerName: item?.extendedProperties?.private?.customerName || "",
+        conferenceId: calendarId,
       },
     },
   };
@@ -45,9 +47,11 @@ const DescriptionForm = ({
 
   const handleSubmit = () => {
     startTransition(() => {
-      updateEvent(session.user.access_token, eventProps).then(() => {
-        message.success("הערה נרשמה בהצלחה");
-      });
+      updateEvent(session.user.access_token, eventProps, calendarId).then(
+        () => {
+          message.success("הערה נרשמה בהצלחה");
+        }
+      );
     });
   };
 

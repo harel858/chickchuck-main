@@ -7,7 +7,7 @@ import {
   deleteById,
   getTreatments,
 } from "../../lib/prisma/treatment";
-import { getById } from "../../lib/prisma/users";
+import { getUserAccount } from "../../lib/prisma/users";
 
 export default async function handler(
   req: NextApiRequest,
@@ -73,14 +73,13 @@ export default async function handler(
   }
   if (req.method == "GET") {
     try {
-      const { id } = req.query;
+      const id = req.query.id as string;
       if (!id) return res.status(500).json(`no id`);
 
-      const { userExist, err } = await getById(id);
+      const userExist = await getUserAccount(id);
 
-      if (err || !userExist) {
-        console.log(err);
-        return res.status(500).json(err);
+      if (!userExist) {
+        return res.status(500).json("getUserAccount function failed");
       }
       const { treatments, treatmentNotFound } = await getTreatments(
         userExist.id

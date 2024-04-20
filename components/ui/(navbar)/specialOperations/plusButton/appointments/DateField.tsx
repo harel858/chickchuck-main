@@ -30,6 +30,7 @@ const DateField = ({
   name,
   register,
   user,
+  selectedUser,
 }: {
   getValues: UseFormGetValues<TAppointmentValidation>;
   label: FieldType["label"];
@@ -44,6 +45,7 @@ const DateField = ({
     activityDays: ActivityDays[];
     Customer: Customer[];
   };
+  selectedUser: User | null;
 }) => {
   const data = getValues();
   const [slots, setSlots] = useState<{ start: string; end: string }[]>([]);
@@ -72,7 +74,7 @@ const DateField = ({
             timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             groupExpansionMax: 1,
             calendarExpansionMax: 50,
-            items: [{ id: "primary" }],
+            items: [{ id: selectedUser?.calendarId || "primary" }],
           }),
         }
       );

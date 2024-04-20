@@ -7,7 +7,7 @@ export async function signIn(
   req: NextApiRequest,
   res: NextApiResponse,
   database: {
-    getUserByEmail(email: string): Promise<User | null>;
+    getUserByPhone(email: string): Promise<User | null>;
   }
 ) {
   if (req.method == "POST") {
@@ -17,7 +17,7 @@ export async function signIn(
       if (!email || !req.body.password)
         return res.status(400).json(`Missing Inputs.`);
 
-      const userExist = await database.getUserByEmail(email);
+      const userExist = await database.getUserByPhone(email);
 
       if (!userExist) return res.status(400).json(`User not found`);
 
