@@ -118,7 +118,6 @@ const RecurrenceEvents = ({
           start = event.start.date as string;
           end = event.end.date as string;
         }
-        console.log("event", event);
         const conferenceId = event?.extendedProperties?.private?.conferenceId
           ? event.extendedProperties.private.conferenceId
           : "primary";
@@ -136,7 +135,6 @@ const RecurrenceEvents = ({
         });
       }
     }
-    console.log("scheduleData", scheduleData);
 
     e.result = scheduleData;
   };
@@ -198,13 +196,13 @@ const RecurrenceEvents = ({
         style={{ background: props.SecondaryColor }}
       >
         <div
-          className="subject flex flex-row flex-wrap justify-around items-center"
+          className="subject flex flex-row-reverse flex-wrap justify-center gap-2 items-center"
           style={{ background: props.PrimaryColor }}
         >
-          <p className="font-semibold">
-            {props?.ExtendedProperties?.private?.customerName || ""}{" "}
+          <p className="font-semibold text-xl">
+            - {props?.ExtendedProperties?.private?.customerName || ""}{" "}
           </p>
-          <p className="font-semibold">
+          <p className="font-semibold text-xl">
             {getTimeString(props.StartTime)} -{getTimeString(props.EndTime)}
           </p>
         </div>
@@ -262,9 +260,9 @@ const RecurrenceEvents = ({
               />
             </ResourcesDirective>
             <ViewsDirective>
-              <ViewDirective option="Day" />
+              <ViewDirective eventTemplate={eventTemplate} option="Day" />
               <ViewDirective eventTemplate={eventTemplate} option="Week" />
-              <ViewDirective option="Month" />
+              <ViewDirective eventTemplate={eventTemplate} option="Month" />
             </ViewsDirective>
             <Inject services={[Day, Week, Month, Resize, DragAndDrop]} />
           </ScheduleComponent>
