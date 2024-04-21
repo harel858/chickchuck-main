@@ -1,0 +1,140 @@
+
+.h2 {
+  font-family: "Lobster Two", cursive;
+}
+.roboto{
+    font-family: 'Roboto', sans-serif;
+}
+
+.hamburger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 40vw;
+  display: none;
+  font-family: "Open Sans", sans-serif !important;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  cursor: pointer;
+  background: beige;
+}
+/* background-color: rgb(15 23 42)
+ */
+.button {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    pointer-events: auto !important;
+    z-index: 40;
+    position: absolute;
+    top: 18px;
+    left: 27px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.button::-moz-user-select {
+  display: none;
+}
+.button::-webkit-user-select {
+  display: none;
+}
+.button::-ms-user-select {
+  display: none;
+}
+
+.ul {
+  display: none;
+  font-family: "Roboto", sans-serif;
+  flex-direction: column;
+  gap: 1em;
+  padding: 25px;
+  position: absolute;
+  top: 100px;
+  left: 1rem;
+}
+
+.li {
+  list-style: none;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 200ms ease-out;
+}
+
+.iconPlaceholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex: 40px 0;
+  margin-right: 20px;
+}
+
+/* .iconPlaceholder h5 {
+  text-align: center;
+  font-weight: 100;
+
+  font-size: 2em;
+} */
+
+.textPlaceholder {
+  border-radius: 5px;
+  width: 200px;
+  height: 30px;
+  flex: 1;
+}
+
+.li h3 {
+  font-family: serif;
+  text-align: center;
+  font-weight: 500;
+  font-size: 2em;
+  color: beige;
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Old versions of Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently */
+}
+
+.refresh {
+  padding: 10px;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1250px) {
+  .hamburger {
+    display: flex;
+    justify-content: center;
+  }
+
+  .ul {
+    display: flex;
+  }
+}

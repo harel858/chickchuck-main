@@ -1,0 +1,33 @@
+/* styles.css (or within your component) */
+/* Style the scrollbar track (background) */
+.scrollbarCustom::-webkit-scrollbar {
+    width: 6px;
+    /* Set the width of the scrollbar */
+}
+
+/* Style the scrollbar thumb (the draggable part) */
+.scrollbarCustom::-webkit-scrollbar-thumb {
+    background-color: #4a90e2;
+    /* Set the color of the scrollbar thumb */
+    border-radius: 3px;
+    /* Add rounded corners to the thumb */
+}
+
+/* Style the scrollbar track when hovering over it */
+.scrollbarCustom::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* Set the background color of the track */ 
+}
+
+/* If you want to hide the scrollbar when not hovering */
+.scrollbarCustom::-webkit-scrollbar-thumb:hover {
+    background: #4a90e2;
+    /* Change the thumb color on hover */
+}
+
+/* For Firefox, you can use the scrollbar-width property */
+.scrollbarCustom {
+    scrollbar-width: thin;
+    scrollbar-color: #4a90e2 #f1f1f1;
+    /* Set thumb and track colors */
+}
