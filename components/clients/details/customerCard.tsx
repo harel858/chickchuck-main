@@ -27,7 +27,7 @@ function CustomerCard({
     const getEvents = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/google/customer?id=${customer.id}`,
+          `${process.env.NEXTAUTH_URL}/api/google/customer?id=${customer.id}`,
           {
             headers: { Authorization: `Bearer ${session.user.access_token}` },
           }

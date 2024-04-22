@@ -66,12 +66,12 @@ const RecurrenceEvents = ({
   console.log("calendarsIds", calendarsIds);
   const [eventSettings, setEventSettings] = useState<EventSettingsModel>({
     dataSource: new DataManager({
-      url: `http://localhost:3000/api/google/events?id=${
+      url: `${process.env.NEXTAUTH_URL}/api/google/events?id=${
         session.user.accountId
       }&calendarsIds=${JSON.stringify(calendarsIds)}`,
       headers: [{ Authorization: `Bearer ${session.user.access_token}` }],
       adaptor: new UrlAdaptor(),
-      crudUrl: "http://localhost:3000/api/google/crud",
+      crudUrl: `${process.env.NEXTAUTH_URL}/api/google/crud`,
       crossDomain: true,
     }),
     editFollowingEvents: true,

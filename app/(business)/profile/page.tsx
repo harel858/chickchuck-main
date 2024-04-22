@@ -35,7 +35,7 @@ async function Page() {
       business={business}
       session={session}
       user={session?.user as any}
-      link={`http://localhost:3000/${formattedBusinessName}`}
+      link={`${process.env.NEXTAUTH_URL}/${formattedBusinessName}`}
     />
   );
 }
