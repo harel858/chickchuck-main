@@ -1,5 +1,5 @@
 {
-    "private": false,
+    "private": true,
     "scripts": {
         "dev": "next dev",
         "build": "next build",
@@ -23,7 +23,6 @@
         "@mantine/core": "^6.0.9",
         "@mantine/hooks": "^6.0.9",
         "@mantine/next": "^6.0.9",
-        "@mobiscroll/react": "https://npm.mobiscroll.com/@mobiscroll/react-trial/-/react-trial-5.22.3.tgz",
         "@mui/icons-material": "^5.11.9",
         "@mui/lab": "^5.0.0-alpha.120",
         "@mui/x-date-pickers": "^6.4.0",
@@ -92,7 +91,7 @@
         "@types/bcrypt": "^5.0.0",
         "@types/formidable": "^2.0.6",
         "@types/jest": "^29.5.2",
-        "@types/node": "18.11.3",
+        "@types/node": "^18.11.3",
         "@types/react": "^18.2.7",
         "@types/react-datetime-picker": "^3.4.1",
         "@types/react-dom": "^18.0.6",
