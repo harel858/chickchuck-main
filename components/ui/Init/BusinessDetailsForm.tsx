@@ -55,7 +55,7 @@ const BusinessDetailsForm = ({
       <div className="flex flex-col justify-center items-center w-full">
         <Form {...form}>
           <form
-            className="flex flex-col justify-center items-center"
+            className="flex flex-col justify-center items-center gap-5"
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="grid grid-cols-2 max-xl:grid-cols-1 gap-x-4 gap-y-4 w-full">
@@ -72,7 +72,7 @@ const BusinessDetailsForm = ({
                 );
               })}
             </div>
-            <Button className="bg-sky-600" type="submit" size="lg">
+            <Button className="bg-sky-600 w-full" type="submit" size="lg">
               Next
             </Button>
           </form>
