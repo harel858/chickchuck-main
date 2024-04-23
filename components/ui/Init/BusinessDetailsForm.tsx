@@ -11,21 +11,8 @@ import { Form } from "@ui/form";
 import { Button } from "@ui/Button";
 
 export interface FieldType {
-  label:
-    | "Your Business Name"
-    | "Your Business Phone"
-    | "Your Business Address"
-    | "Business Type"
-    | "What calendar have you used so far?"
-    | "lastCalendar"
-    | "How did you hear about us?";
-  name:
-    | "businessName"
-    | "businessPhone"
-    | "businessAddress"
-    | "businessType"
-    | "lastCalendar"
-    | "fromWhere";
+  label: "Your Business Name" | "Your Business Phone" | "Your Business Address";
+  name: "businessName" | "businessPhone" | "businessAddress";
 }
 
 const BusinessDetailsForm = ({
@@ -60,12 +47,6 @@ const BusinessDetailsForm = ({
     { label: "Your Business Name", name: "businessName" },
     { label: "Your Business Phone", name: "businessPhone" },
     { label: "Your Business Address", name: "businessAddress" },
-    { label: "Business Type", name: "businessType" },
-    {
-      label: "What calendar have you used so far?",
-      name: "lastCalendar",
-    },
-    { label: "How did you hear about us?", name: "fromWhere" },
   ];
 
   return (

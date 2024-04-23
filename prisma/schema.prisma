@@ -121,9 +121,9 @@ model Business {
   businessName     String             @unique
   phone            String             @unique
   businessImage    String?
-  BusinessType     BusinessType
-  LastCalendar     LastCalendar
-  ComeFrom         ComeFrom
+  BusinessType     BusinessType?
+  LastCalendar     LastCalendar?
+  ComeFrom         ComeFrom?
   user             User[]
   activityDays     ActivityDays[]
   Customer         Customer[]

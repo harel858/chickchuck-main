@@ -10,31 +10,6 @@ export const BusinessDetailsValidation = z.object({
   businessAddress: z.string().min(2, {
     message: "Phone number must be at least 2 characters long.",
   }),
-  businessType: z.enum([
-    "Barber",
-    "Beautician",
-    "Manicurist",
-    "BeautySalon",
-    "MedicalClinic",
-    "SpaAndWellnessCenter",
-    "VeterinaryClinic",
-    "Trainer",
-    "DogGroomer",
-    "TATTOO",
-    "Other",
-  ]),
-  lastCalendar: z.enum([
-    "PhysicalCalendar",
-    "GoogleCalendar",
-    "OtherSystem",
-    "NONE",
-  ]),
-  fromWhere: z.enum([
-    "InternetAdvertisement",
-    "GoogleSearch",
-    "Recommendation",
-    "anotherBusiness",
-  ]),
 });
 
 export type TBusinessDetailsValidation = z.infer<
