@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Business" ALTER COLUMN "BusinessType" DROP NOT NULL,
+ALTER COLUMN "ComeFrom" DROP NOT NULL,
+ALTER COLUMN "LastCalendar" DROP NOT NULL;

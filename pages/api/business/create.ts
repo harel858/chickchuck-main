@@ -76,9 +76,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         data: {
           businessName: businessDetails.businessName,
           phone: businessDetails.businessPhone,
-          BusinessType: businessDetails.businessType,
-          ComeFrom: businessDetails.fromWhere,
-          LastCalendar: businessDetails.lastCalendar,
           Address: businessDetails.businessAddress,
           Treatment: {
             createMany: {
