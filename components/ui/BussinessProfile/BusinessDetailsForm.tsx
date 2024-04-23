@@ -26,9 +26,6 @@ const BusinessDetailsForm = ({ business }: { business: Business }) => {
       businessAddress: business.Address,
       businessPhone: business.phone,
       businessName: business.businessName,
-      businessType: business.BusinessType,
-      fromWhere: business.ComeFrom,
-      lastCalendar: business.LastCalendar,
     },
   });
   const {
