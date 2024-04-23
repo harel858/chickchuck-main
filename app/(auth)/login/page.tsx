@@ -84,7 +84,7 @@ function SignInForm() {
           <div className="flex flex-col items-center space-y-2 text-center">
             <Icons.logo className="h-20 w-20" />
             <h1 className="text-2xl font-semibold tracking-tight">
-              .תן ליומן להתמלא quickly
+              .תן ליומן להתמלא, קוויקלי
             </h1>
           </div>
           <GoogleSignInButton />
