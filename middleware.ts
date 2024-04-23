@@ -24,7 +24,7 @@ export default withAuth(
 
     //manage rate limit
     if (pathName.startsWith("/api")) {
-      const ip = req.ip ?? `${process.env.NEXTAUTH_URL}`;
+      const ip = req.ip ?? `127.0.0.1`;
 
       try {
         const { success } = await rateLimit.limit(ip);
