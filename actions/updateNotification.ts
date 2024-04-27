@@ -7,9 +7,8 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { unmarshall, marshall } from "@aws-sdk/util-dynamodb";
+import { client } from "@lib/aws/dynamoClient";
 import { Notification } from "types/types";
-const accessKey = process.env.ROOT_ACCESS_KEY!;
-const secretAccessKey = process.env.ROOT_SECRET_ACCESS_KEY!;
 
 interface Data {
   connectionId: string;
@@ -21,10 +20,7 @@ interface Data {
 }
 
 // Initialize the DynamoDB client
-const client = new DynamoDBClient({
-  region: "eu-west-1",
-  credentials: { accessKeyId: accessKey, secretAccessKey: secretAccessKey },
-});
+
 const docClient = DynamoDBDocumentClient.from(client);
 const updateItem = async (notification: Notification) => {
   try {

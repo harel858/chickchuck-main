@@ -8,6 +8,7 @@ import {
   QueryCommand,
   UpdateCommandInput,
 } from "@aws-sdk/lib-dynamodb";
+import { client } from "./dynamoClient";
 interface Messages {
   userId: string;
   message: string;
@@ -21,7 +22,6 @@ interface Data {
   domainName: string;
   ID: string;
 }
-const client = new DynamoDBClient({ region: "eu-west-1" });
 const docClient = DynamoDBDocumentClient.from(client);
 export async function writeData(data: Data, TableName: string) {
   console.log("data", data);

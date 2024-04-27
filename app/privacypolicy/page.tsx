@@ -18,7 +18,7 @@ export default function Page() {
           </h2>
           <p className="mb-4">
             The Application collects information when you download and use it.
-            This information may include information such as
+            This information may include:
           </p>
           <ul className="list-disc list-inside mb-4">
             <li>Your device's Internet Protocol address (e.g. IP address)</li>
@@ -28,6 +28,10 @@ export default function Page() {
             </li>
             <li>The time spent on the Application</li>
             <li>The operating system you use on your mobile device</li>
+            <li>
+              Information related to OAuth 2 authentication for accessing Google
+              Calendar API, including user identifiers and access tokens.
+            </li>
           </ul>
           <p className="mb-4">
             The Application does not gather precise information about the
@@ -41,10 +45,13 @@ export default function Page() {
             Only aggregated, anonymized data is periodically transmitted to
             external services to aid the Service Provider in improving the
             Application and their service. The Service Provider may share your
-            information with third parties in the ways that are described in
-            this privacy statement.
+            information with third parties in the following scenarios:
           </p>
           <ul className="list-disc list-inside mb-4">
+            <li>
+              With Google, as necessary, to authenticate users and access Google
+              Calendar API in compliance with Google's OAuth 2 policies.
+            </li>
             <li>
               as required by law, such as to comply with a subpoena, or similar
               legal process;
