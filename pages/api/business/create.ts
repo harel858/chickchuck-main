@@ -33,6 +33,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       if (error) return res.status(400).json({ error });
 
       const userId = fields.userId as string;
+      console.log("userId", userId);
+
       const businessDetails = JSON.parse(
         fields.businessDetails as string
       ) as TBusinessDetailsValidation;
@@ -139,6 +141,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       console.log("newBusiness", newBusiness);
       return res.json(newBusiness);
     });
+    return res.status(500).json("Internal server error");
   } catch (error) {
     console.error(error);
     return res.status(500).json("Internal server error");

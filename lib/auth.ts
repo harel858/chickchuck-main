@@ -170,32 +170,22 @@ export const authOptions: NextAuthOptions = {
       const { account, token, user, profile, session, trigger } = props;
 
       try {
-        /*         if (trigger === "signUp" && token) {
-          // Link user and account if it's a new sign-in
-          await prisma.user.update({
-            where: { id: token?.sub },
-            data: {
-              accounts: {
-                connect: { userId: token?.sub },
-              },
+        let logo: string | null = "";
+        let user = null;
+        try {
+          user = await prisma.user.findUnique({
+            where: { id: token.sub! },
+            include: {
+              Business: { include: { Images: true, Customer: true } },
+              Treatment: true,
+              activityDays: true,
+              accounts: true,
             },
           });
+        } catch (err: any) {
+          throw new Error(err);
         }
- */
-        let logo: string | null = "";
-
-        let user = await prisma.user.findUnique({
-          where: { id: token.sub! },
-          include: {
-            Business: { include: { Images: true, Customer: true } },
-            Treatment: true,
-            activityDays: true,
-            accounts: true,
-          },
-        });
-        if (!user) {
-          throw new Error("user not found");
-        }
+        if (!user) throw new Error("user not found");
 
         if (
           user?.UserRole === "TEAMMEATE" &&
