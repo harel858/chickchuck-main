@@ -38,7 +38,7 @@ async function fetchWatch(
         requestBody: {
           id: uuid,
           type: "web_hook",
-          address: `${process.env.NEXTAUTH_URL}/api/google/notifications?userId=${account.userId}`,
+          address: `/api/google/notifications?userId=${account.userId}`,
           expiration: `${expirationTime * 1000}`,
         },
       });

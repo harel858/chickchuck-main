@@ -18,7 +18,7 @@ function OnlinePage({
   return (
     <div className="w-full flex flex-col justify-center items-center gap-5">
       <UploadLogo logo={logo} setLogo={setLogo} />
-      <UploadGallery fileList={fileList} setFileList={setFileList} />
+      {/*       <UploadGallery fileList={fileList} setFileList={setFileList} /> */}
       {/*       <ThemePicker />
        */}{" "}
     </div>

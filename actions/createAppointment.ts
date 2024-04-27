@@ -1,8 +1,5 @@
 "use server";
 import { setupGoogleCalendarClient } from "@lib/google/client";
-import { prisma } from "@lib/prisma";
-import { AdditionData } from "@ui/calendar/SyncfusionCalendar";
-import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
 export type EventProps = {
   summary: string | undefined;

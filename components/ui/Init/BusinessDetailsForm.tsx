@@ -11,7 +11,7 @@ import { Form } from "@ui/form";
 import { Button } from "@ui/Button";
 
 export interface FieldType {
-  label: "Your Business Name" | "Your Business Phone" | "Your Business Address";
+  label: "שם העסק" | "טלפון" | "כתובת העסק";
   name: "businessName" | "businessPhone" | "businessAddress";
 }
 
@@ -44,14 +44,14 @@ const BusinessDetailsForm = ({
     }
   };
   const formType: FieldType[] = [
-    { label: "Your Business Name", name: "businessName" },
-    { label: "Your Business Phone", name: "businessPhone" },
-    { label: "Your Business Address", name: "businessAddress" },
+    { label: "שם העסק", name: "businessName" },
+    { label: "טלפון", name: "businessPhone" },
+    { label: "כתובת העסק", name: "businessAddress" },
   ];
 
   return (
     <>
-      <h1 className="text-2xl text-black">Lets Set Up Your Calendar </h1>
+      <h1 className="text-2xl text-black">קצת על העסק שלך</h1>
       <div className="flex flex-col justify-center items-center w-full">
         <Form {...form}>
           <form
@@ -73,7 +73,7 @@ const BusinessDetailsForm = ({
               })}
             </div>
             <Button className="bg-sky-600 w-full" type="submit" size="lg">
-              Next
+              המשך
             </Button>
           </form>
         </Form>

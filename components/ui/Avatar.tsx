@@ -1,7 +1,9 @@
 "use client";
 import React from "react";
-import Image, { ImageLoaderProps } from "next/image";
-const DEFAULT_AVATAR_SRC = "https://example.com/placeholder.png";
+import Image, { ImageLoaderProps, StaticImageData } from "next/image";
+import logo from "@public/assets/logo3.png";
+
+const DEFAULT_AVATAR_SRC: StaticImageData = logo;
 
 interface AvatarProps {
   src: string | null | undefined;
@@ -26,7 +28,7 @@ const Avatar: React.FC<AvatarProps> = ({
 
   const imgIxLoader = ({ src }: ImageLoaderProps) => {
     const url = new URL(src);
-    console.log("url.pathname", url.pathname);
+    console.log("src", src);
 
     const imgIxName = url.pathname.split("/").pop();
 
@@ -40,9 +42,8 @@ const Avatar: React.FC<AvatarProps> = ({
   };
   return (
     <Image
-      width={width || 50}
-      height={height || 50}
-      loader={imgIxLoader}
+      width={width || 70}
+      loader={src ? imgIxLoader : undefined}
       onClick={onClick}
       src={src || DEFAULT_AVATAR_SRC}
       alt={alt}

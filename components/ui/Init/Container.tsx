@@ -13,13 +13,13 @@ import axios from "axios";
 import { RcFile } from "antd/es/upload";
 
 const initDays: DayData[] = [
-  { value: 0, label: "Su", start: "09:00", end: "17:00", isActive: true },
-  { value: 1, label: "Mo", start: "09:00", end: "17:00", isActive: true },
-  { value: 2, label: "Tu", start: "09:00", end: "17:00", isActive: true },
-  { value: 3, label: "We", start: "09:00", end: "17:00", isActive: true },
-  { value: 4, label: "Mo", start: "09:00", end: "17:00", isActive: true },
-  { value: 5, label: "Fr", start: "09:00", end: "17:00", isActive: true },
-  { value: 6, label: "Sa", start: "09:00", end: "17:00", isActive: true },
+  { value: 0, label: "'א", start: "09:00", end: "17:00", isActive: true },
+  { value: 1, label: "'ב", start: "09:00", end: "17:00", isActive: true },
+  { value: 2, label: "'ג", start: "09:00", end: "17:00", isActive: true },
+  { value: 3, label: "'ד", start: "09:00", end: "17:00", isActive: true },
+  { value: 4, label: "'ה", start: "09:00", end: "17:00", isActive: true },
+  { value: 5, label: "'ו", start: "09:00", end: "17:00", isActive: true },
+  { value: 6, label: "'ש", start: "09:00", end: "17:00", isActive: true },
 ];
 
 const Container = ({ session }: { session: Session }) => {
@@ -155,12 +155,12 @@ const Container = ({ session }: { session: Session }) => {
       <div className="mt-2 space-x-4">
         {current > 0 && (
           <Button className="hover:bg-white/30" onClick={() => prev()}>
-            Previous
+            חזור
           </Button>
         )}
         {current < steps.length - 1 && current != 0 && (
           <Button className="bg-sky-600" type="primary" onClick={() => next()}>
-            Next
+            המשך
           </Button>
         )}
         {current === steps.length - 1 && (
@@ -170,7 +170,7 @@ const Container = ({ session }: { session: Session }) => {
             className="bg-sky-600"
             onClick={onDone}
           >
-            Done
+            סיים
           </Button>
         )}
       </div>

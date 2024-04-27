@@ -57,7 +57,7 @@ const InitServices = ({
         className="flex justify-center items-center gap-1 bg-white text-black hover:bg-slate-950 hover:text-white"
         onClick={showModal}
       >
-        <span>Add Service</span>
+        <span>הוספת שירות</span>
         <PlusOutlined className="text-xl" />
       </Button>
       <List
@@ -75,7 +75,7 @@ const InitServices = ({
         )}
       />
       <Modal
-        title="New Service"
+        title="שירות חדש"
         open={open}
         onOk={handleOk}
         okButtonProps={{

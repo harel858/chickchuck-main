@@ -32,10 +32,3 @@ export const fetchEventsByDate = async (
     console.log(err);
   }
 };
-/* {
-      calendarId: calendarId,
-      timeMin: date.startOf("month").toISOString(),
-      timeMax: date.endOf("month").toISOString(),
-      singleEvents: true,
-      orderBy: "startTime",
-    } */
