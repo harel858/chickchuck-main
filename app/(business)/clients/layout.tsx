@@ -1,15 +1,12 @@
 import React from "react";
-import VerticalNav from "@ui/(navbar)/VerticalNav";
 import { OAuth2Client } from "google-auth-library";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@lib/auth";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Navbar from "@ui/(navbar)/Navbar";
-import { UserData } from "types/types";
 import { prisma } from "@lib/prisma";
 import PlusButton from "@ui/(navbar)/specialOperations/plusButton/PlusButton";
 import { getUserAccount } from "@lib/prisma/users";
-import axios from "axios";
 import { calendar_v3 } from "googleapis";
 import { Account } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
@@ -40,7 +37,7 @@ async function fetchWatch(
         requestBody: {
           id: uuid,
           type: "web_hook",
-          address: `/api/google/notifications?userId=${account.userId}`,
+          address: `${process.env.NEXTAUTH_URL}/api/google/notifications?userId=${account.userId}`,
           expiration: `${expirationTime * 1000}`,
         },
       });
@@ -120,8 +117,6 @@ async function Layout({ children }: { children: React.ReactNode }) {
         user={user}
         scheduleProps={scheduleProps}
         session={session}
-        link={""}
-        watchExpired={JSON.stringify(watchExpired)}
         customers={user.Business?.Customer || []}
       />
       <PlusButton business={user.Business} user={user} session={session} />

@@ -38,7 +38,7 @@ async function fetchWatch(
         requestBody: {
           id: uuid,
           type: "web_hook",
-          address: `/api/google/notifications?userId=${account.userId}`,
+          address: `${process.env.NEXTAUTH_URL}/api/google/notifications?userId=${account.userId}`,
           expiration: `${expirationTime * 1000}`,
         },
       });
@@ -117,7 +117,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
         user={user}
         scheduleProps={scheduleProps}
         session={session}
-        link={""}
+        customers={user.Business?.Customer || []}
       />
       <PlusButton business={user.Business!} user={user} session={session} />
 
