@@ -64,14 +64,20 @@ const RecurrenceEvents = ({
     return dayjs(value).format("h:mm");
   };
   console.log("calendarsIds", calendarsIds);
+  console.log(
+    "url",
+    `${process.env.NEXTAUTH_URL}/api/google/events?id=${
+      session.user.accountId
+    }&calendarsIds=${JSON.stringify(calendarsIds)}`
+  );
   const [eventSettings, setEventSettings] = useState<EventSettingsModel>({
     dataSource: new DataManager({
-      url: `${process.env.NEXTAUTH_URL}/api/google/events?id=${
+      url: `/api/google/events?id=${
         session.user.accountId
       }&calendarsIds=${JSON.stringify(calendarsIds)}`,
       headers: [{ Authorization: `Bearer ${session.user.access_token}` }],
       adaptor: new UrlAdaptor(),
-      crudUrl: `${process.env.NEXTAUTH_URL}/api/google/crud`,
+      crudUrl: `/api/google/crud`,
       crossDomain: true,
     }),
     editFollowingEvents: true,
@@ -148,10 +154,10 @@ const RecurrenceEvents = ({
 
   const editorTemplate = useCallback(
     (props: any) => {
-      console.log("editorTemplateprops", props);
-      if (!props.ConferenceId) return;
+      let ConferenceId = props.ConferenceId?.[0] || "primary";
 
-      const ConferenceId = props.ConferenceId[0] as string;
+      console.log("editorTemplateprops", props);
+
       console.log("ConferenceId", ConferenceId);
 
       return props !== undefined && !props?.Guid ? (

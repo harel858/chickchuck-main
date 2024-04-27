@@ -6,9 +6,7 @@ import { Inter } from "next/font/google";
 import Providers from "@ui/Providers";
 import { cn } from "@lib/utils";
 import { ServerThemeProvider } from "next-themes";
-import { registerLicense } from "@syncfusion/ej2-base";
-// Registering Syncfusion license key
-registerLicense("License Key");
+
 const inter = Inter({
   weight: ["100", "500", "300", "400"],
   subsets: ["latin"],

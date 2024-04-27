@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "users" ALTER COLUMN "calendarId" DROP NOT NULL,
-ALTER COLUMN "accountId" DROP NOT NULL;

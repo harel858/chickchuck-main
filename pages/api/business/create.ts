@@ -137,11 +137,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
           },
         },
       });
-
-      console.log("newBusiness", newBusiness);
-      return res.json(newBusiness);
     });
-    return res.status(500).json("Internal server error");
+    return res.status(201);
   } catch (error) {
     console.error(error);
     return res.status(500).json("Internal server error");

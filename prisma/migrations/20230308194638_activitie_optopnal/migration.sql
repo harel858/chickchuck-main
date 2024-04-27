@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "User" ALTER COLUMN "closingTime" DROP NOT NULL,
-ALTER COLUMN "openingTime" DROP NOT NULL;
