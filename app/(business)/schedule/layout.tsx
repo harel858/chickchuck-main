@@ -40,7 +40,7 @@ async function fetchWatch(
         requestBody: {
           id: uuid,
           type: "web_hook",
-          address: `${process.env.NEXTAUTH_URL}/api/google/notifications?userId=${account.userId}`,
+          address: `https://8264-2a00-a041-3a0f-ba00-cce3-7397-e2c2-a69.ngrok-free.app/api/google/notifications?userId=${account.userId}`,
           expiration: `${expirationTime * 1000}`,
         },
       });

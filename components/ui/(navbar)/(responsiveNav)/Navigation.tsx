@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import NavItemWithLinks from "../NavItemWithLinks";
 import { CgProfile } from "react-icons/cg";
-import { AiOutlineSchedule } from "react-icons/ai";
-import { GiFeather } from "react-icons/gi";
 import { motion } from "framer-motion";
 import { MenuItem } from "./MenuItem";
+import { FiExternalLink } from "react-icons/fi";
+import { IoCalendarOutline, IoSettingsOutline } from "react-icons/io5";
+import { RiCoinsLine, RiTeamLine } from "react-icons/ri";
 
 const variants = {
   open: {
@@ -16,18 +16,39 @@ const variants = {
   },
 };
 
-export const Navigation = ({ isOpen }: { isOpen: boolean }) => {
+export const Navigation = ({
+  isOpen,
+  formattedBusinessName,
+}: {
+  isOpen: boolean;
+  formattedBusinessName: string;
+}) => {
   const itemIds = [
-    { title: "profile", link: `/profile`, icon: <CgProfile /> },
     {
-      title: "Schedule",
+      title: "יומן",
       link: `/schedule`,
-      icon: <AiOutlineSchedule />,
+      icon: <IoCalendarOutline />,
+    },
+    { title: "שירותים", link: `/services`, icon: <RiCoinsLine /> },
+    {
+      title: "לקוחות",
+      link: `/clients`,
+      icon: <CgProfile />,
     },
     {
-      title: "Services",
-      link: `/treatments`,
-      icon: <GiFeather />,
+      title: "צוות",
+      link: `/team`,
+      icon: <RiTeamLine />,
+    },
+    {
+      title: "דך העסק",
+      link: `/${formattedBusinessName}`,
+      icon: <FiExternalLink />,
+    },
+    {
+      title: "הגדרות",
+      link: `/profile`,
+      icon: <IoSettingsOutline />,
     },
   ];
   return (
@@ -53,7 +74,6 @@ export const Navigation = ({ isOpen }: { isOpen: boolean }) => {
           <MenuItem i={i} icon={icon} link={link} title={title} key={i} />
         )
       )}
-      <NavItemWithLinks responsive={true} />
     </motion.ul>
   );
 };

@@ -41,16 +41,21 @@ const Avatar: React.FC<AvatarProps> = ({
     return imgIxUrl.href;
   };
   return (
-    <Image
-      width={width || 70}
-      loader={src ? imgIxLoader : undefined}
-      onClick={onClick}
-      src={src || DEFAULT_AVATAR_SRC}
-      alt={alt}
-      priority
-      className={`rounded-full ${className}`}
-      style={{ ...style, objectFit: "contain" }}
-    />
+    <div className="rounded-full overflow-hidden">
+      <Image
+        width={width || 60}
+        height={height || 60}
+        sizes="large"
+        loader={src ? imgIxLoader : undefined}
+        onClick={onClick}
+        src={src || DEFAULT_AVATAR_SRC.src}
+        alt={alt}
+        priority
+        objectFit="contain"
+        className={`rounded-full aspect-square object-cover ${className}`}
+        style={{ ...style }}
+      />
+    </div>
   );
 };
 export default Avatar;

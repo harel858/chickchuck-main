@@ -5,9 +5,11 @@ import { motion, useCycle } from "framer-motion";
 import { useDimensions } from "./use-dimensions";
 import { MenuToggle } from "./MenuToggle";
 import { Navigation } from "./Navigation";
-import { Avatar } from "@mui/material";
 import { User } from "next-auth";
 import { Lobster_Two } from "next/font/google";
+import { Account } from "@prisma/client";
+import logo from "@public/assets/logo3.png";
+import Avatar from "@ui/Avatar";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 const sidebar = {
@@ -49,19 +51,15 @@ const variantHeader = {
 
 const Hamburger = ({
   user,
+  formattedBusinessName,
 }: {
-  user: User & {
-    id: string;
-    UserRole: "CUSTOMER" | "RECIPIENT";
-    urls: {
-      backgroundImage: string;
-      profileImage: string;
-    } | null;
-  };
+  user: User & { accounts: Account[] };
+  formattedBusinessName: string;
 }) => {
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
   const [isOpen, toggleOpen] = useCycle(false, true);
+  const profileImage = user.image;
 
   return (
     <motion.nav
@@ -78,9 +76,9 @@ const Hamburger = ({
         className=" flex justify-center content-center items-center gap-5 flex-col z-50 text-white"
       >
         <h2 className={`${lobster.className} text-black  text-3xl w-max`}>
-          Queue
+          Quickly
         </h2>
-        <Avatar alt="Profile Img" src={user.urls?.profileImage || undefined} />
+        <Avatar alt="Profile Img" src={profileImage} />
         <motion.h3
           className={`${
             !isOpen ? `hidden` : `block`
@@ -93,7 +91,10 @@ const Hamburger = ({
         className={`${classes.background} border-r border-gray-800 shadow-[0_35px_60px_10px_rgba(0,0,0,0.3)]`}
         variants={sidebar}
       />
-      <Navigation isOpen={isOpen} />
+      <Navigation
+        formattedBusinessName={formattedBusinessName}
+        isOpen={isOpen}
+      />
       <MenuToggle toggle={() => toggleOpen()} />
     </motion.nav>
   );
