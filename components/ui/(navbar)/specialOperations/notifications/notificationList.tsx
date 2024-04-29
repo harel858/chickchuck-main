@@ -28,17 +28,9 @@ const NotificationList = ({
     switch (status) {
       case "confirmed":
         return (
-          <div className="flex justify-center items-center gap-4 w-max">
-            <CheckCircleTwoTone className="text-xl" />
-            <div className="flex flex-col justify-center items-center">
-              <span>
-                {name} קבע/ה תור ל{summary}
-              </span>
-              <div className="font-normal" style={{ textAlign: "right" }}>
-                {startTime} - {endTime}, {formatDate}
-              </div>
-            </div>
-          </div>
+          <p className="text-right">
+            {name} קבע/ה תור ל{summary}
+          </p>
         );
       case "pending":
         return "Pending Event";
@@ -107,7 +99,14 @@ const NotificationList = ({
                     )}
                   </div>
                 }
-                description={<></>}
+                description={
+                  <div className="flex flex-col justify-center items-center text-right gap-0 ">
+                    <span className="w-max">
+                      {startTime} - {endTime}
+                    </span>
+                    <span className="w-max">{formatDate}</span>
+                  </div>
+                }
               />
             </List.Item>
           );
