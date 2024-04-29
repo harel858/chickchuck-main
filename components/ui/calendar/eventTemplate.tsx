@@ -5,19 +5,24 @@ function eventTemplate(props: any) {
   const getTimeString = (value: any) => {
     return dayjs(value).format("h:mm");
   };
+  console.log("props", props);
+
   return (
-    <div className="template-wrap" style={{ background: props.SecondaryColor }}>
-      <div
-        className="subject flex flex-row-reverse flex-wrap justify-center gap-2 items-center"
-        style={{ background: props.PrimaryColor }}
-      >
-        <p className="font-semibold text-xl">
-          - {props?.ExtendedProperties?.private?.customerName || ""}{" "}
-        </p>
-        <p className="font-semibold text-xl">
-          {getTimeString(props.StartTime)} -{getTimeString(props.EndTime)}
-        </p>
-      </div>
+    <div
+      className="flex flex-col justify-start items-center w-full relative"
+      style={{ background: props.SecondaryColor }}
+    >
+      <p className="absolute top-0 right-0 font-semibold text-base text-justify max-md:text-xs">
+        {props?.Subject || ""}
+      </p>
+
+      <p className="absolute top-5 right-0 font-semibold text-base max-md:text-xs">
+        {props?.ExtendedProperties?.private?.customerName || ""}
+      </p>
+      <p className="absolute top-10 right-0 font-semibold text-sm max-md:text-xs flex flex-wrap">
+        <span>{getTimeString(props.StartTime)} - </span>
+        <span> {getTimeString(props.EndTime)}</span>
+      </p>
     </div>
   );
 }
