@@ -123,6 +123,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
     user.calendarId
   );
   const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-"); // Replace whitespace with hyphens
+  const profileImage = session.user.image;
 
   return (
     <>
@@ -133,7 +134,11 @@ async function Layout({ children }: { children: React.ReactNode }) {
         customers={user.Business?.Customer || []}
       />
       <PlusButton business={user.Business} user={user} session={session} />
-      <Hamburger user={user} formattedBusinessName={formattedBusinessName} />
+      <Hamburger
+        user={user}
+        profileImage={profileImage}
+        formattedBusinessName={formattedBusinessName}
+      />
 
       <section className="flex justify-center items-center overflow-hidden">
         <div className="w-full mt-20 overflow-hidden">{children}</div>

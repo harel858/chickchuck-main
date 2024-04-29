@@ -26,6 +26,8 @@ function Navbar({
   customers: Customer[];
 }) {
   const profileImage = session.user.image;
+  console.log("profileImage", profileImage);
+
   const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-"); // Replace whitespace with hyphens
 
   return (

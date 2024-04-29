@@ -53,14 +53,15 @@ const variantHeader = {
 const Hamburger = ({
   user,
   formattedBusinessName,
+  profileImage,
 }: {
   user: User & { accounts: Account[] };
   formattedBusinessName: string;
+  profileImage: string | null;
 }) => {
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
   const [isOpen, toggleOpen] = useCycle(false, true);
-  const profileImage = user.image;
 
   return (
     <motion.nav
