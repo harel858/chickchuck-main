@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Button } from "@ui/Button";
 import { Popover } from "antd";
@@ -11,7 +12,7 @@ interface NotificationComponentProps {
   userId: string;
   session: Session;
   customers: Customer[];
-  scheduleProps: calendar_v3.Schema$Events | null;
+  scheduleProps: calendar_v3.Schema$Events["items"] | null;
 }
 
 function NotificationComponent({
@@ -23,15 +24,15 @@ function NotificationComponent({
   const [notifications, setNotifications] = useState<
     calendar_v3.Schema$Events["items"]
   >([]);
-  /* useEffect(() => {
-    const notifications = scheduleProps?.items?.filter((item) =>
-      customers?.find(
-        (customer) =>
-          customer.id === item.extendedProperties?.private?.customerId
-      )
+  useEffect(() => {
+    const notifications = scheduleProps?.filter(
+      (item) => item.extendedProperties?.private?.customerId
     );
+    console.log("scheduleProps", scheduleProps);
+    console.log("notification", notifications);
+
     notifications && setNotifications(notifications);
-  }, []); */
+  }, []);
   const webSocketRef = useRef<WebSocket | null>(null);
   const [open, setOpen] = useState(false);
   const closePopover = useCallback(() => setOpen(false), [open]);
@@ -45,16 +46,19 @@ function NotificationComponent({
 
   const handleWebSocketMessage = useCallback(
     (e: MessageEvent<any>) => {
-      console.log("message", e?.data);
+      console.log("message", JSON.parse(e.data));
 
-      const newNotifications = (JSON.parse(e.data) as calendar_v3.Schema$Events)
-        ?.items;
+      const newNotifications = (
+        JSON.parse(e.data) as calendar_v3.Schema$Events[]
+      )[0]?.items;
       const filteredNewNotifications = newNotifications?.filter(
         (newNotification) =>
           !notifications?.some(
             (notification) => notification.etag === newNotification.etag
           )
       );
+      console.log("filteredNewNotifications", filteredNewNotifications);
+
       notifications &&
         filteredNewNotifications &&
         setNotifications((prevNotifications) => [

@@ -1,22 +1,21 @@
 import React from "react";
-import VerticalNav from "@ui/(navbar)/VerticalNav";
 import { OAuth2Client } from "google-auth-library";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@lib/auth";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Navbar from "@ui/(navbar)/Navbar";
-import { UserData } from "types/types";
 import { prisma } from "@lib/prisma";
 import PlusButton from "@ui/(navbar)/specialOperations/plusButton/PlusButton";
 import { getUserAccount } from "@lib/prisma/users";
-import axios from "axios";
 import { calendar_v3 } from "googleapis";
 import { Account } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import { setupGoogleCalendarClient } from "@lib/google/client";
+import Hamburger from "@ui/(navbar)/(responsiveNav)/Hamburger";
 
 //expect an error
 async function fetchWatch(
+  userId: string,
   account: Account,
   googleClient: {
     auth: OAuth2Client;
@@ -40,7 +39,7 @@ async function fetchWatch(
         requestBody: {
           id: uuid,
           type: "web_hook",
-          address: `${process.env.NEXTAUTH_URL}/api/google/notifications?userId=${account.userId}`,
+          address: `/api/google/notifications?userId=${userId}`,
           expiration: `${expirationTime * 1000}`,
         },
       });
@@ -64,16 +63,20 @@ async function fetchEvents(
     calendarId: string;
   },
   expired: string,
-  accountId: string
+  accountId: string,
+  calendarId: string | null
 ) {
   try {
-    const { auth, calendar, calendarId } = googleClient;
+    const conferenceId = calendarId || "primary";
+    const { auth, calendar } = googleClient;
 
     const response = await calendar.events.list({
-      calendarId,
+      calendarId: conferenceId,
       auth,
+      privateExtendedProperty: [`conferenceId=${conferenceId}`],
     });
-    const result = response.data;
+
+    const result = response.data.items;
     const newSyncToken = response.data.nextSyncToken;
 
     await prisma.account.update({
@@ -107,13 +110,20 @@ async function Layout({ children }: { children: React.ReactNode }) {
   if (!user?.accounts[0] || !user.Business) {
     return notFound();
   }
-  const watchExpired = await fetchWatch(user.accounts[0], googleClient);
+  const watchExpired = await fetchWatch(
+    session?.user.id,
+    user.accounts[0],
+    googleClient
+  );
 
   const scheduleProps = await fetchEvents(
     googleClient,
     watchExpired?.expiration,
-    user.accounts[0]?.id
+    user.accounts[0]?.id,
+    user.calendarId
   );
+  const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-"); // Replace whitespace with hyphens
+
   return (
     <>
       <Navbar
@@ -123,6 +133,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
         customers={user.Business?.Customer || []}
       />
       <PlusButton business={user.Business} user={user} session={session} />
+      <Hamburger user={user} formattedBusinessName={formattedBusinessName} />
 
       <section className="flex justify-center items-center overflow-hidden">
         <div className="w-full mt-20 overflow-hidden">{children}</div>

@@ -71,15 +71,19 @@ const NotificationList = ({
           const startTime = dayjs(item.start?.dateTime).format("hh:mm");
           const endTime = dayjs(item.end?.dateTime).format("hh:mm");
           const formatDate = dayjs(item.end?.dateTime).format("DD/MM/YYYY");
-          return customer ? (
+          return (
             <List.Item key={item.id}>
               <List.Item.Meta
                 avatar={
-                  <DetailsButton
-                    closePopover={closePopover}
-                    session={session}
-                    customer={customer}
-                  />
+                  customer ? (
+                    <DetailsButton
+                      closePopover={closePopover}
+                      session={session}
+                      customer={customer}
+                    />
+                  ) : (
+                    <></>
+                  )
                 }
                 title={
                   <div style={{ textAlign: "right", direction: "rtl" }}>
@@ -93,8 +97,6 @@ const NotificationList = ({
                 }
               />
             </List.Item>
-          ) : (
-            <></>
           );
         }}
       />

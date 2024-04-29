@@ -1,7 +1,8 @@
+"use client";
 import classes from "./style.module.css";
 import React from "react";
 import { useRef } from "react";
-import { motion, useCycle } from "framer-motion";
+import { Variants, motion, useCycle } from "framer-motion";
 import { useDimensions } from "./use-dimensions";
 import { MenuToggle } from "./MenuToggle";
 import { Navigation } from "./Navigation";
@@ -12,9 +13,9 @@ import logo from "@public/assets/logo3.png";
 import Avatar from "@ui/Avatar";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
-const sidebar = {
+const sidebar: Variants = {
   open: (height = 1000) => ({
-    clipPath: `circle(${height * 2 + 200}px at 40px 40px)`,
+    clipPath: `circle(${height * 2 + 1100}px at 110px 110px )`,
     transition: {
       type: "spring",
       stiffness: 20,
@@ -22,7 +23,7 @@ const sidebar = {
     },
   }),
   closed: {
-    clipPath: "circle(30px at 40px 40px)",
+    clipPath: "circle(0px at 40px 40px )",
     transition: {
       delay: 0.5,
       type: "spring",
@@ -34,7 +35,7 @@ const sidebar = {
 
 const variantHeader = {
   open: {
-    y: 0,
+    y: 50,
     opacity: 1,
     transition: {
       y: { stiffness: 1000, velocity: -100 },
@@ -65,7 +66,7 @@ const Hamburger = ({
     <motion.nav
       className={`${
         !isOpen ? `hidden pointer-events-none` : `flex`
-      } fixed z-40 top-0 left-0 h-screen w-52 max-xl:flex pt-16 gap-10 hidden flex-col align-center items-center justify-start`}
+      } fixed z-40 bottom-0 left-0 h-screen w-52 max-xl:flex pt-0 gap-20 hidden flex-col align-center items-center justify-start`}
       initial={false}
       animate={isOpen ? "open" : "closed"}
       custom={height}
@@ -73,22 +74,22 @@ const Hamburger = ({
     >
       <motion.div
         variants={variantHeader}
-        className=" flex justify-center content-center items-center gap-5 flex-col z-50 text-white"
+        className=" flex justify-center content-center items-center gap-1 flex-col z-50 text-white"
       >
         <h2 className={`${lobster.className} text-black  text-3xl w-max`}>
           Quickly
         </h2>
         <Avatar alt="Profile Img" src={profileImage} />
-        <motion.h3
+        {/* <motion.h3
           className={`${
             !isOpen ? `hidden` : `block`
           }  text-black text-2xl min:text-xl  w-max `}
         >
           Hello, {user?.name}
-        </motion.h3>
+        </motion.h3> */}
       </motion.div>
       <motion.div
-        className={`${classes.background} border-r border-gray-800 shadow-[0_35px_60px_10px_rgba(0,0,0,0.3)]`}
+        className={`${classes.background}  border-r border-gray-800 shadow-[0_35px_60px_10px_rgba(0,0,0,0.3)]`}
         variants={sidebar}
       />
       <Navigation

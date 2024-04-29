@@ -73,7 +73,7 @@ const PlusButton = ({
       <FloatButton.Group
         trigger="click"
         type="primary"
-        style={{ right: 24 }}
+        style={{ right: "27px", bottom: "24px" }}
         shape="square"
         icon={<PlusOutlined />}
       >

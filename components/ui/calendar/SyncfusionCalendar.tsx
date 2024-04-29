@@ -33,7 +33,9 @@ import CustomHeaderTemplate from "./CustomHeaderTemplate";
 import eventTemplate from "./eventTemplate";
 import { onPopupOpen } from "./utils/onPopupOpen";
 import { fields } from "./utils/eventSettings";
-
+import { enableRtl } from "@syncfusion/ej2-base";
+// Enables Right to left alignment for all controls
+enableRtl(true);
 export type AdditionData = {
   service?: { label: string; value: string };
   customer?: { label: string; value: string };
@@ -103,6 +105,7 @@ const RecurrenceEvents = ({
     },
     [session, business, user]
   );
+  const timeScale = { enable: true, interval: 60, slotCount: 6 };
 
   return (
     <div className="schedule-control-section">
@@ -122,6 +125,8 @@ const RecurrenceEvents = ({
             showQuickInfo={true}
             resourceHeaderTemplate={resourceHeaderTemplate}
             group={{ allowGroupEdit: true, resources: ["Conferences"] }}
+            enableRtl
+            timeScale={timeScale}
           >
             <ResourcesDirective>
               <ResourceDirective

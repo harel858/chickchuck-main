@@ -51,7 +51,6 @@ const Avatar: React.FC<AvatarProps> = ({
         src={src || DEFAULT_AVATAR_SRC.src}
         alt={alt}
         priority
-        objectFit="contain"
         className={`rounded-full aspect-square object-cover ${className}`}
         style={{ ...style }}
       />

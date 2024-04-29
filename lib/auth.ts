@@ -85,7 +85,7 @@ async function refreshAccessToken(
     }
     await prisma.account.update({
       where: { id: token.accountId },
-      data: { access_token: token.access_token },
+      data: { access_token: refreshedTokens.access_token },
     });
     return {
       ...token,

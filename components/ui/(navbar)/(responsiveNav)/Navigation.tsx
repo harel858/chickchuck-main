@@ -41,7 +41,7 @@ export const Navigation = ({
       icon: <RiTeamLine />,
     },
     {
-      title: "דך העסק",
+      title: "דף העסק",
       link: `/${formattedBusinessName}`,
       icon: <FiExternalLink />,
     },

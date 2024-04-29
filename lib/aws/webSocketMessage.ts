@@ -35,6 +35,8 @@ const send = async ({
 
   try {
     const ws = create(domainName, stage);
+    console.log("messages", messages);
+
     const newMessage = [messages[messages.length - 1]];
 
     const postParams = {

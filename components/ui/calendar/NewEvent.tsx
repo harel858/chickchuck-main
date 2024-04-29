@@ -43,8 +43,8 @@ const NewEvent = ({
   };
   ConferenceId: string;
 }) => {
-  console.log("customers23", business.Customer);
-
+  /*   console.log("access_token", session?.user?.access_token);
+   */
   const { token } = theme.useToken();
   const [isPending, startTransition] = useTransition();
   const [isNewClient, setIsNewClient] = useState(false);

@@ -28,17 +28,22 @@
 /* background-color: rgb(15 23 42)
  */
 .button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
     outline: none;
     border: none;
     cursor: pointer;
     pointer-events: auto !important;
     z-index: 40;
     position: absolute;
-    top: 18px;
+    bottom: 24px;
     left: 27px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    background: beige;
 }
 
 .button::-moz-user-select {

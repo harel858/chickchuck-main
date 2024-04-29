@@ -9,7 +9,8 @@ export async function fetchEvents(
     calendarId: string;
   },
   accountId: string,
-  calendarIds: string[] // Change to array of calendar IDs
+  calendarIds: string[], // Change to array of calendar IDs
+  syncToken?: string
 ) {
   try {
     const { auth, calendar } = googleClient;
@@ -22,6 +23,7 @@ export async function fetchEvents(
       const response = await calendar.events.list({
         calendarId,
         auth,
+        syncToken: syncToken,
         fields: "items(*)",
         /*      privateExtendedProperty: [
           "treatmentId",
@@ -30,6 +32,7 @@ export async function fetchEvents(
           "customerName",
         ], */
       });
+      console.log("responseList", response);
 
       // Check if response data and items exist
       if (response.data && response.data.items) {
@@ -51,6 +54,8 @@ export async function fetchEvents(
 
     return allEvents;
   } catch (error: any) {
+    console.log(error);
+
     throw new Error("Error while fetching events:", error);
   }
 }

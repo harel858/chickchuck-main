@@ -70,7 +70,7 @@ export default function DetailsButton({
       <Modal
         title={
           <div className="flex flex-row justify-center items-center gap-2">
-            <h3 className="text-2xl">{customer.name}</h3>
+            <h3 className="text-2xl">{customer?.name}</h3>
             <BiEdit className="text-4xl" />
           </div>
         }

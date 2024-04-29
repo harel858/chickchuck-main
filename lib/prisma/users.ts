@@ -21,6 +21,8 @@ export const getUserAccount = async (userId: string) => {
         Business: { include: { user: true, Customer: true, Treatment: true } },
       },
     });
+    console.log("getUserAccount user", user);
+
     if (
       user?.UserRole === "TEAMMEATE" &&
       user?.accounts.length === 0 &&

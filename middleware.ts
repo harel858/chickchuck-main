@@ -15,14 +15,14 @@ const redis = new Redis({
 
 const rateLimit = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(200, `1 h`),
+  limiter: Ratelimit.slidingWindow(100, `1 h`),
 });
 
 export default withAuth(
   async function middleware(req) {
     const pathName = req.nextUrl.pathname; //relative path
 
-    //manage rate limit
+    /*     //manage rate limit
     if (pathName.startsWith("/api")) {
       const ip = req.ip ?? `127.0.0.1`;
 
@@ -31,10 +31,12 @@ export default withAuth(
         if (!success) return NextResponse.json({ error: "Too many request" });
         return NextResponse.next();
       } catch (error) {
+        console.log("error", error);
+
         return NextResponse.json({ error: "Internal Server Error" });
       }
     } //Manage route protection
-
+ */
     const token = await getToken({ req });
 
     const isAuth = !!token;

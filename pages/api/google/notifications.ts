@@ -15,11 +15,13 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   try {
-    console.log("started");
-
     const userId = req.query.userId as string;
+    console.log("userId", userId);
+
     const record = await getDataByUserId(userId, tableName);
     const user = await getUserAccount(userId);
+    console.log("getUserAccount", user);
+
     const access_token = user?.accounts[0]?.access_token;
     const syncToken = user?.accounts[0]?.syncToken || "";
     if (!access_token) throw new Error("access_token is missing");
