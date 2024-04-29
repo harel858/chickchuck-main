@@ -20,15 +20,25 @@ const NotificationList = ({
   const getTitleByStatus = (
     status: calendar_v3.Schema$Event["status"],
     name: string | undefined,
-    summary: string | null | undefined
+    summary: string | null | undefined,
+    startTime: string,
+    endTime: string,
+    formatDate: string
   ) => {
     switch (status) {
       case "confirmed":
         return (
-          <>
+          <div className="flex justify-center items-center gap-4 w-max">
             <CheckCircleTwoTone className="text-xl" />
-            {name} קבע/ה תור ל{summary}
-          </>
+            <div className="flex flex-col justify-center items-center">
+              <span>
+                {name} קבע/ה תור ל{summary}
+              </span>
+              <div className="font-normal" style={{ textAlign: "right" }}>
+                {startTime} - {endTime}, {formatDate}
+              </div>
+            </div>
+          </div>
         );
       case "pending":
         return "Pending Event";
@@ -87,14 +97,17 @@ const NotificationList = ({
                 }
                 title={
                   <div style={{ textAlign: "right", direction: "rtl" }}>
-                    {getTitleByStatus(item.status, customerName, item.summary)}
+                    {getTitleByStatus(
+                      item.status,
+                      customerName,
+                      item.summary,
+                      startTime,
+                      endTime,
+                      formatDate
+                    )}
                   </div>
                 }
-                description={
-                  <div style={{ textAlign: "right" }}>
-                    {startTime} - {endTime}, {formatDate}
-                  </div>
-                }
+                description={<></>}
               />
             </List.Item>
           );

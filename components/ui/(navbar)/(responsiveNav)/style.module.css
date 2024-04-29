@@ -11,6 +11,7 @@
   top: 0;
   left: 0;
   bottom: 0;
+    color: white;
   width: 40vw;
   display: none;
   font-family: "Open Sans", sans-serif !important;
@@ -27,6 +28,7 @@
 }
 /* background-color: rgb(15 23 42)
  */
+
 .button {
   display: flex;
   justify-content: center;
@@ -43,8 +45,13 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: beige;
+    color: white !important;
+  background: beige;
+  transition: all 200ms ease-in-out;
 }
+/*  .button:hover  {
+   background: #4096ff;
+ } */
 
 .button::-moz-user-select {
   display: none;
