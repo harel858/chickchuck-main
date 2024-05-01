@@ -66,7 +66,6 @@ const NewEvent = ({
       label: string;
     }[]
   >([]);
-  console.log("customersList", business.Customer);
 
   useEffect(() => {
     const customersList = business.Customer.map((item) => ({

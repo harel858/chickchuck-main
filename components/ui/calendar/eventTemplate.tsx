@@ -5,7 +5,6 @@ function eventTemplate(props: any) {
   const getTimeString = (value: any) => {
     return dayjs(value).format("h:mm");
   };
-  console.log("props", props);
 
   return (
     <div

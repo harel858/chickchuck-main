@@ -1,6 +1,7 @@
 import { prisma } from "@lib/prisma";
 import { OAuth2Client } from "google-auth-library";
 import { calendar_v3 } from "googleapis";
+import { GaxiosPromise } from "googleapis/build/src/apis/abusiveexperiencereport";
 
 export async function fetchEvents(
   googleClient: {
@@ -57,5 +58,50 @@ export async function fetchEvents(
     console.log(error);
 
     throw new Error("Error while fetching events:", error);
+  }
+}
+
+export async function fetchEvents2(
+  googleClient: {
+    auth: OAuth2Client;
+    calendar: calendar_v3.Calendar;
+    calendarId: string;
+  },
+  accountId: string,
+  calendarIds: string[], // Change to array of calendar IDs
+  syncToken?: string
+) {
+  try {
+    const { auth, calendar, calendarId } = googleClient;
+    console.log("calendarId", calendarId);
+
+    let allEvents: calendar_v3.Schema$Events["items"] = [];
+    let nextPageToken: string | null | undefined = undefined;
+    let newSyncToken;
+    do {
+      const res = (await calendar.events.list({
+        calendarId,
+        pageToken: nextPageToken,
+        auth,
+      })) as unknown as GaxiosPromise<calendar_v3.Schema$Events>;
+      const response = await res;
+      newSyncToken = allEvents.length > 0 ? response.data.nextSyncToken : null;
+
+      const events = response.data.items || [];
+      nextPageToken = response.data.nextPageToken;
+      allEvents.push(...events);
+    } while (nextPageToken);
+
+    await prisma.account.update({
+      where: { id: accountId },
+      data: {
+        syncToken: newSyncToken,
+      },
+    });
+
+    return allEvents;
+  } catch (error) {
+    console.error("Error while fetching events:", error);
+    return null;
   }
 }

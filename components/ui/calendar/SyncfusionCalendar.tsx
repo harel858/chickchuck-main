@@ -83,6 +83,7 @@ const RecurrenceEvents = ({
   const editorTemplate = useCallback(
     (props: any) => {
       let ConferenceId = props.ConferenceId?.[0] || "primary";
+
       return props !== undefined && !props?.Guid ? (
         <NewEvent
           scheduleObj={scheduleObj}

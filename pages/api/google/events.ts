@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { setupGoogleCalendarClient } from "@lib/google/client";
-import { fetchEvents } from "@lib/google/eventList";
+import { fetchEvents, fetchEvents2 } from "@lib/google/eventList";
 type ResponseData = {
   message: string;
 };
@@ -29,7 +29,7 @@ export default async function handler(
         .json({ message: "Unauthorized: Invalid Authorization header format" });
     }
     const googleClient = setupGoogleCalendarClient(accessToken);
-    const scheduleProps = await fetchEvents(
+    const scheduleProps = await fetchEvents2(
       googleClient,
       accountId,
       calendarsIds

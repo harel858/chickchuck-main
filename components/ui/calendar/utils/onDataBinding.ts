@@ -2,6 +2,7 @@ export const onDataBinding = (e: Record<string, any>): void => {
   const items: Record<string, any>[] =
     (JSON.parse(e.actual.message) as Record<string, Record<string, any>[]>[]) ||
     [];
+  console.log("items", items);
 
   let scheduleData: Record<string, any>[] = [];
   if (items.length > 0) {
