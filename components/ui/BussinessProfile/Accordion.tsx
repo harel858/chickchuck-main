@@ -68,11 +68,11 @@ const Accordion = ({
       label: "פרטים כלליים",
       children: <BusinessDetailsForm business={business} />,
     },
-    {
+    /*  {
       key: "3",
       label: "This is panel header 3",
       children: <p>{text}</p>,
-    },
+    }, */
   ];
   return <Collapse className="bg-slate-100" accordion items={items} />;
 };

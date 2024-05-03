@@ -68,6 +68,8 @@ const ChooseDate = ({
 
   const getAvailableTimeSlots = useMemo(
     () => (month: string) => {
+      console.count();
+
       const availableSlots: calendar_v3.Schema$TimePeriod[] = [];
       const startOfMonth = dayjs(month).startOf("month");
       const endOfMonth = dayjs(month).endOf("month");
@@ -148,8 +150,8 @@ const ChooseDate = ({
                 currentSlotStart.isSame(busyEnd)
               );
             });
-            if (dayjs(currentSlotStart).format("DD/MM/YYYY") === "09/04/2024")
-              console.log("isSlotAvailable", isSlotAvailable);
+            /*   if (dayjs(currentSlotStart).format("DD/MM/YYYY") === "09/04/2024")
+              console.log("isSlotAvailable", isSlotAvailable); */
             if (
               (isSlotAvailable &&
                 dayjs(currentSlotEnd.format("HH:mm"), "HH:mm").isBefore(
@@ -212,7 +214,6 @@ const ChooseDate = ({
       (day) => day.day === currentDay && day.isActive
     );
     if (!isActivityDay) return true; // If the day is not active, disable it
-    console.log("slotsForMonth", slotsForMonth);
 
     const daySlots = slotsForMonth?.[current.format("DD/MM/YYYY")];
 

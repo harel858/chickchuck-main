@@ -20,6 +20,7 @@ import { Button } from "@ui/Button";
 import dayjs, { Dayjs } from "dayjs";
 import { calendar_v3 } from "googleapis";
 import { TUserValidation } from "@lib/validators/userValidation";
+import { message } from "antd";
 
 export default function AppointmentSteps({
   business,
@@ -43,12 +44,17 @@ export default function AppointmentSteps({
     string,
     calendar_v3.Schema$TimePeriod[]
   > | null>(null);
-  const handleNext = useCallback(() => {
-    if (activeStep === 0 && business.user.length < 2)
-      return setActiveStep((prevActiveStep) => prevActiveStep + 2);
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  }, [setActiveStep, activeStep]);
+  const handleNext = useCallback(() => {
+    setActiveStep((prevActiveStep) => {
+      console.log("activeStep", prevActiveStep);
+
+      if (prevActiveStep === 0 && business.user.length < 2)
+        return prevActiveStep + 2;
+
+      return prevActiveStep + 1;
+    });
+  }, [business.user.length, setActiveStep]);
 
   const onSelectedUser = useCallback(
     (user: User) => {
@@ -94,13 +100,20 @@ export default function AppointmentSteps({
 
   const onSelectedDate = useCallback(
     (date: Dayjs) => {
-      if (
+      const monthChanged =
         selectedDate.add(1, "month").format("DD/MM/YYYY") ===
           date.format("DD/MM/YYYY") ||
         selectedDate.add(-1, "month").format("DD/MM/YYYY") ===
-          date.format("DD/MM/YYYY")
-      )
-        return setSelectedDate(date);
+          date.format("DD/MM/YYYY") ||
+        date.isAfter(selectedDate, "month");
+      const yearChanged =
+        selectedDate.add(1, "month").format("DD/MM/YYYY") ===
+          date.format("DD/MM/YYYY") ||
+        selectedDate.add(-1, "month").format("DD/MM/YYYY") ===
+          date.format("DD/MM/YYYY");
+
+      if (date.isBefore(dayjs())) return message.error("לא ניתן לחזור אל העבר");
+      if (monthChanged || yearChanged) return setSelectedDate(date);
 
       setSelectedDate(date);
       handleNext();

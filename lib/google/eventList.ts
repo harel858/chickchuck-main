@@ -72,25 +72,30 @@ export async function fetchEvents2(
   syncToken?: string
 ) {
   try {
-    const { auth, calendar, calendarId } = googleClient;
-    console.log("calendarId", calendarId);
+    const { auth, calendar } = googleClient;
+    console.log("calendarIds");
 
     let allEvents: calendar_v3.Schema$Events["items"] = [];
-    let nextPageToken: string | null | undefined = undefined;
     let newSyncToken;
-    do {
-      const res = (await calendar.events.list({
-        calendarId,
-        pageToken: nextPageToken,
-        auth,
-      })) as unknown as GaxiosPromise<calendar_v3.Schema$Events>;
-      const response = await res;
-      newSyncToken = allEvents.length > 0 ? response.data.nextSyncToken : null;
 
-      const events = response.data.items || [];
-      nextPageToken = response.data.nextPageToken;
-      allEvents.push(...events);
-    } while (nextPageToken);
+    for (const calendarId of calendarIds) {
+      let nextPageToken: string | null | undefined = undefined;
+
+      do {
+        const res = (await calendar.events.list({
+          calendarId,
+          pageToken: nextPageToken,
+          auth,
+        })) as unknown as GaxiosPromise<calendar_v3.Schema$Events>;
+        const response = await res;
+        newSyncToken =
+          allEvents.length > 0 ? response.data.nextSyncToken : null;
+
+        const events = response.data.items || [];
+        nextPageToken = response.data.nextPageToken;
+        allEvents.push(...events);
+      } while (nextPageToken);
+    }
 
     await prisma.account.update({
       where: { id: accountId },

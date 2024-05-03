@@ -28,13 +28,13 @@ function SlotsList({
   console.log("slotsForDay", slotsForDay);
 
   return (
-    <div className="flex flex-col justify-center items-center">
-      <div className="w-full flex justify-center items-center">
+    <div className="flex flex-col justify-center items-center gap-2">
+      <div className="w-full flex justify-center items-center pt-2">
         <LargeHeading size={"sm"} className="text-center text-base">
           {selectedDate.format("MMMM D, YYYY")}
         </LargeHeading>
       </div>
-      <div className="w-full p-2 gap-5 flex flex-row flex-wrap items-center justify-center">
+      <div className="w-full h-52 overflow-y-scroll p-2 gap-5 flex flex-row flex-wrap items-center justify-center">
         {slotsForDay.map((slot) => {
           const { start, end } = slot;
           const formattedStart = dayjs(start).format("HH:mm");

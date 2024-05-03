@@ -2,7 +2,8 @@
 import React, { useCallback, useState } from "react";
 import { PlusOutlined, UserAddOutlined } from "@ant-design/icons";
 import { TbCalendarPlus } from "react-icons/tb";
-import { FloatButton, Modal, theme } from "antd";
+import { FaCreativeCommonsShare } from "react-icons/fa";
+import { FloatButton, Modal, message, theme } from "antd";
 import AddCustomer from "./Customer";
 import AppointmentSteps from "./appointments/newAppointment";
 import { Session } from "next-auth";
@@ -34,6 +35,7 @@ const PlusButton = ({
   };
 }) => {
   console.log("user", user);
+  const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-"); // Replace whitespace with hyphens
 
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -67,7 +69,11 @@ const PlusButton = ({
     border: `1px dashed ${token.colorBorder}`,
     marginTop: 16,
   };
-
+  const copyToClipboard = () => {
+    const link = `https://main.d2u034j1xcc80b.amplifyapp.com/${formattedBusinessName}`;
+    navigator.clipboard.writeText(link);
+    message.success("קישור הועתק ללוח");
+  };
   return (
     <>
       <FloatButton.Group
@@ -88,6 +94,12 @@ const PlusButton = ({
           icon={<TbCalendarPlus className="w-full h-full scale-150" />}
           shape="square"
           style={{ right: 164 }}
+        />
+        <FloatButton
+          onClick={() => copyToClipboard()}
+          icon={<FaCreativeCommonsShare className="w-full h-full scale-150" />}
+          shape="square"
+          style={{ right: 24 }}
         />
       </FloatButton.Group>
 
