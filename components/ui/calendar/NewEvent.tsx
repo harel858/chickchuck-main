@@ -107,7 +107,7 @@ const NewEvent = ({
 
   const steps = [
     {
-      title: "First",
+      title: "?למי התור",
       content: (
         <FormFiled
           event={event}
@@ -118,7 +118,7 @@ const NewEvent = ({
       ),
     },
     {
-      title: "Second",
+      title: "?איזה טיפול",
       content: (
         <FormFiled
           event={event}
@@ -220,9 +220,9 @@ const NewEvent = ({
         >
           <LargeHeading className="text-xl" size={"sm"}>
             {!isNewClient && current === 0
-              ? "choose client"
+              ? "בחירת לקוח"
               : current === 1
-              ? "choose a service"
+              ? "בחירת סוג שירות"
               : ""}
           </LargeHeading>
           {isNewClient && current === 0 ? (

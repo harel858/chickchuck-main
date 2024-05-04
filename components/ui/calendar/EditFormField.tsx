@@ -91,7 +91,7 @@ function EditFormField({
       />
       <TextArea
         rows={4}
-        placeholder="maxLength is 255"
+        placeholder="מקסימום תווים 255"
         className="focus:bg-white bg-white !important w-10/12"
         maxLength={255}
         value={event?.descripition}

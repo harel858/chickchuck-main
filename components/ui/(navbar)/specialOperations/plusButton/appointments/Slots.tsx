@@ -36,7 +36,7 @@ function Slots({
   return (
     <div className="w-full max-h-44 p-2 overflow-hidden flex flex-wrap justify-around items-center gap-1">
       {isPastDate && !isToday ? (
-        <>black bimo</>
+        <>אי אפשר להחזיר את העבר</>
       ) : slotsByDay.length === 0 ? (
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
@@ -48,7 +48,7 @@ function Slots({
           }}
         >
           <div className="text-lg flex flex-col justify-center items-center over">
-            <h1 className="text-black max-w-xl">No free appointments found.</h1>
+            <h1 className="text-black max-w-xl">.אין תורים פנויים לתאריך זה</h1>
             <FaRegCalendarTimes className="text-4xl text-black" />
           </div>
         </motion.div>

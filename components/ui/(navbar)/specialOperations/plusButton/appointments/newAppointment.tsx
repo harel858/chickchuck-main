@@ -112,7 +112,7 @@ const AppointmentSteps = ({
       });
       setCurrent(0);
       handleCancel2 && handleCancel2();
-      return message.success("The appointment was created successfully");
+      return message.success("הפגישה נוצרה בהצלחה");
     } catch (err: any) {
       message.error("Internal error");
       console.log("err", err);
@@ -134,7 +134,7 @@ const AppointmentSteps = ({
             register={register}
             control={control}
             name={"Client"}
-            label={"For who?"}
+            label={"בחירת לקוח"}
             key={"For Who"}
             session={session}
             user={user}
@@ -172,7 +172,7 @@ const AppointmentSteps = ({
           register={register}
           control={control}
           name={"Service"}
-          label={"Pick A Service"}
+          label={"סוג השירות"}
           key={"Pick A Service"}
           session={session}
           user={user}
@@ -190,7 +190,7 @@ const AppointmentSteps = ({
           control={control}
           getValues={getValues}
           name={"Date"}
-          label={"When Do You Want"}
+          label={"?למתי"}
           key={"When Do You Want"}
           session={session}
           user={user}

@@ -45,7 +45,6 @@ function AddCustomer({
         phoneNumber: Phone,
         bussinesId: business.id,
       });
-      console.log("createNewCustomer", res);
       message.success(`${Name} הוסף לרשימה`);
       if (res) {
         handleCancel && handleCancel();
@@ -71,21 +70,22 @@ function AddCustomer({
       <Form {...form}>
         <form className="flex flex-col items-center gap-4 mt-4 w-full relative">
           <h2 className={`text-slate-900 font-normal font-serif text-2xl`}>
-            Create A Customer
+            יצירת לקוח חדש
           </h2>
           <div className="flex flex-col items-center gap-4 mt-4 w-10/12 max-2xl:w-full pb-5">
             <div
               key={"Name"}
               className="flex flex-col justify-center items-center gap-2"
             >
-              <Label htmlFor={"Name"}>{"Enter Name"}</Label>
+              <Label htmlFor={"Name"}>{"שם מלא"}</Label>
               <Input
                 style={{ width: "15rem" }} // Set the specific width here
                 {...register("Name")}
                 className={cn({
                   "focus-visible:ring-red-500": errors["Name"],
                 })}
-                placeholder={"Enter Name"}
+                /*                 placeholder={"Enter Name"}
+                 */
               />
               {errors?.["Name"] && (
                 <p className="text-sm text-red-500">
@@ -97,14 +97,15 @@ function AddCustomer({
               key={"Phone"}
               className="flex flex-col justify-center items-center gap-2"
             >
-              <Label htmlFor={"Phone"}>{"Enter Phone Number"}</Label>
+              <Label htmlFor={"Phone"}>{"מספר פלאפון"}</Label>
               <Input
                 style={{ width: "15rem" }} // Set the specific width here
                 {...register("Phone")}
                 className={cn({
                   "focus-visible:ring-red-500": errors["Phone"],
                 })}
-                placeholder={"Enter Phone"}
+                /*                 placeholder={"Enter Phone"}
+                 */
               />
               {errors?.["Phone"] && (
                 <p className="text-sm text-red-500">
@@ -120,7 +121,7 @@ function AddCustomer({
             type="button"
             onClick={handleSubmit(submitForm)}
           >
-            Create
+            הוסף
           </Button>
         </form>
       </Form>

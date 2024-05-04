@@ -167,7 +167,7 @@ function EditEvent({
           className="flex flex-col justify-center items-center py-5 gap-4"
         >
           <LargeHeading className="text-xl" size={"sm"}>
-            Edit Event
+            עריכת אירוע
           </LargeHeading>
           <EditFormField
             customers={customers}
