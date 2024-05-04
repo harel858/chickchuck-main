@@ -125,7 +125,7 @@ const AppointmentSteps = ({
   const switchIsNewClient = () => setIsNewClient((prev) => !prev);
   const steps = [
     {
-      title: "For Who?",
+      title: "?למי",
       content: (
         <div>
           <AppointmentField
@@ -163,7 +163,7 @@ const AppointmentSteps = ({
       ),
     },
     {
-      title: "Second",
+      title: "?למה",
       content: (
         <AppointmentField
           business={business}
@@ -181,7 +181,7 @@ const AppointmentSteps = ({
       ),
     },
     {
-      title: "Last",
+      title: "?מתי",
       content: (
         <AppointmentField
           business={business}
