@@ -152,16 +152,20 @@ const AppointmentSteps = ({
         </div>
       ),
     },
-    {
-      title: "?אצל מי",
-      content: (
-        <UserList
-          users={business.user}
-          onSelectedUser={onSelectedUser}
-          selectedUser={selectedUser}
-        />
-      ),
-    },
+    ...(business.user.length > 2
+      ? [
+          {
+            title: "?אצל מי",
+            content: (
+              <UserList
+                users={business.user}
+                onSelectedUser={onSelectedUser}
+                selectedUser={selectedUser}
+              />
+            ),
+          },
+        ]
+      : []),
     {
       title: "?למה",
       content: (
