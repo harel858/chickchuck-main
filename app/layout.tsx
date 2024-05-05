@@ -31,28 +31,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ServerThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <html lang="en" className="h-full">
-        <body
-          className={cn(
-            "h-full font-sans bg-slate-300 dark:bg-slate-900 antialiased relative"
-          )}
-        >
-          <Providers>
-            <main className="relative flex flex-col min-h-screen">
-              <div className="flex-grow flex-1">{children}</div>
-            </main>
-          </Providers>
+    /*     <ServerThemeProvider attribute="class" defaultTheme="system" enableSystem>
+     */ <html lang="en" className="h-full">
+      <body
+        className={cn(
+          "h-full font-sans bg-slate-300 dark:bg-slate-900 antialiased relative"
+        )}
+      >
+        <Providers>
+          <main className="relative flex flex-col min-h-screen">
+            <div className="flex-grow flex-1">{children}</div>
+          </main>
+        </Providers>
 
-          {/* Add the inset box shadow */}
-          {/*    <div className="fixed inset-0 pointer-events-none -z-10">
+        {/* Add the inset box shadow */}
+        {/*    <div className="fixed inset-0 pointer-events-none -z-10">
             <div className="h-screen bg-gradient-to-t from-transparent dark:to-slate-700/80 to-slate-300/40 -z-10" />
           </div> */}
 
-          {/* Allow more height for mobile menu on mobile */}
-          <div className="max-md:h-10 hidden" />
-        </body>
-      </html>
-    </ServerThemeProvider>
+        {/* Allow more height for mobile menu on mobile */}
+        <div className="max-md:h-10" />
+      </body>
+    </html>
+    /* </ServerThemeProvider> */
   );
 }
