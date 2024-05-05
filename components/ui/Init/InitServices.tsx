@@ -8,10 +8,14 @@ import CardItem from "./CardItem";
 
 export type ServiceInput = {
   title: string;
-  duration: number;
-  price: number;
+  duration: number | undefined;
+  price: number | undefined;
 };
-const initService: ServiceInput = { duration: 0, price: 0, title: "" };
+const initService: ServiceInput = {
+  duration: undefined,
+  price: undefined,
+  title: "",
+};
 const InitServices = ({
   services,
   setServices,
@@ -50,6 +54,7 @@ const InitServices = ({
     setOpen(false);
     setService(initService);
   };
+  console.log("service", service);
 
   return (
     <div className="flex flex-col justify-center items-center gap-3 w-full">

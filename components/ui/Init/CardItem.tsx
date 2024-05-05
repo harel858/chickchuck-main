@@ -75,8 +75,8 @@ const CardItem = ({
         ]}
       >
         <List.Item.Meta
-          title={`${item.title} ${item.price}$`}
-          description={<p className="text-black">{item.duration} minutes</p>}
+          title={`${item.title} ${item.price}₪`}
+          description={<p className="text-black">{item.duration} דקות</p>}
           className="border-slate-950"
         />
       </List.Item>

@@ -58,7 +58,7 @@ const BusinessDetailsForm = ({
             className="flex flex-col justify-center items-center gap-10"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="grid grid-cols-2 max-xl:grid-cols-1 gap-x-4 gap-y-4 w-full">
+            <div className="flex flex-col justify-center items-center gap-x-4 gap-y-4 w-full">
               {formType.map(({ label, name }) => {
                 return (
                   <FormField

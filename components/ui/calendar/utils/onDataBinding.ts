@@ -1,7 +1,9 @@
 export const onDataBinding = (e: Record<string, any>): void => {
   const items: Record<string, any>[] =
-    (JSON.parse(e.actual.message) as Record<string, Record<string, any>[]>[]) ||
-    [];
+    (JSON.parse(e?.actual?.message) as Record<
+      string,
+      Record<string, any>[]
+    >[]) || [];
   console.log("items", items);
 
   let scheduleData: Record<string, any>[] = [];
@@ -20,15 +22,15 @@ export const onDataBinding = (e: Record<string, any>): void => {
         : "primary";
 
       scheduleData.push({
-        Id: event.id,
-        status: event.status,
-        Subject: event.summary,
-        descripition: event.description,
+        Id: event?.id,
+        status: event?.status,
+        Subject: event?.summary,
+        descripition: event?.description,
         StartTime: new Date(start),
         EndTime: new Date(end),
-        IsAllDay: !event.start.dateTime,
+        IsAllDay: !event?.start?.dateTime,
         ConferenceId: [conferenceId],
-        ExtendedProperties: event.extendedProperties, // Include extended properties
+        ExtendedProperties: event?.extendedProperties, // Include extended properties
       });
     }
   }

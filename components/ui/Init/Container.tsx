@@ -51,7 +51,7 @@ const Container = ({ session }: { session: Session }) => {
   };
   const steps = [
     {
-      title: "First",
+      title: "קצת על העסק",
       content: (
         <BusinessDetailsForm
           next={next}
@@ -60,7 +60,7 @@ const Container = ({ session }: { session: Session }) => {
       ),
     },
     {
-      title: "Second",
+      title: "זמני פעילות",
       content: (
         <InitActivityDetails
           setActivityDays={setActivityDays}
@@ -69,11 +69,11 @@ const Container = ({ session }: { session: Session }) => {
       ),
     },
     {
-      title: "third",
+      title: "שירותי העסק",
       content: <InitServices services={services} setServices={setServices} />,
     },
     {
-      title: "Last",
+      title: "עמוד עסקי",
       content: (
         <OnlinePage
           fileList={gallaryList}

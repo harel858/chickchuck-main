@@ -92,6 +92,7 @@ function InitDetails({
           return (
             <TimePicker
               minuteStep={5}
+              className="w-max"
               defaultValue={dayjs(value, format)}
               onSelect={(time) => setStartTime(time, day.key)}
               format={format}
@@ -110,6 +111,7 @@ function InitDetails({
           return (
             <TimePicker
               minuteStep={5}
+              className="w-max"
               defaultValue={dayjs(value, format)}
               onSelect={(time) => setEndTime(time, day.key)}
               format={format}

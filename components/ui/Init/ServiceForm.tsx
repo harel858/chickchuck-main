@@ -4,9 +4,9 @@ import ServiceFormField from "./ServiceFormField";
 import { ServiceInput } from "./InitServices";
 
 export interface ServiceFieldType {
-  label: "Title" | "Price" | "Time Durtion";
+  label: "כותרת" | "מחיר" | "משך זמן הטיפול";
   name: "title" | "price" | "duration";
-  value: string | number;
+  value: string | number | undefined;
 }
 
 const BusinessDetailsForm = ({
@@ -16,11 +16,13 @@ const BusinessDetailsForm = ({
   handleServicesChange: (e: ChangeEvent<HTMLInputElement>) => void;
   service: ServiceInput;
 }) => {
+  console.log("service", service);
+
   ["Title", "Price", "Time Durtion"];
   const formType: ServiceFieldType[] = [
-    { label: "Title", name: "title", value: service.title },
-    { label: "Price", name: "price", value: service.price },
-    { label: "Time Durtion", name: "duration", value: service.duration },
+    { label: "כותרת", name: "title", value: service.title },
+    { label: "מחיר", name: "price", value: service.price },
+    { label: "משך זמן הטיפול", name: "duration", value: service.duration },
   ];
   return (
     <div className="flex flex-col justify-center items-center bg-orange-200 rounded-3xl py-4">

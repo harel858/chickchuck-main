@@ -68,11 +68,11 @@ const NewEvent = ({
   >([]);
 
   useEffect(() => {
-    const customersList = business.Customer.map((item) => ({
+    const customersList = business?.Customer.map((item) => ({
       value: item.id,
       label: `${item.name} - ${item.phoneNumber}`,
     }));
-    const servicesList = business.Treatment.map((item) => ({
+    const servicesList = business?.Treatment.map((item) => ({
       value: item.id,
       label: item.title,
     }));
