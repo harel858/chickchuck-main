@@ -69,7 +69,7 @@ const BusinessDetailsForm = ({
       const client = result.data as Customer;
       if (result.status === 200) {
         const eventProps = {
-          summary: client.name,
+          summary: selectedService?.title,
           description: "",
           start: {
             dateTime: selectedSlot?.start || "", // Date.toISOString() ->

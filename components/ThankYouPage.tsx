@@ -16,7 +16,7 @@ function ThankYouPage({
     <div className="flex flex-col justify-center items-center p-5">
       <h1 className="text-2xl text-black">סיכום</h1>
       <p className="text-xl text-black text-center">
-        נקבע תור אצל {selectedUser.name} ל{selectedService?.title} בתאריך{" "}
+        נקבע תור אצל {selectedUser.name} ל{selectedService?.title || ""} בתאריך{" "}
         {dayjs(selectedSlot?.start).format("DD/MM/YYYY")} בשעה{" "}
         {dayjs(selectedSlot?.start).format("HH:mm")}
       </p>
