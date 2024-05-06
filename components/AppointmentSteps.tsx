@@ -47,8 +47,6 @@ export default function AppointmentSteps({
 
   const handleNext = useCallback(() => {
     setActiveStep((prevActiveStep) => {
-      console.log("activeStep", prevActiveStep);
-
       if (prevActiveStep === 0 && business.user.length < 2)
         return prevActiveStep + 2;
 

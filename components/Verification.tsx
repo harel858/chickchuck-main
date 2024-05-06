@@ -49,17 +49,12 @@ const BusinessDetailsForm = ({
   } = form;
 
   const onSubmit = async (data: TUserValidation) => {
-    console.log("data", data);
-
     try {
       const result = await axios.post("/api/verification/stepone", {
         name: data.fullName,
         phoneNumber: data.phoneNumber,
       });
       const request_id = result.data.request_id;
-      console.log("result", result);
-
-      console.log("request_id", request_id);
 
       onSetCustomerInput({ ...data, request_id: request_id });
     } catch (err: any) {
@@ -104,7 +99,6 @@ const BusinessDetailsForm = ({
               className="bg-blue-600 text-2xl fixed bottom-10 w-1/3 max-md:w-full transition-all ease-in-out duration-300"
               type="submit"
               size="lg"
-              onClick={() => console.log("getValues()", getValues())}
             >
               המשך
             </Button>

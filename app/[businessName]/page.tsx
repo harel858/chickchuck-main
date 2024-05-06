@@ -32,10 +32,12 @@ async function getBusiness(params: string) {
         Images: true,
         Treatment: true,
         activityDays: true,
-        user: { include: { activityDays: true } },
+        user: { include: { activityDays: true, accounts: true } },
       },
     });
     if (!business?.user) return null;
+    const admin = business.user.find((item) => item.accounts.length != 0);
+    const account = admin?.accounts[0];
 
     if (business?.Images) {
       const params = business.Images.map((element) => ({
@@ -50,7 +52,7 @@ async function getBusiness(params: string) {
     }
     /*  const result = { ...business, urls };
     const { id, ...rest } = result; */
-    return { business, urls };
+    return { business, urls, account: account?.access_token };
   } catch (err) {
     console.log(err);
     return null;
@@ -60,10 +62,10 @@ export default async function LandingPage({
   params: { businessName },
 }: LandingPageProps) {
   const result = await getBusiness(businessName);
-
   const session = await getServerSession(authOptions);
+  if (!result || !result.account) return notFound();
+  const freeBusy = session?.user.access_token || result.account;
 
-  if (!result) return notFound();
   const { business, urls } = result;
   return (
     <>
@@ -73,10 +75,7 @@ export default async function LandingPage({
         <BackgroundImage urls={urls} />
       )}
       <NavButtons business={business} />
-      <AppointmentSteps
-        business={business}
-        freeBusy={session?.user.access_token || ""}
-      />
+      <AppointmentSteps business={business} freeBusy={freeBusy} />
     </>
   );
 }

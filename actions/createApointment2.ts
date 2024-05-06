@@ -24,11 +24,18 @@ export type EventProps = {
 
 export async function createAppointment2(
   access_token: string,
-  eventProps: EventProps
+  eventProps: EventProps,
+  calendarId: string
 ) {
+  console.log("access_token", access_token);
+
   try {
     const googleClient = setupGoogleCalendarClient(access_token);
-    const { auth, calendar, calendarId } = googleClient;
+    console.log("googleClient", googleClient);
+
+    const { auth, calendar } = googleClient;
+    console.log("auth", auth);
+
     const result = await calendar.events.insert({
       auth: auth,
       calendarId: calendarId,

@@ -88,7 +88,12 @@ const BusinessDetailsForm = ({
             },
           },
         };
-        const event = await createAppointment2(freeBusy, eventProps);
+
+        const event = await createAppointment2(
+          freeBusy,
+          eventProps,
+          selectedUser.calendarId || "primary"
+        );
         if (event) {
           handleNext();
           return message.success("הפגישה נקבעה בהצלחה");
