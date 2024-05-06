@@ -4,6 +4,8 @@ import dayjs, { Dayjs } from "dayjs";
 import { calendar_v3 } from "googleapis";
 import { fetchEventsByDate } from "actions/getSlots";
 import { ActivityDays, Treatment } from "@prisma/client";
+import he from "dayjs/locale/he";
+dayjs.locale(he);
 
 const ChooseDate = ({
   onSelectedDate,

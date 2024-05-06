@@ -1,24 +1,8 @@
 "use client";
 import { Input } from "@components/input";
 import { Label } from "@components/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@components/select";
-
 import { cn } from "@lib/utils";
 import { TUserValidation } from "@lib/validators/userValidation";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@ui/form";
 import {
   Control,
   FieldErrors,
