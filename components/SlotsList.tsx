@@ -53,7 +53,7 @@ function SlotsList({
               onClick={() => onSelectedSlot(slot)}
               type={"button"}
             >
-              {formattedStart} - {formattedEnd}
+              {formattedStart}
             </Button>
           );
         })}
