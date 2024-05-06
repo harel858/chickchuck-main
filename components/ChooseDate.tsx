@@ -88,7 +88,7 @@ const ChooseDate = ({
         ).isAfter(dayjs(startTime, "HH:mm"));
 
         const isValidEndTime = dayjs(
-          currentSlotStart.format("HHLmm"),
+          currentSlotStart.format("HH:mm"),
           "HH:mm"
         ).isBefore(dayjs(endTime, "HH:mm"));
 
