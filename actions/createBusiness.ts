@@ -34,7 +34,6 @@ export async function createBusiness(
     };
 
     const upload = await uploadImages([params]);
-    console.log("upload", upload);
 
     // Create a new business and associate it with the user
     const newBusiness = await prisma.business.create({

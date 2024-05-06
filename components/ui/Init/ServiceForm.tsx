@@ -6,7 +6,7 @@ import { ServiceInput } from "./InitServices";
 export interface ServiceFieldType {
   label: "כותרת" | "מחיר" | "משך זמן הטיפול";
   name: "title" | "price" | "duration";
-  value: string | number | undefined;
+  value: string | number;
 }
 
 const BusinessDetailsForm = ({

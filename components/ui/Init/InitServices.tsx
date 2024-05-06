@@ -8,12 +8,12 @@ import CardItem from "./CardItem";
 
 export type ServiceInput = {
   title: string;
-  duration: number | undefined;
-  price: number | undefined;
+  duration: number;
+  price: number;
 };
 const initService: ServiceInput = {
-  duration: undefined,
-  price: undefined,
+  duration: 0,
+  price: 0,
   title: "",
 };
 const InitServices = ({

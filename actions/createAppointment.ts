@@ -30,7 +30,6 @@ export async function createAppointment(
     const googleClient = setupGoogleCalendarClient(access_token);
     const { auth, calendar } = googleClient;
     const calendarId = eventProps.extendedProperties.private.conferenceId;
-    console.log("calendarId2", calendarId);
 
     calendar.events.insert({
       auth: auth,
