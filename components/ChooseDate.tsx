@@ -5,6 +5,7 @@ import { calendar_v3 } from "googleapis";
 import { fetchEventsByDate } from "actions/getSlots";
 import { ActivityDays, Treatment } from "@prisma/client";
 import he from "dayjs/locale/he";
+import { hebrewClendar } from "@ui/calendar/utils/hebCalendar";
 dayjs.locale(he);
 
 const ChooseDate = ({
@@ -232,11 +233,13 @@ const ChooseDate = ({
         <Spin spinning size="large" />
       ) : (
         <Calendar
+          locale={hebrewClendar}
           defaultValue={selectedDate}
           fullscreen={false}
           disabledDate={disabledDate}
           onSelect={onSelectedDate}
           value={selectedDate}
+          style={{ direction: "rtl" }} // Set direction to RTL
         />
       )}
     </div>
