@@ -39,6 +39,8 @@ const ChooseDate = ({
           freeBusy,
           calendarId
         );
+        console.log("response", response);
+
         const res = response?.calendars?.primary?.busy;
         const isoDate = selectedDate.toISOString();
         const generatedSlots = getAvailableTimeSlots(isoDate);
@@ -76,6 +78,10 @@ const ChooseDate = ({
       let currentSlotStart = startOfMonth;
       const startTime = activityDays[currentSlotStart.day()]?.start;
       const endTime = activityDays[currentSlotStart.day()]?.end;
+      console.log("activityDays", activityDays);
+      console.log("startTime", startTime);
+      console.log("endTime", endTime);
+
       while (currentSlotStart.isBefore(endOfMonth)) {
         const currentSlotEnd = currentSlotStart.add(5, "minutes");
 

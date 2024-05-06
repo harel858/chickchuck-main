@@ -31,9 +31,11 @@ function InitDetails({
   const format = "HH:mm";
 
   const setStartTime = (time: dayjs.Dayjs, value: number) => {
+    console.log("time", time.format("HH:mm"));
+
     const newDays = activityDays.map((currentDay) =>
       currentDay.value === value
-        ? { ...currentDay, start: time.toISOString() }
+        ? { ...currentDay, start: time.format("HH:mm") }
         : currentDay
     );
 
@@ -45,7 +47,7 @@ function InitDetails({
 
     const newDays = activityDays.map((currentDay) =>
       currentDay.value === value
-        ? { ...currentDay, end: time.toISOString() }
+        ? { ...currentDay, end: time.format("HH:mm") }
         : currentDay
     );
 
