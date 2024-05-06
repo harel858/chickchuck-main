@@ -65,7 +65,7 @@ const FormFields = ({
         }
         placeholder={label}
         maxLength={name === "phoneNumber" ? 15 : undefined}
-        defaultValue={name === "phoneNumber" ? "+972 " : undefined}
+        defaultValue={name === "phoneNumber" ? "972 " : undefined}
       />
       {errors?.[name] && (
         <p className="text-sm text-red-500">{errors[name]?.message}</p>
