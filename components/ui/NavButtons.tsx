@@ -33,14 +33,17 @@ function NavButtons({ business }: { business: Business }) {
         <></>
       )}
       <div className="flex justify-center items-center gap-4">
-        <Button className="rounded-full bg-white text-black hover:text-white border border-slate-400 ">
-          <FaWhatsapp className="text-3xl font-bold" />
-        </Button>
-        <Button className="rounded-full bg-white text-black hover:text-white border border-slate-400 ">
-          <FaPhoneAlt className="text-3xl font-bold" />
-        </Button>
+        <a href={`https://api.whatsapp.com/send?phone=972${business.phone}`}>
+          <Button className="rounded-full bg-white text-black hover:text-white border border-slate-400 ">
+            <FaWhatsapp className="text-3xl font-bold" />
+          </Button>
+        </a>
+        <a href={`tel:${business.phone}`}>
+          <Button className="rounded-full bg-white text-black hover:text-white border border-slate-400 ">
+            <FaPhoneAlt className="text-3xl font-bold" />
+          </Button>
+        </a>
         <a href={`https://waze.com/ul?q=${business?.Address}`}>
-          {" "}
           <Button className="rounded-full bg-white text-black hover:text-white border border-slate-400 ">
             <FaWaze className="text-3xl font-bold" />
           </Button>
