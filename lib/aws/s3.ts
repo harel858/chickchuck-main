@@ -113,7 +113,7 @@ const imgIxLoader = (src: string) => {
 export const getImages2 = async (paramsArray: getParams[]) => {
   try {
     let profileUrls: string = "";
-    let backgroundUrls: string[] = [];
+    let backgroundUrls: string = "";
 
     for (let i = 0; i < paramsArray.length; i++) {
       const params = paramsArray[i];
@@ -149,7 +149,7 @@ export const getImages2 = async (paramsArray: getParams[]) => {
         });
         const url = imgIxLoader(backgroundUrl);
 
-        backgroundUrls.push(url);
+        backgroundUrls = url;
       }
     }
     return { profileUrls, backgroundUrls };

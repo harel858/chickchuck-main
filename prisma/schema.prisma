@@ -83,6 +83,7 @@ model Images {
     id                String   @id @default(uuid())
     profileImgName    String?
     backgroundImgName String?
+    galleryImgName    String?
     Business          Business @relation(fields: [businessId], references: [id])
     businessId        String
 }

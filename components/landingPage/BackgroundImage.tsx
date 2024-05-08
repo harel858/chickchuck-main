@@ -15,16 +15,17 @@ function Images({
 }: {
   urls: {
     profileUrls: string;
-    backgroundUrls: string[];
+    backgroundUrls: string;
   } | null;
 }) {
   const profileImage = urls?.profileUrls;
+  const backgroundUrl = urls?.backgroundUrls;
 
   return (
     <div
       className="relative p-32 max-2xl:m-0 rounded-3xl  inset-y-0 top-0 left-0 right-0 w-1/2 h-1/5 bg-cover bg-center z-0 max-2xl:w-full max-2xl:rounded-t-none max-2xl:ml-auto shadow-2xl dark:shadow-white/10"
       style={{
-        backgroundImage: `url(${profileImage})`,
+        backgroundImage: `url(${backgroundUrl})`,
         backgroundSize: "cover",
         boxShadow: "inset 0px -20vh 70px rgba(0, 0, 0, 0.4)",
       }}

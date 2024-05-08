@@ -40,7 +40,7 @@ export const updateProfileImages = async (params: {
     }
 
     if (type === "BACKGROUND") {
-      // Check if there's an existing background image
+      // Check if there's an existing profile image
       const existingImage = await prisma.images.findFirst({
         where: {
           businessId: businessId,

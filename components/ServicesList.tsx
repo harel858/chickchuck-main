@@ -20,10 +20,10 @@ function ServicesList({
       header={
         <div className="w-full flex justify-center items-center">
           <LargeHeading
-            size={"sm"}
-            className="text-center text-base font-normal"
+            size={"default"}
+            className="text-2xl text-center font-medium"
           >
-            בחר שירות
+            בחירת שירות
           </LargeHeading>
         </div>
       }
@@ -40,7 +40,7 @@ function ServicesList({
         >
           <p
             dir="rtl"
-            className={`font-bold ${
+            className={`w-full text-right font-bold ${
               item.id === selectedService?.id ? "text-white" : "text-black"
             }`}
           >

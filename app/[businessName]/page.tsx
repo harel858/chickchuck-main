@@ -23,7 +23,7 @@ async function getBusiness(params: string) {
 
   let urls: {
     profileUrls: string;
-    backgroundUrls: string[];
+    backgroundUrls: string;
   } | null = null;
   try {
     const business = await prisma.business.findUnique({
@@ -45,6 +45,7 @@ async function getBusiness(params: string) {
         Key: {
           profileImgName: element?.profileImgName || "",
           backgroundImgName: element?.backgroundImgName || "",
+          galleryImgName: element?.galleryImgName || "",
         },
       }));
       const res = await getImages2(params);
