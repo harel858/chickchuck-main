@@ -34,7 +34,7 @@ function Images({
         <FiShare className="text-xl" />
       </Button>
 
-      <div className="absolute z-40 -bottom-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center hover:scale-125 transition-all ease-in-out duration-200">
+      <div className="absolute rounded-full z-40 -bottom-1/4 right-4 transform -translate-y-1/2 flex justify-center hover:scale-125 transition-all ease-in-out duration-200">
         <Avatar
           alt="Profile Img"
           className={`border-white border-2 p-0 m-0`}
