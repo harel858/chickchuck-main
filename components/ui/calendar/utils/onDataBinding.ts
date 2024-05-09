@@ -4,17 +4,13 @@ export const onDataBinding = (e: Record<string, any>): void => {
       string,
       Record<string, any>[]
     >[]) || [];
-  console.log("items", items);
 
   let scheduleData: Record<string, any>[] = [];
   if (items.length > 0) {
     for (const event of items) {
-      console.count();
-      console.log("event", event);
       // Check if the event is cancelled
       if (event?.status === "cancelled") {
         // Handle cancelled events here (if needed)
-        console.log("Cancelled event:", event);
         continue; // Skip the current event and move to the next one
       }
       let when: string = event?.start?.dateTime as string;
