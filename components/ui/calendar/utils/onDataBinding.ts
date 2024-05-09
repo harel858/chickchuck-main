@@ -9,6 +9,9 @@ export const onDataBinding = (e: Record<string, any>): void => {
   let scheduleData: Record<string, any>[] = [];
   if (items.length > 0) {
     for (const event of items) {
+      console.count();
+      console.log("event", event);
+
       let when: string = event.start.dateTime as string;
       let start: string = event.start.dateTime as string;
       let end: string = event.end.dateTime as string;

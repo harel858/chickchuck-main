@@ -109,7 +109,10 @@ const RecurrenceEvents = ({
     [session, business, user]
   );
   const timeScale = { enable: true, interval: 60, slotCount: 6 };
-
+  const onDataBindingCallBack = useCallback(
+    (e: Record<string, any>) => onDataBinding(e),
+    []
+  );
   return (
     <div className="schedule-control-section">
       <div className="col-lg-9 control-section">
@@ -120,7 +123,7 @@ const RecurrenceEvents = ({
             selectedDate={new Date()}
             ref={scheduleObj}
             eventSettings={eventSettings}
-            dataBinding={onDataBinding}
+            dataBinding={onDataBindingCallBack}
             popupOpen={onPopupOpen}
             cellClick={(props: any) => onCellClick(props, scheduleObj)}
             editorTemplate={editorTemplate}
