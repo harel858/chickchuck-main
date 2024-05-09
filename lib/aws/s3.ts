@@ -152,7 +152,7 @@ export const getImages2 = async (paramsArray: getParams[]) => {
         backgroundUrls = url;
       }
     }
-    return { profileUrls, backgroundUrls };
+    return { profileUrls, backgroundUrls, galleryImgName: [] };
   } catch (err) {
     console.log(err);
     throw new Error("internal error");
