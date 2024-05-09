@@ -11,17 +11,23 @@ export const onDataBinding = (e: Record<string, any>): void => {
     for (const event of items) {
       console.count();
       console.log("event", event);
-
-      let when: string = event.start.dateTime as string;
-      let start: string = event.start.dateTime as string;
-      let end: string = event.end.dateTime as string;
-      if (!when) {
-        when = event.start.date as string;
-        start = event.start.date as string;
-        end = event.end.date as string;
+      // Check if the event is cancelled
+      if (event?.status === "cancelled") {
+        // Handle cancelled events here (if needed)
+        console.log("Cancelled event:", event);
+        continue; // Skip the current event and move to the next one
       }
+      let when: string = event?.start?.dateTime as string;
+      let start: string = event?.start?.dateTime as string;
+      let end: string = event?.end?.dateTime as string;
+      if (!when) {
+        when = event?.start?.date as string;
+        start = event?.start?.date as string;
+        end = event?.end?.date as string;
+      }
+
       const conferenceId = event?.extendedProperties?.private?.conferenceId
-        ? event.extendedProperties.private.conferenceId
+        ? event?.extendedProperties?.private?.conferenceId
         : "primary";
 
       scheduleData.push({
