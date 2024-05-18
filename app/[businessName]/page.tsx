@@ -25,7 +25,7 @@ async function getBusiness(params: string) {
   let urls: {
     profileUrls: string;
     backgroundUrls: string;
-    galleryImgUrls: string[];
+    galleryImgUrls: { url: string; fileName: string }[];
   } | null = null;
   try {
     const business = await prisma.business.findUnique({

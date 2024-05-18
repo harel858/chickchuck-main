@@ -18,11 +18,11 @@ function NavButtons({ business }: { business: Business }) {
           <Button
             variant={"link"}
             size={"sm"}
-            className="text-black font-normal flex justify-center items-center gap-2"
+            className="text-black font-normal flex justify-center items-center align-baseline gap-2"
           >
             <LargeHeading
               size={"sm"}
-              className="text-black font-normal flex justify-center items-baseline gap-2"
+              className="text-black font-normal flex justify-center items-center gap-2"
             >
               {business.Address}
             </LargeHeading>

@@ -2,6 +2,7 @@ import {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
+  DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import fs from "fs";
@@ -12,7 +13,7 @@ export interface UploadParams {
   Body: fs.ReadStream;
   ContentType: string;
 }
-interface getParams {
+interface GetParams {
   Bucket: string;
   Key: {
     profileImgName: string | null;
@@ -20,7 +21,7 @@ interface getParams {
     galleryImgName: string | null;
   };
 }
-interface getParam {
+export interface GetParam {
   Bucket: string;
   Key: string | null;
 }
@@ -54,7 +55,30 @@ export const uploadImages = async (paramsArray: UploadParams[]) => {
   }
 };
 
-export const getImages = async (paramsArray: getParams[]) => {
+export const deleteImagesS3 = async (paramsArray: GetParam[]) => {
+  try {
+    for (let i = 0; i < paramsArray.length; i++) {
+      const params = paramsArray[i];
+      if (!params || !params.Key) {
+        throw new Error("Key is missing");
+      }
+      params.Key = `uploads/${params.Key}`;
+      const command = new DeleteObjectCommand({
+        Bucket: params.Bucket,
+        Key: params.Key,
+      });
+      const upload = await s3.send(command);
+    }
+    // If you want to return something after all uploads are done,
+    // you can return a success message or an array of upload results.
+    return "All uploads completed successfully";
+  } catch (err) {
+    console.log({ err });
+    return null;
+  }
+};
+
+export const getImages = async (paramsArray: GetParams[]) => {
   try {
     let profileUrls: string[] = [];
     let backgroundUrls: string[] = [];
@@ -111,11 +135,11 @@ const imgIxLoader = (src: string) => {
   imgIxUrl.searchParams.set("q", "75");
   return imgIxUrl.href;
 };
-export const getImages2 = async (paramsArray: getParams[]) => {
+export const getImages2 = async (paramsArray: GetParams[]) => {
   try {
     let profileUrls: string = "";
     let backgroundUrls: string = "";
-    let galleryImgUrls: string[] = [];
+    let galleryImgUrls: { url: string; fileName: string }[] = [];
 
     for (let i = 0; i < paramsArray.length; i++) {
       const params = paramsArray[i];
@@ -167,7 +191,7 @@ export const getImages2 = async (paramsArray: getParams[]) => {
         });
         const url = imgIxLoader(galleryImgUrl);
 
-        galleryImgUrls.push(url);
+        galleryImgUrls.push({ url: url, fileName: galleryImgKey });
       }
     }
     return { profileUrls, backgroundUrls, galleryImgUrls };
@@ -177,7 +201,7 @@ export const getImages2 = async (paramsArray: getParams[]) => {
   }
 };
 
-export const getImage = async (params: getParam) => {
+export const getImage = async (params: GetParam) => {
   if (!params.Key) return null;
   try {
     const command = new GetObjectCommand({

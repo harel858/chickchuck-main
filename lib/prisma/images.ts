@@ -98,6 +98,27 @@ export const updateProfileImages = async (
   }
 };
 
+export const deleteGalleryImages = async (businessId: string) => {
+  try {
+    await prisma.images.deleteMany({
+      where: { businessId: businessId, galleryImgName: { not: null } },
+    });
+  } catch (err: any) {
+    throw new Error(err);
+  }
+};
+
+export const getGalleryImages = async (businessId: string) => {
+  try {
+    const result = await prisma.images.findMany({
+      where: { businessId: businessId, galleryImgName: { not: null } },
+    });
+    return result;
+  } catch (err: any) {
+    throw new Error(err);
+  }
+};
+
 export const createProfileImage = async (
   fileName: string,
   businessId: string

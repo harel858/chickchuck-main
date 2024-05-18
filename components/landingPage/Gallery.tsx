@@ -14,12 +14,20 @@ function Responsive({
   urls: {
     profileUrls: string;
     backgroundUrls: string;
-    galleryImgUrls: string[];
+    galleryImgUrls: {
+      url: string;
+      fileName: string;
+    }[];
   } | null;
   setGalleryOrUpload: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [previewVisible, setPreviewVisible] = useState(false);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [previewImages, setPreviewImages] = useState<
+    {
+      url: string;
+      fileName: string;
+    }[]
+  >([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const settings = {
@@ -84,7 +92,7 @@ function Responsive({
                   <Image
                     width="100%"
                     height="200px"
-                    src={img}
+                    src={img.url}
                     preview={{ visible: false }}
                     style={{ objectFit: "cover", objectPosition: "center" }}
                   />
@@ -98,7 +106,7 @@ function Responsive({
               }}
             >
               {previewImages.map((img, index) => (
-                <Image key={index} src={img} style={{ display: "none" }} />
+                <Image key={index} src={img.url} style={{ display: "none" }} />
               ))}
             </Image.PreviewGroup>
           </>

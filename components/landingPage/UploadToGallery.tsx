@@ -6,6 +6,7 @@ import type { RcFile, UploadProps } from "antd/es/upload";
 import type { UploadFile } from "antd/es/upload/interface";
 import { Button } from "@ui/Button";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 const { Dragger } = Upload;
 
 const getBase64 = (file: RcFile): Promise<string> =>
@@ -15,6 +16,24 @@ const getBase64 = (file: RcFile): Promise<string> =>
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
+const urlToFile = async (
+  url: string,
+  fileName: string
+): Promise<UploadFile> => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const file = new File([blob], fileName, { type: blob.type });
+
+  const uploadFile: UploadFile = {
+    uid: fileName,
+    name: fileName,
+    status: "done",
+    url,
+    originFileObj: file as RcFile, // Explicitly type file as RcFile
+  };
+
+  return uploadFile;
+};
 
 const UploadGallery = ({
   setGalleryOrUpload,
@@ -25,28 +44,37 @@ const UploadGallery = ({
   urls: {
     profileUrls: string;
     backgroundUrls: string;
-    galleryImgUrls: string[];
+    galleryImgUrls: { url: string; fileName: string }[];
   } | null;
   adminUserId: string | false;
 }) => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [galleryList, setGalleryList] = useState<UploadFile[]>([]);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+  console.log("useRouter", galleryList);
 
   useEffect(() => {
-    if (urls?.galleryImgUrls) {
-      const initialGalleryList: UploadFile<any>[] = urls?.galleryImgUrls.map(
-        (url, index) => ({
-          uid: `-1_${index}`,
-          name: `image${index}.png`,
-          status: "done", // or undefined if not known
-          url: url,
-        })
-      );
-      setGalleryList(initialGalleryList);
-    }
+    const initializeGalleryList = async () => {
+      if (urls?.galleryImgUrls) {
+        const initialGalleryList: UploadFile<RcFile>[] = await Promise.all(
+          urls.galleryImgUrls.map(async (item, index) => {
+            const file = await urlToFile(item.url, item.fileName);
+            return {
+              uid: `-1_${index}`,
+              name: item.fileName,
+              status: "done",
+              url: item.url,
+              originFileObj: file.originFileObj, // Correctly typed as RcFile
+            };
+          })
+        );
+        setGalleryList(initialGalleryList);
+      }
+    };
+    initializeGalleryList();
   }, [urls]);
 
   const handleCancel = () => setPreviewOpen(false);
@@ -87,6 +115,7 @@ const UploadGallery = ({
 
   const onDone = async () => {
     setIsLoading(true);
+
     if (adminUserId === false) {
       message.error("המשתמש לא מורשה לבצע שינויים");
       setIsLoading(false);
@@ -96,20 +125,21 @@ const UploadGallery = ({
     const formData = new FormData();
     formData.append("userId", adminUserId);
     formData.append("type", "GALLERY");
-    formData.append("galleryList", JSON.stringify(galleryList));
+
     galleryList.forEach((file, index) => {
-      if (file.originFileObj) {
-        formData.append(`galleryList[${index}]`, file.originFileObj as File);
-      }
+      formData.append(`galleryList[${index}]`, file.originFileObj as File);
     });
-    formData.append("galleryLength", JSON.stringify(galleryList.length));
+    formData.append("galleryLength", galleryList.length.toString());
 
     try {
       const result = await axios.post("/api/user/image-route", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      console.log("result", result);
+
       setIsLoading(false);
       setGalleryOrUpload(false);
+      router.refresh();
       message.success("התמונות נשמרו בהצלחה");
     } catch (err) {
       console.log(err);

@@ -1,8 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import fs from "fs";
-import { UploadParams, uploadImages } from "@lib/aws/s3";
-import { createProfileImage, updateProfileImages } from "@lib/prisma/images";
+import {
+  GetParam,
+  UploadParams,
+  deleteImagesS3,
+  uploadImages,
+} from "@lib/aws/s3";
+import {
+  createProfileImage,
+  deleteGalleryImages,
+  getGalleryImages,
+  updateProfileImages,
+} from "@lib/prisma/images";
 import { getUserAccount } from "@lib/prisma/users";
 import { bussinessById } from "@lib/prisma/bussiness/getUnique";
 export const config = {
@@ -82,27 +92,33 @@ export default async function handler(
           // Send the response
           return res.status(201).json({ message: result });
         }
-        if (type == "GALLERY") {
-          console.log("businessId", business.id);
-
+        if (type === "GALLERY") {
+          const imageNames = await getGalleryImages(business.id);
+          const deleteParams: GetParam[] = imageNames?.map((item) => ({
+            Bucket: bucketName,
+            Key: item.galleryImgName,
+          }));
+          await deleteImagesS3(deleteParams);
+          await deleteGalleryImages(business.id);
           const galleryLength = Number(fields.galleryLength);
           const params: {
             fileName: string;
             businessId: string;
             type: "PROFILE" | "BACKGROUND" | "GALLERY";
-            imagesId?: string; // Make imagesId optional
+            imagesId?: string;
           }[] = [];
+
           for (let i = 0; i < galleryLength; i++) {
             const item = files[`galleryList[${i}]`] as formidable.File;
-            console.log("item", item);
-            console.log("item.newFilename", item.newFilename);
-            if (!item?.newFilename) continue;
+            if (!item) continue;
+
             const uploadParam: UploadParams = {
               Bucket: bucketName,
-              Key: item.newFilename,
+              Key: item?.newFilename,
               Body: fs.createReadStream(item.filepath),
-              ContentType: item.mimetype!,
+              ContentType: item?.mimetype!,
             };
+
             uploadParams.push(uploadParam);
             params.push({
               fileName: item.newFilename,
@@ -113,9 +129,10 @@ export default async function handler(
 
           const upload = await uploadImages(uploadParams);
           if (!upload) return res.status(500).json("s3 bucket err");
+
           const result = await updateProfileImages(params);
           if (!result) return res.status(500).json("prisma err");
-          // Send the response
+
           return res.status(201).json({ message: result });
         }
       });
