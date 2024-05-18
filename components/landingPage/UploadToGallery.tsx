@@ -1,12 +1,13 @@
 "use client";
-import React, { useState } from "react";
-import { PlusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { Modal, Upload, message } from "antd";
 import type { RcFile, UploadProps } from "antd/es/upload";
 import type { UploadFile } from "antd/es/upload/interface";
 import { Button } from "@ui/Button";
 import axios from "axios";
 const { Dragger } = Upload;
+
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -34,6 +35,20 @@ const UploadGallery = ({
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
 
+  useEffect(() => {
+    if (urls?.galleryImgUrls) {
+      const initialGalleryList: UploadFile<any>[] = urls?.galleryImgUrls.map(
+        (url, index) => ({
+          uid: `-1_${index}`,
+          name: `image${index}.png`,
+          status: "done", // or undefined if not known
+          url: url,
+        })
+      );
+      setGalleryList(initialGalleryList);
+    }
+  }, [urls]);
+
   const handleCancel = () => setPreviewOpen(false);
 
   const handlePreview = async (file: UploadFile) => {
@@ -56,46 +71,48 @@ const UploadGallery = ({
     <div>
       <PlusCircleOutlined className="text-3xl" />
       <p style={{ marginTop: 8 }} className="text-xl">
-        {"Upload Your Gallary"}
+        {"Upload Your Gallery"}
       </p>
     </div>
   );
 
   const handlebeforeUpload = (file: RcFile) => {
-    const isPNG = file.type === "image/png" || "image/jpeg";
+    const isPNG = file.type === "image/png" || file.type === "image/jpeg";
 
     if (!isPNG) {
-      message.error(`${file.name} is not a png file`);
+      message.error(`${file.name} is not a png or jpeg file`);
     }
     return isPNG || Upload.LIST_IGNORE;
   };
+
   const onDone = async () => {
     setIsLoading(true);
-    if (adminUserId === false)
-      return message.error("המשתמש לא מורשה לבצע שינויים");
+    if (adminUserId === false) {
+      message.error("המשתמש לא מורשה לבצע שינויים");
+      setIsLoading(false);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("userId", adminUserId);
     formData.append("type", "GALLERY");
     formData.append("galleryList", JSON.stringify(galleryList));
-    // Append each file in galleryList individually
     galleryList.forEach((file, index) => {
-      formData.append(`galleryList[${index}]`, file.originFileObj as File);
+      if (file.originFileObj) {
+        formData.append(`galleryList[${index}]`, file.originFileObj as File);
+      }
     });
-    formData.append(`galleryLength`, JSON.stringify(galleryList.length));
+    formData.append("galleryLength", JSON.stringify(galleryList.length));
 
     try {
       const result = await axios.post("/api/user/image-route", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("result", result);
-
-      /* if (result.status === 200) {
-        return router.push("/schedule");
-      } */
       setIsLoading(false);
     } catch (err) {
-      setIsLoading(false);
       console.log(err);
+      setIsLoading(false);
     }
   };
 
@@ -117,13 +134,11 @@ const UploadGallery = ({
           {uploadButton}
         </Dragger>
         <div className="flex justify-center items-center gap-2">
-          {urls?.galleryImgUrls && urls?.galleryImgUrls.length > 0 ? (
+          {urls?.galleryImgUrls && urls.galleryImgUrls.length > 0 ? (
             <Button variant={"ghost"} onClick={() => setGalleryOrUpload(false)}>
               בטל
             </Button>
-          ) : (
-            <></>
-          )}
+          ) : null}
           <Button
             type="button"
             variant={"default"}

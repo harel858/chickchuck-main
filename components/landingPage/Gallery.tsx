@@ -26,8 +26,8 @@ function Responsive({
     dots: true,
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 4,
+    slidesToShow: 3,
+    slidesToScroll: 3,
     initialSlide: 0,
     responsive: [
       {
@@ -42,9 +42,9 @@ function Responsive({
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          initialSlide: 3,
         },
       },
       {
@@ -71,14 +71,14 @@ function Responsive({
 
   return (
     <div className="flex flex-col justify-center items-center gap-10 w-11/12">
-      <div className="slider-container w-1/2 max-md:w-10/12 block">
+      <div className="slider-container w-1/2 max-md:w-10/12">
         {urls?.galleryImgUrls && urls.galleryImgUrls.length > 0 ? (
           <>
-            <Slider {...settings}>
+            <Slider {...settings} className="flex justify-center items-center">
               {urls.galleryImgUrls.map((img, index) => (
                 <div
                   key={index}
-                  className="image-container"
+                  className="image-container flex justify-center items-center p-2"
                   onClick={() => handleImageClick(index)}
                 >
                   <Image
