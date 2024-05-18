@@ -96,7 +96,7 @@ export default async function handler(
             const item = files[`galleryList[${i}]`] as formidable.File;
             console.log("item", item);
             console.log("item.newFilename", item.newFilename);
-
+            if (!item?.newFilename) continue;
             const uploadParam: UploadParams = {
               Bucket: bucketName,
               Key: item.newFilename,
