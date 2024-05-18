@@ -108,8 +108,9 @@ const UploadGallery = ({
       const result = await axios.post("/api/user/image-route", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("result", result);
       setIsLoading(false);
+      setGalleryOrUpload(false);
+      message.success("התמונות נשמרו בהצלחה");
     } catch (err) {
       console.log(err);
       setIsLoading(false);

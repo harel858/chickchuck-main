@@ -40,10 +40,6 @@ async function fetchWatch(
         !watchExpired;
 
       if (isExpired) {
-        console.count("watchExpired");
-
-        console.log("watchExpired", watchExpired);
-
         const expirationTime = Math.floor(Date.now() / 1000) + 6 * 24 * 60 * 60;
         const uuid = uuidv4();
 
@@ -53,7 +49,7 @@ async function fetchWatch(
           requestBody: {
             id: uuid,
             type: "web_hook",
-            address: `https://74ef-2a00-a041-3a0f-ba00-3435-dcb9-32c5-19f7.ngrok-free.app/api/google/notifications?userId=${userId}&calendarId=${userCalendar.calendarId}`,
+            address: `/api/google/notifications?userId=${userId}&calendarId=${userCalendar.calendarId}`,
             expiration: `${expirationTime * 1000}`,
           },
         });

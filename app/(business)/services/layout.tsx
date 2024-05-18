@@ -27,6 +27,8 @@ async function fetchWatch(
     watchExpired: string | null;
   }[]
 ) {
+  console.log("calendarslength", calendars.length);
+
   const { auth, calendar } = googleClient;
 
   try {
@@ -36,9 +38,8 @@ async function fetchWatch(
       const isExpired =
         (watchExpired && +watchExpired < Math.floor(Date.now() / 1000)) ||
         !watchExpired;
-      console.log("isExpired", isExpired);
 
-      if (watchExpired) {
+      if (isExpired) {
         const expirationTime = Math.floor(Date.now() / 1000) + 6 * 24 * 60 * 60;
         const uuid = uuidv4();
 
@@ -48,15 +49,16 @@ async function fetchWatch(
           requestBody: {
             id: uuid,
             type: "web_hook",
-            address: `https://74ef-2a00-a041-3a0f-ba00-3435-dcb9-32c5-19f7.ngrok-free.app/api/google/notifications?userId=${userId}&calendarId=${userCalendar.calendarId}`,
+            address: `/api/google/notifications?userId=${userId}&calendarId=${userCalendar.calendarId}`,
             expiration: `${expirationTime * 1000}`,
           },
         });
 
-        await prisma.user.update({
+        const res = await prisma.user.update({
           where: { id: userCalendar.userId },
           data: { watchExpiration: result.data.expiration },
         });
+        console.log("updateres", res);
       }
     }
   } catch (error) {
