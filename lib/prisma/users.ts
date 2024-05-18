@@ -21,7 +21,6 @@ export const getUserAccount = async (userId: string) => {
         Business: { include: { user: true, Customer: true, Treatment: true } },
       },
     });
-    console.log("getUserAccount user", user);
 
     if (
       user?.UserRole === "TEAMMEATE" &&
@@ -60,8 +59,6 @@ export async function getById(userId: string) {
 
 export async function getUserByPhone(emailORphoneNumber: string) {
   try {
-    console.log("emailORphoneNumber", emailORphoneNumber);
-
     const userExist = await prisma?.user.findFirst({
       where: {
         OR: [
@@ -79,8 +76,6 @@ export async function getUserByPhone(emailORphoneNumber: string) {
 }
 export async function updateUserByPhone(phone: string, password: string) {
   try {
-    console.log("phone", phone);
-
     const userUpdated = await prisma?.user.update({
       where: {
         phone,

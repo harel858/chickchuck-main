@@ -6,11 +6,8 @@ export async function setNewImage(profileSrc: string, userId: string) {
       where: { id: userId },
       data: { image: profileSrc },
     });
-    console.log(profileUpdated);
     return { profileUpdated };
   } catch (err) {
-    console.log(err);
-
     return { err };
   }
 }

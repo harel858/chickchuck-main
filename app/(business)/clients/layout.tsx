@@ -29,7 +29,7 @@ async function fetchWatch(
     (watchExpired && +watchExpired < Math.floor(Date.now() / 1000)) ||
     !watchExpired;
 
-  if (isExpired) {
+  if (watchExpired) {
     const expirationTime = Math.floor(Date.now() / 1000) + 6 * 24 * 60 * 60;
     const uuid = uuidv4();
     try {
@@ -43,7 +43,6 @@ async function fetchWatch(
           expiration: `${expirationTime * 1000}`,
         },
       });
-      console.log("resulthokk", result);
 
       const newWatch: any = result;
       return newWatch;

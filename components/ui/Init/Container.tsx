@@ -114,7 +114,6 @@ const Container = ({ session }: { session: Session }) => {
       const result = await axios.post("/api/business/create", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("result", result);
       if (result.status === 200) {
         return router.push("/schedule");
       }

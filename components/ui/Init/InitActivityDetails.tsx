@@ -31,8 +31,6 @@ function InitDetails({
   const format = "HH:mm";
 
   const setStartTime = (time: dayjs.Dayjs, value: number) => {
-    console.log("time", time.format("HH:mm"));
-
     const newDays = activityDays.map((currentDay) =>
       currentDay.value === value
         ? { ...currentDay, start: time.format("HH:mm") }
@@ -43,7 +41,6 @@ function InitDetails({
   };
   const setEndTime = (time: dayjs.Dayjs, value: number) => {
     const ISOstring = time.toISOString();
-    console.log("ISOstring to time", dayjs(ISOstring).format(format));
 
     const newDays = activityDays.map((currentDay) =>
       currentDay.value === value
@@ -59,7 +56,6 @@ function InitDetails({
         ? { ...currentDay, isActive: !currentDay.isActive }
         : currentDay
     );
-    console.log("newDays", newDays);
     setActivityDays(newDays);
   };
 
@@ -129,8 +125,6 @@ function InitDetails({
         dataIndex: "isActive",
         align: "center" as AlignType,
         render: (_, record) => {
-          console.log("record", record);
-
           return (
             <Switch
               checked={record.isActive}

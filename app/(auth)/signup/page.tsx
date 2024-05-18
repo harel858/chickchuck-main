@@ -26,9 +26,7 @@ const Page = () => {
 
   const router = useRouter();
 
-  const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
-    console.log({ email, password });
-  };
+  const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {};
 
   return (
     <>

@@ -95,8 +95,6 @@ function DateCalendar({
     try {
       const startOfMonth = dayjs(selectedDate).startOf("month").toISOString();
       const endOfMonth = dayjs(selectedDate).endOf("month").toISOString();
-      console.log("startOfMonth", dayjs(startOfMonth).format("DD/MM/YYYY"));
-      console.log("startOfMonth", dayjs(endOfMonth).format("DD/MM/YYYY"));
 
       const res = await fetch(
         "https://www.googleapis.com/calendar/v3/freeBusy",
@@ -122,25 +120,18 @@ function DateCalendar({
       );
 
       const result = (await res.json()) as any;
-      console.log("result", result);
       if (res.status === 200) {
         const treatment = user.Treatment.find(
           (item) => item.id === data.Service.value
         );
 
-        console.log("treatment", treatment?.duration);
-
         const durationInMinutes = treatment?.duration || 0;
         const busy = result?.calendars?.primary?.busy;
-        console.log("busy", busy);
         const isoDate = dayjs(selectedDate).toISOString();
         const generatedSlots = getAvailableTimeSlots(isoDate);
 
-        console.log("generatedSlots", generatedSlots);
-
         setSlots(generatedSlots);
         const newSlots = getSlotsByDay(selectedDate, generatedSlots);
-        console.log("newSlots", newSlots);
         setSlotsByDay(newSlots);
         return onChange(selectedDate.toISOString());
       }

@@ -12,7 +12,6 @@ export default async function handler(
     try {
       const email = req.query.email as string;
       const password = req.query.password as string;
-      console.log(email);
 
       if (!email || !password) return res.status(500).json("server Error");
       const { user, error } = await signIn(email, password);

@@ -33,7 +33,6 @@ export async function fetchEvents(
           "customerName",
         ], */
       });
-      console.log("responseList", response);
 
       // Check if response data and items exist
       if (response.data && response.data.items) {
@@ -73,7 +72,6 @@ export async function fetchEvents2(
 ) {
   try {
     const { auth, calendar } = googleClient;
-    console.log("calendarIds");
 
     let allEvents: calendar_v3.Schema$Events["items"] = [];
     let newSyncToken;

@@ -16,8 +16,6 @@ const BusinessDetailsForm = ({
   handleServicesChange: (e: ChangeEvent<HTMLInputElement>) => void;
   service: ServiceInput;
 }) => {
-  console.log("service", service);
-
   ["Title", "Price", "Time Durtion"];
   const formType: ServiceFieldType[] = [
     { label: "כותרת", name: "title", value: service.title },

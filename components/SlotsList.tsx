@@ -25,8 +25,6 @@ function SlotsList({
     setSlotsForDay(slots);
   }, [selectedDate, slotsForMonth]);
 
-  console.log("slotsForDay", slotsForDay);
-
   return (
     <div className="flex flex-col justify-center items-center gap-2">
       <div className="w-full flex justify-center items-center pt-2">

@@ -36,25 +36,22 @@ const InitServices = ({
       const {
         target: { name, value },
       } = e;
-      console.log("service", service);
 
       setService({ ...service, [name]: value });
     },
     [service]
   );
   const handleOk = useCallback(() => {
-    console.log("service", service);
     setServices([...services, service]);
     setOpen(false);
     setService(initService); // Reset service state to initial state
   }, [service]);
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
+    ("Clicked cancel button");
     setOpen(false);
     setService(initService);
   };
-  console.log("service", service);
 
   return (
     <div className="flex flex-col justify-center items-center gap-3 w-full">

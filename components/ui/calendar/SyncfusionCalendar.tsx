@@ -12,6 +12,7 @@ import {
   EventSettingsModel,
   ResourcesDirective,
   ResourceDirective,
+  Schedule,
 } from "@syncfusion/ej2-react-schedule";
 import { DataManager, UrlAdaptor } from "@syncfusion/ej2-data";
 import { Session } from "next-auth";
@@ -40,6 +41,12 @@ export type AdditionData = {
   service?: { label: string; value: string };
   customer?: { label: string; value: string };
 };
+
+const ScheduleComponenta = React.forwardRef(
+  (props: any, ref: React.Ref<Schedule>) => {
+    return <ScheduleComponent {...props} />;
+  }
+);
 
 const RecurrenceEvents = ({
   session,
@@ -82,13 +89,11 @@ const RecurrenceEvents = ({
 
   const editorTemplate = useCallback(
     (props: any) => {
-      console.log("props", props);
-
       let ConferenceId = props.ConferenceId?.[0] || "primary";
 
       return props !== undefined && !props?.Guid ? (
         <NewEvent
-          scheduleObj={scheduleObj}
+          ref={scheduleObj}
           props={props}
           business={business}
           session={session}
@@ -97,7 +102,7 @@ const RecurrenceEvents = ({
         />
       ) : (
         <EditEvent
-          scheduleObj={scheduleObj}
+          ref={scheduleObj}
           props={props}
           business={business}
           session={session}
@@ -117,9 +122,9 @@ const RecurrenceEvents = ({
     <div className="schedule-control-section">
       <div className="col-lg-9 control-section">
         <div className="control-wrapper">
-          <ScheduleComponent
+          <ScheduleComponenta
             width="100%"
-            height="88vh"
+            height="100vh"
             selectedDate={new Date()}
             ref={scheduleObj}
             eventSettings={eventSettings}
@@ -164,7 +169,7 @@ const RecurrenceEvents = ({
               />
             </ViewsDirective>
             <Inject services={[Day, Week, Month]} />
-          </ScheduleComponent>
+          </ScheduleComponenta>
         </div>
       </div>
     </div>

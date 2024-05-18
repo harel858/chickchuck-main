@@ -16,17 +16,15 @@ export default async function handler(
 ) {
   try {
     const userId = req.query.userId as string;
-    console.log("userId", userId);
+    const calendarId = req.query.calendarId as string;
 
     const record = await getDataByUserId(userId, tableName);
     const user = await getUserAccount(userId);
-    console.log("getUserAccount", user);
 
     const access_token = user?.accounts[0]?.access_token;
     const syncToken = user?.accounts[0]?.syncToken || "";
     if (!access_token) throw new Error("access_token is missing");
 
-    const calendarId = "primary";
     const { auth, calendar } = setupGoogleCalendarClient(access_token);
 
     const response = await calendar.events.list({
@@ -36,7 +34,7 @@ export default async function handler(
     });
     const events = response.data;
     if (events.items && events?.items.length === 0)
-      throw new Error("empty list");
+      return res.status(200).json({ message: "no notification" });
 
     const newSyncToken = events.nextSyncToken;
 
@@ -59,7 +57,6 @@ export default async function handler(
         connectionID: record?.connectionId,
         ...data,
       });
-      console.log("sendResult", result);
     }
     return res.status(200).json({ message: "success" });
   } catch (err) {

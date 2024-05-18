@@ -8,7 +8,6 @@ async function NewUserSignupLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  console.log("session", session);
 
   return (
     <section className="h-screen w-full flex justify-center items-center overflow-x-hidden">

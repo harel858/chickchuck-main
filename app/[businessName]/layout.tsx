@@ -11,7 +11,7 @@ async function Layout({
   params: { businessName },
 }: LandingPageProps) {
   return (
-    <section className="flex flex-col justify-center items-center gap-3 pb-10">
+    <section className="flex flex-col justify-center items-center gap-5 pb-10">
       {children}
     </section>
   );

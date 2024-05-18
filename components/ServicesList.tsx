@@ -19,10 +19,7 @@ function ServicesList({
       className="w-full"
       header={
         <div className="w-full flex justify-center items-center">
-          <LargeHeading
-            size={"default"}
-            className="text-2xl text-center font-medium"
-          >
+          <LargeHeading size={"sm"} className="text-lg text-center font-medium">
             בחירת שירות
           </LargeHeading>
         </div>

@@ -17,7 +17,6 @@ const CardItem = ({
   const [service, setService] = useState<ServiceInput>(item);
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
   };
 
@@ -26,7 +25,6 @@ const CardItem = ({
       const {
         target: { name, value },
       } = e;
-      console.log("service", service);
       setService({ ...service, [name]: value });
     },
     [service]

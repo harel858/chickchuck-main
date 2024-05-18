@@ -43,8 +43,6 @@ function TeamManeger({
 
   const onSearchChange = useCallback(
     (value: string) => {
-      console.log(value);
-
       setSearchQuery(value);
     },
     [searchQuery, setSearchQuery]

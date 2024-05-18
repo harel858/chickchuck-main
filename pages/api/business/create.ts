@@ -37,7 +37,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
           }
 
           const userId = fields.userId as string;
-          console.log("userId", userId);
 
           const businessDetails = JSON.parse(
             fields.businessDetails as string

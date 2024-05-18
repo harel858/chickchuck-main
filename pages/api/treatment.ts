@@ -23,7 +23,6 @@ export default async function handler(
         advancePayment,
         businessId,
       } = req.body;
-      console.log("documentName", documentName);
 
       //validate Service
       const { error } = validateService({

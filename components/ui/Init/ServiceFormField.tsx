@@ -15,8 +15,6 @@ const FormFields = ({
   value: ServiceFieldType["value"];
   handleServicesChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }) => {
-  console.log("value", value);
-
   return (
     <div key={name} className="flex flex-col justify-center items-center gap-2">
       <Label htmlFor={name}>{label}</Label>

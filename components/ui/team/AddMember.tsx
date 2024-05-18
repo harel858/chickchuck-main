@@ -32,7 +32,6 @@ const AddMember = ({
   };
 
   const handleCancel = useCallback(() => {
-    console.log("Clicked cancel button");
     setOpen(false);
   }, [setOpen, open]);
 

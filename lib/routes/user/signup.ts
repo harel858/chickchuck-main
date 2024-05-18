@@ -20,7 +20,6 @@ async function signUp(
   if (req.method == "POST") {
     try {
       const { name, email, phone, password, businessName } = req.body;
-      console.log("req.body", req.body);
 
       //validate user
       const { error } = validateUser({

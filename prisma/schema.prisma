@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
     provider     = "postgresql"
-    url          = env("DATABASE_URL")
+    url          = env("DATABASE_URL_DEV")
     relationMode = "foreignKeys"
 }
 
@@ -52,29 +52,30 @@ model VerificationToken {
 }
 
 model User {
-    id            String         @id @default(cuid())
-    name          String
-    email         String?        @unique
-    emailVerified DateTime?      @map("email_verified")
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    password      String?
-    phone         String?        @unique
-    startActivity String?
-    endActivity   String?
-    activityDays  ActivityDays[]
-    TypeOfWage    TypeOfWage     @default(HOURLY)
-    Wage          String?
-    UserRole      UserRole?      @default(RECIPIENT)
-    Treatment     Treatment[]
-    isAdmin       Boolean?
-    PremiumKit    PremiumKits    @default(Light)
-    Business      Business?      @relation(fields: [businessId], references: [id])
-    businessId    String?
-    Customer      Customer[]
-    calendarId    String?
-    accountId     String?
+    id              String         @id @default(cuid())
+    name            String
+    email           String?        @unique
+    emailVerified   DateTime?      @map("email_verified")
+    image           String?
+    accounts        Account[]
+    sessions        Session[]
+    password        String?
+    phone           String?        @unique
+    startActivity   String?
+    endActivity     String?
+    activityDays    ActivityDays[]
+    TypeOfWage      TypeOfWage     @default(HOURLY)
+    Wage            String?
+    UserRole        UserRole?      @default(RECIPIENT)
+    Treatment       Treatment[]
+    isAdmin         Boolean?
+    PremiumKit      PremiumKits    @default(Light)
+    Business        Business?      @relation(fields: [businessId], references: [id])
+    businessId      String?
+    watchExpiration String?
+    Customer        Customer[]
+    calendarId      String?        @unique
+    accountId       String?
 
     @@map("users")
 }

@@ -27,7 +27,6 @@ export default async function handler(
       req.body as VerificationData;
 
     const check = await vonage.verify.check(request_id, code);
-    console.log(`check: ${JSON.stringify(check)}`);
 
     if (+check.status !== 0) {
       return res.status(400).json("Wrong verification code");
@@ -38,7 +37,6 @@ export default async function handler(
       phoneNumber,
       bussinesId
     );
-    console.log("existCustomer", existCustomer);
 
     if (existCustomer) {
       customer = existCustomer;
@@ -56,7 +54,6 @@ export default async function handler(
     }
 
     await vonage.verify.cancel(request_id);
-    console.log(`Request canceled successfully`);
 
     if (customer) {
       return res.status(200).json(customer);

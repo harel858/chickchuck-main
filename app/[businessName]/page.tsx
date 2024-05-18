@@ -8,7 +8,7 @@ import { getImages2 } from "@lib/aws/s3";
 import Images from "@ui/Images";
 import BackgroundImage from "@components/landingPage/BackgroundImage";
 import { prisma } from "@lib/prisma";
-import Gallery from "@components/landingPage/Gallery";
+import GallerySection from "@components/landingPage/GallerySection";
 
 type LandingPageProps = {
   params: {
@@ -25,7 +25,7 @@ async function getBusiness(params: string) {
   let urls: {
     profileUrls: string;
     backgroundUrls: string;
-    galleryImgName: string[];
+    galleryImgUrls: string[];
   } | null = null;
   try {
     const business = await prisma.business.findUnique({
@@ -70,6 +70,12 @@ export default async function LandingPage({
   const freeBusy = session?.user.access_token || result.account;
 
   const { business, urls } = result;
+  const isAdmin =
+    !!session?.user?.isAdmin && session.user.businessId === business.id;
+  const adminUserId =
+    !!session?.user?.isAdmin && session.user.businessId === business.id
+      ? session?.user.id
+      : false;
   return (
     <>
       {session?.user.isAdmin && session.user.businessId === business.id ? (
@@ -78,8 +84,7 @@ export default async function LandingPage({
         <BackgroundImage urls={urls} />
       )}
       <NavButtons business={business} />
-      {/*       <Gallery urls={urls} />
-       */}{" "}
+      <GallerySection adminUserId={adminUserId} isAdmin={isAdmin} urls={urls} />
       <AppointmentSteps business={business} freeBusy={freeBusy} />
     </>
   );

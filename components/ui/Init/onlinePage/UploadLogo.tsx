@@ -39,7 +39,6 @@ const App = ({
   };
   const handlebeforeUpload = (file: RcFile) => {
     const isPNG = file.type === "image/png" || "image/jpeg";
-    console.log("file.size", file.size);
 
     if (!isPNG) {
       message.error(`${file.name} is not a png file`);
@@ -48,8 +47,6 @@ const App = ({
   };
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-    console.log("newFileList", newFileList);
-
     setLogo(newFileList);
   };
   const uploadButton = (

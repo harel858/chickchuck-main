@@ -16,8 +16,6 @@ export async function createNewCustomer({
   bussinesId,
 }: InputData) {
   try {
-    console.log("bussinesId", bussinesId);
-
     const { error } = validateCustomer({
       name,
       phoneNumber,
@@ -31,7 +29,6 @@ export async function createNewCustomer({
       include: { Customer: true },
     });
 
-    console.log("res", res);
     revalidatePath("/");
     return res;
   } catch (err) {

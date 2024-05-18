@@ -39,8 +39,6 @@ const SelectField = ({
     Customer: Customer[];
   };
 }) => {
-  console.log("user", user);
-
   const selectOptions =
     name === "Client"
       ? business.Customer.map((item) => ({
@@ -52,9 +50,7 @@ const SelectField = ({
           label: item.title,
         }));
 
-  const onSearch = (value: string) => {
-    console.log("search:", value);
-  };
+  const onSearch = (value: string) => {};
   const filterOption = (
     input: string,
     option?: { label: string; value: string }
@@ -72,9 +68,6 @@ const SelectField = ({
             value={field.value}
             optionFilterProp="children"
             onSelect={(e, option) => {
-              console.log(e);
-              console.log(option);
-
               return field.onChange(option);
             }}
             onSearch={onSearch}

@@ -30,8 +30,6 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   try {
-    console.log("header", req.headers);
-
     const authorizationHeader = req.headers.authorization;
 
     if (!authorizationHeader) {
@@ -47,11 +45,9 @@ export default async function handler(
     }
 
     // Now 'token' contains the extracted Bearer token
-    console.log("Bearer Token:", token);
 
     if (req.body.value) {
       const data = req.body.value.customField;
-      console.log("data", data);
 
       const event = {
         summary: data.Subject,
@@ -77,7 +73,6 @@ export default async function handler(
     }
 
     if (req.body.changed !== null && req.body.changed.length > 0) {
-      console.log("req.body", req.body.changed[0]);
       const data = req.body.changed[0] as EventProps & {
         id: string;
       };
@@ -92,7 +87,6 @@ export default async function handler(
     }
 
     if (req.body.deleted !== null && req.body.deleted.length > 0) {
-      console.log("req.body", req.body.changed[0]);
       const data = req.body.deleted[0] as DeleteBody;
       const googleClient = setupGoogleCalendarClient(token);
       const deletedEvent = await deleteGoogleCalendarEvent(

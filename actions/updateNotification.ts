@@ -29,12 +29,9 @@ const updateItem = async (notification: Notification) => {
       TableName: "sessionsTable",
     });
     const itemData = await docClient.send(getCommand);
-    console.log("itemData", itemData);
     if (!itemData.Item) throw new Error("item not found");
     const item = unmarshall(itemData.Item);
-    console.log("data.messages", item.data.messages);
     const data = item.data;
-    console.log("data", data);
 
     const messages = item.data.messages as Notification[];
     const messagesToUpdated: Notification[] = messages.map((item) =>
@@ -46,7 +43,6 @@ const updateItem = async (notification: Notification) => {
       ...data,
       messages: messagesToUpdated,
     });
-    console.log("newData", newData);
 
     // Now, you can access the 'messages' property in 'data'
     const params: UpdateItemCommandInput = {
@@ -64,7 +60,6 @@ const updateItem = async (notification: Notification) => {
     const command = new UpdateItemCommand(params);
 
     const response = await docClient.send(command); // Use ddbClient here
-    console.log(response);
     return response;
   } catch (err) {
     console.log(err);

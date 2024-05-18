@@ -14,7 +14,7 @@ import {
   User,
 } from "@prisma/client";
 import { Session } from "next-auth";
-import { ScheduleComponent } from "@syncfusion/ej2-react-schedule";
+import { Schedule, ScheduleComponent } from "@syncfusion/ej2-react-schedule";
 import AddCustomer from "@ui/(navbar)/specialOperations/plusButton/Customer";
 import LargeHeading from "@ui/LargeHeading";
 import { createNewCustomer } from "actions/createCustomer";
@@ -25,10 +25,10 @@ const NewEvent = ({
   business,
   session,
   user,
-  scheduleObj,
+  ref: scheduleObj,
   ConferenceId,
 }: {
-  scheduleObj: React.RefObject<ScheduleComponent>;
+  ref: React.RefObject<ScheduleComponent>;
   props: any;
   session: Session;
   business: Business & {
@@ -43,8 +43,6 @@ const NewEvent = ({
   };
   ConferenceId: string;
 }) => {
-  /*   console.log("access_token", session?.user?.access_token);
-   */
   const { token } = theme.useToken();
   const [isPending, startTransition] = useTransition();
   const [isNewClient, setIsNewClient] = useState(false);
@@ -81,7 +79,6 @@ const NewEvent = ({
 
     // Save props to localStorage if it exists
     if (props?.StartTime) {
-      console.log("saved");
       localStorage.setItem("newEventProps", JSON.stringify(props));
     }
 
@@ -142,9 +139,6 @@ const NewEvent = ({
   };
 
   const onSubmit = async (_e: React.FormEvent<HTMLButtonElement>) => {
-    console.count("clicked");
-    console.log("props", props);
-
     let propsToUse = props; // Initialize with props if available
 
     // If props is not available, retrieve it from localStorage
@@ -285,4 +279,6 @@ const NewEvent = ({
   );
 };
 
-export default NewEvent;
+export default React.forwardRef((props: any, ref: React.Ref<Schedule>) => (
+  <NewEvent {...props} />
+));

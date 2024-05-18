@@ -80,7 +80,6 @@ const DateField = ({
       );
 
       const result: any = await res.json();
-      console.log("freebusy", result);
 
       if (res.status === 200) {
         const treatment = user.Treatment.find(
@@ -133,15 +132,12 @@ const DateField = ({
 
       currentSlotStart = currentSlotStart.add(5, "minutes");
     }
-    console.log("availableSlots", availableSlots);
 
     return availableSlots;
   }, []);
 
   const getSlotsByDay = useCallback(
     (selectedDate: Dayjs, allSlots: { start: string; end: string }[]) => {
-      console.log("what day is picked?", user.activityDays[selectedDate.day()]);
-
       if (
         allSlots.length <= 0 ||
         !user.activityDays[selectedDate.day()]?.isActive

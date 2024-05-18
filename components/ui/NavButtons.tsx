@@ -1,5 +1,5 @@
 import React from "react";
-import { Business, BusinessType, ComeFrom, LastCalendar } from "@prisma/client";
+import { Business } from "@prisma/client";
 import { Button } from "./Button";
 import LargeHeading from "./LargeHeading";
 import { FaWhatsapp } from "react-icons/fa";
@@ -9,7 +9,7 @@ import { IoIosPin } from "react-icons/io";
 
 function NavButtons({ business }: { business: Business }) {
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center gap-2">
       <LargeHeading size={"default"} className="text-black font-normal m-0">
         {business.businessName}
       </LargeHeading>
@@ -22,7 +22,7 @@ function NavButtons({ business }: { business: Business }) {
           >
             <LargeHeading
               size={"sm"}
-              className="text-black font-normal flex justify-center items-center gap-2"
+              className="text-black font-normal flex justify-center items-baseline gap-2"
             >
               {business.Address}
             </LargeHeading>

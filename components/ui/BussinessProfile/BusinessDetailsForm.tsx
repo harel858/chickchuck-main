@@ -37,8 +37,6 @@ const BusinessDetailsForm = ({ business }: { business: Business }) => {
   } = form;
 
   const onSubmit = async (data: TBusinessDetailsValidation) => {
-    console.log("data", data);
-
     try {
       startTransition(async () => updateBusinessDetails(data, business.id));
       message.success("פרטי העסק עודכנו בהצלחה");

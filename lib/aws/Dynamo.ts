@@ -24,14 +24,11 @@ interface Data {
 }
 const docClient = DynamoDBDocumentClient.from(client);
 export async function writeData(data: Data, TableName: string) {
-  console.log("data", data);
-
   try {
     const params = {
       Item: { data, ID: data.ID, connectionId: data.connectionId }, // Include the connectionId for the secondary index
       TableName: TableName,
     };
-    console.log("params", params);
 
     const command = new PutCommand(params); // Use the updated params with connectionId
 
@@ -49,8 +46,6 @@ export async function updateItemData(
   TableName: string
 ) {
   try {
-    console.log("newData", newData);
-
     // Define the Update Expression and Expression Attribute Values
     const updateParams: UpdateCommandInput = {
       TableName: TableName,
@@ -102,7 +97,6 @@ export async function updateSecondaryIndexValue(
 
     // Step 2: Retrieve the item's attributes
     const item = queryResponse.Items?.[0]; // Assuming you expect only one item with the specified connectionId
-    console.log("item", item);
 
     if (!item) {
       throw new Error("Item not found");
@@ -189,8 +183,6 @@ export async function updateSecondaryIndexValueById(
 
     const putCommand = new PutCommand(putParams);
     const res = await docClient.send(putCommand);
-    console.log("putCommand", putCommand);
-    console.log("res", res);
 
     return "Connected with Secondary index value updated successfully with all previous data";
   } catch (err: any) {
@@ -253,7 +245,6 @@ export async function insertConnectionId(
       TableName,
     });
     const response = await docClient.send(command);
-    console.log("response", response);
 
     return response;
   } catch (err: any) {
@@ -268,7 +259,6 @@ export async function getDataByUserId(ID: string, TableName: string) {
 
     const command = new GetCommand(params);
     const response = await docClient.send(command);
-    console.log("response", response);
 
     return response.Item?.data;
   } catch (err: any) {
@@ -292,7 +282,6 @@ export async function getByConnectionId(
 
     const command = new QueryCommand(params);
     const response = await docClient.send(command);
-    console.log("response", response);
 
     return response.Items; // Use response.Items to get the matching items
   } catch (err: any) {

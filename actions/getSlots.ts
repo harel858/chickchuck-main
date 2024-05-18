@@ -25,7 +25,6 @@ export const fetchEventsByDate = async (
         items: [{ id: calendarId }],
       },
     });
-    console.log("response", response);
 
     return response.data;
   } catch (err: any) {

@@ -16,7 +16,6 @@ export async function deleteGoogleCalendarEvent(
       eventId,
       auth,
     });
-    console.log("Deleted event:", eventId);
 
     return response;
   } catch (error) {

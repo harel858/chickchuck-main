@@ -14,7 +14,11 @@ export interface UploadParams {
 }
 interface getParams {
   Bucket: string;
-  Key: { profileImgName: string | null; backgroundImgName: string | null };
+  Key: {
+    profileImgName: string | null;
+    backgroundImgName: string | null;
+    galleryImgName: string | null;
+  };
 }
 interface getParam {
   Bucket: string;
@@ -40,7 +44,6 @@ export const uploadImages = async (paramsArray: UploadParams[]) => {
       params.Key = `uploads/${params.Key}`;
       const command = new PutObjectCommand(params);
       const upload = await s3.send(command);
-      console.log("upload", upload);
     }
     // If you want to return something after all uploads are done,
     // you can return a success message or an array of upload results.
@@ -98,13 +101,11 @@ export const getImages = async (paramsArray: getParams[]) => {
 };
 const imgIxLoader = (src: string) => {
   const url = new URL(src);
-  console.log("url.pathname", url.pathname);
 
   const imgIxName = url.pathname.split("/").pop();
 
   const imgIxUrl = new URL("https://imgixs3.imgix.net");
   imgIxUrl.pathname = `/${imgIxName}`;
-  console.log({ imgIxUrl });
   imgIxUrl.searchParams.set("auto", "format");
   imgIxUrl.searchParams.set("auto", "compress");
   imgIxUrl.searchParams.set("q", "75");
@@ -114,6 +115,7 @@ export const getImages2 = async (paramsArray: getParams[]) => {
   try {
     let profileUrls: string = "";
     let backgroundUrls: string = "";
+    let galleryImgUrls: string[] = [];
 
     for (let i = 0; i < paramsArray.length; i++) {
       const params = paramsArray[i];
@@ -125,6 +127,10 @@ export const getImages2 = async (paramsArray: getParams[]) => {
         : null;
       const backgroundImgKey = params.Key.backgroundImgName
         ? `uploads/${params.Key.backgroundImgName}`
+        : null;
+
+      const galleryImgKey = params.Key.galleryImgName
+        ? `uploads/${params.Key.galleryImgName}`
         : null;
 
       if (profileImgKey) {
@@ -151,8 +157,20 @@ export const getImages2 = async (paramsArray: getParams[]) => {
 
         backgroundUrls = url;
       }
+      if (galleryImgKey) {
+        const galleryImgCommand = new GetObjectCommand({
+          ...params,
+          Key: galleryImgKey,
+        });
+        const galleryImgUrl = await getSignedUrl(s3, galleryImgCommand, {
+          expiresIn: 3600,
+        });
+        const url = imgIxLoader(galleryImgUrl);
+
+        galleryImgUrls.push(url);
+      }
     }
-    return { profileUrls, backgroundUrls, galleryImgName: [] };
+    return { profileUrls, backgroundUrls, galleryImgUrls };
   } catch (err) {
     console.log(err);
     throw new Error("internal error");

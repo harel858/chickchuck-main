@@ -1,8 +1,6 @@
 import { prisma } from "..";
 
 export async function bussinessById(id: string) {
-  console.log("id", id);
-
   try {
     const business = await prisma.business.findUnique({
       where: { id },

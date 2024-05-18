@@ -89,8 +89,6 @@ export async function createBusiness(
         },
       },
     });
-
-    console.log("Business and related data created successfully.");
   } catch (err) {
     console.error(err);
     throw new Error("Internal error");

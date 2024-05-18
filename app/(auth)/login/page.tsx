@@ -73,7 +73,6 @@ function SignInForm() {
   }, []);
 
   const handleCancel = useCallback(() => {
-    console.log("Clicked cancel button");
     setOpen(false);
   }, [setOpen]);
 

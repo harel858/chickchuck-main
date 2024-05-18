@@ -26,8 +26,6 @@ const UploadGallery = ({
   const handleCancel = () => setPreviewOpen(false);
 
   const handlePreview = async (file: UploadFile) => {
-    console.log("file", file);
-
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as RcFile);
     }
@@ -40,8 +38,6 @@ const UploadGallery = ({
   };
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-    console.log("fileList", fileList);
-
     setFileList(newFileList);
   };
 
@@ -55,9 +51,7 @@ const UploadGallery = ({
   );
 
   const handlebeforeUpload = (file: RcFile) => {
-    console.log("fileList", fileList);
     const isPNG = file.type === "image/png" || "image/jpeg";
-    console.log("file.size", file.size);
 
     if (!isPNG) {
       message.error(`${file.name} is not a png file`);

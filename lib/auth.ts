@@ -17,9 +17,6 @@ type UserCredentials = {
   confirmPassword: string;
 };
 const authorizeUserSignUp = async (credentials: any, req: any) => {
-  console.log("req", req);
-  console.log("credentials", credentials);
-
   try {
     const { phone, password } = credentials as UserCredentials;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -33,9 +30,6 @@ const authorizeUserSignUp = async (credentials: any, req: any) => {
   }
 };
 const authorizeUserSignIn = async (credentials: any, req: any) => {
-  console.log("req", req);
-  console.log("credentials", credentials);
-
   try {
     const { phone, password, confirmPassword } = credentials as UserCredentials;
 
@@ -59,8 +53,6 @@ async function refreshAccessToken(
   }
 ) {
   try {
-    console.log("token", token);
-
     const url =
       "https://oauth2.googleapis.com/token?" +
       new URLSearchParams({
@@ -78,7 +70,6 @@ async function refreshAccessToken(
     });
 
     const refreshedTokens: any = await response.json();
-    console.log("refreshedTokens", refreshedTokens);
 
     if (!response.ok) {
       throw refreshedTokens;
@@ -148,9 +139,6 @@ export const authOptions: NextAuthOptions = {
       },
       async profile(profile, tokens) {
         try {
-          console.log("profile", profile);
-          console.log("tokens", tokens);
-
           return {
             id: profile.sub,
             name: `${profile.given_name} ${profile.family_name}`,
@@ -166,7 +154,6 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt(props) {
-      console.log("props", props);
       const { account, token, user, profile, session, trigger } = props;
 
       try {

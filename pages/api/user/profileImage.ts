@@ -8,7 +8,6 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     const { imageSrc, userId } = req.body;
-    console.log(imageSrc);
     const { profileUpdated, err } = await setNewImage(imageSrc, userId);
     if (profileUpdated)
       return res.status(200).json("profile was successfully changed");

@@ -20,7 +20,6 @@ export async function updateGoogleCalendarEvent(
       auth,
       requestBody: rest,
     });
-    console.log("Updated event:", response.data);
 
     return response.data;
   } catch (error) {

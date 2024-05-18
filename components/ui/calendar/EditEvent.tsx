@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useTransition } from "react";
-import { ScheduleComponent } from "@syncfusion/ej2-react-schedule";
+import { Schedule, ScheduleComponent } from "@syncfusion/ej2-react-schedule";
 import { Session } from "next-auth";
 import {
   Account,
@@ -32,10 +32,10 @@ function EditEvent({
   business,
   session,
   user,
-  scheduleObj,
+  ref: scheduleObj,
   conferenceId,
 }: {
-  scheduleObj: React.RefObject<ScheduleComponent>;
+  ref: React.RefObject<ScheduleComponent>;
   props: EditProps;
   session: Session;
   business: Business & {
@@ -95,7 +95,6 @@ function EditEvent({
     });
     /*  } */
   }, [props, business.Customer, user.Treatment]);
-  console.log("editEvent", editEvent);
 
   const { token } = theme.useToken();
 
@@ -119,7 +118,6 @@ function EditEvent({
     let data = new DataManager(
       scheduleObj?.current?.getCurrentViewEvents()
     ).executeLocal(new Query().where("RecurrenceID", "equal", props.Id));
-    console.log("data", data);
 
     const eventProps: EventProps & { id: string } = {
       id: props.Id,
@@ -190,4 +188,6 @@ function EditEvent({
   );
 }
 
-export default EditEvent;
+export default React.forwardRef((props: any, ref: React.Ref<Schedule>) => (
+  <EditEvent {...props} />
+));

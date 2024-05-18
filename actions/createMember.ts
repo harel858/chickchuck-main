@@ -9,7 +9,6 @@ export async function createMember(
   businessId: string
 ) {
   const { name, password, "phone Number": phoneNumber } = formData;
-  console.log("phoneNumber", phoneNumber);
   if (!name || !phoneNumber || !password) return;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);

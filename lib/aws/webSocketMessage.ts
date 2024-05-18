@@ -6,7 +6,6 @@ interface Messages {
 }
 const create = (domainName: string, stage: string) => {
   const endpoint = `https://${domainName}/${stage}`;
-  console.log(endpoint);
 
   return new ApiGatewayManagementApi({
     apiVersion: "2018-11-29",
@@ -35,7 +34,6 @@ const send = async ({
 
   try {
     const ws = create(domainName, stage);
-    console.log("messages", messages);
 
     const newMessage = [messages[messages.length - 1]];
 

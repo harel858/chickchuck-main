@@ -12,86 +12,59 @@ import { Account } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import { setupGoogleCalendarClient } from "@lib/google/client";
 import Hamburger from "@ui/(navbar)/(responsiveNav)/Hamburger";
+import { fetchEvents2 } from "@lib/google/eventList";
 
-//expect an error
 async function fetchWatch(
   userId: string,
-  account: Account,
-  googleClient: {
-    auth: OAuth2Client;
-    calendar: calendar_v3.Calendar;
-    calendarId: string;
-  }
-) {
-  const { auth, calendar, calendarId } = googleClient;
-  const watchExpired = account?.watchExpired;
-  const isExpired =
-    (watchExpired && +watchExpired < Math.floor(Date.now() / 1000)) ||
-    !watchExpired;
-
-  if (isExpired) {
-    const expirationTime = Math.floor(Date.now() / 1000) + 6 * 24 * 60 * 60;
-    const uuid = uuidv4();
-    try {
-      const result = await calendar.events.watch({
-        calendarId,
-        auth,
-        requestBody: {
-          id: uuid,
-          type: "web_hook",
-          address: `/api/google/notifications?userId=${userId}`,
-          expiration: `${expirationTime * 1000}`,
-        },
-      });
-      console.log("resulthokk", result);
-
-      const newWatch: any = result;
-      return newWatch;
-    } catch (error) {
-      console.error("Error while fetching watch request:", error);
-      return null;
-    }
-  }
-
-  return watchExpired;
-}
-
-async function fetchEvents(
   googleClient: {
     auth: OAuth2Client;
     calendar: calendar_v3.Calendar;
     calendarId: string;
   },
-  expired: string,
-  accountId: string,
-  calendarId: string | null
+  calendars: {
+    calendarId: string;
+    userId: string;
+    watchExpired: string | null;
+  }[]
 ) {
+  const { auth, calendar } = googleClient;
+
   try {
-    const conferenceId = calendarId || "primary";
-    const { auth, calendar } = googleClient;
+    // Iterate over each calendar and set up a watch
+    for (const userCalendar of calendars) {
+      const watchExpired = userCalendar.watchExpired;
 
-    const response = await calendar.events.list({
-      calendarId: conferenceId,
-      auth,
-      privateExtendedProperty: [`conferenceId=${conferenceId}`],
-    });
+      const isExpired =
+        (watchExpired && +watchExpired < Math.floor(Date.now() / 1000)) ||
+        !watchExpired;
 
-    const result = response.data.items;
-    const newSyncToken = response.data.nextSyncToken;
+      if (watchExpired) {
+        const expirationTime = Math.floor(Date.now() / 1000) + 6 * 24 * 60 * 60;
+        const uuid = uuidv4();
 
-    await prisma.account.update({
-      where: { id: accountId },
-      data: {
-        syncToken: newSyncToken,
-        watchExpired: expired,
-      },
-    });
+        const result = await calendar.events.watch({
+          calendarId: userCalendar.calendarId,
+          auth,
+          requestBody: {
+            id: uuid,
+            type: "web_hook",
+            address: `https://74ef-2a00-a041-3a0f-ba00-3435-dcb9-32c5-19f7.ngrok-free.app/api/google/notifications?userId=${userId}&calendarId=${userCalendar.calendarId}`,
+            expiration: `${expirationTime * 1000}`,
+          },
+        });
 
-    return result;
+        await prisma.user.update({
+          where: { id: userCalendar.userId },
+          data: { watchExpiration: result.data.expiration },
+        });
+      }
+    }
   } catch (error) {
-    console.error("Error while fetching events:", error);
+    console.error("Error while fetching watch request:", error);
     return null;
   }
+
+  return calendars.map((calendar) => calendar.watchExpired);
 }
 
 async function Layout({ children }: { children: React.ReactNode }) {
@@ -110,18 +83,28 @@ async function Layout({ children }: { children: React.ReactNode }) {
   if (!user?.accounts[0] || !user.Business) {
     return notFound();
   }
-  const watchExpired = await fetchWatch(
-    session?.user.id,
-    user.accounts[0],
-    googleClient
+
+  const calendars: {
+    calendarId: string;
+    userId: string;
+    watchExpired: string | null;
+  }[] = user.Business.user.map((user) => ({
+    calendarId: user.calendarId ? user.calendarId : "primary",
+    userId: user.id,
+    watchExpired: user.watchExpiration,
+  }));
+
+  await fetchWatch(session?.user.id, googleClient, calendars);
+
+  const calendarsIds: string[] = user.Business.user.map((user) =>
+    user.calendarId ? user.calendarId : "primary"
+  );
+  const scheduleProps = await fetchEvents2(
+    googleClient,
+    user.accounts[0]?.id,
+    calendarsIds
   );
 
-  const scheduleProps = await fetchEvents(
-    googleClient,
-    watchExpired?.expiration,
-    user.accounts[0]?.id,
-    user.calendarId
-  );
   const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-"); // Replace whitespace with hyphens
   const profileImage = session.user.image;
 

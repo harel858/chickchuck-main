@@ -20,7 +20,6 @@ export async function getEventsByCustomer(
       auth,
       privateExtendedProperty: [`customerId=${customerId}`], // Pass an array of strings
     });
-    console.log("response.data.items", response.data.items);
 
     return response.data.items;
   } catch (error) {
