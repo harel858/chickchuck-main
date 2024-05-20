@@ -35,7 +35,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
             reject(error);
             return;
           }
-          console.log("fields", fields);
 
           const userId = fields.userId as string;
 
@@ -48,7 +47,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
           const treatments = JSON.parse(
             fields.services as string
           ) as ServiceInput[];
-          console.log("treatments", treatments);
+
           const uploadParams: UploadParams[] = [];
           const logo = files.logoFile as formidable.File | null;
 

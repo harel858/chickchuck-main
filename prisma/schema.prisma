@@ -149,7 +149,7 @@ model Customer {
 
 model Treatment {
     id               String             @id @default(uuid())
-    title            String             @unique
+    title            String
     cost             Int
     duration         Int
     advancePayment   Int? // New field for advance payment amount
