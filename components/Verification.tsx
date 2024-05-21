@@ -54,7 +54,7 @@ const BusinessDetailsForm = ({
   const onSubmit = async (data: TUserValidation) => {
     try {
       setLoadingState(true);
-      const result = await axios.post("/api/verification/sendotp", {
+      const result = await axios.post("/api/verification/stepone", {
         name: data.fullName,
         phoneNumber: data.phoneNumber,
       });

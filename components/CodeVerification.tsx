@@ -17,8 +17,9 @@ import { Input } from "./input";
 import { cn } from "@lib/utils";
 import { createAppointment } from "actions/createAppointment";
 import { message } from "antd";
-import { createAppointment2 } from "actions/createApointment2";
 import { VerificationData } from "types/types";
+import { createAppointment3 } from "actions/createAppointment3";
+import { appointmentRequestHandler } from "actions/appointmentRequest";
 
 const BusinessDetailsForm = ({
   selectedService,
@@ -29,7 +30,9 @@ const BusinessDetailsForm = ({
   bussinesId,
   selectedUser,
   setLoadingState,
+  confirmationNeeded,
 }: {
+  confirmationNeeded: boolean | null;
   selectedService: Treatment | null;
   selectedSlot: calendar_v3.Schema$TimePeriod | null;
   customerInput:
@@ -59,51 +62,44 @@ const BusinessDetailsForm = ({
   } = form;
 
   const onSubmit = async (data: TUserValidationCode) => {
+    const params = {
+      code: data.code,
+      request_id: customerInput?.request_id,
+      name: customerInput?.fullName,
+      phoneNumber: customerInput?.phoneNumber,
+      bussinesId: bussinesId,
+    } as VerificationData;
+    if (!selectedService) return message.error("שירות מבוקש חסר");
     try {
       setLoadingState(true);
-      const params = {
-        code: data.code,
-        request_id: customerInput?.request_id,
-        name: customerInput?.fullName,
-        phoneNumber: customerInput?.phoneNumber,
-        bussinesId: bussinesId,
-      } as VerificationData;
-      const result = await axios.post("/api/verification/verifyotp", params);
+      const result = await axios.post("/api/verification/steptwo", params);
       const client = result.data as Customer;
-      console.log("result", result);
 
-      if (result.status === 200) {
-        const eventProps = {
-          summary: selectedService?.title,
-          description: "",
-          start: {
-            dateTime: selectedSlot?.start || "", // Date.toISOString() ->
-            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // America/Los_Angeles
-          },
-          end: {
-            dateTime: selectedSlot?.end || "", // Date.toISOString() ->
-            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // America/Los_Angeles
-          },
-          extendedProperties: {
-            private: {
-              treatmentId: selectedService?.id || "",
-              customerId: client.id || "",
-              customerName: client.name || "",
-              conferenceId: selectedUser.calendarId || "primary",
-            },
-          },
-        };
-
-        const event = await createAppointment2(
+      if (result.status === 200 && !confirmationNeeded) {
+        const event = await createAppointment3(
           freeBusy,
-          eventProps,
-          selectedUser.calendarId || "primary"
+          selectedService,
+          selectedSlot,
+          selectedUser,
+          client
         );
         if (event) {
           setLoadingState(false);
           handleNext();
           return message.success("הפגישה נקבעה בהצלחה");
         }
+      }
+      const appointmentRequest = await appointmentRequestHandler(
+        selectedService,
+        selectedSlot,
+        selectedUser,
+        client
+      );
+
+      if (appointmentRequest) {
+        setLoadingState(false);
+        handleNext();
+        return message.success("הבקשה לתור עודכנה בהצלחה");
       }
     } catch (err: any) {
       console.log(typeof err);
@@ -116,11 +112,13 @@ const BusinessDetailsForm = ({
   return (
     <div className="flex flex-col justify-center items-center p-5">
       <h1 className="text-2xl text-black">סיכום</h1>
-      <p className="text-xl text-black text-center">
-        תור אצל {selectedUser.name} ל{selectedService?.title} בתאריך{" "}
-        {dayjs(selectedSlot?.start).format("DD/MM/YYYY")} בשעה{" "}
-        {dayjs(selectedSlot?.start).format("HH:mm")}
-      </p>
+      {
+        <p className="text-xl text-black text-center">
+          תור אצל {selectedUser.name} ל{selectedService?.title} בתאריך{" "}
+          {dayjs(selectedSlot?.start).format("DD/MM/YYYY")} בשעה{" "}
+          {dayjs(selectedSlot?.start).format("HH:mm")}
+        </p>
+      }
       <div className="flex flex-col justify-center items-center w-full">
         <Form {...form}>
           <form

@@ -6,6 +6,7 @@ export const appointmentValidation = z.object({
   Client: z.object({ value: z.string(), label: z.string() }),
   Date: z.string(),
   slot: z.object({ start: z.string(), end: z.string() }),
+  confirmationNeeded: z.boolean(),
 });
 
 export type TAppointmentValidation = z.infer<typeof appointmentValidation>;

@@ -8,7 +8,8 @@ export default async function updateBusinessDetails(
   data: TBusinessDetailsValidation,
   businessId: string
 ) {
-  const { businessAddress, businessName, businessPhone } = data;
+  const { businessAddress, businessName, businessPhone, confirmationNeeded } =
+    data;
   try {
     await prisma.business.update({
       where: { id: businessId },
@@ -16,6 +17,7 @@ export default async function updateBusinessDetails(
         phone: businessPhone,
         businessName: businessName,
         Address: businessAddress,
+        confirmationNeeded: confirmationNeeded,
       },
     });
     revalidatePath("/profile");

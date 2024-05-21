@@ -14,8 +14,12 @@ import { message } from "antd";
 import { Business } from "@prisma/client";
 
 export interface FieldType {
-  label: "שם העסק" | "טלפון" | "כתובת";
-  name: "businessName" | "businessPhone" | "businessAddress";
+  label: "שם העסק" | "טלפון" | "כתובת" | "אישור תורים";
+  name:
+    | "businessName"
+    | "businessPhone"
+    | "businessAddress"
+    | "confirmationNeeded";
 }
 
 const BusinessDetailsForm = ({ business }: { business: Business }) => {
@@ -49,6 +53,7 @@ const BusinessDetailsForm = ({ business }: { business: Business }) => {
     { label: "שם העסק", name: "businessName" },
     { label: "טלפון", name: "businessPhone" },
     { label: "כתובת", name: "businessAddress" },
+    { label: "אישור תורים", name: "confirmationNeeded" },
   ];
 
   return (
@@ -60,10 +65,11 @@ const BusinessDetailsForm = ({ business }: { business: Business }) => {
             className="flex flex-col justify-center items-center gap-5"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="flex flex-col justify-center items-center w-full">
+            <div className="flex flex-col justify-center items-center gap-5 w-full">
               {formType.map(({ label, name }) => {
                 return (
                   <FormField
+                    control={control}
                     errors={errors}
                     register={register}
                     name={name}
@@ -80,7 +86,7 @@ const BusinessDetailsForm = ({ business }: { business: Business }) => {
               type="submit"
               size="lg"
             >
-              Next
+              שמור
             </Button>
           </form>
         </Form>

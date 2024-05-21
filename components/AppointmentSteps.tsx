@@ -198,6 +198,7 @@ export default function AppointmentSteps({
       title: "אימות",
       content: (
         <CodeVerification
+          confirmationNeeded={business.confirmationNeeded}
           setLoadingState={setIsLoading}
           selectedService={selectedService}
           selectedSlot={selectedSlot}
@@ -213,6 +214,7 @@ export default function AppointmentSteps({
       title: "אימות",
       content: (
         <ThankYouPage
+          confirmationNeeded={business.confirmationNeeded}
           selectedService={selectedService}
           selectedSlot={selectedSlot}
           selectedUser={selectedUser || business.user[0]!}
