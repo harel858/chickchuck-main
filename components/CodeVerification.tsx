@@ -28,6 +28,7 @@ const BusinessDetailsForm = ({
   handleNext,
   bussinesId,
   selectedUser,
+  setLoadingState,
 }: {
   selectedService: Treatment | null;
   selectedSlot: calendar_v3.Schema$TimePeriod | null;
@@ -39,6 +40,7 @@ const BusinessDetailsForm = ({
         request_id: string;
       })
     | null;
+  setLoadingState: React.Dispatch<React.SetStateAction<boolean>>;
   freeBusy: string;
   handleNext: () => void;
   bussinesId: string;
@@ -58,6 +60,7 @@ const BusinessDetailsForm = ({
 
   const onSubmit = async (data: TUserValidationCode) => {
     try {
+      setLoadingState(true);
       const params = {
         code: data.code,
         request_id: customerInput?.request_id,
@@ -65,8 +68,10 @@ const BusinessDetailsForm = ({
         phoneNumber: customerInput?.phoneNumber,
         bussinesId: bussinesId,
       } as VerificationData;
-      const result = await axios.post("/api/verification/steptwo", params);
+      const result = await axios.post("/api/verification/verifyotp", params);
       const client = result.data as Customer;
+      console.log("result", result);
+
       if (result.status === 200) {
         const eventProps = {
           summary: selectedService?.title,
@@ -95,6 +100,7 @@ const BusinessDetailsForm = ({
           selectedUser.calendarId || "primary"
         );
         if (event) {
+          setLoadingState(false);
           handleNext();
           return message.success("הפגישה נקבעה בהצלחה");
         }
@@ -102,6 +108,7 @@ const BusinessDetailsForm = ({
     } catch (err: any) {
       console.log(typeof err);
       console.log("err", err);
+      setLoadingState(false);
       return message.error("קביעת פגישה נכשלה");
     }
   };

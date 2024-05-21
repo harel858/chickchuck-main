@@ -24,10 +24,13 @@ const BusinessDetailsForm = ({
   selectedSlot,
   onSetCustomerInput,
   selectedUser,
+  setLoadingState,
 }: {
   selectedUser: User;
   selectedService: Treatment | null;
   selectedSlot: calendar_v3.Schema$TimePeriod | null;
+  setLoadingState: React.Dispatch<React.SetStateAction<boolean>>;
+
   onSetCustomerInput: (
     input: {
       fullName: string;
@@ -50,16 +53,19 @@ const BusinessDetailsForm = ({
 
   const onSubmit = async (data: TUserValidation) => {
     try {
-      const result = await axios.post("/api/verification/stepone", {
+      setLoadingState(true);
+      const result = await axios.post("/api/verification/sendotp", {
         name: data.fullName,
         phoneNumber: data.phoneNumber,
       });
       const request_id = result.data.request_id;
 
       onSetCustomerInput({ ...data, request_id: request_id });
+      setLoadingState(false);
     } catch (err: any) {
       console.log(typeof err);
       console.log("err", err);
+      setLoadingState(false);
     }
   };
   const formType: FieldType[] = [

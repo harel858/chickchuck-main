@@ -34,6 +34,7 @@ export default function AppointmentSteps({
   };
   freeBusy: string;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [selectedService, setSelectedService] =
     React.useState<Treatment | null>(null);
@@ -44,6 +45,13 @@ export default function AppointmentSteps({
     string,
     calendar_v3.Schema$TimePeriod[]
   > | null>(null);
+
+  const setLoadingState = useCallback(
+    (bool: boolean) => {
+      setIsLoading(bool);
+    },
+    [isLoading, setIsLoading]
+  );
 
   const handleNext = useCallback(() => {
     setActiveStep((prevActiveStep) => {
@@ -178,6 +186,7 @@ export default function AppointmentSteps({
       title: "אימות",
       content: (
         <Verification
+          setLoadingState={setIsLoading}
           selectedService={selectedService}
           selectedSlot={selectedSlot}
           onSetCustomerInput={onSetCustomerInput}
@@ -189,6 +198,7 @@ export default function AppointmentSteps({
       title: "אימות",
       content: (
         <CodeVerification
+          setLoadingState={setIsLoading}
           selectedService={selectedService}
           selectedSlot={selectedSlot}
           customerInput={customerInput}
@@ -233,6 +243,7 @@ export default function AppointmentSteps({
       </Box>
       {selectedService && activeStep === 0 ? (
         <Button
+          isLoading={isLoading}
           disabled={activeStep >= steps.length}
           onClick={() => handleNext()}
           className="bg-blue-600 text-2xl fixed bottom-10 w-1/3 max-md:w-full transition-all ease-in-out duration-300"
