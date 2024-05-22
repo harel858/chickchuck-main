@@ -132,6 +132,7 @@ export default function AppointmentSteps({
     if (activeStep > 1) setActiveStep(1);
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   }, [setActiveStep, activeStep]);
+  console.log("activityDays", business.activityDays);
 
   const steps = [
     {

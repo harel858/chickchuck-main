@@ -16,8 +16,6 @@ function GallerySection({
   } | null;
   adminUserId: string | false;
 }) {
-  console.log("urls", urls);
-
   const [galleryOrUpload, setGalleryOrUpload] = useState<boolean>(
     isAdmin && urls?.galleryImgUrls.length === 0
   );

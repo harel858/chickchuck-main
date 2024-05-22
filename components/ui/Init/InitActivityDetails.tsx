@@ -1,9 +1,11 @@
 "use client";
-import React, { useState } from "react";
-import { Table, Switch, TimePicker } from "antd";
+import React, { useState, useMemo } from "react";
+import { Table, Switch, Select } from "antd";
 import dayjs from "dayjs";
 import { ColumnsType } from "antd/es/table";
 import { AlignType } from "rc-table/lib/interface";
+
+const { Option } = Select;
 
 interface DataType {
   key: number;
@@ -28,28 +30,59 @@ function InitDetails({
   setActivityDays: React.Dispatch<React.SetStateAction<DayData[]>>;
   activityDays: DayData[];
 }) {
-  const format = "HH:mm";
+  const [firstTime, setFirstTime] = useState(true);
+  const [firstTime2, setFirstTime2] = useState(true);
 
-  const setStartTime = (time: dayjs.Dayjs, value: number) => {
-    const newDays = activityDays.map((currentDay) =>
-      currentDay.value === value
-        ? { ...currentDay, start: time.format("HH:mm") }
-        : currentDay
-    );
+  const generateTimeSlots = () => {
+    const slots = [];
+    for (let i = 0; i < 24 * 60; i += 5) {
+      const hours = Math.floor(i / 60);
+      const minutes = i % 60;
+      slots.push(dayjs().hour(hours).minute(minutes).format("HH:mm"));
+    }
+    return slots;
+  };
+
+  const timeSlots = generateTimeSlots();
+
+  const setStartTime = (value: string, dayValue: number) => {
+    let newDays;
+    if (firstTime) {
+      newDays = activityDays.map((currentDay) => ({
+        ...currentDay,
+        start: value,
+      }));
+      setFirstTime(false);
+    } else {
+      newDays = activityDays.map((currentDay) =>
+        currentDay.value === dayValue
+          ? { ...currentDay, start: value }
+          : currentDay
+      );
+    }
 
     setActivityDays(newDays);
   };
-  const setEndTime = (time: dayjs.Dayjs, value: number) => {
-    const ISOstring = time.toISOString();
 
-    const newDays = activityDays.map((currentDay) =>
-      currentDay.value === value
-        ? { ...currentDay, end: time.format("HH:mm") }
-        : currentDay
-    );
+  const setEndTime = (value: string, dayValue: number) => {
+    let newDays;
+    if (firstTime2) {
+      newDays = activityDays.map((currentDay) => ({
+        ...currentDay,
+        end: value,
+      }));
+      setFirstTime2(false);
+    } else {
+      newDays = activityDays.map((currentDay) =>
+        currentDay.value === dayValue
+          ? { ...currentDay, end: value }
+          : currentDay
+      );
+    }
 
     setActivityDays(newDays);
   };
+
   const onSwitchChange = (isActive: boolean, value: number) => {
     const newDays = activityDays.map((currentDay) =>
       currentDay.value === value
@@ -58,8 +91,9 @@ function InitDetails({
     );
     setActivityDays(newDays);
   };
+  console.log("activityDays", activityDays);
 
-  const data: DataType[] = React.useMemo(() => {
+  const data: DataType[] = useMemo(() => {
     const dataSource = activityDays.map((day) => ({
       key: day.value,
       Days: day.label,
@@ -70,7 +104,7 @@ function InitDetails({
     return dataSource;
   }, [activityDays, setActivityDays]);
 
-  const columns: ColumnsType<DataType> = React.useMemo(() => {
+  const columns: ColumnsType<DataType> = useMemo(() => {
     return [
       {
         title: "יום",
@@ -88,15 +122,19 @@ function InitDetails({
         align: "center" as AlignType,
         render: (value, day, index) => {
           return (
-            <TimePicker
-              minuteStep={5}
+            <Select
               className="w-max"
-              defaultValue={dayjs(value, format)}
-              onSelect={(time) => setStartTime(time, day.key)}
-              format={format}
+              defaultValue={value}
+              value={activityDays[index]?.start}
+              onChange={(value) => setStartTime(value, day.key)}
               disabled={!day.isActive}
-              showSecond={false}
-            />
+            >
+              {timeSlots.map((time) => (
+                <Option key={time} value={time}>
+                  {time}
+                </Option>
+              ))}
+            </Select>
           );
         },
       },
@@ -107,15 +145,19 @@ function InitDetails({
         align: "center" as AlignType,
         render: (value, day, index) => {
           return (
-            <TimePicker
-              minuteStep={5}
+            <Select
               className="w-max"
-              defaultValue={dayjs(value, format)}
-              onSelect={(time) => setEndTime(time, day.key)}
-              format={format}
+              defaultValue={value}
+              value={activityDays[index]?.end}
+              onChange={(value) => setEndTime(value, day.key)}
               disabled={!day.isActive}
-              showSecond={false}
-            />
+            >
+              {timeSlots.map((time) => (
+                <Option key={time} value={time}>
+                  {time}
+                </Option>
+              ))}
+            </Select>
           );
         },
       },

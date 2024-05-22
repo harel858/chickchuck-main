@@ -24,17 +24,13 @@ const Avatar: React.FC<AvatarProps> = ({
   width,
   onClick,
 }) => {
-  console.log({ src });
-
   const imgIxLoader = ({ src }: ImageLoaderProps) => {
     const url = new URL(src);
-    console.log("src", src);
 
     const imgIxName = url.pathname.split("/").pop();
 
     const imgIxUrl = new URL("https://imgixs3.imgix.net");
     imgIxUrl.pathname = `/${imgIxName}`;
-    console.log({ imgIxUrl });
     imgIxUrl.searchParams.set("auto", "format");
     imgIxUrl.searchParams.set("auto", "compress");
     imgIxUrl.searchParams.set("q", "75");

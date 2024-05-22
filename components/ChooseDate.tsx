@@ -6,6 +6,8 @@ import { fetchEventsByDate } from "actions/getSlots";
 import { ActivityDays, Treatment } from "@prisma/client";
 import he from "dayjs/locale/he";
 import { hebrewClendar } from "@ui/calendar/utils/hebCalendar";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 dayjs.locale(he);
 
 const ChooseDate = ({
@@ -32,6 +34,8 @@ const ChooseDate = ({
   slotsForMonth: Record<string, calendar_v3.Schema$TimePeriod[]> | null;
   calendarId: string;
 }) => {
+  console.log("activityDays", activityDays);
+
   const [loading, isLoading] = useState(true);
   const prevSelectedDate = useRef<Dayjs | null>(null);
   useEffect(() => {
@@ -42,7 +46,6 @@ const ChooseDate = ({
           freeBusy,
           calendarId
         );
-        console.log("response", response);
 
         const res = response?.calendars?.primary?.busy;
         const isoDate = selectedDate.toISOString();
@@ -53,7 +56,6 @@ const ChooseDate = ({
           generatedSlots,
           res || []
         );
-        console.log("newSlotsForMonth", newSlotsForMonth);
 
         onSlotsForMonth(newSlotsForMonth);
       } catch (err: any) {
@@ -79,10 +81,11 @@ const ChooseDate = ({
       const startOfMonth = dayjs(month).startOf("month");
       const endOfMonth = dayjs(month).endOf("month");
       let currentSlotStart = startOfMonth;
-      const startTime = activityDays[currentSlotStart.day()]?.start;
-      const endTime = activityDays[currentSlotStart.day()]?.end;
 
       while (currentSlotStart.isBefore(endOfMonth)) {
+        const startTime = activityDays[currentSlotStart.day()]?.start;
+        const endTime = activityDays[currentSlotStart.day()]?.end;
+
         const currentSlotEnd = currentSlotStart.add(5, "minutes");
 
         const isValidStartTime = dayjs(
@@ -109,7 +112,6 @@ const ChooseDate = ({
     },
     [selectedDate]
   );
-
   const getSlotsByDay = useMemo(
     () =>
       (
@@ -119,6 +121,7 @@ const ChooseDate = ({
       ) => {
         if (allSlots.length <= 0 || !activityDays[selectedDate.day()]?.isActive)
           return [];
+
         const day = activityDays.find(
           (item) => item.day === dayjs(selectedDate).day()
         );
@@ -134,48 +137,50 @@ const ChooseDate = ({
 
         let currentSlotStart = dayjs(res[0]?.start);
         let currentSlotEnd = currentSlotStart.add(durationInMinutes, "minutes");
+        console.log("selectedDate", selectedDate.format("DD/MM/YYYY"));
 
-        while (
-          currentSlotStart &&
-          dayjs(currentSlotStart.format("HH:mm"), "HH:mm").isBefore(
-            dayjs(day?.end, "HH:mm")
-          )
-        ) {
-          currentSlotEnd = currentSlotStart.add(durationInMinutes, "minutes");
+        if (day?.isActive === true)
+          while (
+            day &&
+            currentSlotStart &&
+            currentSlotStart.isSame(selectedDate, "day") &&
+            currentSlotStart.format("HH:mm") < day?.end
+          ) {
+            console.log("currentSlotStart", currentSlotStart.format("HH:mm"));
+            console.log("day?.end", day?.end);
 
-          // Check if the current slot's end time is in the future
-          if (dayjs(currentSlotEnd).isAfter(dayjs())) {
-            const isSlotAvailable = busySlots.every((busySlot) => {
-              const busyStart = dayjs(busySlot.start);
-              const busyEnd = dayjs(busySlot.end);
+            currentSlotEnd = currentSlotStart.add(durationInMinutes, "minutes");
 
-              return (
-                currentSlotEnd.isBefore(busyStart) ||
-                currentSlotEnd.isSame(busyStart) ||
-                currentSlotStart.isAfter(busyEnd) ||
-                currentSlotStart.isSame(busyEnd)
-              );
-            });
-            /*   if (dayjs(currentSlotStart).format("DD/MM/YYYY") === "09/04/2024")
-              console.log("isSlotAvailable", isSlotAvailable); */
-            if (
-              (isSlotAvailable &&
-                dayjs(currentSlotEnd.format("HH:mm"), "HH:mm").isBefore(
-                  dayjs(day?.end, "HH:mm")
-                )) ||
-              (isSlotAvailable &&
-                dayjs(currentSlotEnd.format("HH:mm"), "HH:mm").isSame(
-                  dayjs(day?.end, "HH:mm")
-                ))
-            )
-              availableSlots.push({
-                start: currentSlotStart.toISOString(),
-                end: currentSlotEnd.toISOString(),
+            // Check if the current slot's end time is in the future
+            if (dayjs(currentSlotEnd).isAfter(dayjs())) {
+              const isSlotAvailable = busySlots.every((busySlot) => {
+                const busyStart = dayjs(busySlot.start);
+                const busyEnd = dayjs(busySlot.end);
+
+                return (
+                  currentSlotEnd.isBefore(busyStart) ||
+                  currentSlotEnd.isSame(busyStart) ||
+                  currentSlotStart.isAfter(busyEnd) ||
+                  currentSlotStart.isSame(busyEnd)
+                );
               });
-          }
 
-          currentSlotStart = currentSlotStart.add(durationInMinutes, "minutes");
-        }
+              if (
+                isSlotAvailable &&
+                currentSlotEnd.format("HH:mm") <= day?.end
+              ) {
+                availableSlots.push({
+                  start: currentSlotStart.toISOString(),
+                  end: currentSlotEnd.toISOString(),
+                });
+              }
+            }
+
+            currentSlotStart = currentSlotStart.add(
+              durationInMinutes,
+              "minutes"
+            );
+          }
 
         return availableSlots;
       },
@@ -196,11 +201,13 @@ const ChooseDate = ({
         const endOfMonth = selectedDate.endOf("month");
 
         let currentDate = startOfMonth;
+
         while (
           currentDate.isBefore(endOfMonth, "day") ||
           currentDate.isSame(endOfMonth, "day")
         ) {
           const formattedDate = currentDate.format("DD/MM/YYYY");
+
           slotsForMonth[formattedDate] = getSlotsByDay(
             currentDate,
             allSlots,

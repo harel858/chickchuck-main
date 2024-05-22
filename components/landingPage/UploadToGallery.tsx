@@ -54,7 +54,6 @@ const UploadGallery = ({
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  console.log("useRouter", galleryList);
 
   useEffect(() => {
     const initializeGalleryList = async () => {
@@ -135,7 +134,6 @@ const UploadGallery = ({
       const result = await axios.post("/api/user/image-route", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("result", result);
 
       setIsLoading(false);
       setGalleryOrUpload(false);
