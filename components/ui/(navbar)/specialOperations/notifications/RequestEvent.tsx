@@ -39,38 +39,44 @@ function RequestEvent({
       actions={
         item.isConfirmed === null
           ? [
-              <Button
-                onClick={() =>
-                  startTransition(async () => await denyAppointment(item.id))
-                }
-                isLoading={isPending}
-                variant={"ghost"}
-                type="button"
-                className="text-red-500"
-              >
-                סירוב
-              </Button>,
-              <Button
-                onClick={() =>
-                  startTransition2(
-                    async () =>
-                      await confirmAppointment(
-                        session.user.access_token!,
-                        item.treatment,
-                        { start: item.start, end: item.end },
-                        item.user,
-                        item.customer,
-                        item.id
-                      )
-                  )
-                }
-                isLoading={isPending2}
-                variant={"ghost"}
-                type="button"
-                className="text-blue-500"
-              >
-                אישור
-              </Button>,
+              <div className="flex justify-center items-center">
+                <Button
+                  size={"sm"}
+                  onClick={() =>
+                    startTransition(async () => await denyAppointment(item.id))
+                  }
+                  isLoading={isPending}
+                  variant={"ghost"}
+                  type="button"
+                  className="text-red-500"
+                  key={"deny"}
+                >
+                  סירוב
+                </Button>
+                <Button
+                  size={"sm"}
+                  onClick={() =>
+                    startTransition2(
+                      async () =>
+                        await confirmAppointment(
+                          session.user.access_token!,
+                          item.treatment,
+                          { start: item.start, end: item.end },
+                          item.user,
+                          item.customer,
+                          item.id
+                        )
+                    )
+                  }
+                  isLoading={isPending2}
+                  key={"consfirm"}
+                  variant={"ghost"}
+                  type="button"
+                  className="text-blue-500"
+                >
+                  אישור
+                </Button>
+              </div>,
             ]
           : [
               <p
