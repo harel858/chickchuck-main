@@ -6,13 +6,17 @@ import { GrNotification } from "react-icons/gr";
 import { Session } from "next-auth";
 import { calendar_v3 } from "googleapis";
 import NotificationList from "./notificationList";
-import { Customer } from "@prisma/client";
+import { AppointmentRequest, Customer, Treatment, User } from "@prisma/client";
+import { CombinedEvent } from "types/types";
+import dayjs from "dayjs";
+import { isGoogleEvent } from "./utils/typeGourd";
 
 interface NotificationComponentProps {
   userId: string;
   session: Session;
   customers: Customer[];
-  scheduleProps: calendar_v3.Schema$Events["items"] | null;
+  scheduleProps: CombinedEvent[];
+  confirmationNeeded: boolean | null;
 }
 
 function NotificationComponent({
@@ -20,19 +24,37 @@ function NotificationComponent({
   session,
   scheduleProps,
   customers,
+  confirmationNeeded,
 }: NotificationComponentProps) {
-  const [notifications, setNotifications] = useState<
-    calendar_v3.Schema$Events["items"]
-  >([]);
+  const [notifications, setNotifications] = useState<CombinedEvent[]>([]);
   useEffect(() => {
-    const notifications = scheduleProps?.filter(
-      (item) => item.extendedProperties?.private?.customerId
+    const filteredNotifications = scheduleProps?.filter((item) =>
+      isGoogleEvent(item)
+        ? item.extendedProperties?.private?.customerId
+        : item.customerId
     );
-    console.log("scheduleProps", scheduleProps);
-    console.log("notification", notifications);
 
-    notifications && setNotifications(notifications);
-  }, []);
+    if (filteredNotifications) {
+      // Sort the filteredNotifications array by dateTime
+      const sortedNotifications = filteredNotifications.sort((a, b) => {
+        const dateA = isGoogleEvent(a)
+          ? new Date(dayjs(a.start?.dateTime).toISOString()).getTime()
+          : new Date(dayjs(a.start).toISOString()).getTime();
+        const dateB = isGoogleEvent(b)
+          ? new Date(dayjs(b.start?.dateTime).toISOString()).getTime()
+          : new Date(dayjs(b.start).toISOString()).getTime();
+        return dateA - dateB;
+      });
+
+      setNotifications(sortedNotifications);
+    }
+
+    console.log("scheduleProps", scheduleProps);
+    console.log("notifications", filteredNotifications);
+
+    filteredNotifications && setNotifications(filteredNotifications);
+  }, [scheduleProps]);
+
   const webSocketRef = useRef<WebSocket | null>(null);
   const [open, setOpen] = useState(false);
   const closePopover = useCallback(() => setOpen(false), [open]);
@@ -54,7 +76,7 @@ function NotificationComponent({
       const filteredNewNotifications = newNotifications?.filter(
         (newNotification) =>
           !notifications?.some(
-            (notification) => notification.etag === newNotification.etag
+            (notification) => notification.id === newNotification.id
           )
       );
       console.log("filteredNewNotifications", filteredNewNotifications);
@@ -62,7 +84,7 @@ function NotificationComponent({
       notifications &&
         filteredNewNotifications &&
         setNotifications((prevNotifications) => [
-          ...notifications,
+          ...prevNotifications,
           ...filteredNewNotifications,
         ]);
     },
@@ -90,7 +112,15 @@ function NotificationComponent({
       }
     };
   }, [handleWebSocketMessage]);
-
+  const length = confirmationNeeded
+    ? (
+        notifications as (AppointmentRequest & {
+          treatment: Treatment;
+          customer: Customer;
+          user: User;
+        })[]
+      ).filter((item) => item.isConfirmed === null).length
+    : (notifications as calendar_v3.Schema$Event[]).length;
   return (
     <Popover
       content={
@@ -114,9 +144,9 @@ function NotificationComponent({
           className="relative transition-all ease-in-out duration-300 hover:scale-125"
         >
           <GrNotification className="text-3xl" />
-          {notifications && notifications.length > 0 && (
+          {notifications && length > 0 && (
             <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs">
-              {notifications.length}
+              {length}
             </span>
           )}
         </Button>

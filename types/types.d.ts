@@ -9,8 +9,10 @@ import {
   Address,
   Appointment,
   Customer,
+  AppointmentRequest,
 } from "@prisma/client";
 import { Dayjs } from "dayjs";
+import { calendar_v3 } from "googleapis";
 
 export type AllUsers = {
   id: string;
@@ -21,6 +23,7 @@ export type AllUsers = {
   appointments: appointment[];
   treatment: treatment[];
 };
+
 export type RegularAppointment = {
   id: string;
   userId: string;
@@ -430,3 +433,11 @@ export type UpdateEventProps = {
     };
   };
 };
+
+export type CombinedEvent =
+  | calendar_v3.Schema$Event
+  | (AppointmentRequest & {
+      treatment: Treatment;
+      customer: Customer;
+      user: User;
+    });

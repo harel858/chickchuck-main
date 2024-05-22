@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@lib/prisma";
-import { TBusinessDetailsValidation } from "@lib/validators/business-details-validation";
+import { TBusinessDetailsValidation } from "@lib/validators/business-details-validation2";
 import { revalidatePath } from "next/cache";
 
 export default async function updateBusinessDetails(

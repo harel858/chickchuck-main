@@ -8,7 +8,6 @@ import { prisma } from "@lib/prisma";
 import PlusButton from "@ui/(navbar)/specialOperations/plusButton/PlusButton";
 import { getUserAccount } from "@lib/prisma/users";
 import { calendar_v3 } from "googleapis";
-import { Account } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import { setupGoogleCalendarClient } from "@lib/google/client";
 import Hamburger from "@ui/(navbar)/(responsiveNav)/Hamburger";
@@ -27,8 +26,6 @@ async function fetchWatch(
     watchExpired: string | null;
   }[]
 ) {
-  console.log("calendarslength", calendars.length);
-
   const { auth, calendar } = googleClient;
 
   try {
@@ -58,7 +55,6 @@ async function fetchWatch(
           where: { id: userCalendar.userId },
           data: { watchExpiration: result.data.expiration },
         });
-        console.log("updateres", res);
       }
     }
   } catch (error) {
@@ -96,7 +92,8 @@ async function Layout({ children }: { children: React.ReactNode }) {
     watchExpired: user.watchExpiration,
   }));
 
-  await fetchWatch(session?.user.id, googleClient, calendars);
+  if (!user.Business.confirmationNeeded)
+    await fetchWatch(session?.user.id, googleClient, calendars);
 
   const calendarsIds: string[] = user.Business.user.map((user) =>
     user.calendarId ? user.calendarId : "primary"
@@ -104,7 +101,9 @@ async function Layout({ children }: { children: React.ReactNode }) {
   const scheduleProps = await fetchEvents2(
     googleClient,
     user.accounts[0]?.id,
-    calendarsIds
+    calendarsIds,
+    user.Business.confirmationNeeded,
+    session.user.id
   );
 
   const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-"); // Replace whitespace with hyphens
@@ -117,6 +116,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
         scheduleProps={scheduleProps}
         session={session}
         customers={user.Business?.Customer || []}
+        confirmationNeeded={user.Business.confirmationNeeded}
       />
       <PlusButton business={user.Business} user={user} session={session} />
       <Hamburger

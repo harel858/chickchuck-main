@@ -2,8 +2,7 @@
 import { Input } from "@components/input";
 import { Label } from "@components/label";
 import { cn } from "@lib/utils";
-import { TBusinessDetailsValidation } from "@lib/validators/business-details-validation";
-
+import { TBusinessDetailsValidation } from "@lib/validators/business-details-validation2";
 import {
   Control,
   FieldErrors,
@@ -27,7 +26,7 @@ const FormFields = ({
       businessName: string;
       businessPhone: string;
       businessAddress: string;
-      confirmationNeeded: boolean;
+      confirmationNeeded: boolean | null;
     },
     any
   >;
@@ -56,7 +55,7 @@ const FormFields = ({
             <FormControl>
               {name === "confirmationNeeded" ? (
                 <Switch
-                  checked={!!field.value}
+                  checked={!!data?.confirmationNeeded}
                   onCheckedChange={field.onChange}
                 />
               ) : (

@@ -10,13 +10,17 @@ export async function appointmentRequestHandler(
   selectedUser: User,
   client: Customer
 ) {
+  const start = selectedSlot?.start;
+  const end = selectedSlot?.end;
+  if (!start || !end) throw new Error("start nor end missing");
   try {
     if (!selectedSlot?.start) throw new Error("selectedSlot.start IS MISSING");
     const appointmentRequest = await prisma.appointmentRequest.create({
       data: {
         title: selectedService?.title,
         description: "",
-        date: selectedSlot?.start,
+        start: start,
+        end: end,
         user: { connect: { id: selectedUser.id } },
         customer: { connect: { id: client.id } },
         treatment: { connect: { id: selectedService.id } },

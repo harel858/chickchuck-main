@@ -12,6 +12,7 @@ import Avatar from "@ui/Avatar";
 import { calendar_v3 } from "googleapis";
 import { IoSettingsOutline, IoCalendarOutline } from "react-icons/io5";
 import Hamburger from "./(responsiveNav)/Hamburger";
+import { CombinedEvent } from "types/types";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 function Navbar({
@@ -19,11 +20,13 @@ function Navbar({
   scheduleProps,
   user,
   customers,
+  confirmationNeeded,
 }: {
   session: Session;
-  scheduleProps: calendar_v3.Schema$Events["items"] | null;
+  scheduleProps: CombinedEvent[];
   user: User & { accounts: Account[] };
   customers: Customer[];
+  confirmationNeeded: boolean | null;
 }) {
   const profileImage = session.user.image;
   console.log("profileImage", profileImage);
@@ -72,6 +75,7 @@ function Navbar({
           session={session}
           userId={session.user.id}
           customers={customers}
+          confirmationNeeded={confirmationNeeded}
         />
         <Avatar alt="Profile Img" src={profileImage} />
       </div>

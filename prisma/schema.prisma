@@ -167,7 +167,9 @@ model AppointmentRequest {
     id          String    @id @default(uuid())
     title       String
     description String?
-    date        String
+    start       String
+    end         String
+    isConfirmed Boolean?
     customer    Customer  @relation(fields: [customerId], references: [id])
     customerId  String
     treatment   Treatment @relation(fields: [treatmentId], references: [id])

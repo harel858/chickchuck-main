@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import {
   BusinessDetailsValidation,
   TBusinessDetailsValidation,
-} from "@lib/validators/business-details-validation";
+} from "@lib/validators/business-details-validation2";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormField from "./FormField";
 import { Form } from "@ui/form";
@@ -30,6 +30,7 @@ const BusinessDetailsForm = ({ business }: { business: Business }) => {
       businessAddress: business.Address,
       businessPhone: business.phone,
       businessName: business.businessName,
+      confirmationNeeded: business.confirmationNeeded,
     },
   });
   const {
@@ -42,7 +43,9 @@ const BusinessDetailsForm = ({ business }: { business: Business }) => {
 
   const onSubmit = async (data: TBusinessDetailsValidation) => {
     try {
-      startTransition(async () => updateBusinessDetails(data, business.id));
+      startTransition(
+        async () => await updateBusinessDetails(data, business.id)
+      );
       message.success("פרטי העסק עודכנו בהצלחה");
     } catch (err: any) {
       console.log("err", err);

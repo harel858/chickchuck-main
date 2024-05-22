@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { setupGoogleCalendarClient } from "@lib/google/client";
-import { fetchEvents, fetchEvents2 } from "@lib/google/eventList";
+import { fetchEvents2 } from "@lib/google/eventList";
 type ResponseData = {
   message: string;
 };
