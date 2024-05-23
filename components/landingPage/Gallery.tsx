@@ -10,6 +10,7 @@ import { Image } from "antd";
 function Responsive({
   urls,
   setGalleryOrUpload,
+  adminUserId,
 }: {
   urls: {
     profileUrls: string;
@@ -19,6 +20,7 @@ function Responsive({
       fileName: string;
     }[];
   } | null;
+  adminUserId: string | false;
   setGalleryOrUpload: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -111,18 +113,20 @@ function Responsive({
             </Image.PreviewGroup>
           </>
         ) : (
-          <p>No images available</p>
+          <></>
         )}
       </div>
-      <Button
-        className="flex justify-center items-center gap-2 bg-slate-100 text-black hover:bg-slate-100/50"
-        variant="default"
-        onClick={() => setGalleryOrUpload(true)}
-        aria-label="Edit Gallery"
-      >
-        <BiEdit />
-        <span>עריכת גלריה</span>
-      </Button>
+      {adminUserId && (
+        <Button
+          className="flex justify-center items-center gap-2 bg-slate-100 text-black hover:bg-slate-100/50"
+          variant="default"
+          onClick={() => setGalleryOrUpload(true)}
+          aria-label="Edit Gallery"
+        >
+          <BiEdit />
+          <span>עריכת גלריה</span>
+        </Button>
+      )}
     </div>
   );
 }

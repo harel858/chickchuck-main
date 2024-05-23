@@ -21,14 +21,18 @@ function GallerySection({
   );
   return (
     <>
-      {galleryOrUpload ? (
+      {isAdmin && galleryOrUpload ? (
         <UploadToGallery
           adminUserId={adminUserId}
           urls={urls}
           setGalleryOrUpload={setGalleryOrUpload}
         />
       ) : (
-        <Gallery setGalleryOrUpload={setGalleryOrUpload} urls={urls} />
+        <Gallery
+          adminUserId={adminUserId}
+          setGalleryOrUpload={setGalleryOrUpload}
+          urls={urls}
+        />
       )}
     </>
   );

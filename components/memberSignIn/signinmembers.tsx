@@ -127,7 +127,6 @@ export default function SignInSteps() {
               getValues().password !== getValues().confirmPassword
             )
               return message.error("סיסמאות לא תואמות");
-            console.log(getValues());
 
             const res = await signIn("credentials", {
               ...getValues(),
