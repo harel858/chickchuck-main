@@ -1,16 +1,25 @@
 "use client";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import classes from "./customerAppointments.module.css";
 import React, { useState } from "react";
 import Slider from "react-slick";
 import { Button } from "@ui/Button";
 import { BiEdit } from "react-icons/bi";
 import { Image } from "antd";
+import CustomerSignIn from "./CustomerSignIn";
+import { calendar_v3 } from "googleapis";
+import { Session } from "next-auth";
+import CustomerAppointments from "./CustomerAppointments";
+import { AppointmentRequest, Customer, Treatment, User } from "@prisma/client";
 
 function Responsive({
   urls,
   setGalleryOrUpload,
   adminUserId,
+  freebusy,
+  customerAppointments,
+  session,
 }: {
   urls: {
     profileUrls: string;
@@ -20,8 +29,21 @@ function Responsive({
       fileName: string;
     }[];
   } | null;
+  session: Session | null;
+  freebusy: string;
   adminUserId: string | false;
   setGalleryOrUpload: React.Dispatch<React.SetStateAction<boolean>>;
+  customerAppointments:
+    | (
+        | calendar_v3.Schema$Event
+        | (AppointmentRequest & {
+            treatment: Treatment;
+            customer: Customer;
+            user: User;
+          })
+      )[]
+    | null
+    | undefined;
 }) {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImages, setPreviewImages] = useState<
@@ -38,7 +60,6 @@ function Responsive({
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 3,
-    initialSlide: 0,
     responsive: [
       {
         breakpoint: 1024,
@@ -52,9 +73,9 @@ function Responsive({
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          initialSlide: 3,
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2,
         },
       },
       {
@@ -68,14 +89,8 @@ function Responsive({
   };
 
   const handleImageClick = (index: number) => {
-    const reorderedImages = urls
-      ? [
-          ...urls.galleryImgUrls.slice(index),
-          ...urls.galleryImgUrls.slice(0, index),
-        ]
-      : [];
-    setPreviewImages(reorderedImages);
-    setCurrentImageIndex(0);
+    setPreviewImages(urls ? urls.galleryImgUrls : []);
+    setCurrentImageIndex(index);
     setPreviewVisible(true);
   };
 
@@ -84,18 +99,17 @@ function Responsive({
       <div className="slider-container w-1/2 max-md:w-10/12">
         {urls?.galleryImgUrls && urls.galleryImgUrls.length > 0 ? (
           <>
-            <Slider {...settings} className="flex justify-center items-center">
+            <Slider {...settings}>
               {urls.galleryImgUrls.map((img, index) => (
                 <div
                   key={index}
-                  className="image-container flex justify-center items-center p-2"
+                  className="image-container"
                   onClick={() => handleImageClick(index)}
                 >
                   <Image
-                    width="100%"
-                    height="200px"
+                    width={200}
                     src={img.url}
-                    preview={{ visible: false }}
+                    preview={false}
                     style={{ objectFit: "cover", objectPosition: "center" }}
                   />
                 </div>
@@ -104,7 +118,8 @@ function Responsive({
             <Image.PreviewGroup
               preview={{
                 visible: previewVisible,
-                onVisibleChange: setPreviewVisible,
+                current: currentImageIndex,
+                onVisibleChange: (visible) => setPreviewVisible(visible),
               }}
             >
               {previewImages.map((img, index) => (
@@ -113,10 +128,10 @@ function Responsive({
             </Image.PreviewGroup>
           </>
         ) : (
-          <></>
+          <p>No images available</p>
         )}
       </div>
-      {adminUserId && (
+      {adminUserId ? (
         <Button
           className="flex justify-center items-center gap-2 bg-slate-100 text-black hover:bg-slate-100/50"
           variant="default"
@@ -126,6 +141,13 @@ function Responsive({
           <BiEdit />
           <span>עריכת גלריה</span>
         </Button>
+      ) : !session ? (
+        <CustomerSignIn />
+      ) : (
+        <CustomerAppointments
+          freebusy={freebusy}
+          customerAppointments={customerAppointments}
+        />
       )}
     </div>
   );

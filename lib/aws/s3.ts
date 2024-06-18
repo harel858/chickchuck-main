@@ -135,7 +135,8 @@ const imgIxLoader = (src: string) => {
   imgIxUrl.searchParams.set("q", "75");
   return imgIxUrl.href;
 };
-export const getImages2 = async (paramsArray: GetParams[]) => {
+
+export async function getImages2(paramsArray: GetParams[]) {
   try {
     let profileUrls: string = "";
     let backgroundUrls: string = "";
@@ -199,7 +200,7 @@ export const getImages2 = async (paramsArray: GetParams[]) => {
     console.log(err);
     throw new Error("internal error");
   }
-};
+}
 
 export const getImage = async (params: GetParam) => {
   if (!params.Key) return null;

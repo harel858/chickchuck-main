@@ -2,6 +2,7 @@
 import { setupGoogleCalendarClient } from "@lib/google/client";
 import { Customer, Treatment, User } from "@prisma/client";
 import { calendar_v3 } from "googleapis";
+import { revalidatePath } from "next/cache";
 
 export type EventProps = {
   summary: string | undefined;
@@ -68,6 +69,7 @@ export async function createAppointment3(
         },
       },
     });
+    revalidatePath("/");
     return result.data;
   } catch (error) {
     console.error(error);

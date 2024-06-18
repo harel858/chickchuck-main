@@ -2,11 +2,16 @@
 import React, { useState } from "react";
 import Gallery from "@components/landingPage/Gallery";
 import UploadToGallery from "@components/landingPage/UploadToGallery";
-
+import { calendar_v3 } from "googleapis";
+import { Session } from "next-auth";
+import { AppointmentRequest, Customer, Treatment, User } from "@prisma/client";
 function GallerySection({
   isAdmin,
   urls,
   adminUserId,
+  customerAppointments,
+  session,
+  freeBusy,
 }: {
   isAdmin: boolean;
   urls: {
@@ -15,7 +20,22 @@ function GallerySection({
     galleryImgUrls: { url: string; fileName: string }[];
   } | null;
   adminUserId: string | false;
+  freeBusy: string;
+  customerAppointments:
+    | (
+        | calendar_v3.Schema$Event
+        | (AppointmentRequest & {
+            treatment: Treatment;
+            customer: Customer;
+            user: User;
+          })
+      )[]
+    | null
+    | undefined;
+  session: Session | null;
 }) {
+  console.log("customerAppointments", customerAppointments);
+
   const [galleryOrUpload, setGalleryOrUpload] = useState<boolean>(
     isAdmin && urls?.galleryImgUrls.length === 0
   );
@@ -32,6 +52,9 @@ function GallerySection({
           adminUserId={adminUserId}
           setGalleryOrUpload={setGalleryOrUpload}
           urls={urls}
+          customerAppointments={customerAppointments}
+          session={session}
+          freebusy={freeBusy}
         />
       )}
     </>

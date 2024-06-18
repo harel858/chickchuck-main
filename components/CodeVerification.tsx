@@ -1,5 +1,5 @@
 "use client";
-import React, { useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import {
   TUserValidationCode,
@@ -15,7 +15,6 @@ import axios from "axios";
 import { Label } from "./label";
 import { Input } from "./input";
 import { cn } from "@lib/utils";
-import { createAppointment } from "actions/createAppointment";
 import { message } from "antd";
 import { VerificationData } from "types/types";
 import { createAppointment3 } from "actions/createAppointment3";
@@ -29,7 +28,6 @@ const BusinessDetailsForm = ({
   handleNext,
   bussinesId,
   selectedUser,
-  setLoadingState,
   confirmationNeeded,
 }: {
   confirmationNeeded: boolean | null;
@@ -43,14 +41,15 @@ const BusinessDetailsForm = ({
         request_id: string;
       })
     | null;
-  setLoadingState: React.Dispatch<React.SetStateAction<boolean>>;
   freeBusy: string;
   handleNext: () => void;
   bussinesId: string;
   selectedUser: User;
 }) => {
-  const [isPending, startTransition] = useTransition();
-
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    return () => setIsLoading(false);
+  }, []);
   const form = useForm<TUserValidationCode>({
     resolver: zodResolver(UserValidationCode),
   });
@@ -71,7 +70,7 @@ const BusinessDetailsForm = ({
     } as VerificationData;
     if (!selectedService) return message.error("שירות מבוקש חסר");
     try {
-      setLoadingState(true);
+      setIsLoading(true);
       const result = await axios.post("/api/verification/steptwo", params);
       const client = result.data as Customer;
 
@@ -84,7 +83,7 @@ const BusinessDetailsForm = ({
           client
         );
         if (event) {
-          setLoadingState(false);
+          setIsLoading(false);
           handleNext();
           return message.success("הפגישה נקבעה בהצלחה");
         }
@@ -97,14 +96,14 @@ const BusinessDetailsForm = ({
       );
 
       if (appointmentRequest) {
-        setLoadingState(false);
+        setIsLoading(false);
         handleNext();
         return message.success("הבקשה לתור עודכנה בהצלחה");
       }
     } catch (err: any) {
       console.log(typeof err);
       console.log("err", err);
-      setLoadingState(false);
+      setIsLoading(false);
       return message.error("קביעת פגישה נכשלה");
     }
   };
@@ -151,7 +150,7 @@ const BusinessDetailsForm = ({
               className="bg-blue-600 text-2xl fixed bottom-5 w-1/3 max-md:w-full transition-all ease-in-out duration-300"
               type="submit"
               size="lg"
-              isLoading={isPending}
+              isLoading={isLoading}
             >
               סיום
             </Button>

@@ -5,9 +5,11 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getImage } from "./aws/s3";
 import googleProvider from "next-auth/providers/google";
-import { getUserByPhone, updateUserByPhone } from "./prisma/users";
+import { updateUserByPhone } from "./prisma/users";
 import bcrypt from "bcrypt";
 import findUserByPhone from "actions/findUserByPhone";
+import { updateCustomerByPhone } from "./prisma/customer/updateCustomerByPhone";
+import findCustomer from "actions/findCustomer";
 
 const bucketName = process.env.BUCKET_NAME!;
 
@@ -16,7 +18,10 @@ type UserCredentials = {
   password: string;
   confirmPassword: string;
 };
+//team member sign up
 const authorizeUserSignUp = async (credentials: any, req: any) => {
+  console.log("authorizeUserSignUp");
+
   try {
     const { phone, password } = credentials as UserCredentials;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -29,11 +34,51 @@ const authorizeUserSignUp = async (credentials: any, req: any) => {
     throw new Error(err);
   }
 };
+
+//team member sign in
 const authorizeUserSignIn = async (credentials: any, req: any) => {
+  console.log("authorizeUserSignIn");
+
+  try {
+    const { phone, password, confirmPassword } = credentials as UserCredentials;
+    const user = await findUserByPhone(phone);
+    if (user?.password) {
+      let verify = await bcrypt.compare(password, user.password);
+
+      if (!verify) return null;
+      return user;
+    }
+    return null;
+  } catch (err: any) {
+    console.log(err);
+    throw new Error(err);
+  }
+};
+
+//customer sign up
+const authorizeCustomerSignUp = async (credentials: any, req: any) => {
+  console.log("authorizeCustomerSignUp");
+
+  try {
+    const { phone, password } = credentials as UserCredentials;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await updateCustomerByPhone(phone, hashedPassword);
+
+    return user;
+  } catch (err: any) {
+    console.log(err);
+    throw new Error(err);
+  }
+};
+
+//customer sign InIn
+const authorizeCustomerSignIn = async (credentials: any, req: any) => {
+  console.log("authorizeCustomerSignIn");
   try {
     const { phone, password, confirmPassword } = credentials as UserCredentials;
 
-    const user = await findUserByPhone(phone);
+    const user = await findCustomer(phone);
     if (user?.password) {
       let verify = await bcrypt.compare(password, user.password);
 
@@ -101,26 +146,39 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   providers: [
     CredentialsProvider({
-      name: "Sign Up",
+      name: "SignUpCustomer",
       type: "credentials",
       credentials: {
-        phone: {
-          label: "Phone",
-          type: "phone",
-        },
+        phone: { label: "Phone", type: "phone" },
+        password: { label: "Password", type: "password" },
+        confirmPassword: { label: "Confirm Password", type: "password" },
+      },
+      authorize: authorizeCustomerSignUp,
+    }),
+    CredentialsProvider({
+      name: "SignInCustomer",
+      type: "credentials",
+      credentials: {
+        phone: { label: "Phone", type: "phone" },
+        password: { label: "Password", type: "password" },
+      },
+      authorize: authorizeCustomerSignIn,
+    }),
+    CredentialsProvider({
+      name: "SignUpUser",
+      type: "credentials",
+      credentials: {
+        phone: { label: "Phone", type: "phone" },
         password: { label: "Password", type: "password" },
         confirmPassword: { label: "Confirm Password", type: "password" },
       },
       authorize: authorizeUserSignUp,
     }),
     CredentialsProvider({
-      name: "Sign In",
+      name: "SignInUser",
       type: "credentials",
       credentials: {
-        phone: {
-          label: "Phone",
-          type: "phone",
-        },
+        phone: { label: "Phone", type: "phone" },
         password: { label: "Password", type: "password" },
       },
       authorize: authorizeUserSignIn,
@@ -157,8 +215,12 @@ export const authOptions: NextAuthOptions = {
       const { account, token, user, profile, session, trigger } = props;
 
       try {
+        console.log("props", props);
+
         let logo: string | null = "";
         let user = null;
+        let customer = null;
+
         try {
           user = await prisma.user.findUnique({
             where: { id: token.sub! },
@@ -171,6 +233,19 @@ export const authOptions: NextAuthOptions = {
           });
         } catch (err: any) {
           throw new Error(err);
+        }
+        try {
+          const findCustomer = await prisma.customer.findUnique({
+            where: { id: token.sub! },
+          });
+          customer = findCustomer;
+        } catch (err: any) {
+          throw new Error(err);
+        }
+        if (customer) {
+          token.user = customer;
+
+          return token;
         }
         if (!user) throw new Error("user not found");
 

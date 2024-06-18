@@ -25,6 +25,7 @@ export default async function handler(
   try {
     const { request_id, code, phoneNumber, name, bussinesId } =
       req.body as VerificationData;
+    let phoneNumber2 = phoneNumber.slice(4);
 
     const check = await vonage.verify.check(request_id, code);
 
@@ -34,20 +35,20 @@ export default async function handler(
 
     let customer: Customer | null = null;
     const { existCustomer, getCustomerErr } = await getCustomer(
-      phoneNumber,
+      phoneNumber2,
       bussinesId
     );
 
     if (existCustomer) {
       customer = existCustomer;
       if (existCustomer.name !== name) {
-        await updateCustomer(name, phoneNumber);
+        await updateCustomer(name, phoneNumber2);
         customer = existCustomer;
       }
     } else {
       const { newCustomer, createCustomerErr } = await createCustomer(
         name,
-        phoneNumber,
+        phoneNumber2,
         bussinesId
       );
       customer = newCustomer || null;

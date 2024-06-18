@@ -21,10 +21,11 @@ import dayjs, { Dayjs } from "dayjs";
 import { calendar_v3 } from "googleapis";
 import { TUserValidation } from "@lib/validators/userValidation";
 import { message } from "antd";
-
+import { Session } from "next-auth";
 export default function AppointmentSteps({
   business,
   freeBusy,
+  session,
 }: {
   business: Business & {
     Treatment: Treatment[];
@@ -33,7 +34,10 @@ export default function AppointmentSteps({
     user: User[];
   };
   freeBusy: string;
+  session: Session | null;
 }) {
+  console.log("Session", session);
+
   const [isLoading, setIsLoading] = useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [selectedService, setSelectedService] =
@@ -187,7 +191,6 @@ export default function AppointmentSteps({
       title: "אימות",
       content: (
         <Verification
-          setLoadingState={setIsLoading}
           selectedService={selectedService}
           selectedSlot={selectedSlot}
           onSetCustomerInput={onSetCustomerInput}
@@ -200,7 +203,6 @@ export default function AppointmentSteps({
       content: (
         <CodeVerification
           confirmationNeeded={business.confirmationNeeded}
-          setLoadingState={setIsLoading}
           selectedService={selectedService}
           selectedSlot={selectedSlot}
           customerInput={customerInput}

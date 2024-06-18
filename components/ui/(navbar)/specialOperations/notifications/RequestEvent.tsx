@@ -1,36 +1,25 @@
-import { CloseCircleOutlined } from "@ant-design/icons";
-import DetailsButton from "@components/clients/details/DetailsButton";
+import React, { useTransition } from "react";
 import { AppointmentRequest, Customer, Treatment, User } from "@prisma/client";
 import { List } from "antd";
 import dayjs from "dayjs";
-import { calendar_v3 } from "googleapis";
-import React, { useTransition } from "react";
 import { Session } from "next-auth";
 import { Button } from "@ui/Button";
-import { createAppointment3 } from "actions/createAppointment3";
 import { confirmAppointment } from "actions/confirmAppointment";
 import { denyAppointment } from "actions/denyAppointment";
 function RequestEvent({
-  customers,
   item,
-  closePopover,
   session,
 }: {
-  customers: Customer[];
   item: AppointmentRequest & {
     treatment: Treatment;
     customer: Customer;
     user: User;
   };
-  closePopover: () => void;
   session: Session;
 }) {
   const [isPending, startTransition] = useTransition();
   const [isPending2, startTransition2] = useTransition();
-  const customer = customers.find(
-    (customer) => customer.id === item.customerId
-  );
-  const customerName = item.customer.name;
+
   const startTime = dayjs(item.start).format("hh:mm");
   const formatDate = dayjs(item.start).format("DD/MM/YYYY");
   return (

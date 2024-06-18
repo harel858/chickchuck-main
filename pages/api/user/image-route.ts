@@ -31,9 +31,6 @@ export default async function handler(
       const form = new formidable.IncomingForm({ multiples: false });
 
       form.parse(req, async (error, fields, files) => {
-        console.log("files", files);
-        console.log("fields", fields);
-
         if (error) {
           console.error(error);
           return res.status(500).json({ error: "An error occurred" });

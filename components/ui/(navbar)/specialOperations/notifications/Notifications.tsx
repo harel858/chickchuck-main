@@ -38,19 +38,16 @@ function NotificationComponent({
       // Sort the filteredNotifications array by dateTime
       const sortedNotifications = filteredNotifications.sort((a, b) => {
         const dateA = isGoogleEvent(a)
-          ? new Date(dayjs(a.start?.dateTime).toISOString()).getTime()
-          : new Date(dayjs(a.start).toISOString()).getTime();
+          ? new Date(dayjs(a.created).toISOString()).getTime()
+          : new Date(dayjs(a.created).toISOString()).getTime();
         const dateB = isGoogleEvent(b)
-          ? new Date(dayjs(b.start?.dateTime).toISOString()).getTime()
-          : new Date(dayjs(b.start).toISOString()).getTime();
-        return dateA - dateB;
+          ? new Date(dayjs(b.created).toISOString()).getTime()
+          : new Date(dayjs(b.created).toISOString()).getTime();
+        return dateB - dateA;
       });
 
       setNotifications(sortedNotifications);
     }
-
-    console.log("scheduleProps", scheduleProps);
-    console.log("notifications", filteredNotifications);
 
     filteredNotifications && setNotifications(filteredNotifications);
   }, [scheduleProps]);
@@ -62,9 +59,7 @@ function NotificationComponent({
 
   const handleOpenChange = (newOpen: boolean) => setOpen(newOpen);
 
-  const handleWebSocketOpen = () => {
-    console.log("WebSocket connection opened");
-  };
+  const handleWebSocketOpen = () => {};
 
   const handleWebSocketMessage = useCallback(
     (e: MessageEvent<any>) => {
@@ -79,7 +74,6 @@ function NotificationComponent({
             (notification) => notification.id === newNotification.id
           )
       );
-      console.log("filteredNewNotifications", filteredNewNotifications);
 
       notifications &&
         filteredNewNotifications &&

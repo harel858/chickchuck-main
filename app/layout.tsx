@@ -6,15 +6,16 @@ import { Inter } from "next/font/google";
 import Providers from "@ui/Providers";
 import { cn } from "@lib/utils";
 import { ServerThemeProvider } from "next-themes";
+import Navbar from "@components/homePage/Navbar";
 
 const inter = Inter({
   weight: ["100", "500", "300", "400"],
   subsets: ["latin"],
 });
 export const metadata: Metadata = {
-  title: "PosaPoint - Efficient Queue Management System for Your Business",
+  title: "Quickly - Efficient Queue Management System for Your Business",
   description:
-    "Optimize your business operations with PosaPoint, a powerful Queue Management System designed to enhance your time management at the point of sale. Streamline customer service, reduce wait times, and boost efficiency.",
+    "Optimize your business operations with Quickly, a powerful Queue Management System designed to enhance your time management at the point of sale. Streamline customer service, reduce wait times, and boost efficiency.",
   keywords: [
     "queue management system",
     "point of sale",
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
     "business efficiency",
     "customer service",
     "queue app",
-    "PosaPoint",
+    "Quickly",
   ],
 };
 export default function RootLayout({
@@ -38,17 +39,17 @@ export default function RootLayout({
           "h-full font-sans bg-slate-300 dark:bg-slate-900 antialiased relative"
         )}
       >
+        {/* @ts-ignore */}
+        <Navbar />
         <Providers>
           <main className="relative flex flex-col min-h-screen">
             <div className="flex-grow flex-1">{children}</div>
           </main>
         </Providers>
-
         {/* Add the inset box shadow */}
         {/*    <div className="fixed inset-0 pointer-events-none -z-10">
             <div className="h-screen bg-gradient-to-t from-transparent dark:to-slate-700/80 to-slate-300/40 -z-10" />
           </div> */}
-
         {/* Allow more height for mobile menu on mobile */}
         <div className="max-md:h-10" />
       </body>

@@ -9,24 +9,30 @@ import Images from "@ui/Images";
 import BackgroundImage from "@components/landingPage/BackgroundImage";
 import { prisma } from "@lib/prisma";
 import GallerySection from "@components/landingPage/GallerySection";
+import { calendar_v3 } from "googleapis";
+import { setupGoogleCalendarClient } from "@lib/google/client";
+import { getEventsByCustomer } from "@lib/google/getEventsByCustomer";
+import { AppointmentRequest, Customer, Treatment, User } from "@prisma/client";
+import { isGoogleEvent } from "@ui/(navbar)/specialOperations/notifications/utils/typeGourd";
+import dayjs from "dayjs";
 
 type LandingPageProps = {
   params: {
     businessName: string;
   };
 };
+
 const bucketName = process.env.BUCKET_NAME!;
 
 async function getBusiness(params: string) {
-  const value = decodeURIComponent(
-    params?.replace(/\-/g, " ") // Replace hyphens with whitespace
-  );
+  const value = decodeURIComponent(params?.replace(/\-/g, " "));
 
   let urls: {
     profileUrls: string;
     backgroundUrls: string;
     galleryImgUrls: { url: string; fileName: string }[];
   } | null = null;
+
   try {
     const business = await prisma.business.findUnique({
       where: { businessName: value },
@@ -37,8 +43,10 @@ async function getBusiness(params: string) {
         user: { include: { activityDays: true, accounts: true } },
       },
     });
+
     if (!business?.user) return null;
-    const admin = business.user.find((item) => item.accounts.length != 0);
+
+    const admin = business.user.find((item) => item.accounts.length !== 0);
     const account = admin?.accounts[0];
 
     if (business?.Images) {
@@ -50,42 +58,114 @@ async function getBusiness(params: string) {
           galleryImgName: element?.galleryImgName || "",
         },
       }));
+
       const res = await getImages2(params);
       urls = res;
     }
-    /*  const result = { ...business, urls };
-    const { id, ...rest } = result; */
+
     return { business, urls, account: account?.access_token };
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return null;
   }
 }
+
+const getCustomerEvents = async (id: string, access_token: string) => {
+  try {
+    const googleClient = setupGoogleCalendarClient(access_token);
+    const events = await getEventsByCustomer(googleClient, id);
+    return events;
+  } catch (error) {
+    console.error("Error loading Google Calendar API:", error);
+  }
+};
+
+const getAppointmentRequest = async (
+  customerId: string,
+  businessId: string
+) => {
+  try {
+    const appointmentRequest = prisma.appointmentRequest.findMany({
+      where: { customerId: customerId, businessId: businessId },
+      include: { customer: true, treatment: true, user: true },
+    });
+    return appointmentRequest || [];
+  } catch (error) {
+    console.error("Error loading prisma API:", error);
+  }
+};
+
 export default async function LandingPage({
   params: { businessName },
 }: LandingPageProps) {
   const result = await getBusiness(businessName);
   const session = await getServerSession(authOptions);
+
   if (!result || !result.account) return notFound();
-  const freeBusy = session?.user.access_token || result.account;
 
   const { business, urls } = result;
   const isAdmin =
     !!session?.user?.isAdmin && session.user.businessId === business.id;
-  const adminUserId =
-    !!session?.user?.isAdmin && session.user.businessId === business.id
-      ? session?.user.id
-      : false;
+  const adminUserId = isAdmin ? session?.user.id : false;
+  const freeBusy = session?.user.access_token || result.account;
+
+  let customerAppointments: (
+    | calendar_v3.Schema$Event
+    | (AppointmentRequest & {
+        treatment: Treatment;
+        customer: Customer;
+        user: User;
+      })
+  )[] = [];
+
+  if (session && !session?.user.UserRole) {
+    const googleAppointments = await getCustomerEvents(
+      session?.user.id,
+      result.account
+    );
+    console.log("session", session);
+    const appointmentRequest =
+      (await getAppointmentRequest(session.user.id, business.id)) || [];
+    console.log("appointmentRequest", appointmentRequest);
+
+    if (googleAppointments) {
+      customerAppointments = [
+        ...customerAppointments,
+        ...googleAppointments,
+        ...appointmentRequest,
+      ].sort((a, b) => {
+        const dateA = isGoogleEvent(a)
+          ? new Date(dayjs(a.created).toISOString()).getTime()
+          : new Date(dayjs(a.created).toISOString()).getTime();
+        const dateB = isGoogleEvent(b)
+          ? new Date(dayjs(b.created).toISOString()).getTime()
+          : new Date(dayjs(b.created).toISOString()).getTime();
+        return dateB - dateA;
+      });
+    }
+  }
+
   return (
     <>
-      {session?.user.isAdmin && session.user.businessId === business.id ? (
+      {isAdmin ? (
         <Images urls={urls} session={session} />
       ) : (
         <BackgroundImage urls={urls} />
       )}
       <NavButtons business={business} />
-      <GallerySection adminUserId={adminUserId} isAdmin={isAdmin} urls={urls} />
-      <AppointmentSteps business={business} freeBusy={freeBusy} />
+      <GallerySection
+        adminUserId={adminUserId}
+        isAdmin={isAdmin}
+        freeBusy={freeBusy}
+        urls={urls}
+        customerAppointments={customerAppointments}
+        session={session}
+      />
+      <AppointmentSteps
+        business={business}
+        freeBusy={freeBusy}
+        session={session}
+      />
     </>
   );
 }

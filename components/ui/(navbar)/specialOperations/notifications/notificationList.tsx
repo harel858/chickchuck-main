@@ -18,11 +18,6 @@ const NotificationList = ({
   customers: Customer[];
   closePopover: () => void;
 }) => {
-  // Reverse the notifications array
-  const reversedNotifications = notifications
-    ? [...notifications].reverse()
-    : [];
-
   return (
     <div
       id="scrollableDiv"
@@ -46,12 +41,7 @@ const NotificationList = ({
               session={session}
             />
           ) : (
-            <RequestEvent
-              item={item}
-              customers={customers}
-              closePopover={closePopover}
-              session={session}
-            />
+            <RequestEvent item={item} session={session} />
           )
         }
       />

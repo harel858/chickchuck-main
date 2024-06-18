@@ -1,5 +1,6 @@
 "use server";
 import { prisma } from "@lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function denyAppointment(requestId: string) {
   try {
@@ -7,6 +8,7 @@ export async function denyAppointment(requestId: string) {
       where: { id: requestId },
       data: { isConfirmed: false },
     });
+    revalidatePath("/");
   } catch (error) {
     console.error(error);
     throw new Error("An error occurred while creating the appointment");

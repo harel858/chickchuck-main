@@ -130,10 +130,13 @@ const UploadGallery = ({
     });
     formData.append("galleryLength", galleryList.length.toString());
 
+    console.log("formData", formData);
+
     try {
       const result = await axios.post("/api/user/image-route", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      console.log("result", result);
 
       setIsLoading(false);
       setGalleryOrUpload(false);

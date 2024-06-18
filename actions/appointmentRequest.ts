@@ -2,7 +2,9 @@
 
 import { prisma } from "@lib/prisma";
 import { Customer, Treatment, User } from "@prisma/client";
+import dayjs from "dayjs";
 import { calendar_v3 } from "googleapis";
+import { revalidatePath } from "next/cache";
 
 export async function appointmentRequestHandler(
   selectedService: Treatment,
@@ -21,11 +23,15 @@ export async function appointmentRequestHandler(
         description: "",
         start: start,
         end: end,
+        created: dayjs().toISOString(),
         user: { connect: { id: selectedUser.id } },
         customer: { connect: { id: client.id } },
         treatment: { connect: { id: selectedService.id } },
+        business: { connect: { id: selectedUser.businessId! } },
       },
     });
+    revalidatePath("/");
+
     return appointmentRequest;
   } catch (err: any) {
     throw new Error(err);

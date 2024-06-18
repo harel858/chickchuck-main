@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   TUserValidation,
@@ -24,12 +24,10 @@ const BusinessDetailsForm = ({
   selectedSlot,
   onSetCustomerInput,
   selectedUser,
-  setLoadingState,
 }: {
   selectedUser: User;
   selectedService: Treatment | null;
   selectedSlot: calendar_v3.Schema$TimePeriod | null;
-  setLoadingState: React.Dispatch<React.SetStateAction<boolean>>;
 
   onSetCustomerInput: (
     input: {
@@ -40,6 +38,10 @@ const BusinessDetailsForm = ({
     }
   ) => void;
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    return () => setIsLoading(false);
+  }, []);
   const form = useForm<TUserValidation>({
     resolver: zodResolver(UserValidation),
   });
@@ -53,7 +55,7 @@ const BusinessDetailsForm = ({
 
   const onSubmit = async (data: TUserValidation) => {
     try {
-      setLoadingState(true);
+      setIsLoading(true);
       const result = await axios.post("/api/verification/stepone", {
         name: data.fullName,
         phoneNumber: data.phoneNumber,
@@ -61,11 +63,10 @@ const BusinessDetailsForm = ({
       const request_id = result.data.request_id;
 
       onSetCustomerInput({ ...data, request_id: request_id });
-      setLoadingState(false);
     } catch (err: any) {
       console.log(typeof err);
       console.log("err", err);
-      setLoadingState(false);
+      setIsLoading(false);
     }
   };
   const formType: FieldType[] = [
@@ -105,6 +106,7 @@ const BusinessDetailsForm = ({
               className="bg-blue-600 text-2xl fixed bottom-10 w-1/3 max-md:w-full transition-all ease-in-out duration-300"
               type="submit"
               size="lg"
+              isLoading={isLoading}
             >
               המשך
             </Button>
