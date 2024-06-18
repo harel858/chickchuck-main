@@ -82,14 +82,14 @@ const Navbar = async () => {
                   Login
                 </Link> */}
 
-                <div className="h-8 w-px bg-zinc-200 hidden sm:block" />
+                <div className="h-8 w-px bg-zinc-200 sm:block" />
 
                 <Link
                   href="/login"
-                  className={buttonVariants({
+                  className={`${buttonVariants({
                     size: "sm",
-                    className: "hidden sm:flex items-center gap-1",
-                  })}
+                    className: "sm:flex items-center gap-1",
+                  })} w-max`}
                 >
                   היכנס לחשבון
                   <ArrowRight className="ml-1.5 h-5 w-5" />

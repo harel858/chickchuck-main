@@ -39,8 +39,6 @@ export default function RootLayout({
           "h-full font-sans bg-slate-300 dark:bg-slate-900 antialiased relative"
         )}
       >
-        {/* @ts-ignore */}
-        <Navbar />
         <Providers>
           <main className="relative flex flex-col min-h-screen">
             <div className="flex-grow flex-1">{children}</div>
