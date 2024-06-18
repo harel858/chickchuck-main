@@ -93,6 +93,7 @@ export default function Home() {
                     src="/testimonials/8.jpg"
                     alt="user image"
                   />
+
                   <img
                     className="inline-block object-cover h-10 w-10 rounded-full ring-2 ring-slate-100"
                     src="/testimonials/5.jpg"
