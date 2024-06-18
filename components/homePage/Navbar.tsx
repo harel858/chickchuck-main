@@ -29,7 +29,7 @@ const Navbar = async () => {
           <div className="h-full flex items-center space-x-4">
             {user ? (
               <>
-                <Link
+                {/* <Link
                   href="/api/auth/logout"
                   className={buttonVariants({
                     size: "sm",
@@ -48,7 +48,7 @@ const Navbar = async () => {
                   >
                     Dashboard ✨
                   </Link>
-                ) : null}
+                ) : null} */}
                 <Link
                   href="/login"
                   className={buttonVariants({
