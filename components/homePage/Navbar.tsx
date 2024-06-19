@@ -5,6 +5,7 @@ import { buttonVariants } from "@ui/Button";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@lib/auth";
 import Image from "next/image";
+import { ArrowLeft } from "lucide-react";
 
 const Navbar = async () => {
   const session = await getServerSession(authOptions);
@@ -13,13 +14,13 @@ const Navbar = async () => {
   const isAdmin = user?.isAdmin;
 
   return (
-    <nav className="sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all">
+    <nav className="sticky z-[100] h-20 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all">
       <MaxWidthWrapper>
-        <div className="flex h-14 items-center justify-between border-b border-zinc-200">
+        <div className="flex flex-row-reverse h-20 items-center justify-between border-b border-zinc-200">
           <Link href="/" className="flex z-40 font-semibold">
             <Image
-              width={200}
-              height={200}
+              width={300}
+              height={300}
               alt="logo"
               aria-hidden="true"
               src="/QuickLine-logo-temp3.png"
@@ -56,8 +57,9 @@ const Navbar = async () => {
                     className: "hidden sm:flex items-center gap-1",
                   })}
                 >
+                  {" "}
+                  <ArrowLeft className="ml-1.5 h-5 w-5" />
                   היכנס לחשבון
-                  <ArrowRight className="ml-1.5 h-5 w-5" />
                 </Link>
               </>
             ) : (

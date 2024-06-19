@@ -70,7 +70,7 @@ const PlusButton = ({
     marginTop: 16,
   };
   const copyToClipboard = () => {
-    const link = `https://main.d2u034j1xcc80b.amplifyapp.com/${formattedBusinessName}`;
+    const link = `https://www.quickline.co.il/${formattedBusinessName}`;
     navigator.clipboard.writeText(link);
     message.success("קישור הועתק ללוח");
   };
