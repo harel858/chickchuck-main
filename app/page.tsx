@@ -35,7 +35,7 @@ export default function Home() {
                   style={{ direction: "rtl" }}
                   className="relative w-fit tracking-tight text-balance mt-16 font-bold !leading-tight text-gray-900 text-5xl md:text-6xl lg:text-7xl"
                 >
-                  חאלס עם הדיבורים{" "}
+                  פחות דיבורים{" "}
                   <span className="bg-green-600 px-2 text-white">
                     האפליקציה
                   </span>{" "}
@@ -45,12 +45,13 @@ export default function Home() {
                   style={{ direction: "rtl" }}
                   className="mt-8 text-lg lg:pr-10 max-w-prose text-center lg:text-left text-balance md:text-wrap"
                 >
-                  אפליקציה הכרחית לעסק שלכם,{" "}
+                  אפליקציה חיונית לעסק שלכם,{" "}
                   <span className="font-semibold">
                     Quickline מסנכרנת ישירות את יומן גוגל
                   </span>{" "}
-                  כך שכל תור שיוזמן יופיע מיד ביומן שלכם ותקבלו תזכורות כדי לא
-                  לשכוח שום דבר.
+                  כך שכל תור שנקבע מופיע מיידית ביומן. Quickline גם מאפשרת קבלת
+                  מקדמות דרך ביט כדי למזער הברזות, תזכורות ישירות בווצאפ, (כי
+                  היום כולם שם).
                 </p>
 
                 <ul className="mt-8 space-y-2 text-left font-medium flex flex-col items-center sm:items-start">
