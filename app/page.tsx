@@ -314,7 +314,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-slate-100 grainy-dark py-24">
+        {/* <section className="bg-slate-100 grainy-dark py-24">
           <MaxWidthWrapper classNames="py-24">
             <div className="mb-12 px-6 lg:px-8">
               <div className="mx-auto max-w-2xl sm:text-center">
@@ -377,7 +377,7 @@ export default function Home() {
               </div>
             </ul>
           </MaxWidthWrapper>
-        </section>
+        </section> */}
       </div>
     </>
   );

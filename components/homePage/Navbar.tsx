@@ -16,7 +16,7 @@ const Navbar = async () => {
   return (
     <nav className="sticky z-[100] h-20 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all">
       <MaxWidthWrapper>
-        <div className="flex flex-row-reverse h-20 items-center justify-between border-b border-zinc-200">
+        <div className="flex flex-row h-20 items-center justify-between border-b border-zinc-200">
           <Link href="/" className="flex z-40 font-semibold">
             <Image
               width={300}
