@@ -3,6 +3,7 @@ import Cards from "@components/homePage/Cards";
 import Navbar from "@components/homePage/Navbar";
 import Phone from "@components/homePage/Phone";
 import { Reviews } from "@components/homePage/Reviews";
+import Footer from "@components/homePage/footer";
 import { buttonVariants } from "@ui/Button";
 import Icons from "@ui/Icons";
 import { ArrowLeft, ArrowRight, Check, Star } from "lucide-react";
@@ -208,7 +209,6 @@ export default function Home() {
             {/*        </ul> */}
           </MaxWidthWrapper>
         </section>
-
         {/* value proposition section */}
         <section className="grainy-dark py-24">
           <MaxWidthWrapper classNames="flex flex-col items-center gap-16 sm:gap-32">
@@ -313,7 +313,7 @@ export default function Home() {
             <Reviews />
           </div>
         </section>
-
+        <Footer />
         {/* <section className="bg-slate-100 grainy-dark py-24">
           <MaxWidthWrapper classNames="py-24">
             <div className="mb-12 px-6 lg:px-8">
