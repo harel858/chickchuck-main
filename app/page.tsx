@@ -70,14 +70,14 @@ export default function Home() {
                       className="flex gap-1.5 items-center text-left"
                     >
                       <Check className="h-5 w-5 shrink-0 text-green-600" />
-                      סנכרון תשלומי מקדמות בביט
+                      דף עסקי לגמרי משלכם עם אופציה לקביעת תורים
                     </li>
                     <li
                       style={{ direction: "rtl" }}
                       className="flex gap-1.5 items-center text-left"
                     >
                       <Check className="h-5 w-5 shrink-0 text-green-600" />
-                      וכמובן שתזכורות בווצאפ או בSMS לבחירתך
+                      מקדמות בביט עם קבלות
                     </li>
                   </div>
                 </ul>
@@ -122,7 +122,7 @@ export default function Home() {
                     </div>
 
                     <p style={{ direction: "rtl" }}>
-                      <span className="font-semibold">+1250</span>לקוחות מרוצים
+                      <span className="font-semibold">1250+</span>לקוחות מרוצים
                     </p>
                   </div>
                 </div>

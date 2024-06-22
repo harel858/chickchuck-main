@@ -135,7 +135,7 @@ export const Pricing = async () => {
                 <div
                   key={plan}
                   className={cn(
-                    "relative w-1/3 rounded-2xl bg-white shadow-lg",
+                    "relative w-1/3 max-xl:w-11/12 rounded-2xl bg-white shadow-lg",
                     {
                       "border-2 border-blue-600 shadow-blue-200":
                         plan === "לייט",
