@@ -122,7 +122,7 @@ export default function Home() {
                     </div>
 
                     <p style={{ direction: "rtl" }}>
-                      <span className="font-semibold">1250</span> לקוחות מרוצים
+                      <span className="font-semibold">+1250</span>לקוחות מרוצים
                     </p>
                   </div>
                 </div>
@@ -242,14 +242,13 @@ export default function Home() {
                 </div>
                 <div className="text-lg leading-8">
                   <p style={{ direction: "rtl" }}>
-                    "Quickline{" "}
+                    "Quickline היא הפתרון לכל מי שחי על לוח זמנים צפוף. קביעת
+                    התורים מסודרת ומדויקת, עם סנכרון מושלם ליומן בגוגל וללא חשש
+                    להתנגשויות. התזכורות בווצאפ או ב-SMS הן בונוס אדיר,
                     <span className="p-0.5 bg-slate-800 text-white">
-                      הפכה את חיי להרבה יותר קלים!{" "}
+                      ותשלומי המקדמות בביט הופכים את הכל לכל כך פשוט ונוח{" "}
                     </span>{" "}
-                    לא רק שאני קובעת תורים בקלות ובמהירות, אלא שהאפליקציה גם
-                    מסנכרנת את כל התורים עם היומן בגוגל שלי, מה שמונע כל התנגשות
-                    אפשרית. תשלומי המקדמות דרך ביט והתזכורות בווצאפ פשוט
-                    מושלמים. הכל במקום אחד!"
+                    לא יכולתי לבקש יותר!"
                   </p>
                 </div>
                 <div className="flex gap-4 mt-2">
@@ -281,13 +280,14 @@ export default function Home() {
                 </div>
                 <div className="text-lg leading-8">
                   <p style={{ direction: "rtl" }}>
-                    "Quickline היא הפתרון לכל מי שחי על לוח זמנים צפוף. קביעת
-                    התורים מסודרת ומדויקת, עם סנכרון מושלם ליומן בגוגל וללא חשש
-                    להתנגשויות. התזכורות בווצאפ או ב-SMS הן בונוס אדיר,
+                    "Quickline{" "}
                     <span className="p-0.5 bg-slate-800 text-white">
-                      ותשלומי המקדמות בביט הופכים את הכל לכל כך פשוט ונוח{" "}
+                      הפכה את חיי להרבה יותר קלים!{" "}
                     </span>{" "}
-                    לא יכולתי לבקש יותר!"
+                    לא רק שאני קובעת תורים בקלות ובמהירות, אלא שהאפליקציה גם
+                    מסנכרנת את כל התורים עם היומן בגוגל שלי, מה שמונע כל התנגשות
+                    אפשרית. תשלומי המקדמות דרך ביט והתזכורות בווצאפ פשוט
+                    מושלמים. הכל במקום אחד!"
                   </p>
                 </div>
                 <div className="flex gap-4 mt-2">
@@ -297,7 +297,7 @@ export default function Home() {
                     alt="user"
                   />
                   <div className="flex flex-col">
-                    <p className="font-semibold">נטלי</p>
+                    <p className="font-semibold">נטלי מור</p>
                     <div className="flex gap-1.5 items-center text-zinc-600">
                       <Check className="h-4 w-4 stroke-[3px] text-green-600" />
                       <p className="text-sm" style={{ direction: "rtl" }}>
