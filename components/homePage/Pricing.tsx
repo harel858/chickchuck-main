@@ -117,7 +117,7 @@ export const Pricing = async () => {
     <>
       <MaxWidthWrapper classNames="mb-8 mt-24 text-center max-w-full">
         <div className="mx-auto mb-10 sm:max-w-lg">
-          <h1 className="text-6xl font-bold sm:text-7xl">תמחור</h1>
+          <h1 className="text-6xl font-bold sm:text-7xl">מחירון</h1>
           <p className="mt-5 text-gray-600 sm:text-lg">
             בין אם אתם רק מתחילים או זקוקים לפתרונות מתקדמים, יש לנו תוכנית
             שתתאים בדיוק לצרכים שלכם.
