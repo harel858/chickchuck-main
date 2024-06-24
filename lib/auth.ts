@@ -231,6 +231,7 @@ export const authOptions: NextAuthOptions = {
               accounts: true,
             },
           });
+          console.log("user", user);
         } catch (err: any) {
           throw new Error(err);
         }
@@ -274,7 +275,6 @@ export const authOptions: NextAuthOptions = {
             })
           );
         }
-        ``;
 
         token.businessId = user?.Business?.id || "";
         token.user = user;
