@@ -1,4 +1,3 @@
-// Example footer with links
 function Footer() {
   return (
     <footer className="p-4 bg-gray-800 text-white">
