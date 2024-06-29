@@ -1,160 +1,169 @@
-export default function Page() {
+import React from "react";
+
+export default function PrivacyPolicy() {
   return (
     <div className="p-4">
-      <main className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold mb-4">Privacy Policy</h1>
-          <p className="mb-4">
-            This privacy policy applies to the Quickly web application (hereby
-            referred to as the "Application") created by Harel Levi (hereby
-            referred to as the "Service Provider"). This application is
-            accessible via web browsers and is provided as a Freemium service.
-            This service is intended for use "AS IS".
+      <main className="max-w-4xl mx-auto" style={{ direction: "rtl" }}>
+        <h1 className="text-2xl font-bold mb-4">מדיניות פרטיות של Quickline</h1>
+
+        <div className="bg-yellow-100 p-4 rounded mb-4">
+          <p className="text-sm">
+            השימוש באפליקציית Quickline והעברת מידע לאפליקציות אחרות ב-Google
+            נעשים בהתאם למדיניות נתוני המשתמש של שירותי Google API, כולל דרישות
+            ההגבלות בשימוש. למדיניות זו, ראה את
+            <a
+              href="https://developers.google.com/terms/api-services-user-data-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline text-blue-600"
+            >
+              מדיניות נתוני משתמש של שירותי Google API
+            </a>
+            .
           </p>
         </div>
 
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">
-            Information Collection and Use
-          </h2>
-          <p className="mb-4">
-            The Application collects information when you access and use it.
-            This information may include:
-          </p>
-          <ul className="list-disc list-inside mb-4">
-            <li>Your device's Internet Protocol (IP) address</li>
-            <li>
-              The pages of the Application that you visit, the time and date of
-              your visit, the time spent on those pages
-            </li>
-            <li>The operating system and browser you use</li>
-            <li>
-              Information related to OAuth 2 authentication for accessing Google
-              Calendar API, including user identifiers and access tokens.
-            </li>
-          </ul>
-          <p className="mb-4">
-            The Application does not gather precise information about the
-            physical location of your device.
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">Third Party Access</h2>
-          <p className="mb-4">
-            Only aggregated, anonymized data is periodically transmitted to
-            external services to aid the Service Provider in improving the
-            Application and their service. The Service Provider may share your
-            information with third parties in the following scenarios:
-          </p>
-          <ul className="list-disc list-inside mb-4">
-            <li>
-              With Google, as necessary, to authenticate users and access Google
-              Calendar API in compliance with Google's OAuth 2 policies.
-            </li>
-            <li>
-              As required by law, such as to comply with a subpoena or similar
-              legal process.
-            </li>
-            <li>
-              When the Service Provider believes in good faith that disclosure
-              is necessary to protect their rights, protect your safety or the
-              safety of others, investigate fraud, or respond to a government
-              request.
-            </li>
-            <li>
-              With trusted service providers who work on behalf of the Service
-              Provider, do not have independent use of the information disclosed
-              to them, and have agreed to adhere to the rules set forth in this
-              privacy statement.
-            </li>
-          </ul>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">Opt-Out Rights</h2>
-          <p className="mb-4">
-            You can stop all collection of information by the Application easily
-            by discontinuing its use. You may delete your account or cease using
-            the Application.
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">Data Retention Policy</h2>
-          <p className="mb-4">
-            The Service Provider will retain user-provided data for as long as
-            you have an active account with the Application and for a reasonable
-            time thereafter. If you wish to request the deletion of
-            user-provided data, please contact the Service Provider at
-            harellevi85@gmail.com, and they will respond in a reasonable time.
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">Children</h2>
-          <p className="mb-4">
-            The Service Provider does not knowingly collect personally
-            identifiable information from children under the age of 13. The
-            Application is not directed at children under 13 years of age.
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">Security</h2>
-          <p className="mb-4">
-            The Service Provider is committed to safeguarding the
-            confidentiality of your information. They provide physical,
-            electronic, and procedural safeguards to protect the information
-            they process and maintain.
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">Changes</h2>
-          <p className="mb-4">
-            This Privacy Policy may be updated from time to time for any reason.
-            The Service Provider will notify users of any changes by updating
-            this page with the revised Privacy Policy. Users are advised to
-            review this Privacy Policy periodically for any changes, as
-            continued use of the Application is deemed approval of all changes.
-          </p>
-          <p className="mb-4">
-            This privacy policy is effective as of 2024-04-22.
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">Your Consent</h2>
-          <p className="mb-4">
-            By using the Application, you consent to the processing of your
-            information as described in this Privacy Policy.
-          </p>
-        </div>
-
-        <div>
-          <h2 className="text-lg font-bold mb-2">Contact Us</h2>
-          <p className="mb-4">
-            If you have any questions regarding privacy while using the
-            Application or about the practices described in this Privacy Policy,
-            please contact the Service Provider via email at
-            harellevi85@gmail.com.
-          </p>
-        </div>
-
-        <hr className="my-8" />
-
-        <p className="text-sm">
-          This privacy policy page was generated by{" "}
-          <a
-            href="https://app-privacy-policy-generator.nisrulz.com/"
-            className="text-blue-500"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            App Privacy Policy Generator
-          </a>
+        <p className="mb-4">
+          מדיניות פרטיות זו מסבירה כיצד אנו אוספים, משתמשים, מאחסנים ומשתפים את
+          המידע שנאסף ממך במהלך השימוש שלך באפליקציית Quickline (להלן "היישום").
+          היישום נוצר ומסופק על ידי חראל לוי (להלן "ספק השירות") וזמין לשימוש
+          כשירות חינמי דרך דפדפנים.
         </p>
+
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">איסוף ושימוש במידע</h2>
+          <p className="mb-4">
+            אנו אוספים מידע בעת שימושך ביישום. המידע שאנו אוספים עשוי לכלול:
+          </p>
+          <ul className="list-disc list-inside mb-4">
+            <li>כתובת ה-IP שלך.</li>
+            <li>
+              הדפים בהם ביקרת ביישום, תאריך ושעת ביקור, וזמן השהות בדפים אלו.
+            </li>
+            <li>מערכת ההפעלה והדפדפן שאתה משתמש בהם.</li>
+            <li>
+              מידע הקשור לאימות OAuth 2.0 לצורך גישה ל-API של Google, כולל זיהוי
+              משתמשים וטוקנים.
+            </li>
+          </ul>
+          <p className="mb-4">היישום אינו אוסף מידע מדויק על מיקומך הפיזי.</p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">נתוני משתמש של Google</h2>
+          <p className="mb-4">
+            בהתאמה למדיניות שירותי Google API, אנו מטפלים בנתוני המשתמש של
+            Google כדלקמן:
+          </p>
+          <ul className="list-disc list-inside mb-4">
+            <li>
+              <strong>גישה:</strong> אנו ניגשים לנתוני המשתמש של Google באמצעות
+              OAuth 2.0 לצורך אימות משתמש וגישה לאירועי יומן Google ומידע פרופיל
+              הדרושים לתפקוד היישום.
+            </li>
+            <li>
+              <strong>שימוש:</strong> הנתונים שנאספים משמשים רק לספק את
+              הפונקציונליות של היישום. לדוגמה, אנו משתמשים באירועי היומן שלך
+              להצגת שיעוריך.
+            </li>
+            <li>
+              <strong>אחסון:</strong> אנו מאחסנים טוקנים וזיהויים בצורה מאובטחת
+              כדי להבטיח גישה רציפה ל-API של Google. אנו משתמשים בהצפנה ובאמצעי
+              אבטחה סטנדרטיים.
+            </li>
+            <li>
+              <strong>שיתוף:</strong> אנו לא משתפים את נתוני המשתמש של Google עם
+              צדדים שלישיים, אלא במקרים הבאים:
+              <ul className="list-disc list-inside ml-6">
+                <li>לצורך עמידה בדרישות חוקיות.</li>
+                <li>להגנה על זכויותינו או זכויות אחרים ומניעת הונאות.</li>
+                <li>
+                  לצורך תמיכה טכנית מספקי שירות מהימנים שאינם משתמשים במידע שלך
+                  לשום מטרה אחרת.
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>שמירה:</strong> אנו נשמור את הנתונים שלך כל עוד יש לך
+              חשבון פעיל. אם תבקש למחוק את הנתונים שלך, פנה אלינו בכתובת
+              harellevi85@gmail.com, ונשיב תוך 30 ימים.
+            </li>
+          </ul>
+          <p className="mb-4">
+            השימוש שלנו בנתוני משתמש של Google מוגבל למה שמתואר במדיניות פרטיות
+            זו. אנו מחויבים להגן על הנתונים שלך ולוודא שהם משמשים רק לשיפור
+            חוויית השימוש שלך ביישום.
+          </p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">גישה לצדדים שלישיים</h2>
+          <p className="mb-4">
+            מידע סטטיסטי ואנונימי עשוי להיות משותף עם צדדים שלישיים כדי לשפר את
+            היישום. ספק השירות עשוי לשתף את המידע שלך במקרים הבאים:
+          </p>
+          <ul className="list-disc list-inside mb-4">
+            <li>עם Google לצורך אימות גישה ויישום של OAuth 2.0.</li>
+            <li>במידה שנדרש על פי חוק.</li>
+            <li>
+              כדי להגן על זכויותינו או זכויות אחרים, לשמור על בטיחותך ולמנוע
+              הונאות.
+            </li>
+            <li>
+              עם ספקי שירות מהימנים שמצייתים למדיניות פרטיות זו ולא ישתמשו במידע
+              שלך לשום מטרה אחרת.
+            </li>
+          </ul>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">זכויות ביטול (Opt-Out)</h2>
+          <p className="mb-4">
+            באפשרותך להפסיק את איסוף כל המידע על ידי היישום על ידי הפסקת השימוש
+            בו. ניתן למחוק את חשבונך או להפסיק את השימוש ביישום.
+          </p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">מדיניות שמירת הנתונים</h2>
+          <p className="mb-4">
+            אנו נשמור על נתונים שסיפקת כל עוד יש לך חשבון פעיל. לאחר בקשת מחיקה,
+            הנתונים שלך יוסרו מהשרתים שלנו תוך 30 ימים.
+          </p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">ילדים</h2>
+          <p className="mb-4">
+            היישום אינו מיועד לשימוש ילדים מתחת לגיל 13 ואינו אוסף מידע אישי
+            מזהה מילדים בגיל זה.
+          </p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">אבטחה</h2>
+          <p className="mb-4">
+            אנו מחויבים להגן על המידע שלך באמצעות אמצעים פיזיים, אלקטרוניים
+            ומנהליים תקינים להגנה על המידע שלך, כולל הצפנה ובקרת גישה.
+          </p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">שינויים במדיניות</h2>
+          <p className="mb-4">
+            מדיניות זו עשויה להשתנות מעת לעת. אנו נודיע לך על שינויים על ידי
+            עדכון עמוד זה. המשך שימושך ביישום לאחר פרסום השינויים מהווה הסכמתך
+            למדיניות פרטיות מעודכנת זו.
+          </p>
+        </div>
+
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">יצירת קשר</h2>
+          <p className="mb-4">
+            אם יש לך שאלות או בקשות בנוגע למדיניות פרטיות זו, אנא צור איתנו קשר
+            בכתובת הדוא"ל harellevi85@gmail.com.
+          </p>
+        </div>
       </main>
     </div>
   );
