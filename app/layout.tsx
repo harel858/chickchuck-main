@@ -83,6 +83,10 @@ export default function RootLayout({
           content="Quickline - אפליקציה לניהול תורים לעסקים"
         />
         <meta
+          name="google-site-verification"
+          content="UwBjA4x4fOqKSdObmZpp5tFVPlYYnruq6UyauUptye0"
+        />
+        <meta
           property="og:description"
           content="Quickline - אפליקציה לניהול תורים לעסקים, סינכרון ליומן גוגל ותשלומים בביט. יצירת אתר פרופיל עם גלריה ותמונות."
         />
