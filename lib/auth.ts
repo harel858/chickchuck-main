@@ -5,11 +5,9 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getImage } from "./aws/s3";
 import googleProvider from "next-auth/providers/google";
-import { updateUserByPhone } from "./prisma/users";
+import { getUserByPhone, updateUserByPhone } from "./prisma/users";
 import bcrypt from "bcrypt";
 import findUserByPhone from "actions/findUserByPhone";
-import { updateCustomerByPhone } from "./prisma/customer/updateCustomerByPhone";
-import findCustomer from "actions/findCustomer";
 
 const bucketName = process.env.BUCKET_NAME!;
 
@@ -18,9 +16,9 @@ type UserCredentials = {
   password: string;
   confirmPassword: string;
 };
-//team member sign up
 const authorizeUserSignUp = async (credentials: any, req: any) => {
-  console.log("authorizeUserSignUp");
+  console.log("req", req);
+  console.log("credentials", credentials);
 
   try {
     const { phone, password } = credentials as UserCredentials;
@@ -34,51 +32,14 @@ const authorizeUserSignUp = async (credentials: any, req: any) => {
     throw new Error(err);
   }
 };
-
-//team member sign in
 const authorizeUserSignIn = async (credentials: any, req: any) => {
-  console.log("authorizeUserSignIn");
+  console.log("req", req);
+  console.log("credentials", credentials);
 
   try {
     const { phone, password, confirmPassword } = credentials as UserCredentials;
+
     const user = await findUserByPhone(phone);
-    if (user?.password) {
-      let verify = await bcrypt.compare(password, user.password);
-
-      if (!verify) return null;
-      return user;
-    }
-    return null;
-  } catch (err: any) {
-    console.log(err);
-    throw new Error(err);
-  }
-};
-
-//customer sign up
-const authorizeCustomerSignUp = async (credentials: any, req: any) => {
-  console.log("authorizeCustomerSignUp");
-
-  try {
-    const { phone, password } = credentials as UserCredentials;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await updateCustomerByPhone(phone, hashedPassword);
-
-    return user;
-  } catch (err: any) {
-    console.log(err);
-    throw new Error(err);
-  }
-};
-
-//customer sign InIn
-const authorizeCustomerSignIn = async (credentials: any, req: any) => {
-  console.log("authorizeCustomerSignIn");
-  try {
-    const { phone, password, confirmPassword } = credentials as UserCredentials;
-
-    const user = await findCustomer(phone);
     if (user?.password) {
       let verify = await bcrypt.compare(password, user.password);
 
@@ -98,6 +59,8 @@ async function refreshAccessToken(
   }
 ) {
   try {
+    console.log("token", token);
+
     const url =
       "https://oauth2.googleapis.com/token?" +
       new URLSearchParams({
@@ -115,13 +78,14 @@ async function refreshAccessToken(
     });
 
     const refreshedTokens: any = await response.json();
+    console.log("refreshedTokens", refreshedTokens);
 
     if (!response.ok) {
       throw refreshedTokens;
     }
     await prisma.account.update({
       where: { id: token.accountId },
-      data: { access_token: refreshedTokens.access_token },
+      data: { access_token: token.access_token },
     });
     return {
       ...token,
@@ -146,39 +110,26 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   providers: [
     CredentialsProvider({
-      name: "SignUpCustomer",
+      name: "Sign Up",
       type: "credentials",
       credentials: {
-        phone: { label: "Phone", type: "phone" },
-        password: { label: "Password", type: "password" },
-        confirmPassword: { label: "Confirm Password", type: "password" },
-      },
-      authorize: authorizeCustomerSignUp,
-    }),
-    CredentialsProvider({
-      name: "SignInCustomer",
-      type: "credentials",
-      credentials: {
-        phone: { label: "Phone", type: "phone" },
-        password: { label: "Password", type: "password" },
-      },
-      authorize: authorizeCustomerSignIn,
-    }),
-    CredentialsProvider({
-      name: "SignUpUser",
-      type: "credentials",
-      credentials: {
-        phone: { label: "Phone", type: "phone" },
+        phone: {
+          label: "Phone",
+          type: "phone",
+        },
         password: { label: "Password", type: "password" },
         confirmPassword: { label: "Confirm Password", type: "password" },
       },
       authorize: authorizeUserSignUp,
     }),
     CredentialsProvider({
-      name: "SignInUser",
+      name: "Sign In",
       type: "credentials",
       credentials: {
-        phone: { label: "Phone", type: "phone" },
+        phone: {
+          label: "Phone",
+          type: "phone",
+        },
         password: { label: "Password", type: "password" },
       },
       authorize: authorizeUserSignIn,
@@ -196,6 +147,9 @@ export const authOptions: NextAuthOptions = {
       },
       async profile(profile, tokens) {
         try {
+          console.log("profile", profile);
+          console.log("tokens", tokens);
+
           return {
             id: profile.sub,
             name: `${profile.given_name} ${profile.family_name}`,
@@ -211,43 +165,36 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt(props) {
+      console.log("props", props);
       const { account, token, user, profile, session, trigger } = props;
 
       try {
-        console.log("props", props);
-
-        let logo: string | null = "";
-        let user = null;
-        let customer = null;
-
-        try {
-          user = await prisma.user.findUnique({
-            where: { id: token.sub! },
-            include: {
-              Business: { include: { Images: true, Customer: true } },
-              Treatment: true,
-              activityDays: true,
-              accounts: true,
+        /*         if (trigger === "signUp" && token) {
+          // Link user and account if it's a new sign-in
+          await prisma.user.update({
+            where: { id: token?.sub },
+            data: {
+              accounts: {
+                connect: { userId: token?.sub },
+              },
             },
           });
-          console.log("user", user);
-        } catch (err: any) {
-          throw new Error(err);
         }
-        try {
-          const findCustomer = await prisma.customer.findUnique({
-            where: { id: token.sub! },
-          });
-          customer = findCustomer;
-        } catch (err: any) {
-          throw new Error(err);
-        }
-        if (customer) {
-          token.user = customer;
+ */
+        let logo: string | null = "";
 
-          return token;
+        let user = await prisma.user.findUnique({
+          where: { id: token.sub! },
+          include: {
+            Business: { include: { Images: true, Customer: true } },
+            Treatment: true,
+            activityDays: true,
+            accounts: true,
+          },
+        });
+        if (!user) {
+          throw new Error("user not found");
         }
-        if (!user) throw new Error("user not found");
 
         if (
           user?.UserRole === "TEAMMEATE" &&
@@ -274,6 +221,7 @@ export const authOptions: NextAuthOptions = {
             })
           );
         }
+        ``;
 
         token.businessId = user?.Business?.id || "";
         token.user = user;
@@ -320,5 +268,4 @@ export const authOptions: NextAuthOptions = {
       };
     },
   },
-  debug: true,
 };

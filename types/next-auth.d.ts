@@ -1,4 +1,12 @@
-import { AppointmentRequest } from "@prisma/client";
+/* eslint-disable no-unused-vars */
+import {
+  Business,
+  Treatment,
+  Customer,
+  ActivityDays,
+  Account,
+  User,
+} from "@prisma/client";
 import type { Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
@@ -9,13 +17,9 @@ declare module "next-auth/jwt" {
     id: UserId;
     refresh_token: string;
     exp: number;
-    user:
-      | User
-      | (Customer & {
-          isAdmin?: boolean;
-        });
+    user: User;
     activityDays: ActivityDays[];
-    accessTokenExpires: number;
+    accessTokenExpires: numer;
     account: Account | null;
     access_token: string;
     businessId: string;
@@ -30,18 +34,14 @@ declare module "next-auth/jwt" {
 
 declare module "next-auth" {
   interface Session {
-    user:
-      | (User & {
-          id: UserId;
-          access_token: string;
-          publicKeys: any;
-          isAdmin: boolean;
-          businessId: string;
-          accountId: string;
-          businessName: string;
-        })
-      | (Customer & {
-          isAdmin: boolean;
-        });
+    user: User & {
+      id: UserId;
+      access_token: string;
+      publicKeys: any;
+      isAdmin: boolean;
+      businessId: string;
+      accountId: string;
+      businessName: string;
+    };
   }
 }
