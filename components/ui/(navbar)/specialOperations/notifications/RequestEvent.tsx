@@ -9,12 +9,14 @@ import { denyAppointment } from "actions/denyAppointment";
 function RequestEvent({
   item,
   session,
+  access_token,
 }: {
   item: AppointmentRequest & {
     treatment: Treatment;
     customer: Customer;
     user: User;
   };
+  access_token: string;
   session: Session;
 }) {
   const [isPending, startTransition] = useTransition();
@@ -48,7 +50,7 @@ function RequestEvent({
                     startTransition2(
                       async () =>
                         await confirmAppointment(
-                          session.user.access_token!,
+                          access_token,
                           item.treatment,
                           { start: item.start, end: item.end },
                           item.user,

@@ -36,8 +36,6 @@ export default function AppointmentSteps({
   freeBusy: string;
   session: Session | null;
 }) {
-  console.log("Session", session);
-
   const [isLoading, setIsLoading] = useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [selectedService, setSelectedService] =

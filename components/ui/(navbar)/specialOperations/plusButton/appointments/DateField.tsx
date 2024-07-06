@@ -31,6 +31,7 @@ const DateField = ({
   register,
   user,
   selectedUser,
+  access_token,
 }: {
   getValues: UseFormGetValues<TAppointmentValidation>;
   label: FieldType["label"];
@@ -38,6 +39,7 @@ const DateField = ({
   name: FieldType["name"];
   register: UseFormRegister<TAppointmentValidation>;
   errors: FieldErrors<TAppointmentValidation>;
+  access_token: string;
   session: Session;
   user: User & {
     accounts: Account[];
@@ -66,7 +68,7 @@ const DateField = ({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session.user.access_token}`,
+            Authorization: `Bearer ${access_token}`,
           },
           body: JSON.stringify({
             timeMin: startOfMonth,
@@ -221,6 +223,7 @@ const DateField = ({
         setSlots={setSlots}
         setSlotsByDay={setSlotsByDay}
         slots={slots}
+        access_token={access_token}
       />
       <Slots
         control={control}

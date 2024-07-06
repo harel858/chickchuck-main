@@ -19,10 +19,12 @@ const AddMember = ({
   users,
   businessId,
   session,
+  access_token,
 }: {
   businessId: string;
   users: User[];
   session: Session;
+  access_token: string;
 }) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -61,6 +63,7 @@ const AddMember = ({
           session={session}
           businessId={businessId}
           users={users}
+          access_token={access_token}
         />
       </Modal>
     </div>

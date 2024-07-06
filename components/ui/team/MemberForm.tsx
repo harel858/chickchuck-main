@@ -29,7 +29,9 @@ const MemberForm = ({
   businessId,
   session,
   handleCancel,
+  access_token,
 }: {
+  access_token: string;
   businessId: string;
   users: User[];
   session: Session;
@@ -52,7 +54,7 @@ const MemberForm = ({
     try {
       setIsPending(async () => {
         await addMember(
-          session.user.access_token,
+          access_token,
           data,
           businessId,
           session.user.accountId,

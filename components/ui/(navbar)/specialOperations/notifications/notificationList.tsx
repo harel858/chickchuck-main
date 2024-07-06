@@ -12,11 +12,13 @@ const NotificationList = ({
   session,
   customers,
   closePopover,
+  access_token,
 }: {
   notifications: CombinedEvent[];
   session: Session;
   customers: Customer[];
   closePopover: () => void;
+  access_token: string;
 }) => {
   return (
     <div
@@ -41,7 +43,11 @@ const NotificationList = ({
               session={session}
             />
           ) : (
-            <RequestEvent item={item} session={session} />
+            <RequestEvent
+              access_token={access_token}
+              item={item}
+              session={session}
+            />
           )
         }
       />

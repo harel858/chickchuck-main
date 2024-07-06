@@ -34,7 +34,9 @@ function EditEvent({
   user,
   ref: scheduleObj,
   conferenceId,
+  access_token,
 }: {
+  access_token: string;
   ref: React.RefObject<ScheduleComponent>;
   props: EditProps;
   session: Session;
@@ -141,8 +143,7 @@ function EditEvent({
       },
     };
     startTransition(
-      async () =>
-        await updateEvent(session.user.access_token, eventProps, conferenceId)
+      async () => await updateEvent(access_token, eventProps, conferenceId)
     );
     message.success(`${eventProps?.summary}נערך התור ל`);
     closeEditorTemplate();

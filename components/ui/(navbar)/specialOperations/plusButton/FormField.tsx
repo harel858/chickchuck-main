@@ -38,6 +38,7 @@ const AppointmentField = ({
   getValues,
   business,
   selectedUser,
+  access_token,
 }: {
   label: FieldType["label"];
   control: Control<TAppointmentValidation>;
@@ -55,6 +56,7 @@ const AppointmentField = ({
   business: Business & {
     Customer: Customer[];
   };
+  access_token: string;
   selectedUser: User | null;
 }) => {
   return (
@@ -84,6 +86,7 @@ const AppointmentField = ({
           session={session}
           user={user}
           selectedUser={selectedUser}
+          access_token={access_token}
         />
       )}
     </div>

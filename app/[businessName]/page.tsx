@@ -107,7 +107,7 @@ export default async function LandingPage({
   const isAdmin =
     !!session?.user?.isAdmin && session.user.businessId === business.id;
   const adminUserId = isAdmin ? session?.user.id : false;
-  const freeBusy = session?.user.access_token || result.account;
+  const freeBusy = result.account;
 
   let customerAppointments: (
     | calendar_v3.Schema$Event

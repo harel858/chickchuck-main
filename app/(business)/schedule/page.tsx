@@ -18,15 +18,14 @@ export type DataSource = {
 
 async function ScheduleListPage() {
   const session = await getServerSession(authOptions);
-  if (!session?.user.access_token) {
+  if (!session) {
     return notFound();
   }
-  const googleClient = setupGoogleCalendarClient(session?.user.access_token);
-  const publicKey = await googleClient.auth.getIapPublicKeys();
-
   const user = await getUserAccount(session?.user.id);
+  const access_token = user?.accounts[0]?.access_token;
+  const googleClient = setupGoogleCalendarClient(access_token);
 
-  if (!user?.accounts[0] || !user.Business) {
+  if (!user?.accounts[0] || !user.Business || !access_token) {
     return notFound();
   }
 
@@ -51,6 +50,7 @@ async function ScheduleListPage() {
       resourceData={result}
       calendarsIds={calendarsId}
       user={user}
+      access_token={access_token}
     />
   );
 }

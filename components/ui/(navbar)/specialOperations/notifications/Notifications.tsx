@@ -17,6 +17,7 @@ interface NotificationComponentProps {
   customers: Customer[];
   scheduleProps: CombinedEvent[];
   confirmationNeeded: boolean | null;
+  access_token: string;
 }
 
 function NotificationComponent({
@@ -25,6 +26,7 @@ function NotificationComponent({
   scheduleProps,
   customers,
   confirmationNeeded,
+  access_token,
 }: NotificationComponentProps) {
   const [notifications, setNotifications] = useState<CombinedEvent[]>([]);
   useEffect(() => {
@@ -123,6 +125,7 @@ function NotificationComponent({
           session={session}
           customers={customers}
           notifications={notifications}
+          access_token={access_token}
         />
       }
       title={<div style={{ textAlign: "right" }}>התראות</div>} // Centered title

@@ -54,7 +54,9 @@ const RecurrenceEvents = ({
   user,
   resourceData,
   calendarsIds,
+  access_token,
 }: {
+  access_token: string;
   session: Session;
   business: Business & {
     Customer: Customer[];
@@ -77,7 +79,7 @@ const RecurrenceEvents = ({
       url: `/api/google/events?id=${
         session.user.accountId
       }&calendarsIds=${JSON.stringify(calendarsIds)}`,
-      headers: [{ Authorization: `Bearer ${session.user.access_token}` }],
+      headers: [{ Authorization: `Bearer ${access_token}` }],
       adaptor: new UrlAdaptor(),
       crudUrl: `/api/google/crud`,
       crossDomain: true,
@@ -99,6 +101,7 @@ const RecurrenceEvents = ({
           session={session}
           user={user}
           ConferenceId={ConferenceId}
+          access_token={access_token}
         />
       ) : (
         <EditEvent
@@ -108,6 +111,7 @@ const RecurrenceEvents = ({
           session={session}
           user={user}
           conferenceId={ConferenceId}
+          access_token={access_token}
         />
       );
     },

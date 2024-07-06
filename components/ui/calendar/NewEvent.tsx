@@ -27,6 +27,7 @@ const NewEvent = ({
   user,
   ref: scheduleObj,
   ConferenceId,
+  access_token,
 }: {
   ref: React.RefObject<ScheduleComponent>;
   props: any;
@@ -35,6 +36,7 @@ const NewEvent = ({
     Customer: Customer[];
     Treatment: Treatment[];
   };
+  access_token: string;
   user: User & {
     accounts: Account[];
     Treatment: Treatment[];
@@ -181,8 +183,7 @@ const NewEvent = ({
           },
         };
         startTransition(
-          async () =>
-            await createAppointment(session.user.access_token, eventProps)
+          async () => await createAppointment(access_token, eventProps)
         );
         message.success(`נקבע תור ל${customerName}`);
         closeEditorTemplate();

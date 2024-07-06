@@ -61,6 +61,7 @@ type DatePickerProps = {
     activityDays: ActivityDays[];
     Customer: Customer[];
   };
+  access_token: string;
 };
 
 function DateCalendar({
@@ -73,6 +74,7 @@ function DateCalendar({
   getAvailableTimeSlots,
   setSlots,
   data,
+  access_token,
   slots,
 }: DatePickerProps) {
   const onSelect = async (
@@ -102,7 +104,7 @@ function DateCalendar({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer " + `${session.user.access_token}`,
+            Authorization: "Bearer " + `${access_token}`,
           },
           body: JSON.stringify({
             timeMin: startOfMonth,

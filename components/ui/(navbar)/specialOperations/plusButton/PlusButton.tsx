@@ -21,8 +21,10 @@ const PlusButton = ({
   session,
   user,
   business,
+  access_token,
 }: {
   session: Session;
+  access_token: string;
   business: Business & {
     Customer: Customer[];
     user: User[];
@@ -149,6 +151,7 @@ const PlusButton = ({
           business={business}
           handleCancel2={handleCancel2}
           session={session}
+          access_token={access_token}
         />
       </Modal>
     </>

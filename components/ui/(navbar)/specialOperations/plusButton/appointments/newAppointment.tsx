@@ -31,7 +31,9 @@ const AppointmentSteps = ({
   handleCancel2,
   user,
   business,
+  access_token,
 }: {
+  access_token: string;
   session: Session;
   business: Business & {
     Customer: Customer[];
@@ -102,8 +104,7 @@ const AppointmentSteps = ({
         },
       };
       startTransition(
-        async () =>
-          await createAppointment(session.user.access_token, eventProps)
+        async () => await createAppointment(access_token, eventProps)
       );
 
       form.reset({
@@ -140,6 +141,7 @@ const AppointmentSteps = ({
             user={user}
             business={business}
             selectedUser={selectedUser}
+            access_token={access_token}
           />
           <Button
             onClick={switchIsNewClient}
@@ -181,6 +183,7 @@ const AppointmentSteps = ({
           session={session}
           user={user}
           selectedUser={selectedUser}
+          access_token={access_token}
         />
       ),
     },
@@ -199,6 +202,7 @@ const AppointmentSteps = ({
           session={session}
           user={user}
           selectedUser={selectedUser}
+          access_token={access_token}
         />
       ),
     },

@@ -18,11 +18,13 @@ import { TeamOutlined } from "@ant-design/icons";
 function TeamManeger({
   session,
   business,
+  access_token,
 }: {
   session: Session;
   business: Business & {
     user: (User & { activityDays: ActivityDays[] })[];
   };
+  access_token: string;
 }) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -64,6 +66,7 @@ function TeamManeger({
               session={session}
               users={business.user}
               businessId={business.id}
+              access_token={access_token}
             />
             {/*   <AddRequiredDocuments
               businessId={user.businessId!}

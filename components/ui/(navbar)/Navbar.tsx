@@ -21,12 +21,14 @@ function Navbar({
   user,
   customers,
   confirmationNeeded,
+  access_token,
 }: {
   session: Session;
   scheduleProps: CombinedEvent[];
   user: User & { accounts: Account[] };
   customers: Customer[];
   confirmationNeeded: boolean | null;
+  access_token: string;
 }) {
   const profileImage = session.user.image;
   console.log("profileImage", profileImage);
@@ -76,6 +78,7 @@ function Navbar({
           userId={session.user.id}
           customers={customers}
           confirmationNeeded={confirmationNeeded}
+          access_token={access_token}
         />
         <Avatar alt="Profile Img" src={profileImage} />
       </div>

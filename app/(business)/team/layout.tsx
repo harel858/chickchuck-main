@@ -75,7 +75,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
   const access_token = user?.accounts[0]?.access_token;
   const googleClient = setupGoogleCalendarClient(access_token);
 
-  if (!user?.accounts[0]) {
+  if (!user?.accounts[0] || !access_token) {
     return notFound();
   }
   if (!user?.accounts[0] || !user.Business) {
@@ -112,13 +112,19 @@ async function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar
+        access_token={access_token}
         user={user}
         scheduleProps={scheduleProps}
         session={session}
         customers={user.Business?.Customer || []}
         confirmationNeeded={user.Business.confirmationNeeded}
       />
-      <PlusButton business={user.Business} user={user} session={session} />
+      <PlusButton
+        access_token={access_token}
+        business={user.Business}
+        user={user}
+        session={session}
+      />
       <Hamburger
         user={user}
         profileImage={profileImage}
