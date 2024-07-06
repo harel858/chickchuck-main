@@ -10,10 +10,12 @@ export default function ClientItem({
   i,
   customer,
   session,
+  accessToken,
 }: {
   i: number;
   customer: Customer;
   session: Session;
+  accessToken: string;
 }) {
   return (
     <motion.li
@@ -34,7 +36,11 @@ export default function ClientItem({
       </div>
       <div className="flex flex-row gap-1 justify-between items-center w-full">
         <p className="font-extralight text-lg">{customer.phoneNumber}</p>
-        <DetailsButton session={session} customer={customer} />
+        <DetailsButton
+          accessToken={accessToken}
+          session={session}
+          customer={customer}
+        />
       </div>
     </motion.li>
   );

@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import Clients from "@components/clients/Clients";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { getUserAccount } from "@lib/prisma/users";
 dayjs.extend(customParseFormat);
 
 async function getBusinessCustomers(userId: string | undefined) {
@@ -32,7 +33,19 @@ async function Page() {
   const session = await getServerSession(authOptions);
   const customersData = await getBusinessCustomers(session?.user.id);
   if (!customersData || !session) return notFound();
-  return <Clients session={session} customers={customersData} />;
+
+  const user = await getUserAccount(session?.user.id);
+
+  const accessToken = user?.accounts[0]?.access_token;
+  if (!accessToken) return notFound();
+
+  return (
+    <Clients
+      accessToken={accessToken}
+      session={session}
+      customers={customersData}
+    />
+  );
 }
 
 export default Page;

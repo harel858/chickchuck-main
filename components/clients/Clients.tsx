@@ -12,9 +12,11 @@ import { Customer } from "@prisma/client";
 function Clients({
   customers,
   session,
+  accessToken,
 }: {
   customers: Customer[];
   session: Session;
+  accessToken: string;
 }) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -66,6 +68,7 @@ function Clients({
                 key={customer.id}
                 i={i}
                 customer={customer}
+                accessToken={accessToken}
               />
             ))}
           </ul>
@@ -79,6 +82,7 @@ function Clients({
                 key={customer.id}
                 i={i}
                 customer={customer}
+                accessToken={accessToken}
               />
             ))}
           </ul>

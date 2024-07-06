@@ -188,8 +188,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
       authorization: {
         params: {
-          scope:
-            "openid https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events.readonly",
+          scope: "openid https://www.googleapis.com/auth/calendar",
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
@@ -231,6 +230,7 @@ export const authOptions: NextAuthOptions = {
               accounts: true,
             },
           });
+          console.log("user", user);
         } catch (err: any) {
           throw new Error(err);
         }
@@ -274,14 +274,17 @@ export const authOptions: NextAuthOptions = {
             })
           );
         }
-        ``;
 
+        token.isAdmin = user.isAdmin || false;
         token.businessId = user?.Business?.id || "";
         token.user = user;
+        token.email = user.email;
         token.logo = logo;
         token.businessName = user.Business?.businessName || "";
         token.access_token = user.accounts[0]?.access_token || "";
         token.refresh_token = user.accounts[0]?.refresh_token || "";
+        token.UserRole = user.UserRole;
+        token.accountId = user.accounts[0]?.id || "";
 
         if (account?.expires_at && user) {
           return {
@@ -308,18 +311,18 @@ export const authOptions: NextAuthOptions = {
       return {
         ...session,
         user: {
+          id: token.user.id,
           email: token.email,
           name: token.user.name,
-          id: token.user.id,
-          accountId: token.accountId,
-          image: token.logo || undefined,
-          access_token: token.access_token,
+          /*           access_token: token.access_token,
+           */ businessName: token.businessName,
+          image: token.logo,
           businessId: token.businessId,
-          businessName: token.businessName,
-          isAdmin: token.user.isAdmin,
+          isAdmin: token.isAdmin,
+          UserRole: token.UserRole,
+          accountId: token.accountId,
         },
       };
     },
   },
-  debug: true,
 };

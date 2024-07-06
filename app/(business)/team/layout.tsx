@@ -68,12 +68,12 @@ async function fetchWatch(
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user.access_token) {
+  if (!session?.user.id) {
     return notFound();
   }
-
-  const googleClient = setupGoogleCalendarClient(session?.user.access_token);
   const user = await getUserAccount(session?.user.id);
+  const access_token = user?.accounts[0]?.access_token;
+  const googleClient = setupGoogleCalendarClient(access_token);
 
   if (!user?.accounts[0]) {
     return notFound();

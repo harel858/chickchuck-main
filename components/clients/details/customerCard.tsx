@@ -18,9 +18,11 @@ const format = "MMMM D, YYYY h:mm A";
 function CustomerCard({
   session,
   customer,
+  accessToken,
 }: {
   session: Session;
   customer: Customer;
+  accessToken: string;
 }) {
   const [data, setData] = useState<DataType[]>([]);
   useEffect(() => {
@@ -29,7 +31,7 @@ function CustomerCard({
         const response = await axios.get(
           `/api/google/customer?id=${customer.id}`,
           {
-            headers: { Authorization: `Bearer ${session.user.access_token}` },
+            headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
         console.log("customerresponse", response);
@@ -46,7 +48,13 @@ function CustomerCard({
             subject: item.summary ?? "", // Using nullish coalescing operator to handle potential null or undefined
             start: dayjs(item.start?.dateTime).format(format), // Formatting date using format method
             end: dayjs(item.end?.dateTime).format(format), // Formatting date using format method
-            description: <DescriptionForm session={session} item={item} />,
+            description: (
+              <DescriptionForm
+                accessToken={accessToken}
+                session={session}
+                item={item}
+              />
+            ),
           }));
           setData(tableData); // Update state with tableData
         }

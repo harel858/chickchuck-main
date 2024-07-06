@@ -46,10 +46,12 @@ export default function DetailsButton({
   customer,
   session,
   closePopover,
+  accessToken,
 }: {
   customer: Customer;
   session: Session;
   closePopover?: () => void;
+  accessToken: string;
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -91,7 +93,11 @@ export default function DetailsButton({
           },
         }}
       >
-        <CustomerCard customer={customer} session={session} />
+        <CustomerCard
+          accessToken={accessToken}
+          customer={customer}
+          session={session}
+        />
       </Modal>
     </>
   );

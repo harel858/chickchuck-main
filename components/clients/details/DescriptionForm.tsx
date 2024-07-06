@@ -9,9 +9,11 @@ import { message } from "antd";
 const DescriptionForm = ({
   item,
   session,
+  accessToken,
 }: {
   item: calendar_v3.Schema$Event;
   session: Session;
+  accessToken: string;
 }) => {
   const [description, setDescription] = useState<string>(
     item?.description || ""
@@ -47,11 +49,9 @@ const DescriptionForm = ({
 
   const handleSubmit = () => {
     startTransition(() => {
-      updateEvent(session.user.access_token, eventProps, calendarId).then(
-        () => {
-          message.success("הערה נרשמה בהצלחה");
-        }
-      );
+      updateEvent(accessToken, eventProps, calendarId).then(() => {
+        message.success("הערה נרשמה בהצלחה");
+      });
     });
   };
 

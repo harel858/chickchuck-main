@@ -1,7 +1,9 @@
 // clientSetup.js
 import { Auth, google } from "googleapis";
 
-export function setupGoogleCalendarClient(access_token: string | undefined) {
+export function setupGoogleCalendarClient(
+  access_token: string | null | undefined
+) {
   const auth = new Auth.OAuth2Client({ credentials: { access_token } });
 
   const calendar = google.calendar("v3");
