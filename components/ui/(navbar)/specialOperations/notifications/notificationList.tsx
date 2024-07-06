@@ -41,6 +41,7 @@ const NotificationList = ({
               customers={customers}
               closePopover={closePopover}
               session={session}
+              accessToken={access_token}
             />
           ) : (
             <RequestEvent

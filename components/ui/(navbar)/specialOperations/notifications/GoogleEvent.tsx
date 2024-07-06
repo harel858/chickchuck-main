@@ -11,8 +11,10 @@ function GoogleEvent({
   item,
   closePopover,
   session,
+  accessToken,
 }: {
   customers: Customer[];
+  accessToken: string;
   item: calendar_v3.Schema$Event;
   closePopover: () => void;
   session: Session;
@@ -61,6 +63,7 @@ function GoogleEvent({
               closePopover={closePopover}
               session={session}
               customer={customer}
+              accessToken={accessToken}
             />
           ) : (
             <></>
