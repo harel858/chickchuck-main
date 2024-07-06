@@ -23,6 +23,8 @@ const initDays: DayData[] = [
 ];
 
 const Container = ({ session }: { session: Session }) => {
+  console.log("session", session);
+
   const router = useRouter();
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);

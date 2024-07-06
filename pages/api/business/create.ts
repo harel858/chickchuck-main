@@ -37,6 +37,16 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
           }
 
           const userId = fields.userId as string;
+          console.log("userId", userId);
+
+          // Check if the user exists
+          const userExists = await prisma.user.findUnique({
+            where: { id: userId },
+          });
+
+          if (!userExists) {
+            return res.status(400).json({ message: "User not found." });
+          }
 
           const businessDetails = JSON.parse(
             fields.businessDetails as string

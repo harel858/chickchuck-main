@@ -142,7 +142,7 @@ async function refreshAccessToken(
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
-  pages: { signIn: "/login", newUser: "/createbusinessdetails" },
+  pages: { signIn: "/signin", newUser: "/createbusinessdetails" },
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   providers: [
     CredentialsProvider({
@@ -275,12 +275,16 @@ export const authOptions: NextAuthOptions = {
           );
         }
 
+        token.isAdmin = user.isAdmin || false;
         token.businessId = user?.Business?.id || "";
         token.user = user;
+        token.email = user.email;
         token.logo = logo;
         token.businessName = user.Business?.businessName || "";
         token.access_token = user.accounts[0]?.access_token || "";
         token.refresh_token = user.accounts[0]?.refresh_token || "";
+        token.UserRole = user.UserRole;
+        token.accountId = user.accounts[0]?.id || "";
 
         if (account?.expires_at && user) {
           return {
@@ -307,15 +311,16 @@ export const authOptions: NextAuthOptions = {
       return {
         ...session,
         user: {
+          id: token.user.id,
           email: token.email,
           name: token.user.name,
-          id: token.user.id,
-          accountId: token.accountId,
-          image: token.logo || undefined,
           access_token: token.access_token,
-          businessId: token.businessId,
           businessName: token.businessName,
-          isAdmin: token.user.isAdmin,
+          image: token.logo,
+          businessId: token.businessId,
+          isAdmin: token.isAdmin,
+          UserRole: token.UserRole,
+          accountId: token.accountId,
         },
       };
     },
