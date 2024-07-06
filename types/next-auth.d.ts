@@ -1,4 +1,4 @@
-import { AppointmentRequest, UserRole } from "@prisma/client";
+import { AppointmentRequest } from "@prisma/client";
 import type { Session, User } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
@@ -8,27 +8,37 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: UserId;
     refresh_token: string;
+    exp: number;
     user: User;
-    access_token: string;
-    businessName: string;
-    logo: string;
     isAdmin: boolean;
+    /*     activityDays: ActivityDays[];
+     */ accessTokenExpires: number;
+    account: Account | null;
+    access_token: string;
     businessId: string;
-    UserRole: UserRole | null;
+    logo: string | null;
+    treatments: Treatment[];
     accountId: string;
+    Customer: Customer[];
+    business: Business | null;
+    trigger: "signIn" | "update" | "signUp" | undefined;
   }
 }
 
 declare module "next-auth" {
   interface Session {
-    user: User & {
-      /*       access_token?: string;
-       */ businessName: string;
-      image: string;
-      isAdmin: boolean;
-      businessId: string;
-      UserRole: UserRole | null;
-      accountId: string;
-    };
+    user:
+      | (User & {
+          id: UserId;
+          access_token: string;
+          publicKeys: any;
+          isAdmin: boolean;
+          businessId: string;
+          accountId: string;
+          businessName: string;
+        })
+      | (Customer & {
+          isAdmin: boolean;
+        });
   }
 }

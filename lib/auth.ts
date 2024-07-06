@@ -275,20 +275,17 @@ export const authOptions: NextAuthOptions = {
           );
         }
 
-        token.isAdmin = user.isAdmin || false;
         token.businessId = user?.Business?.id || "";
         token.user = user;
-        token.email = user.email;
         token.logo = logo;
         token.businessName = user.Business?.businessName || "";
         token.access_token = user.accounts[0]?.access_token || "";
         token.refresh_token = user.accounts[0]?.refresh_token || "";
-        token.UserRole = user.UserRole;
-        token.accountId = user.accounts[0]?.id || "";
 
         if (account?.expires_at && user) {
           return {
             ...token,
+            user: { id: token.user.id, email: token.user.email },
             accessToken: token.accessToken,
             accessTokenExpires: Date.now() + account.expires_at * 1000,
             refreshToken: token.refresh_token,
@@ -298,6 +295,7 @@ export const authOptions: NextAuthOptions = {
         // Access token has expired, try to update it
         return refreshAccessToken({
           ...token,
+          user: { id: token.user.id, email: token.user.email },
           refresh_token: user.accounts[0]?.refresh_token!,
           accountId: user.accounts[0]?.id!,
         });
@@ -311,18 +309,18 @@ export const authOptions: NextAuthOptions = {
       return {
         ...session,
         user: {
-          id: token.user.id,
           email: token.email,
           name: token.user.name,
-          /*           access_token: token.access_token,
-           */ businessName: token.businessName,
-          image: token.logo,
-          businessId: token.businessId,
-          isAdmin: token.isAdmin,
-          UserRole: token.UserRole,
+          id: token.user.id,
           accountId: token.accountId,
+          image: token.logo || undefined,
+          access_token: token.access_token,
+          businessId: token.businessId,
+          businessName: token.businessName,
+          isAdmin: token.isAdmin,
         },
       };
     },
   },
+  debug: true,
 };

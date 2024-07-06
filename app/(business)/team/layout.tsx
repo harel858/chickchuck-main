@@ -127,7 +127,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
       />
       <Hamburger
         user={user}
-        profileImage={profileImage}
+        profileImage={profileImage || ""}
         formattedBusinessName={formattedBusinessName}
       />
 
