@@ -86,6 +86,7 @@ function NotificationComponent({
     },
     [notifications]
   );
+  console.log("notifications", notifications);
 
   const createWebSocketUrl = () =>
     `wss://bjkn2zeka0.execute-api.eu-west-1.amazonaws.com/production?userId=${userId}`;

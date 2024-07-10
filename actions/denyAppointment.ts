@@ -8,7 +8,7 @@ export async function denyAppointment(requestId: string) {
       where: { id: requestId },
       data: { isConfirmed: false },
     });
-    revalidatePath("/");
+    revalidatePath("/", "page");
   } catch (error) {
     console.error(error);
     throw new Error("An error occurred while creating the appointment");

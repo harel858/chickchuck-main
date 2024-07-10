@@ -13,6 +13,8 @@ export type DeleteBody = {
     private: {
       customerId: string;
       treatmentId: string;
+      customerName: string;
+      conferenceId: string;
     };
   };
   Guid: string;
@@ -87,10 +89,14 @@ export default async function handler(
     }
 
     if (req.body.deleted !== null && req.body.deleted.length > 0) {
+      console.log("req.body.deleted", req.body.deleted);
+
       const data = req.body.deleted[0] as DeleteBody;
+
+      const calendarId = data.ExtendedProperties.private.conferenceId;
       const googleClient = setupGoogleCalendarClient(token);
       const deletedEvent = await deleteGoogleCalendarEvent(
-        googleClient,
+        { ...googleClient, calendarId: calendarId },
         data.Id
       );
       return res

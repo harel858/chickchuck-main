@@ -235,8 +235,9 @@ const NewEvent = ({
               className="text-blue-500 focus:ring-0 focus:ring-offset-0"
               variant={"link"}
               type="button"
+              style={{ direction: "rtl" }}
             >
-              {isNewClient ? "back to list" : "new customer?"}
+              {isNewClient ? "חזרה לרשימת הלקוחות" : "לקוח חדש?"}
             </Button>
           )}
         </div>
@@ -247,7 +248,7 @@ const NewEvent = ({
               variant={"ghost"}
               onClick={() => prev()}
             >
-              Previous
+              חזור
             </Button>
           )}
           {current == steps.length - 1 ? (
@@ -258,7 +259,7 @@ const NewEvent = ({
               size="lg"
               isLoading={isPending}
             >
-              Done
+              קבע תור
             </Button>
           ) : (
             <Button
@@ -271,7 +272,7 @@ const NewEvent = ({
                 (isNewClient && current === 0 && !newClient.phone)
               }
             >
-              Next
+              הבא
             </Button>
           )}
         </div>

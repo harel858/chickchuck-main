@@ -20,8 +20,6 @@ type UserCredentials = {
 };
 //team member sign up
 const authorizeUserSignUp = async (credentials: any, req: any) => {
-  console.log("authorizeUserSignUp");
-
   try {
     const { phone, password } = credentials as UserCredentials;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -188,7 +186,8 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
       authorization: {
         params: {
-          scope: "openid https://www.googleapis.com/auth/calendar",
+          scope:
+            "openid https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
@@ -214,8 +213,6 @@ export const authOptions: NextAuthOptions = {
       const { account, token, user, profile, session, trigger } = props;
 
       try {
-        console.log("props", props);
-
         let logo: string | null = "";
         let user = null;
         let customer = null;
@@ -230,7 +227,6 @@ export const authOptions: NextAuthOptions = {
               accounts: true,
             },
           });
-          console.log("user", user);
         } catch (err: any) {
           throw new Error(err);
         }
@@ -285,7 +281,6 @@ export const authOptions: NextAuthOptions = {
         if (account?.expires_at && user) {
           return {
             ...token,
-            user: { id: token.user.id, email: token.user.email },
             accessToken: token.accessToken,
             accessTokenExpires: Date.now() + account.expires_at * 1000,
             refreshToken: token.refresh_token,
@@ -295,7 +290,6 @@ export const authOptions: NextAuthOptions = {
         // Access token has expired, try to update it
         return refreshAccessToken({
           ...token,
-          user: { id: token.user.id, email: token.user.email },
           refresh_token: user.accounts[0]?.refresh_token!,
           accountId: user.accounts[0]?.id!,
         });
@@ -317,10 +311,9 @@ export const authOptions: NextAuthOptions = {
           access_token: token.access_token,
           businessId: token.businessId,
           businessName: token.businessName,
-          isAdmin: token.isAdmin,
+          isAdmin: token.user.isAdmin,
         },
       };
     },
   },
-  debug: true,
 };

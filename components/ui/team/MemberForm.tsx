@@ -70,12 +70,12 @@ const MemberForm = ({
   const formType: FieldType[] = [
     { label: "שם", name: "name" },
     { label: "מספר נייד", name: "phone" },
-    { label: "הרשאות", name: "authorization" },
+    /*     { label: "הרשאות", name: "authorization" },
     { label: "להסתיר את העמודה מהיומן", name: "calendarHide" },
     {
       label: "להסתיר מקביעת תורים על ידי לקוחות",
       name: "calendarHide",
-    },
+    }, */
   ];
 
   return (

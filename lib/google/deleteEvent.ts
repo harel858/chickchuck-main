@@ -1,5 +1,7 @@
 import { OAuth2Client } from "google-auth-library";
 import { calendar_v3 } from "googleapis";
+/* import { revalidatePath } from "next/cache";
+revalidatePath("/schedule"); */
 
 export async function deleteGoogleCalendarEvent(
   googleClient: {

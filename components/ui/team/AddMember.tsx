@@ -53,7 +53,7 @@ const AddMember = ({
         okButtonProps={{
           hidden: true,
         }}
-        cancelButtonProps={{ hidden: false }}
+        cancelButtonProps={{ hidden: true }}
         cancelText="סגור"
         confirmLoading={confirmLoading}
         onCancel={handleCancel}

@@ -6,6 +6,25 @@ export default function PrivacyPolicy() {
       <main className="max-w-4xl mx-auto" style={{ direction: "rtl" }}>
         <h1 className="text-2xl font-bold mb-4">מדיניות פרטיות של Quickline</h1>
 
+        {/* Limited Use Policy Disclosure */}
+        <div className="bg-green-100 p-4 rounded mb-4">
+          <p className="text-sm">
+            השימוש באפליקציית Quickline והעברת מידע לאפליקציות אחרות של Google
+            ייעשו בהתאם למדיניות נתוני משתמש של שירותי Google API, כולל דרישות
+            השימוש המוגבל. למידע נוסף, ראה את
+            <a
+              href="https://developers.google.com/terms/api-services-user-data-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline text-blue-600"
+            >
+              מדיניות נתוני משתמש של שירותי Google API
+            </a>
+            .
+          </p>
+        </div>
+
+        {/* Google API User Data Policy */}
         <div className="bg-yellow-100 p-4 rounded mb-4">
           <p className="text-sm">
             השימוש באפליקציית Quickline והעברת מידע לאפליקציות אחרות ב-Google
@@ -23,13 +42,50 @@ export default function PrivacyPolicy() {
           </p>
         </div>
 
-        <p className="mb-4">
-          מדיניות פרטיות זו מסבירה כיצד אנו אוספים, משתמשים, מאחסנים ומשתפים את
-          המידע שנאסף ממך במהלך השימוש שלך באפליקציית Quickline (להלן "היישום").
-          היישום נוצר ומסופק על ידי חראל לוי (להלן "ספק השירות") וזמין לשימוש
-          כשירות חינמי דרך דפדפנים.
-        </p>
+        {/* Detailed Security Measures */}
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">אבטחה מפורטת</h2>
+          <p className="mb-4">
+            אנו משתמשים באמצעי אבטחה מתקדמים, כולל הצפנת SSL לשמירה על נתוני
+            המשתמשים בזמן העברה, והצפנה בתקן AES לאחסון נתונים רגישים. בנוסף,
+            אנו מקפידים על בקרות גישה מחמירות כדי להבטיח שרק משתמשים מורשים
+            יכולים לגשת לנתונים.
+          </p>
+        </div>
 
+        {/* Transparency in Data Sharing */}
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">
+            שיתוף נתונים עם צדדים שלישיים
+          </h2>
+          <p className="mb-4">
+            אנו משתפים נתונים רק במקרים חיוניים לשירות או כאשר הדבר נדרש על פי
+            חוק. כל ספקי השירות שלנו מתחייבים לעמוד במדיניות פרטיות זו ולא
+            ישתמשו במידע שלך למטרות אחרות.
+          </p>
+        </div>
+
+        {/* User Rights and Choices */}
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">זכויות ובחירות של המשתמש</h2>
+          <p className="mb-4">
+            המשתמשים יכולים לגשת למידע שלהם, לעדכן אותו או לבקש את מחיקתו בכל
+            עת. ניתן לשלוט בהגדרות הפרטיות דרך חשבון המשתמש באפליקציה או לפנות
+            אלינו בכתובת הדוא"ל harellevi85@gmail.com לביצוע שינויים.
+          </p>
+        </div>
+
+        {/* In-Product Privacy Notifications */}
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">הודעות פרטיות בתוך היישום</h2>
+          <p className="mb-4">
+            אנו מציגים הודעות פרטיות בתוך היישום כאשר אנו אוספים נתונים רגישים,
+            כגון בעת בקשת גישה לאירועי יומן Google שלך או פרטי הפרופיל שלך.
+            הודעות אלו כוללות הסבר על המידע הנאסף ומדוע אנו זקוקים לו.
+          </p>
+        </div>
+
+        {/* Standard Sections */}
         <div className="mb-8">
           <h2 className="text-lg font-bold mb-2">איסוף ושימוש במידע</h2>
           <p className="mb-4">
@@ -99,69 +155,23 @@ export default function PrivacyPolicy() {
         <div className="mb-8">
           <h2 className="text-lg font-bold mb-2">גישה לצדדים שלישיים</h2>
           <p className="mb-4">
-            מידע סטטיסטי ואנונימי עשוי להיות משותף עם צדדים שלישיים כדי לשפר את
-            היישום. ספק השירות עשוי לשתף את המידע שלך במקרים הבאים:
+            מידע המשתמש לא ישותף עם צדדים שלישיים מלבד במקרים הבאים:
           </p>
           <ul className="list-disc list-inside mb-4">
-            <li>עם Google לצורך אימות גישה ויישום של OAuth 2.0.</li>
-            <li>במידה שנדרש על פי חוק.</li>
+            <li>כאשר הדבר נדרש לצורך עמידה בדרישות חוקיות.</li>
             <li>
-              כדי להגן על זכויותינו או זכויות אחרים, לשמור על בטיחותך ולמנוע
-              הונאות.
+              כאשר הדבר נדרש לצורך הגנה על זכויות, רכוש או בטיחות המשתמשים או
+              הציבור.
             </li>
             <li>
-              עם ספקי שירות מהימנים שמצייתים למדיניות פרטיות זו ולא ישתמשו במידע
-              שלך לשום מטרה אחרת.
+              כאשר המידע מועבר לספקי שירות מהימנים לצורך תמיכה טכנית או שירותי
+              ענן. ספקים אלו מחויבים להבטיח את בטיחות המידע ולא לעשות בו כל
+              שימוש אחר.
             </li>
           </ul>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">זכויות ביטול (Opt-Out)</h2>
           <p className="mb-4">
-            באפשרותך להפסיק את איסוף כל המידע על ידי היישום על ידי הפסקת השימוש
-            בו. ניתן למחוק את חשבונך או להפסיק את השימוש ביישום.
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">מדיניות שמירת הנתונים</h2>
-          <p className="mb-4">
-            אנו נשמור על נתונים שסיפקת כל עוד יש לך חשבון פעיל. לאחר בקשת מחיקה,
-            הנתונים שלך יוסרו מהשרתים שלנו תוך 30 ימים.
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">ילדים</h2>
-          <p className="mb-4">
-            היישום אינו מיועד לשימוש ילדים מתחת לגיל 13 ואינו אוסף מידע אישי
-            מזהה מילדים בגיל זה.
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">אבטחה</h2>
-          <p className="mb-4">
-            אנו מחויבים להגן על המידע שלך באמצעות אמצעים פיזיים, אלקטרוניים
-            ומנהליים תקינים להגנה על המידע שלך, כולל הצפנה ובקרת גישה.
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">שינויים במדיניות</h2>
-          <p className="mb-4">
-            מדיניות זו עשויה להשתנות מעת לעת. אנו נודיע לך על שינויים על ידי
-            עדכון עמוד זה. המשך שימושך ביישום לאחר פרסום השינויים מהווה הסכמתך
-            למדיניות פרטיות מעודכנת זו.
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2">יצירת קשר</h2>
-          <p className="mb-4">
-            אם יש לך שאלות או בקשות בנוגע למדיניות פרטיות זו, אנא צור איתנו קשר
-            בכתובת הדוא"ל harellevi85@gmail.com.
+            אנו מחויבים להבטיח כי כל צד שלישי המקבל גישה למידע שלך יעשה בו שימוש
+            אך ורק בהתאם למדיניות פרטיות זו.
           </p>
         </div>
       </main>

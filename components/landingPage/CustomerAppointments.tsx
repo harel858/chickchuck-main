@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Divider, List, Skeleton } from "antd";
 import { calendar_v3 } from "googleapis";
 import { isGoogleEvent } from "@ui/(navbar)/specialOperations/notifications/utils/typeGourd";
-import GoogleEvent from "@ui/(navbar)/specialOperations/notifications/GoogleEvent";
 import RequestEvent from "./RequestEvent";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LargeHeading from "@ui/LargeHeading";

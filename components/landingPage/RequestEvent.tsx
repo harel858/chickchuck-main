@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { Button } from "@ui/Button";
 import { denyAppointment } from "actions/denyAppointment";
 import { BiTrash } from "react-icons/bi";
+import { useRouter } from "next/navigation";
 function RequestEvent({
   item,
   freebusy,
@@ -16,6 +17,7 @@ function RequestEvent({
   };
   freebusy: string;
 }) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const startTime = dayjs(item.start).format("HH:mm");
   const formatDate = dayjs(item.start).format("DD/MM/YYYY");
@@ -29,9 +31,12 @@ function RequestEvent({
           ? [
               <Button
                 size={"sm"}
-                onClick={() =>
-                  startTransition(async () => await denyAppointment(item.id))
-                }
+                onClick={() => {
+                  startTransition(async () => {
+                    await denyAppointment(item.id);
+                  });
+                  router.refresh();
+                }}
                 isLoading={isPending}
                 variant={"destructive"}
                 type="button"

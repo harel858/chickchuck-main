@@ -47,8 +47,11 @@ function Clients({
   return (
     <div className="flex flex-col justify-center items-center gap-4 p-0 pt-5 w-full max-lg:w-full">
       <div className="flex flex-col justify-center items-center gap-4">
-        <LargeHeading className="flex flex-row justify-center items-center gap-2">
-          My Clients <CgProfile />
+        <LargeHeading
+          className="flex flex-row justify-center items-baseline align-baseline gap-2"
+          style={{ direction: "rtl" }}
+        >
+          מאגר הלקוחות <CgProfile />
         </LargeHeading>
         <SearchClient
           onSearchChange={onSearchChange}
