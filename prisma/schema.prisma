@@ -57,6 +57,7 @@ model User {
     email              String?              @unique
     emailVerified      DateTime?            @map("email_verified")
     image              String?
+    createdAt          String?
     accounts           Account[]
     sessions           Session[]
     password           String?
@@ -69,7 +70,7 @@ model User {
     UserRole           UserRole?            @default(RECIPIENT)
     Treatment          Treatment[]
     isAdmin            Boolean?
-    PremiumKit         PremiumKits          @default(Light)
+    PremiumKit         PremiumKits          @default(FreeTier)
     Business           Business?            @relation(fields: [businessId], references: [id])
     businessId         String?
     watchExpiration    String?
@@ -204,6 +205,7 @@ enum PremiumKits {
     Light
     Pro
     ProPlus
+    FreeTier // New enum value added here
 }
 
 enum BusinessType {

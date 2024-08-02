@@ -245,6 +245,11 @@ export const authOptions: NextAuthOptions = {
         }
         if (!user) throw new Error("user not found");
 
+        if (user.isAdmin) {
+          token.createdAt = user.createdAt;
+          token.PremiumKits = user.PremiumKit;
+        }
+
         if (
           user?.UserRole === "TEAMMEATE" &&
           user?.accounts.length === 0 &&

@@ -16,6 +16,7 @@ declare module "next-auth/jwt" {
     id: UserId;
     refresh_token: string;
     exp: number;
+    createdAt: string | null;
     user:
       | User
       | (Customer & {

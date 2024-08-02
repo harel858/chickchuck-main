@@ -1,12 +1,9 @@
-/* export { default } from "next-auth/middleware";
-export const config = {
-  matcher: ["/profile"],
-}; */
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { getToken } from "next-auth/jwt";
 import { withAuth } from "next-auth/middleware";
 import { NextRequest, NextResponse } from "next/server";
+import { differenceInMonths } from "date-fns"; // A utility library for date operations
 
 const redis = new Redis({
   url: process.env.REDIS_URL,
@@ -21,7 +18,6 @@ const rateLimit = new Ratelimit({
 export default withAuth(
   async function middleware(req) {
     const pathName = req.nextUrl.pathname; //relative path
-
     /*     //manage rate limit
     if (pathName.startsWith("/api")) {
       const ip = req.ip ?? `127.0.0.1`;
@@ -37,6 +33,8 @@ export default withAuth(
       }
     } //Manage route protection
  */
+
+    // Token retrieval
     const token = await getToken({ req });
     console.log("token", token);
 
@@ -51,19 +49,37 @@ export default withAuth(
       "/activityTime",
     ];
 
-    if (isAuthPage) {
-      if (isAuth && !token.businessId) {
-        return NextResponse.redirect(
-          new URL("/createbusinessdetails", req.url)
-        );
-      }
-      if (isAuth) {
+    // Check if user is authenticated
+    if (isAuth) {
+      // Check if user is accessing the login page
+      if (isAuthPage) {
+        if (!token.businessId) {
+          return NextResponse.redirect(
+            new URL("/createbusinessdetails", req.url)
+          );
+        }
         return NextResponse.redirect(new URL("/schedule", req.url));
       }
-      return null;
+
+      // Check if a month has passed since the user was created and if the user is on the FreeTier
+      const userCreatedDate = new Date(token.createdAt || ""); // Assuming token contains createdAt
+      const currentDate = new Date();
+      const monthsDifference = differenceInMonths(currentDate, userCreatedDate);
+
+      if (monthsDifference >= 1 && token.PremiumKits === "FreeTier") {
+        if (pathName !== "/pricing") {
+          return NextResponse.redirect(new URL("/pricing", req.url));
+        }
+      } else if (pathName === "/pricing") {
+        return NextResponse.redirect(new URL("/schedule", req.url));
+      }
+    } else {
+      // Handle unauthenticated users trying to access sensitive routes
+      if (sensetiveRoutes.some((route) => pathName.startsWith(route))) {
+        return NextResponse.redirect(new URL("/login", req.url));
+      }
     }
-    if (!isAuth && sensetiveRoutes.some((route) => pathName.startsWith(route)))
-      return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.next();
   },
   {
     callbacks: {
@@ -73,6 +89,7 @@ export default withAuth(
     },
   }
 );
+
 export const config = {
   matcher: [
     "/:path*",
@@ -85,5 +102,6 @@ export const config = {
     "/signup",
     "/api/:path*",
     "/createbusinessdetails",
+    "/pricing",
   ],
 };

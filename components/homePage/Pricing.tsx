@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@lib/auth";
 import MaxWidthWrapper from "@components/MaxWidthWrapper";
 import { PLANS } from "config/stripe";
-import { buttonVariants } from "@ui/Button";
+import { Button, buttonVariants } from "@ui/Button";
 import { cn } from "@lib/utils";
 import {
   Tooltip,
@@ -13,6 +13,7 @@ import {
   TooltipTrigger,
 } from "@ui/tooltip";
 import UpgradeButton from "./UpgradeButton";
+import CreatePaymentButton from "./CreatePaymentButton"; // ייבוא הרכיב החדש
 
 export const Pricing = async () => {
   const session = await getServerSession(authOptions);
@@ -217,30 +218,12 @@ export const Pricing = async () => {
                   </ul>
                   <div className="border-t border-gray-200" />
                   <div className="p-5">
-                    {plan === "בסיסי" ? (
-                      <Link
-                        href={user ? "/dashboard" : "/sign-in"}
-                        className={buttonVariants({
-                          className: "w-full",
-                          variant: "secondary",
-                        })}
-                      >
-                        {user ? "שדרג עכשיו" : "הרשם"}
-                        <ArrowRight className="h-5 w-5 ml-1.5" />
-                      </Link>
-                    ) : user ? (
-                      <UpgradeButton />
-                    ) : (
-                      <Link
-                        href="/sign-in"
-                        className={buttonVariants({
-                          className: "w-full",
-                        })}
-                      >
-                        {user ? "שדרג עכשיו" : "הרשם"}
-                        <ArrowRight className="h-5 w-5 ml-1.5" />
-                      </Link>
-                    )}
+                    <CreatePaymentButton
+                      sum={price}
+                      description={`תשלום עבור תוכנית ${plan}`}
+                      userId={user?.id || "4ec1d595ae764243"}
+                      fullName={user?.name || "לקוח"}
+                    />
                   </div>
                 </div>
               );

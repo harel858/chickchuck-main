@@ -48,6 +48,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
             return res.status(400).json({ message: "User not found." });
           }
 
+          const updateUser = await prisma.user.update({
+            where: { id: userExists.id },
+            data: { createdAt: new Date().toISOString() },
+          });
+
           const businessDetails = JSON.parse(
             fields.businessDetails as string
           ) as TBusinessDetailsValidation;

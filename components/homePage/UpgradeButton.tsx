@@ -12,7 +12,8 @@ const UpgradeButton = () => {
  */
   return (
     <Button /* onClick={() => createStripeSession()} */ className="w-full">
-      משתלם ביותר <ArrowRight className="h-5 w-5 ml-1.5" />
+      שדרג עכשיו
+      <ArrowRight className="h-5 w-5 ml-1.5" />
     </Button>
   );
 };
