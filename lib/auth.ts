@@ -1,15 +1,15 @@
-import { prisma } from "./prisma";
 import { NextAuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getImage } from "./aws/s3";
 import googleProvider from "next-auth/providers/google";
-import { updateUserByPhone } from "./prisma/users";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import findUserByPhone from "actions/findUserByPhone";
-import { updateCustomerByPhone } from "./prisma/customer/updateCustomerByPhone";
 import findCustomer from "actions/findCustomer";
+import { updateUserByPhone } from "./prisma/users";
+import { updateCustomerByPhone } from "./prisma/customer/updateCustomerByPhone";
+import { prisma } from "./prisma";
 
 const bucketName = process.env.BUCKET_NAME!;
 

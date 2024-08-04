@@ -1,6 +1,6 @@
 import React from "react";
-import updateItem from "actions/updateNotification";
-import { Notification, NotificationData } from "types/types";
+/* import updateItem from "actions/updateNotification";
+ */ import { Notification, NotificationData } from "types/types";
 
 function NotificationItem({
   NotificationData,
@@ -12,7 +12,8 @@ function NotificationItem({
   return (
     <li
       className=" z-50 w-full cursor-pointer"
-      onClick={() => updateItem(NotificationData.notification)}
+      /*       onClick={() => updateItem(NotificationData.notification)}
+       */
     >
       NotificationItem
     </li>

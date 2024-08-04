@@ -29,6 +29,7 @@
       "@components/*": ["./components/*"],
       "@navbar/*": ["./app/(navbar)/*"],
       "@actions": ["./actions"],
+      "@pages/*": ["./pages/*"],
       "@api/*": ["./pages/api/*"],
       "@app/*":["./app/*"]
     }

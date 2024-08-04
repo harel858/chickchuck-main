@@ -9,10 +9,11 @@ import { FiExternalLink } from "react-icons/fi";
 import { RiCoinsLine, RiTeamLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import Avatar from "@ui/Avatar";
-import { calendar_v3 } from "googleapis";
 import { IoSettingsOutline, IoCalendarOutline } from "react-icons/io5";
-import Hamburger from "./(responsiveNav)/Hamburger";
-import { CombinedEvent } from "types/types";
+/* import logo from "@public/QuickLinelogotemp3.png";
+ */ import { CombinedEvent } from "types/types";
+import Image from "next/image";
+import Link from "next/link";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 function Navbar({
@@ -31,12 +32,22 @@ function Navbar({
   access_token: string;
 }) {
   const profileImage = session.user.image;
-  console.log("profileImage", profileImage);
 
   const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-"); // Replace whitespace with hyphens
 
   return (
     <nav className="fixed px-0 py-1 flex items-center justify-center max-2xl:p-0 backdrop-blur-sm bg-slate-300 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-slate-200 dark:border-slate-800 shadow-sm ">
+      <Link href="/" className="flex z-40 font-semibold absolute left-0">
+        <Image
+          width={300}
+          height={300}
+          className="p-0 m-0"
+          alt="logo"
+          aria-hidden="true"
+          src="/QuickLinelogotemp3.png"
+        />
+      </Link>
+
       <ul className="max-xl:hidden h-full flex flex-row justify-between items-center align-between text-md text-white dark:text-white">
         <NavBarItem
           title={"דף העסק"}
