@@ -13,7 +13,7 @@ import { setupGoogleCalendarClient } from "@lib/google/client";
 import Hamburger from "@ui/(navbar)/(responsiveNav)/Hamburger";
 import { fetchEvents2 } from "@lib/google/eventList";
 
-async function fetchWatch(
+/* async function fetchWatch(
   userId: string,
   googleClient: {
     auth: OAuth2Client;
@@ -64,7 +64,7 @@ async function fetchWatch(
 
   return calendars.map((calendar) => calendar.watchExpired);
 }
-
+ */
 async function Layout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
 
@@ -92,9 +92,9 @@ async function Layout({ children }: { children: React.ReactNode }) {
     watchExpired: user.watchExpiration,
   }));
 
-  if (!user.Business.confirmationNeeded)
+  /*   if (!user.Business.confirmationNeeded)
     await fetchWatch(session?.user.id, googleClient, calendars);
-
+ */
   const calendarsIds: string[] = user.Business.user.map((user) =>
     user.calendarId ? user.calendarId : "primary"
   );

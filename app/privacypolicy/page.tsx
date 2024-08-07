@@ -159,6 +159,15 @@ export default function PrivacyPolicy() {
             אך ורק בהתאם למדיניות פרטיות זו.
           </p>
         </div>
+
+        {/* Contact Information */}
+        <div className="mb-8">
+          <h2 className="text-lg font-bold mb-2">יצירת קשר</h2>
+          <p className="mb-4">
+            אם יש לך שאלות או הערות בנוגע למדיניות פרטיות זו, אנא פנה אלינו
+            בכתובת הדוא"ל: harellevi85@gmail.com.
+          </p>
+        </div>
       </main>
     </div>
   );
