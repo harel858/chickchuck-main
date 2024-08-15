@@ -189,7 +189,7 @@ export const authOptions: NextAuthOptions = {
           scope:
             "openid https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
           prompt: "consent",
-          access_type: "offline",
+          access_type: "online",
           response_type: "code",
         },
       },
