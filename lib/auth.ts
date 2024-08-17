@@ -118,6 +118,7 @@ async function refreshAccessToken(
     });
 
     const refreshedTokens: any = await response.json();
+    console.log("response", response);
 
     if (!response.ok) {
       throw refreshedTokens;
@@ -133,7 +134,7 @@ async function refreshAccessToken(
       refresh_token: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
     };
   } catch (error) {
-    console.log(error);
+    console.log("error", error);
 
     return {
       ...token,
@@ -232,6 +233,7 @@ export const authOptions: NextAuthOptions = {
               accounts: true,
             },
           });
+          console.log("user", user);
         } catch (err: any) {
           throw new Error(err);
         }
@@ -287,6 +289,7 @@ export const authOptions: NextAuthOptions = {
         token.businessName = user.Business?.businessName || "";
         token.access_token = user.accounts[0]?.access_token || "";
         token.refresh_token = user.accounts[0]?.refresh_token || "";
+        console.log("account?.expires_at && user", account?.expires_at && user);
 
         if (account?.expires_at && user) {
           return {
@@ -310,6 +313,8 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token, user }) {
+      console.log("session", session);
+
       return {
         ...session,
         user: {
