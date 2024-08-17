@@ -36,6 +36,8 @@ export default function AppointmentSteps({
   freeBusy: string;
   session: Session | null;
 }) {
+  console.log("business.confirmationNeeded", business.confirmationNeeded);
+
   const [isLoading, setIsLoading] = useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [selectedService, setSelectedService] =
