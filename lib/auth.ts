@@ -12,6 +12,11 @@ import { updateCustomerByPhone } from "./prisma/customer/updateCustomerByPhone";
 import { prisma } from "./prisma";
 
 const bucketName = process.env.BUCKET_NAME!;
+console.log("process.env.GOOGLE_CLIENT_ID", process.env.GOOGLE_CLIENT_ID);
+console.log(
+  "process.env.GOOGLE_CLIENT_SECRET",
+  process.env.GOOGLE_CLIENT_SECRET
+);
 
 type UserCredentials = {
   phone: string;
