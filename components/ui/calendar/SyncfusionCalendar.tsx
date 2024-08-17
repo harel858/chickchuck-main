@@ -123,7 +123,7 @@ const RecurrenceEvents = ({
     []
   );
   return (
-    <div className="schedule-control-section">
+    <div className="schedule-control-section z-50">
       <div className="col-lg-9 control-section">
         <div className="control-wrapper">
           <ScheduleComponenta

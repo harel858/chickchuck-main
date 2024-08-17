@@ -118,8 +118,8 @@ async function refreshAccessToken(
     });
 
     const refreshedTokens: any = await response.json();
-    console.log("response", response);
-
+    console.log("response", refreshedTokens);
+    console.log("response.ok", response.ok);
     if (!response.ok) {
       throw refreshedTokens;
     }
@@ -195,7 +195,7 @@ export const authOptions: NextAuthOptions = {
           scope:
             "openid https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
           prompt: "consent",
-          access_type: "online",
+          access_type: "offline",
           response_type: "code",
         },
       },
@@ -233,7 +233,6 @@ export const authOptions: NextAuthOptions = {
               accounts: true,
             },
           });
-          console.log("user", user);
         } catch (err: any) {
           throw new Error(err);
         }
@@ -289,7 +288,8 @@ export const authOptions: NextAuthOptions = {
         token.businessName = user.Business?.businessName || "";
         token.access_token = user.accounts[0]?.access_token || "";
         token.refresh_token = user.accounts[0]?.refresh_token || "";
-        console.log("account?.expires_at && user", account?.expires_at && user);
+        console.log("user", user);
+        console.log("account?.expires_at", account?.expires_at);
 
         if (account?.expires_at && user) {
           return {

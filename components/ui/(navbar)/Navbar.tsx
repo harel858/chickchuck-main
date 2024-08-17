@@ -37,10 +37,10 @@ function Navbar({
 
   return (
     <nav className="fixed px-0 py-1 flex items-center justify-center max-2xl:p-0 backdrop-blur-sm bg-slate-300 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-slate-200 dark:border-slate-800 shadow-sm ">
-      <Link href="/" className="flex z-40 font-semibold absolute left-0">
+      <Link href="/" className="flex font-semibold absolute left-0">
         <Image
-          width={300}
-          height={300}
+          width={200}
+          height={200}
           className="p-0 m-0"
           alt="logo"
           aria-hidden="true"
