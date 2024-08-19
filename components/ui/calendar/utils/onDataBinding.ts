@@ -39,6 +39,7 @@ export const onDataBinding = (e: Record<string, any>): void => {
       });
     }
   }
+  console.log("scheduleData", scheduleData);
 
   e.result = scheduleData;
 };

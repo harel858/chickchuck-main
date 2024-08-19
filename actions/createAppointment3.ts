@@ -21,6 +21,7 @@ export type EventProps = {
       customerId: string;
       customerName: string;
       conferenceId: string;
+      unread: string;
     };
   };
 };
@@ -50,6 +51,7 @@ export async function createAppointment3(
         customerId: client.id || "",
         customerName: client.name || "",
         conferenceId: selectedUser.calendarId || "primary",
+        unread: "true",
       },
     },
   };

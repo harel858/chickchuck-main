@@ -22,6 +22,7 @@ export type EventProps = {
       customerId: string;
       customerName: string;
       conferenceId: string;
+      unread: string;
     };
   };
 };
@@ -52,6 +53,7 @@ export async function confirmAppointment(
         customerId: client.id || "",
         customerName: client.name || "",
         conferenceId: selectedUser.calendarId || "primary",
+        unread: "true",
       },
     },
   };

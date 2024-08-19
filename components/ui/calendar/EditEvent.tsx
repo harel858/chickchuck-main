@@ -139,6 +139,7 @@ function EditEvent({
           customerId: editEvent?.customer?.value || "",
           customerName: editEvent?.customer?.value.split("-")[0] || "",
           conferenceId: conferenceId || "primary",
+          unread: "true",
         },
       },
     };

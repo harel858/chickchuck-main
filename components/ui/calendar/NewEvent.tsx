@@ -179,6 +179,7 @@ const NewEvent = ({
               customerId: event?.customer?.value || "",
               customerName: customerName || "",
               conferenceId: ConferenceId,
+              unread: "true",
             },
           },
         };

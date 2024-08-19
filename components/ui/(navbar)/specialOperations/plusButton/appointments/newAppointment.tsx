@@ -100,6 +100,7 @@ const AppointmentSteps = ({
             customerId: data?.Client?.value || "",
             customerName: customerName || "",
             conferenceId: selectedUser?.calendarId || "primary",
+            unread: "true",
           },
         },
       };

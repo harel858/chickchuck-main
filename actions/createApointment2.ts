@@ -18,6 +18,7 @@ export type EventProps = {
       customerId: string;
       customerName: string;
       conferenceId: string;
+      unread: string;
     };
   };
 };
