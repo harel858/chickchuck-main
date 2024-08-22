@@ -22,9 +22,10 @@ function FormFiled({
   return (
     <Select
       showSearch
-      style={{ width: 200 }}
+      style={{ width: "max-content" }}
+      dropdownStyle={{ width: "max-content" }} // זהו החלק המוסיף
       size="large"
-      placeholder="Search to Select"
+      placeholder="חפש/י לקוח קיים"
       optionFilterProp="children"
       filterOption={(input, option) => (option?.label ?? "").includes(input)}
       filterSort={(optionA, optionB) =>
