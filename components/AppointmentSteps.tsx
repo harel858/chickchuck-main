@@ -54,7 +54,7 @@ export default function AppointmentSteps({
     | null
     | undefined;
 }) {
-  console.log("business.confirmationNeeded", business.confirmationNeeded);
+  console.log("freebusy", freebusy);
 
   const [isLoading, setIsLoading] = useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
@@ -277,7 +277,7 @@ export default function AppointmentSteps({
           isLoading={isLoading}
           disabled={activeStep >= steps.length}
           onClick={() => handleNext()}
-          className="bg-blue-600 text-2xl fixed bottom-10 w-1/3 max-md:w-full transition-all ease-in-out duration-300"
+          className="bg-blue-600 text-2xl w-full transition-all ease-in-out duration-300 z-50"
         >
           המשך
         </Button>

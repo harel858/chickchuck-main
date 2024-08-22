@@ -56,9 +56,13 @@ const BusinessDetailsForm = ({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
+    getValues,
     control,
   } = form;
+
+  const code = watch("code");
 
   const onSubmit = async (data: TUserValidationCode) => {
     const params = {
@@ -71,7 +75,7 @@ const BusinessDetailsForm = ({
     if (!selectedService) return message.error("שירות מבוקש חסר");
     try {
       setIsLoading(true);
-      const result = await axios.post("/api/verification/steptwo", params);
+      const result = await axios.post("/api/verification/verifyotp", params);
       const client = result.data as Customer;
 
       if (result.status === 200 && !confirmationNeeded) {
@@ -147,10 +151,11 @@ const BusinessDetailsForm = ({
               </div>
             </div>
             <Button
-              className="bg-blue-600 text-2xl fixed bottom-5 w-1/3 max-md:w-full transition-all ease-in-out duration-300"
+              className="bg-blue-600 text-2xl w-1/3 max-md:w-full transition-all ease-in-out duration-300"
               type="submit"
               size="lg"
               isLoading={isLoading}
+              disabled={!code}
             >
               סיום
             </Button>

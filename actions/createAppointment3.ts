@@ -55,9 +55,12 @@ export async function createAppointment3(
       },
     },
   };
+  console.log("access_token", access_token);
+  console.log("calendarId", calendarId);
 
   try {
     const googleClient = setupGoogleCalendarClient(access_token);
+    console.log("googleClient", googleClient);
 
     const { auth, calendar } = googleClient;
 

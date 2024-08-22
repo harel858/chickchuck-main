@@ -87,6 +87,7 @@ function Navbar({
           scheduleProps={scheduleProps}
           session={session}
           userId={session.user.id}
+          calendarId={user.calendarId}
           customers={customers}
           confirmationNeeded={confirmationNeeded}
           access_token={access_token}

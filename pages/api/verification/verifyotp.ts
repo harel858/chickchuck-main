@@ -42,7 +42,7 @@ export default async function handler(
     const body = {
       validate_otp: {
         user: {
-          username: "019sms",
+          username: "harellevi",
         },
         phone: phoneNumber,
         app_id: SMS_APP_ID,

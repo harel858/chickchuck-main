@@ -10,6 +10,7 @@ import { AppointmentRequest, Customer, Treatment, User } from "@prisma/client";
 import { CombinedEvent } from "types/types";
 import dayjs from "dayjs";
 import { isGoogleEvent } from "./utils/typeGourd";
+import { updateEventsUnreadStatusToFalse } from "actions/updateEvent";
 
 interface NotificationComponentProps {
   userId: string;
@@ -18,6 +19,7 @@ interface NotificationComponentProps {
   scheduleProps: CombinedEvent[];
   confirmationNeeded: boolean | null;
   access_token: string;
+  calendarId: string | null;
 }
 
 function NotificationComponent({
@@ -27,12 +29,15 @@ function NotificationComponent({
   customers,
   confirmationNeeded,
   access_token,
+  calendarId,
 }: NotificationComponentProps) {
   const [notifications, setNotifications] = useState<CombinedEvent[]>([]);
+  const [length, setLength] = useState<number>(0);
+
   useEffect(() => {
     const filteredNotifications = scheduleProps?.filter((item) =>
       isGoogleEvent(item)
-        ? item.extendedProperties?.private?.customerId
+        ? item.extendedProperties?.private?.unread
         : item.customerId
     );
 
@@ -52,6 +57,24 @@ function NotificationComponent({
     }
 
     filteredNotifications && setNotifications(filteredNotifications);
+
+    if (confirmationNeeded === true) {
+      setLength(
+        (
+          notifications as (AppointmentRequest & {
+            treatment: Treatment;
+            customer: Customer;
+            user: User;
+          })[]
+        ).filter((item) => item.isConfirmed === null).length
+      );
+    } else {
+      setLength(
+        (notifications as calendar_v3.Schema$Event[]).filter(
+          (item) => item.extendedProperties?.private?.unread === "true"
+        ).length
+      );
+    }
   }, [scheduleProps]);
 
   const webSocketRef = useRef<WebSocket | null>(null);
@@ -59,7 +82,22 @@ function NotificationComponent({
   const closePopover = useCallback(() => setOpen(false), [open]);
   const hidePopover = () => setOpen(false);
 
-  const handleOpenChange = (newOpen: boolean) => setOpen(newOpen);
+  const handleOpenChange = async (newOpen: boolean) => {
+    setOpen(newOpen);
+
+    if (!confirmationNeeded && length > 0) {
+      setLength(0);
+      try {
+        updateEventsUnreadStatusToFalse(
+          access_token,
+          notifications as calendar_v3.Schema$Event[],
+          calendarId || "primary"
+        );
+      } catch (err: any) {
+        console.log("error", err);
+      }
+    }
+  };
 
   const handleWebSocketOpen = () => {};
 
@@ -109,7 +147,7 @@ function NotificationComponent({
       }
     };
   }, [handleWebSocketMessage]);
-  const length = confirmationNeeded
+  /*  const length = confirmationNeeded
     ? (
         notifications as (AppointmentRequest & {
           treatment: Treatment;
@@ -117,7 +155,9 @@ function NotificationComponent({
           user: User;
         })[]
       ).filter((item) => item.isConfirmed === null).length
-    : (notifications as calendar_v3.Schema$Event[]).length;
+    : (notifications as calendar_v3.Schema$Event[]).filter(
+        (item) => item.extendedProperties?.private?.unread === "true"
+      ).length; */
   return (
     <Popover
       content={

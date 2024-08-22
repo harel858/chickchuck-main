@@ -19,11 +19,11 @@ export default async function handler(
       const body = {
         send_otp: {
           user: {
-            username: "019sms",
+            username: "harellevi",
           },
           phone: phoneNumber,
           app_id: "1000",
-          source: "039021036",
+          source: "0537761400",
           max_tries: "4",
           text: "the code is [code]",
         },
@@ -36,6 +36,8 @@ export default async function handler(
       });
 
       const result = ans.data;
+      console.log("result", result);
+
       // check the errors in https://docs.019sms.co.il/sms/errors-and-status.html
       if (result.status == 0) {
         return res.status(200).json(result);

@@ -249,6 +249,8 @@ const RecurrenceEvents = ({
   };
   resourceData: DataSource[];
 }) => {
+  console.log("access_token", access_token);
+
   const scheduleObj = useRef<ScheduleComponent>(null);
 
   const [eventSettings, setEventSettings] = useState<EventSettingsModel>({

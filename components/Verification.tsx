@@ -49,14 +49,18 @@ const BusinessDetailsForm = ({
     register,
     handleSubmit,
     getValues,
+    watch,
     formState: { errors },
     control,
   } = form;
+  // Watch the values of fullName and phoneNumber
+  const fullName = watch("fullName");
+  const phoneNumber = watch("phoneNumber");
 
   const onSubmit = async (data: TUserValidation) => {
     try {
       setIsLoading(true);
-      const result = await axios.post("/api/verification/stepone", {
+      const result = await axios.post("/api/verification/sendotp", {
         name: data.fullName,
         phoneNumber: data.phoneNumber,
       });
@@ -103,10 +107,11 @@ const BusinessDetailsForm = ({
               })}
             </div>
             <Button
-              className="bg-blue-600 text-2xl fixed bottom-10 w-1/3 max-md:w-full transition-all ease-in-out duration-300"
+              className="bg-blue-600 text-2xl  w-1/3 max-md:w-full transition-all ease-in-out duration-300"
               type="submit"
               size="lg"
               isLoading={isLoading}
+              disabled={!fullName || !phoneNumber}
             >
               המשך
             </Button>
