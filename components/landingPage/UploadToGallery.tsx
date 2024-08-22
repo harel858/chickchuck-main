@@ -96,7 +96,6 @@ const UploadGallery = ({
 
   const uploadButton = (
     <div>
-      87hh
       <PlusCircleOutlined className="text-3xl" />
       <p style={{ marginTop: 8 }} className="text-xl">
         {"Upload Your Gallery"}
@@ -152,20 +151,6 @@ const UploadGallery = ({
   return (
     <>
       <div className="flex flex-col justify-center items-center gap-2 w-11/12">
-        <Dragger
-          action="/api/progress"
-          beforeUpload={handlebeforeUpload}
-          fileList={galleryList}
-          onPreview={handlePreview}
-          onChange={handleChange}
-          listType="picture"
-          accept="image/png, image/jpeg"
-          maxCount={8}
-          multiple
-          className="w-10/12"
-        >
-          {uploadButton}
-        </Dragger>
         <div className="flex justify-center items-center gap-2">
           {urls?.galleryImgUrls && urls.galleryImgUrls.length > 0 ? (
             <Button variant={"ghost"} onClick={() => setGalleryOrUpload(false)}>
@@ -181,7 +166,21 @@ const UploadGallery = ({
           >
             שמור בגלריה
           </Button>
-        </div>
+        </div>{" "}
+        <Dragger
+          action="/api/progress"
+          beforeUpload={handlebeforeUpload}
+          fileList={galleryList}
+          onPreview={handlePreview}
+          onChange={handleChange}
+          listType="picture"
+          accept="image/png, image/jpeg"
+          maxCount={8}
+          multiple
+          className="w-10/12"
+        >
+          {uploadButton}
+        </Dragger>
       </div>
       <Modal
         open={previewOpen}

@@ -20,7 +20,7 @@ function ServicesList({
       header={
         <div className="w-full flex justify-center items-center">
           <LargeHeading size={"sm"} className="text-lg text-center font-medium">
-            קביעת תור
+            בחר/י שירות{" "}
           </LargeHeading>
         </div>
       }

@@ -132,7 +132,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
       />
 
       <section className="flex justify-center items-center overflow-hidden">
-        <div className="w-full mt-20 overflow-hidden z-40">{children}</div>
+        <div className="w-full mt-20 overflow-hidden">{children}</div>
       </section>
     </>
   );

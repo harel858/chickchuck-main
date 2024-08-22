@@ -5,6 +5,7 @@ import UploadToGallery from "@components/landingPage/UploadToGallery";
 import { calendar_v3 } from "googleapis";
 import { Session } from "next-auth";
 import { AppointmentRequest, Customer, Treatment, User } from "@prisma/client";
+import GallerySlider from "./GallerySlider";
 function GallerySection({
   isAdmin,
   urls,
@@ -48,7 +49,7 @@ function GallerySection({
           setGalleryOrUpload={setGalleryOrUpload}
         />
       ) : (
-        <Gallery
+        <GallerySlider
           adminUserId={adminUserId}
           setGalleryOrUpload={setGalleryOrUpload}
           urls={urls}
