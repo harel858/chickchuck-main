@@ -18,11 +18,11 @@ function CustomerSignIn() {
     <>
       <Button
         onClick={() => setOpen(true)}
-        variant="default"
-        className="flex justify-center items-center gap-2 bg-slate-100 text-black hover:bg-slate-100/50"
+        variant="ghost"
+        className="absolute right-0 -top-10 flex justify-center items-center gap-2"
         aria-label="Edit Gallery"
       >
-        <span>כדי לצפות בתורים שלך, התחבר/י כאן.</span>
+        <span>.כדי לצפות בתורים שלך, התחבר/י כאן</span>
       </Button>
       <Modal
         open={open}

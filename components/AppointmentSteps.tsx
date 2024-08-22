@@ -11,7 +11,9 @@ import CodeVerification from "./CodeVerification";
 import ThankYouPage from "./ThankYouPage";
 import {
   ActivityDays,
+  AppointmentRequest,
   Business,
+  Customer,
   Images,
   Treatment,
   User,
@@ -22,10 +24,14 @@ import { calendar_v3 } from "googleapis";
 import { TUserValidation } from "@lib/validators/userValidation";
 import { message } from "antd";
 import { Session } from "next-auth";
+import CustomerSignIn from "./landingPage/CustomerSignIn";
+import CustomerAppointments from "./landingPage/CustomerAppointments";
 export default function AppointmentSteps({
   business,
   freeBusy,
   session,
+  customerAppointments,
+  freebusy,
 }: {
   business: Business & {
     Treatment: Treatment[];
@@ -35,6 +41,18 @@ export default function AppointmentSteps({
   };
   freeBusy: string;
   session: Session | null;
+  freebusy: string;
+  customerAppointments:
+    | (
+        | calendar_v3.Schema$Event
+        | (AppointmentRequest & {
+            treatment: Treatment;
+            customer: Customer;
+            user: User;
+          })
+      )[]
+    | null
+    | undefined;
 }) {
   console.log("business.confirmationNeeded", business.confirmationNeeded);
 
@@ -228,6 +246,14 @@ export default function AppointmentSteps({
 
   return (
     <div className="relative w-1/3 max-md:w-11/12 flex flex-col justify-center items-center bg-slate-200 rounded-xl mb-20">
+      {!session ? (
+        <CustomerSignIn />
+      ) : (
+        <CustomerAppointments
+          freebusy={freebusy}
+          customerAppointments={customerAppointments}
+        />
+      )}
       <Box
         sx={{
           width: "100%",

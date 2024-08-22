@@ -1,8 +1,8 @@
 "use client";
+import "./style.scss";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import LightGallery from "lightgallery/react";
 import lgZoom from "lightgallery/plugins/zoom";
-import "./style.scss";
 import lgThumbnail from "lightgallery/plugins/thumbnail";
 import { LightGallery as ILightGallery } from "lightgallery/lightgallery";
 import { InitDetail } from "lightgallery/lg-events";
@@ -18,9 +18,6 @@ export const GallerySlider = ({
   urls,
   setGalleryOrUpload,
   adminUserId,
-  freebusy,
-  customerAppointments,
-  session,
 }: {
   urls: {
     profileUrls: string;
@@ -30,21 +27,9 @@ export const GallerySlider = ({
       fileName: string;
     }[];
   } | null;
-  session: Session | null;
-  freebusy: string;
+
   adminUserId: string | false;
   setGalleryOrUpload: React.Dispatch<React.SetStateAction<boolean>>;
-  customerAppointments:
-    | (
-        | calendar_v3.Schema$Event
-        | (AppointmentRequest & {
-            treatment: Treatment;
-            customer: Customer;
-            user: User;
-          })
-      )[]
-    | null
-    | undefined;
 }) => {
   // const lightGalleryRef = useRef<ILightGallery>(null);
   const containerRef = useRef(null);
@@ -67,7 +52,7 @@ export const GallerySlider = ({
     <div className="App">
       {/*       <HeaderComponent />
        */}{" "}
-      {adminUserId ? (
+      {adminUserId && (
         <Button
           className="flex justify-center items-center gap-2 bg-slate-100 text-black hover:bg-slate-100/50"
           variant="default"
@@ -77,13 +62,6 @@ export const GallerySlider = ({
           <BiEdit />
           <span>עריכת גלריה</span>
         </Button>
-      ) : !session ? (
-        <CustomerSignIn />
-      ) : (
-        <CustomerAppointments
-          freebusy={freebusy}
-          customerAppointments={customerAppointments}
-        />
       )}{" "}
       <div
         style={{
@@ -108,10 +86,6 @@ export const GallerySlider = ({
             src: img.url,
             responsive: img.url,
             thumb: img.url,
-            /*             subHtml: `<div class="lightGallery-captions">
-                        <h4>Photo by <a href="https://unsplash.com/@dann">Dan</a></h4>
-                        <p>Published on November 13, 2018</p>
-                    </div>`, */
           }))}
           hash={false}
           elementClassNames={"inline-gallery-container"}
@@ -121,7 +95,7 @@ export const GallerySlider = ({
   );
 };
 
-const HeaderComponent: React.FC = () => (
+/* const HeaderComponent: React.FC = () => (
   <div className="header">
     <h1 className="header__title">lightGallery - Inline Gallery</h1>
     <p className="header__description">
@@ -143,5 +117,5 @@ const HeaderComponent: React.FC = () => (
       View on GitHub
     </a>
   </div>
-);
+); */
 export default GallerySlider;

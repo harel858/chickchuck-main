@@ -35,7 +35,7 @@ function GallerySection({
     | undefined;
   session: Session | null;
 }) {
-  console.log("customerAppointments", customerAppointments);
+  console.log("adminUserId", adminUserId);
 
   const [galleryOrUpload, setGalleryOrUpload] = useState<boolean>(
     isAdmin && urls?.galleryImgUrls.length === 0
@@ -53,9 +53,6 @@ function GallerySection({
           adminUserId={adminUserId}
           setGalleryOrUpload={setGalleryOrUpload}
           urls={urls}
-          customerAppointments={customerAppointments}
-          session={session}
-          freebusy={freeBusy}
         />
       )}
     </>

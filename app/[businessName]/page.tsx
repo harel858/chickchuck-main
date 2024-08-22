@@ -153,10 +153,13 @@ export default async function LandingPage({
         <BackgroundImage urls={urls} />
       )}
       <NavButtons business={business} />
+
       <AppointmentSteps
         business={business}
         freeBusy={freeBusy}
         session={session}
+        customerAppointments={customerAppointments}
+        freebusy={freeBusy}
       />
       <GallerySection
         adminUserId={adminUserId}
