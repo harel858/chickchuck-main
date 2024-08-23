@@ -246,7 +246,7 @@ export default function AppointmentSteps({
   console.log("session", session);
 
   return (
-    <div className="relative w-1/3 max-md:w-11/12 flex flex-col justify-center items-center bg-slate-200 rounded-xl mb-20">
+    <div className="relative w-1/3 max-md:w-11/12 flex flex-col justify-center items-center bg-slate-200 rounded-xl">
       {!session ? (
         <CustomerSignIn />
       ) : !session.user.businessId ? (

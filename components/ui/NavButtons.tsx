@@ -9,7 +9,7 @@ import { IoIosPin } from "react-icons/io";
 
 function NavButtons({ business }: { business: Business }) {
   return (
-    <div className="flex flex-col justify-center items-center gap-4">
+    <div className="flex flex-col justify-center items-center gap-0">
       <LargeHeading size={"default"} className="text-black font-normal m-0">
         {business.businessName}
       </LargeHeading>
