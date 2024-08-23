@@ -39,6 +39,7 @@ const DescriptionForm = ({
         treatmentId: item?.extendedProperties?.private?.treatmentId || "",
         customerName: item?.extendedProperties?.private?.customerName || "",
         conferenceId: calendarId,
+        unread: item?.extendedProperties?.private?.unread || "",
       },
     },
   };
