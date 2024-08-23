@@ -68,7 +68,7 @@ function NotificationComponent({
           })[]
         ).filter((item) => item.isConfirmed === null).length
       );
-    } else {
+    } else if (!confirmationNeeded) {
       setLength(
         (notifications as calendar_v3.Schema$Event[]).filter(
           (item) => item.extendedProperties?.private?.unread === "true"

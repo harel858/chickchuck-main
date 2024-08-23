@@ -5,44 +5,25 @@ import { AdditionData } from "./SyncfusionCalendar";
 import { Button } from "@ui/Button";
 import { motion } from "framer-motion";
 import FormFiled from "./FormFiled";
-import {
-  Account,
-  ActivityDays,
-  Business,
-  Customer,
-  Treatment,
-  User,
-} from "@prisma/client";
-import { Session } from "next-auth";
+import { Business, Customer, Treatment } from "@prisma/client";
 import { Schedule, ScheduleComponent } from "@syncfusion/ej2-react-schedule";
 import AddCustomer from "@ui/(navbar)/specialOperations/plusButton/Customer";
 import LargeHeading from "@ui/LargeHeading";
-import { createNewCustomer } from "actions/createCustomer";
 import { createAppointment } from "actions/createAppointment";
-import { useRouter } from "next/navigation";
 const NewEvent = ({
   props,
   business,
-  session,
-  user,
   ref: scheduleObj,
   ConferenceId,
   access_token,
 }: {
   ref: React.RefObject<ScheduleComponent>;
   props: any;
-  session: Session;
   business: Business & {
     Customer: Customer[];
     Treatment: Treatment[];
   };
   access_token: string;
-  user: User & {
-    accounts: Account[];
-    Treatment: Treatment[];
-    activityDays: ActivityDays[];
-    Customer: Customer[];
-  };
   ConferenceId: string;
 }) => {
   const { token } = theme.useToken();
@@ -179,7 +160,7 @@ const NewEvent = ({
               customerId: event?.customer?.value || "",
               customerName: customerName || "",
               conferenceId: ConferenceId,
-              unread: "true",
+              unread: "false",
             },
           },
         };

@@ -49,7 +49,12 @@ export const GallerySlider = ({
   }, []);
   console.log(containerRef.current);
   return (
-    <div className="App">
+    <div
+      className="App"
+      style={{
+        maxWidth: "-webkit-fill-available",
+      }}
+    >
       {/*       <HeaderComponent />
        */}{" "}
       {adminUserId && (
