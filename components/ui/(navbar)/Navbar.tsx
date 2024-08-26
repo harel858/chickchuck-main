@@ -37,7 +37,7 @@ function Navbar({
 
   return (
     <nav className="fixed px-0 py-1 flex items-center justify-center max-2xl:p-0 backdrop-blur-sm bg-slate-300 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-slate-200 dark:border-slate-800 shadow-sm ">
-      <Link href="/" className="flex font-semibold absolute left-0">
+      <div className="flex font-semibold absolute left-0 pointer-events-none">
         <Image
           width={200}
           height={200}
@@ -46,7 +46,7 @@ function Navbar({
           aria-hidden="true"
           src="/QuickLinelogotemp3.png"
         />
-      </Link>
+      </div>
 
       <ul className="max-xl:hidden h-full flex flex-row justify-between items-center align-between text-md text-white dark:text-white">
         <NavBarItem

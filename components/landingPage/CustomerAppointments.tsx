@@ -6,6 +6,7 @@ import RequestEvent from "./RequestEvent";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LargeHeading from "@ui/LargeHeading";
 import { AppointmentRequest, Customer, Treatment, User } from "@prisma/client";
+import GoogleEvents from "./GoogleEvents";
 
 const CustomerAppointments = ({
   customerAppointments,
@@ -33,7 +34,8 @@ const CustomerAppointments = ({
           user: User;
         })
     )[]
-  >(customerAppointments ? customerAppointments.slice(0, 10) : []);
+  >(customerAppointments || []);
+  console.log("visibleAppointments", visibleAppointments);
 
   const loadMoreData = () => {
     if (customerAppointments) {
@@ -47,9 +49,11 @@ const CustomerAppointments = ({
     }
   };
 
+  console.log("customerAppointments", customerAppointments);
+
   return (
     <div
-      className="w-1/2 max-md:w-11/12 bg-slate-200 rounded-xl"
+      className="w-full max-md:w-11/12 bg-slate-200 rounded-xl"
       style={{ height: 200, overflow: "auto" }}
     >
       {" "}
@@ -59,22 +63,26 @@ const CustomerAppointments = ({
         </LargeHeading>
       </div>
       <InfiniteScroll
-        dataLength={visibleAppointments.length}
+        dataLength={customerAppointments?.length || 0}
         next={loadMoreData}
         hasMore={
           !!customerAppointments &&
           visibleAppointments.length < customerAppointments.length
         }
-        loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+        loader={<></>}
         endMessage={<Divider plain>זה הכל, אין עוד פגישות</Divider>}
         scrollableTarget="scrollableDiv"
       >
         <List
           bordered
-          dataSource={visibleAppointments}
+          dataSource={customerAppointments || []}
           renderItem={(appointments, index) =>
             isGoogleEvent(appointments) ? (
-              <></>
+              <GoogleEvents
+                key={index}
+                item={appointments}
+                freebusy={freebusy}
+              />
             ) : (
               <RequestEvent
                 key={index}

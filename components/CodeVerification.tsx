@@ -79,6 +79,8 @@ const BusinessDetailsForm = ({
       const client = result.data as Customer;
 
       if (result.status === 200 && !confirmationNeeded) {
+        console.log("client", client);
+
         const event = await createAppointment3(
           freeBusy,
           selectedService,

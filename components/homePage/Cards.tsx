@@ -8,17 +8,7 @@ import group from "@public/group.png";
 import whatsappLogo from "@public/whatsapp_logo.png";
 import { motion, Variants } from "framer-motion";
 import Image from "next/image";
-import {
-  RiTeamFill,
-  RiBarChart2Fill,
-  RiCustomerService2Fill,
-  RiCalendarFill,
-} from "react-icons/ri";
-import {
-  FundTwoTone,
-  PieChartTwoTone,
-  ScheduleTwoTone,
-} from "@ant-design/icons";
+import { PieChartTwoTone, ScheduleTwoTone } from "@ant-design/icons";
 
 interface Props {
   title: string;
@@ -53,17 +43,11 @@ function Card({ title, content, logo }: Props) {
       <motion.div className="card relative px-5" variants={cardVariants}>
         <h4
           style={{ direction: "rtl" }}
-          className="w-max text-xl absolute top-2 left-1/2 transform -translate-x-1/2"
+          className="w-max text-xl absolute top-44 left-1/2 transform -translate-x-1/2"
         >
           {title}
         </h4>
         {logo}
-        <p
-          style={{ direction: "rtl" }}
-          className="absolute top-44 w-11/12 font-normal text-base text-right"
-        >
-          {content}
-        </p>
       </motion.div>
     </motion.div>
   );

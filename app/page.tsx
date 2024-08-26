@@ -41,7 +41,7 @@ export default function Home() {
                   <span className="bg-green-600 px-2 text-white">
                     האפליקציה
                   </span>{" "}
-                  שלך לקביעת תורים
+                  שלך לזימון תורים
                 </h1>
                 <p
                   style={{ direction: "rtl", textAlign: "center" }}
@@ -147,69 +147,6 @@ export default function Home() {
             </div>
           </MaxWidthWrapper>
         </section>
-        <section className="bg-slate-100 grainy-dark py-24">
-          <MaxWidthWrapper classNames="py-24">
-            <div className="mb-12 px-6 lg:px-8">
-              <div className="mx-auto max-w-2xl sm:text-center">
-                <h2 className="order-1 mt-2 tracking-tight text-center text-balance !leading-tight font-bold text-5xl md:text-6xl text-gray-900">
-                  קצת על{" "}
-                  <span className="relative px-2 bg-green-600 text-white">
-                    תכונות
-                  </span>{" "}
-                  האפליקציה
-                </h2>
-              </div>
-            </div>
-            {/* <div className="relative flex flex-col items-center md:grid grid-cols-2 gap-40">
-                <img
-                  src="/arrow.png"
-                  className="absolute top-[25rem] md:top-1/2 -translate-y-1/2 z-10 left-1/2 -translate-x-1/2 rotate-90 md:rotate-0"
-                />
-
-                <div className="relative h-80 md:h-full w-full md:justify-self-end max-w-sm rounded-xl bg-gray-900/5 ring-inset ring-gray-900/10 lg:rounded-2xl">
-                  <img
-                    src="/horse.jpg"
-                    className="rounded-md object-cover bg-white shadow-2xl ring-1 ring-gray-900/10 h-full w-full"
-                  />
-                </div>
-
-                <Phone className="w-60" imgSrc="/horse_phone.jpg" />
-              </div> */}
-            <Cards />
-            {/*             <ul className="mx-auto mt-12 max-w-prose sm:text-lg space-y-2 w-fit">
-             */}{" "}
-            {/*  <li className="w-fit">
-                <Check className="h-5 w-5 text-green-600 inline mr-1.5" />
-                High-quality silicone material
-              </li>
-              <li className="w-fit">
-                <Check className="h-5 w-5 text-green-600 inline mr-1.5" />
-                Scratch- and fingerprint resistant coating
-              </li>
-              <li className="w-fit">
-                <Check className="h-5 w-5 text-green-600 inline mr-1.5" />
-                Wireless charging compatible
-              </li>
-              <li className="w-fit">
-                <Check className="h-5 w-5 text-green-600 inline mr-1.5" />5 year
-                print warranty
-              </li> */}
-            <div className="flex justify-center">
-              <Link
-                href="/login"
-                className={buttonVariants({
-                  size: "sm",
-                  className: "hidden sm:flex items-center gap-1",
-                })}
-              >
-                {" "}
-                <ArrowLeft className="ml-1.5 h-5 w-5" />
-                היכנס לחשבון
-              </Link>
-            </div>
-            {/*        </ul> */}
-          </MaxWidthWrapper>
-        </section>
         {/* value proposition section */}
         <section className="grainy-dark py-24">
           <MaxWidthWrapper classNames="flex flex-col items-center gap-16 sm:gap-32">
@@ -313,6 +250,36 @@ export default function Home() {
           <div className="pt-16">
             <Reviews />
           </div>
+        </section>{" "}
+        <section className="bg-slate-100 grainy-dark py-24">
+          <MaxWidthWrapper classNames="py-24">
+            <div className="mb-12 px-6 lg:px-8">
+              <div className="mx-auto max-w-2xl sm:text-center">
+                <h2 className="order-1 mt-2 tracking-tight text-center text-balance !leading-tight font-bold text-5xl md:text-6xl text-gray-900">
+                  קצת על{" "}
+                  <span className="relative px-2 bg-green-600 text-white">
+                    תכונות
+                  </span>{" "}
+                  האפליקציה
+                </h2>
+              </div>
+            </div>
+            <Cards />
+            <div className="flex justify-center">
+              <Link
+                href="/login"
+                className={buttonVariants({
+                  size: "sm",
+                  className: "hidden sm:flex items-center gap-1",
+                })}
+              >
+                {" "}
+                <ArrowLeft className="ml-1.5 h-5 w-5" />
+                היכנס לחשבון
+              </Link>
+            </div>
+            {/*        </ul> */}
+          </MaxWidthWrapper>
         </section>
         <section className="bg-slate-100 grainy-dark py-24">
           {/* @ts-ignore */}

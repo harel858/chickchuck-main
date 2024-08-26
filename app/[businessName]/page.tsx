@@ -74,6 +74,9 @@ const getCustomerEvents = async (id: string, access_token: string) => {
   try {
     const googleClient = setupGoogleCalendarClient(access_token);
     const events = await getEventsByCustomer(googleClient, id);
+    console.log("events", events);
+    console.log("getCustomerEventsid", id);
+
     return events;
   } catch (error) {
     console.error("Error loading Google Calendar API:", error);

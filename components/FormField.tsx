@@ -44,12 +44,12 @@ const FormFields = ({
         className={cn({
           "focus-visible:ring-red-500": errors[name],
         })}
-        onChange={(props) =>
+        /*   onChange={(props) =>
           name === "phoneNumber" ? handlePhoneNumberChange(props) : undefined
-        }
+        } */
         placeholder={label}
         maxLength={name === "phoneNumber" ? 15 : undefined}
-        defaultValue={name === "phoneNumber" ? "972 " : undefined}
+        defaultValue={name === "phoneNumber" ? "" : undefined}
       />
       {errors?.[name] && (
         <p className="text-sm text-red-500">{errors[name]?.message}</p>
