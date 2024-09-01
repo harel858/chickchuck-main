@@ -38,7 +38,10 @@ export default function Home() {
                   className="relative w-fit tracking-tight text-balance mt-16 font-bold !leading-tight text-gray-900 text-5xl md:text-6xl lg:text-7xl"
                 >
                   פחות דיבורים{" "}
-                  <span className="bg-green-600 px-2 text-white">
+                  <span
+                    style={{ background: "#0097b2" }}
+                    className="px-2 text-white"
+                  >
                     האפליקציה
                   </span>{" "}
                   שלך לזימון תורים
@@ -62,6 +65,13 @@ export default function Home() {
                       style={{ direction: "rtl" }}
                       className="flex gap-1.5 items-center text-left"
                     >
+                      <Check className="h-5 w-5 shrink-0 text-green-600" />3
+                      חודשים ראשונים חינם ללא התחייבות{" "}
+                    </li>
+                    <li
+                      style={{ direction: "rtl" }}
+                      className="flex gap-1.5 items-center text-left"
+                    >
                       <Check className="h-5 w-5 shrink-0 text-green-600" />
                       מסונכרן עם יומן גוגל למניעת התנגשויות{" "}
                     </li>
@@ -70,7 +80,14 @@ export default function Home() {
                       className="flex gap-1.5 items-center text-left"
                     >
                       <Check className="h-5 w-5 shrink-0 text-green-600" />
-                      דף עסקי לגמרי משלכם עם אופציה לקביעת תורים
+                      עמוד נחיתה עסקי לזימון תורים
+                    </li>
+                    <li
+                      style={{ direction: "rtl" }}
+                      className="flex gap-1.5 items-center text-left"
+                    >
+                      <Check className="h-5 w-5 shrink-0 text-green-600" />
+                      שיפור חווית שירות והגדלת מאגר לקוחות
                     </li>
                     <li
                       style={{ direction: "rtl" }}
