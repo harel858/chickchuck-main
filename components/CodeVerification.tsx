@@ -19,6 +19,7 @@ import { message } from "antd";
 import { VerificationData } from "types/types";
 import { createAppointment3 } from "actions/createAppointment3";
 import { appointmentRequestHandler } from "actions/appointmentRequest";
+import { useLocale } from "next-intl";
 
 const BusinessDetailsForm = ({
   selectedService,
@@ -29,8 +30,10 @@ const BusinessDetailsForm = ({
   bussinesId,
   selectedUser,
   confirmationNeeded,
+  businessName,
 }: {
   confirmationNeeded: boolean | null;
+  businessName: string;
   selectedService: Treatment | null;
   selectedSlot: calendar_v3.Schema$TimePeriod | null;
   customerInput:
@@ -46,10 +49,15 @@ const BusinessDetailsForm = ({
   bussinesId: string;
   selectedUser: User;
 }) => {
+  console.log("selectedSlot", selectedSlot);
+
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     return () => setIsLoading(false);
   }, []);
+  const locale = useLocale();
+  console.log("locale", locale);
+
   const form = useForm<TUserValidationCode>({
     resolver: zodResolver(UserValidationCode),
   });
@@ -67,20 +75,24 @@ const BusinessDetailsForm = ({
       name: customerInput?.fullName,
       phoneNumber: customerInput?.phoneNumber,
       bussinesId: bussinesId,
+      fromDate: dayjs().format("DD/MM/YYYY hh:mm"),
     } as VerificationData;
     if (!selectedService) return message.error("שירות מבוקש חסר");
     try {
       setIsLoading(true);
-      const result = await axios.post("/api/verification/steptwo", params);
+      const result = await axios.post("/api/verification/verifyotp", params);
       const client = result.data as Customer;
+      console.log("client", client);
 
-      if (result.status === 200 && !confirmationNeeded) {
+      if (result.status === 200 && !confirmationNeeded && selectedSlot) {
         const event = await createAppointment3(
           freeBusy,
           selectedService,
           selectedSlot,
           selectedUser,
-          client
+          client,
+          businessName, // Replace with actual business name
+          locale // Replace with actual locale
         );
         if (event) {
           setIsLoading(false);

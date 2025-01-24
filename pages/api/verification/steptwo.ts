@@ -7,6 +7,7 @@ import {
 } from "../../../lib/prisma/customer/customer";
 import { VerificationData } from "../../../types/types";
 import { Customer } from "@prisma/client";
+import { sendWhatsAppMessage } from "@lib/whatsapp/sendWhatsAppMessage";
 
 const vonage = new (Vonage as any)({
   apiKey: `${process.env.API_KEY}`,
@@ -23,7 +24,7 @@ export default async function handler(
   }
 
   try {
-    const { request_id, code, phoneNumber, name, bussinesId } =
+    const { request_id, code, phoneNumber, name, bussinesId, fromDate } =
       req.body as VerificationData;
     let phoneNumber2 = phoneNumber.slice(4);
 
@@ -41,6 +42,7 @@ export default async function handler(
 
     if (existCustomer) {
       customer = existCustomer;
+
       if (existCustomer.name !== name) {
         await updateCustomer(name, phoneNumber2);
         customer = existCustomer;

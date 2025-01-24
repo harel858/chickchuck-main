@@ -6,10 +6,19 @@ import {
   Customer,
   Treatment,
   User,
+  UserRole,
 } from "@prisma/client";
 import type { Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 type UserId = string;
+
+declare module "next-auth" {
+  interface User extends PrismaUser {
+    isNewUser?: boolean; // Add the isNewUser property
+    preferredLocale?: strings;
+    UserRole?: UserRole | null;
+  }
+}
 
 declare module "next-auth/jwt" {
   interface JWT {
@@ -40,6 +49,7 @@ declare module "next-auth" {
           id: UserId;
           access_token: string;
           publicKeys: any;
+          UserRole?: string; // Add the UserRole property
           isAdmin: boolean;
           businessId: string;
           accountId: string;

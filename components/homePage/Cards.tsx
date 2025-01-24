@@ -19,6 +19,7 @@ import {
   PieChartTwoTone,
   ScheduleTwoTone,
 } from "@ant-design/icons";
+import { useTranslations } from "next-intl";
 
 interface Props {
   title: string;
@@ -58,147 +59,148 @@ function Card({ title, content, logo }: Props) {
           {title}
         </h4>
         {logo}
-        <p
+        {/*    <p
           style={{ direction: "rtl" }}
           className="absolute top-44 w-11/12 font-normal text-base text-right"
         >
           {content}
-        </p>
+        </p> */}
       </motion.div>
     </motion.div>
   );
 }
 
-const options: Props[] = [
-  {
-    title: "מתחברים בקליק אחד עם גוגל",
-    content: (
-      <>
-        <span className="font-semibold">המשתמש שלכם כבר קיים!</span> רק תתחברו
-        ותערכו את דף העסק שלכם. תנו ללקוחות שלכם לקבוע תורים במהירות ובקלות,
-        ישירות מהאפליקציה הנוחה שלנו.
-      </>
-    ),
-    logo: (
-      <Image
-        className="absolute top-16"
-        src={googleLogo}
-        alt="Google Logo"
-        width={80}
-        height={100}
-      />
-    ),
-  },
-  {
-    title: "קבלת מקדמות ותשלומים בביט",
-    content: (
-      <>
-        <span className="font-semibold">תוכלו לקבל מקדמות בביט בקלות</span>{" "}
-        הודות לשילוב עם משולם GROW. ככה תבטיחו הפחתה בהברזות ותשמרו על תזרים
-        מזומנים יציב.
-      </>
-    ),
-    logo: (
-      <Image
-        className="absolute top-16"
-        src={bitLogo}
-        alt="bit Logo"
-        width={80}
-        height={80}
-      />
-    ),
-  },
-  {
-    title: "תזכורות ישירות לווצאפ",
-    content: (
-      <>
-        כל תור או פגישה נשלחים בתזכורות ישירות לוואטסאפ של הלקוח.{" "}
-        <span className="font-semibold">
-          למי עוד יש סבלנות לספאם ולפרסומות?
-        </span>
-        תשכחו מהתירוץ של "לא ראיתי את התזכורת כי אני לא פותח את ה-SMS" – כולם
-        בוואטסאפ היום.
-      </>
-    ),
-    logo: (
-      <Image
-        className="absolute top-16"
-        src={whatsappLogo}
-        alt="whatsapp Logo"
-        width={100}
-        height={100}
-      />
-    ),
-  },
-  {
-    title: "ניהול אנשי צוות",
-    content: (
-      <>
-        ניהול כל נותני השירות בעסק.{" "}
-        <span className="font-semibold">
-          כל איש צוות מקבל יומן עבודה אישי ורשימת תורים מסודרת.
-        </span>{" "}
-        כל התורים והפגישות מאורגנים בצורה מסודרת וברורה, כך שתוכלו לייעל את
-        הפעילות העסקית שלכם ולשמור על סדר מרבי.
-      </>
-    ),
-    logo: (
-      <Image
-        className="absolute top-16"
-        src={group}
-        alt="group Logo"
-        width={80}
-        height={80}
-      />
-    ),
-  },
-  {
-    title: 'דו"חות וניתוח נתונים',
-    content: (
-      <>
-        <span className="font-semibold">
-          קבלו תובנות מיידיות על ביצועי העסק שלכם.{" "}
-        </span>
-        מערכת הדו"חות המתקדמת של Quickline מאפשרת לכם לעקוב אחר הכנסות, תזרים
-        מזומנים וביצועי צוות, ולסייע בקבלת החלטות מבוססות נתונים.
-      </>
-    ),
-    logo: <PieChartTwoTone className="absolute top-16 text-5xl" />,
-  },
-  {
-    title: "ניהול לקוחות (CRM) משולב",
-    content: (
-      <>
-        <span className="font-semibold">כל הלקוחות שלכם במקום אחד. </span>
-        Quickline מאפשרת לכם לנהל את כל פרטי הלקוחות, התקשורת והיסטוריית התורים
-        שלהם בצורה מסודרת ונוחה, ולספק שירות מותאם אישית ואיכותי.
-      </>
-    ),
-    logo: (
-      <Image
-        className="absolute top-16"
-        src={crmLogo}
-        alt="crm Logo"
-        width={80}
-        height={80}
-      />
-    ),
-  },
-  {
-    title: "מנגנון ביטול תורים",
-    content: (
-      <>
-        <span className="font-semibold">גמישות מושלמת בניהול התורים. </span>
-        Quickline מאפשרת ללקוחות לבטל או לשנות את התור בקלות דרך האפליקציה,
-        בהתאם למדיניות הביטולים שלכם. זה מפחית את הצורך בשיחות טלפון מיותרות
-        ומייעל את ניהול התורים.
-      </>
-    ),
-    logo: <ScheduleTwoTone className="absolute top-16 text-5xl" />,
-  },
-];
-
 export default function Cards() {
+  const t = useTranslations("HomePage");
+  const options: Props[] = [
+    {
+      title: t("keyfeature1"),
+      content: (
+        <>
+          <span className="font-semibold">המשתמש שלכם כבר קיים!</span> רק תתחברו
+          ותערכו את דף העסק שלכם. תנו ללקוחות שלכם לקבוע תורים במהירות ובקלות,
+          ישירות מהאפליקציה הנוחה שלנו.
+        </>
+      ),
+      logo: (
+        <Image
+          className="absolute top-16"
+          src={googleLogo}
+          alt="Google Logo"
+          width={80}
+          height={100}
+        />
+      ),
+    },
+    {
+      title: t("keyfeature2"),
+      content: (
+        <>
+          <span className="font-semibold">תוכלו לקבל מקדמות בביט בקלות</span>{" "}
+          הודות לשילוב עם משולם GROW. ככה תבטיחו הפחתה בהברזות ותשמרו על תזרים
+          מזומנים יציב.
+        </>
+      ),
+      logo: (
+        <Image
+          className="absolute top-16"
+          src={bitLogo}
+          alt="bit Logo"
+          width={80}
+          height={80}
+        />
+      ),
+    },
+    {
+      title: t("keyfeature3"),
+      content: (
+        <>
+          כל תור או פגישה נשלחים בתזכורות ישירות לוואטסאפ של הלקוח.{" "}
+          <span className="font-semibold">
+            למי עוד יש סבלנות לספאם ולפרסומות?
+          </span>
+          תשכחו מהתירוץ של "לא ראיתי את התזכורת כי אני לא פותח את ה-SMS" – כולם
+          בוואטסאפ היום.
+        </>
+      ),
+      logo: (
+        <Image
+          className="absolute top-16"
+          src={whatsappLogo}
+          alt="whatsapp Logo"
+          width={100}
+          height={100}
+        />
+      ),
+    },
+    {
+      title: t("keyfeature4"),
+      content: (
+        <>
+          ניהול כל נותני השירות בעסק.{" "}
+          <span className="font-semibold">
+            כל איש צוות מקבל יומן עבודה אישי ורשימת תורים מסודרת.
+          </span>{" "}
+          כל התורים והפגישות מאורגנים בצורה מסודרת וברורה, כך שתוכלו לייעל את
+          הפעילות העסקית שלכם ולשמור על סדר מרבי.
+        </>
+      ),
+      logo: (
+        <Image
+          className="absolute top-16"
+          src={group}
+          alt="group Logo"
+          width={80}
+          height={80}
+        />
+      ),
+    },
+    {
+      title: t("keyfeature5"),
+      content: (
+        <>
+          <span className="font-semibold">
+            קבלו תובנות מיידיות על ביצועי העסק שלכם.{" "}
+          </span>
+          מערכת הדו"חות המתקדמת של Quickline מאפשרת לכם לעקוב אחר הכנסות, תזרים
+          מזומנים וביצועי צוות, ולסייע בקבלת החלטות מבוססות נתונים.
+        </>
+      ),
+      logo: <PieChartTwoTone className="absolute top-16 text-5xl" />,
+    },
+    {
+      title: t("keyfeature6"),
+      content: (
+        <>
+          <span className="font-semibold">כל הלקוחות שלכם במקום אחד. </span>
+          Quickline מאפשרת לכם לנהל את כל פרטי הלקוחות, התקשורת והיסטוריית
+          התורים שלהם בצורה מסודרת ונוחה, ולספק שירות מותאם אישית ואיכותי.
+        </>
+      ),
+      logo: (
+        <Image
+          className="absolute top-16"
+          src={crmLogo}
+          alt="crm Logo"
+          width={80}
+          height={80}
+        />
+      ),
+    },
+    {
+      title: t("keyfeature7"),
+      content: (
+        <>
+          <span className="font-semibold">גמישות מושלמת בניהול התורים. </span>
+          Quickline מאפשרת ללקוחות לבטל או לשנות את התור בקלות דרך האפליקציה,
+          בהתאם למדיניות הביטולים שלכם. זה מפחית את הצורך בשיחות טלפון מיותרות
+          ומייעל את ניהול התורים.
+        </>
+      ),
+      logo: <ScheduleTwoTone className="absolute top-16 text-5xl" />,
+    },
+  ];
+
   return (
     <>
       {options.map(({ title, content, logo }) => (

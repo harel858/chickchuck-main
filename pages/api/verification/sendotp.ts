@@ -16,10 +16,11 @@ export default async function handler(
       const endPoint = "https://019sms.co.il/api";
       // get yours access token from https://docs.019sms.co.il/guide/
       const accessToken = process.env.SMS_TOKEN;
+
       const body = {
         send_otp: {
           user: {
-            username: "019sms",
+            username: "harellevi",
           },
           phone: phoneNumber,
           app_id: "1000",
@@ -36,6 +37,7 @@ export default async function handler(
       });
 
       const result = ans.data;
+      console.log("result", result);
       // check the errors in https://docs.019sms.co.il/sms/errors-and-status.html
       if (result.status == 0) {
         return res.status(200).json(result);

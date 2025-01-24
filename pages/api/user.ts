@@ -7,7 +7,7 @@ import {
   getUserByPhone,
   signIn,
 } from "../../lib/prisma/users";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import validateUser from "../../lib/validation/userValidation";
 
 export default async function handler(

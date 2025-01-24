@@ -206,6 +206,7 @@ export default function AppointmentSteps({
           customerInput={customerInput}
           freeBusy={freeBusy}
           handleNext={handleNext}
+          businessName={business.businessName}
           bussinesId={business.id}
           selectedUser={selectedUser || business.user[0]!}
         />

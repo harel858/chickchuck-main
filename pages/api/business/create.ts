@@ -7,6 +7,7 @@ import { UploadFile } from "antd";
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import formidable from "formidable";
+import cookies from "next-cookies";
 
 export const config = {
   api: {
@@ -27,6 +28,11 @@ type ReqBody = {
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
+    // Access cookies
+    const allCookies = cookies({ req });
+    console.log("Cookies in API route:", allCookies);
+    const preferredLocale = (allCookies.NEXT_LOCALE || "he").toLowerCase(); // Convert to lowercase
+
     const form = new formidable.IncomingForm({ multiples: false });
     await new Promise((resolve, reject) => {
       form.parse(req, async (error, fields, files) => {
@@ -97,6 +103,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
               businessName: businessDetails.businessName,
               phone: businessDetails.businessPhone,
               Address: businessDetails.businessAddress,
+              preferredLocale: preferredLocale,
               Treatment: {
                 createMany: {
                   data: treatments.map((service) => ({
@@ -138,6 +145,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
             where: { id: userId },
             data: {
               isAdmin: true,
+              preferredLocale: preferredLocale,
               activityDays: {
                 createMany: {
                   data: activityDays.map((day) => ({

@@ -1,6 +1,6 @@
-import bcrypt from "bcrypt";
-import dayjs from "dayjs";
 import { prisma } from ".";
+import bcrypt from "bcryptjs";
+import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 

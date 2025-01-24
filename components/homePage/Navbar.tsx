@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import MaxWidthWrapper from "@components/MaxWidthWrapper";
 import { buttonVariants } from "@ui/Button";
@@ -6,8 +5,12 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@lib/auth";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import logo from "@public/QuickLinelogotemp3.png";
 
-const Navbar = async () => {
+const Navbar = async ({ locale }: { locale: string }) => {
+  console.log("locale", locale);
+
   const session = await getServerSession(authOptions);
   const user = session?.user;
 
@@ -23,7 +26,7 @@ const Navbar = async () => {
               height={300}
               alt="logo"
               aria-hidden="true"
-              src="/QuickLine-logo-temp3.png"
+              src={logo.src}
             />
           </Link>
 
@@ -51,7 +54,7 @@ const Navbar = async () => {
                   </Link>
                 ) : null} */}
                 <Link
-                  href="/login"
+                  href={`/${locale}/login`}
                   className={buttonVariants({
                     size: "sm",
                     className: "flex items-center gap-1",
@@ -87,7 +90,7 @@ const Navbar = async () => {
                 <div className="h-8 w-px bg-zinc-200 sm:block" />
 
                 <Link
-                  href="/login"
+                  href={`/${locale}/login`}
                   className={`${buttonVariants({
                     size: "sm",
                     className: "sm:flex items-center gap-1",

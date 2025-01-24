@@ -2,7 +2,7 @@
 import { prisma } from "@lib/prisma";
 import { revalidatePath } from "next/cache";
 import { CreateUserForm } from "types/types";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export async function createMember(
   formData: CreateUserForm,

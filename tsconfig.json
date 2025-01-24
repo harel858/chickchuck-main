@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
+     "target": "es5",
+    "lib": ["dom", "es2015"],
+     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
@@ -27,10 +27,10 @@
       "@lib/*": ["./lib/*"],
       "@ui/*": ["./components/ui/*"],
       "@components/*": ["./components/*"],
-      "@navbar/*": ["./app/(navbar)/*"],
+      "@navbar/*": ["src/app/(navbar)/*"],
       "@actions": ["./actions"],
       "@api/*": ["./pages/api/*"],
-      "@app/*":["./app/*"]
+      "@app/*":["src/app/*"]
     }
   },
   "include": [

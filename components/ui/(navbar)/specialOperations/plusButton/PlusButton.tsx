@@ -22,8 +22,10 @@ const PlusButton = ({
   user,
   business,
   access_token,
+  locale,
 }: {
   session: Session;
+  locale: string;
   access_token: string;
   business: Business & {
     Customer: Customer[];
@@ -72,7 +74,7 @@ const PlusButton = ({
     marginTop: 16,
   };
   const copyToClipboard = () => {
-    const link = `https://www.quickline.co.il/${formattedBusinessName}`;
+    const link = `https://www.quickline.co.il/${locale}/${formattedBusinessName}`;
     navigator.clipboard.writeText(link);
     message.success("קישור הועתק ללוח");
   };

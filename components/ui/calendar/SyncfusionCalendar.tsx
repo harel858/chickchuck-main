@@ -1,6 +1,6 @@
 "use client";
 import "./schedule-component.css";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import {
   ScheduleComponent,
   ViewsDirective,
@@ -26,7 +26,7 @@ import {
   Treatment,
   User,
 } from "@prisma/client";
-import { DataSource } from "@app/(business)/schedule/page";
+import { DataSource } from "src/app/[locale]/(auth)/(business)/schedule/page";
 import { onDataBinding } from "./utils/onDataBinding";
 import { onCellClick } from "./utils/onCellClick";
 import resourceHeaderTemplate from "./resourceHeaderTemplate";
@@ -35,6 +35,14 @@ import eventTemplate from "./eventTemplate";
 import { onPopupOpen } from "./utils/onPopupOpen";
 import { fields } from "./utils/eventSettings";
 import { enableRtl } from "@syncfusion/ej2-base";
+import { registerLicense } from "@syncfusion/ej2-base";
+
+if (process.env.NEXT_PUBLIC_SYNCFUSION_SECRET) {
+  registerLicense(process.env.NEXT_PUBLIC_SYNCFUSION_SECRET);
+} else {
+  console.error("Syncfusion license key is not defined");
+}
+
 // Enables Right to left alignment for all controls
 enableRtl(true);
 export type AdditionData = {

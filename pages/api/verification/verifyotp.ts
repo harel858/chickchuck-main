@@ -42,7 +42,7 @@ export default async function handler(
     const body = {
       validate_otp: {
         user: {
-          username: "019sms",
+          username: "harellevi",
         },
         phone: phoneNumber,
         app_id: SMS_APP_ID,
@@ -80,7 +80,7 @@ export default async function handler(
     }
 
     if (customer) {
-      return res.status(200).json(result);
+      return res.status(200).json(customer);
     } else {
       return res.status(500).json({ error: "Customer creation failed." });
     }

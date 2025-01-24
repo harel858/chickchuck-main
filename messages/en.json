@@ -1,0 +1,24 @@
+{
+  "HomePage": {
+    "title1": "Less talking",
+    "title2": "your App",
+    "title3":"for queue booking",
+    "paragraphA":"Quickline is an essential app for your business,",
+    "paragraphB":"seamlessly syncing with Google Calendar",
+    "paragraphC":"so every appointment you schedule appears instantly in your calendar. It also supports advance payments through Bit to minimize no-shows and sends automated reminders via WhatsApp—keeping you connected with clients right where they are.",
+    "check1": "Synced with Google Calendar to prevent scheduling conflicts",
+    "check2": " appointment booking complete with automated WhatsApp reminders.",
+    "check3": "Advance payments with receipts",
+    "satisfiedCustomers":"Over 1,250 satisfied customers",
+    "keyfeaturesA":"Quickline's",
+    "keyfeaturesB":"Key",
+    "keyfeaturesC":"Features",
+ "keyfeature1": "One-Click Google Login",
+    "keyfeature2": "Advance Payments",
+    "keyfeature3": "WhatsApp Reminders",
+    "keyfeature4": "Team Management",
+    "keyfeature5": "Data Reports & Analytics",
+    "keyfeature6": "Integrated CRM",
+    "keyfeature7": "Appointment Cancellation"
+  }
+}
