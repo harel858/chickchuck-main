@@ -4,8 +4,6 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getImage } from "./aws/s3";
 import googleProvider from "next-auth/providers/google";
-import { updateUserByPhone } from "./prisma/users";
-import bcrypt from "bcryptjs";
 import bcrypt from "bcryptjs";
 import findUserByPhone from "actions/findUserByPhone";
 import findCustomer from "actions/findCustomer";
