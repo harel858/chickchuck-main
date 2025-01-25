@@ -66,6 +66,8 @@ CREATE TABLE "users" (
     "email_verified" TIMESTAMP(3),
     "image" TEXT,
     "createdAt" TEXT,
+    "isNewUser" BOOLEAN NOT NULL DEFAULT false,
+    "preferredLocale" TEXT,
     "password" TEXT,
     "phone" TEXT,
     "startActivity" TEXT,
@@ -133,6 +135,7 @@ CREATE TABLE "Business" (
     "businessName" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
     "businessImage" TEXT,
+    "preferredLocale" TEXT,
     "BusinessType" "BusinessType",
     "LastCalendar" "LastCalendar",
     "ComeFrom" "ComeFrom",
@@ -148,6 +151,7 @@ CREATE TABLE "Customer" (
     "name" TEXT NOT NULL,
     "phoneNumber" TEXT NOT NULL,
     "password" TEXT,
+    "clId" TEXT,
     "UserRole" "UserRole" NOT NULL DEFAULT 'CUSTOMER',
 
     CONSTRAINT "Customer_pkey" PRIMARY KEY ("id")
@@ -185,31 +189,41 @@ CREATE TABLE "AppointmentRequest" (
 -- CreateTable
 CREATE TABLE "_RequiredDocumentToTreatment" (
     "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
+    "B" TEXT NOT NULL,
+
+    CONSTRAINT "_RequiredDocumentToTreatment_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateTable
 CREATE TABLE "_BusinessToCustomer" (
     "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
+    "B" TEXT NOT NULL,
+
+    CONSTRAINT "_BusinessToCustomer_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateTable
 CREATE TABLE "_BlockedCustomers" (
     "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
+    "B" TEXT NOT NULL,
+
+    CONSTRAINT "_BlockedCustomers_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateTable
 CREATE TABLE "_CustomerToUser" (
     "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
+    "B" TEXT NOT NULL,
+
+    CONSTRAINT "_CustomerToUser_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateTable
 CREATE TABLE "_TreatmentToUser" (
     "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
+    "B" TEXT NOT NULL,
+
+    CONSTRAINT "_TreatmentToUser_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateIndex
@@ -246,31 +260,19 @@ CREATE UNIQUE INDEX "Business_phone_key" ON "Business"("phone");
 CREATE UNIQUE INDEX "Customer_phoneNumber_key" ON "Customer"("phoneNumber");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_RequiredDocumentToTreatment_AB_unique" ON "_RequiredDocumentToTreatment"("A", "B");
+CREATE UNIQUE INDEX "Customer_clId_key" ON "Customer"("clId");
 
 -- CreateIndex
 CREATE INDEX "_RequiredDocumentToTreatment_B_index" ON "_RequiredDocumentToTreatment"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_BusinessToCustomer_AB_unique" ON "_BusinessToCustomer"("A", "B");
-
--- CreateIndex
 CREATE INDEX "_BusinessToCustomer_B_index" ON "_BusinessToCustomer"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_BlockedCustomers_AB_unique" ON "_BlockedCustomers"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_BlockedCustomers_B_index" ON "_BlockedCustomers"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_CustomerToUser_AB_unique" ON "_CustomerToUser"("A", "B");
-
--- CreateIndex
 CREATE INDEX "_CustomerToUser_B_index" ON "_CustomerToUser"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_TreatmentToUser_AB_unique" ON "_TreatmentToUser"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_TreatmentToUser_B_index" ON "_TreatmentToUser"("B");
