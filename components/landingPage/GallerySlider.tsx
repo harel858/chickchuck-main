@@ -1,11 +1,11 @@
 "use client";
 import "./style.scss";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
-/* import LightGallery from "lightgallery/react";
+import LightGallery from "lightgallery/react";
 import lgZoom from "lightgallery/plugins/zoom";
 import lgThumbnail from "lightgallery/plugins/thumbnail";
 import { LightGallery as ILightGallery } from "lightgallery/lightgallery";
-import { InitDetail } from "lightgallery/lg-events"; */
+import { InitDetail } from "lightgallery/lg-events";
 import { Button } from "@ui/Button";
 import { BiEdit } from "react-icons/bi";
 import CustomerSignIn from "./CustomerSignIn";
@@ -34,13 +34,13 @@ export const GallerySlider = ({
   // const lightGalleryRef = useRef<ILightGallery>(null);
   const containerRef = useRef(null);
   const [galleryContainer, setGalleryContainer] = useState("");
-  /* 
+
   const onInit = useCallback((detail: InitDetail) => {
     if (detail) {
       // lightGalleryRef.current = detail.instance;
       detail.instance.openGallery();
     }
-  }, []); */
+  }, []);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -75,7 +75,7 @@ export const GallerySlider = ({
         ref={containerRef}
       ></div>
       <div>
-        {/*  <LightGallery
+        <LightGallery
           container={containerRef.current || ""}
           onInit={onInit}
           plugins={[lgZoom, lgThumbnail]}
@@ -94,7 +94,7 @@ export const GallerySlider = ({
           }))}
           hash={false}
           elementClassNames={"inline-gallery-container"}
-        ></LightGallery> */}
+        ></LightGallery>
       </div>
     </div>
   );
