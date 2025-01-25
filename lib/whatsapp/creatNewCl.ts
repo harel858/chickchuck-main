@@ -19,7 +19,7 @@ export const createNewCL = async (
   console.log("destination.phone", destination.lastNineDigits);
 
   const url = "https://019sms.co.il/api";
-  const apiKey = process.env.WHATSAPP_API_KEY;
+  const apiKey = process.env.SMS_TOKEN;
 
   const body = {
     newCL: {
@@ -76,7 +76,7 @@ export const addNumberToCL = async (
   clId: string
 ) => {
   const url = "https://019sms.co.il/api";
-  const apiKey = process.env.WHATSAPP_API_KEY;
+  const apiKey = process.env.SMS_TOKEN;
 
   const addNumCLbody = {
     addNumCL: {

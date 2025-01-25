@@ -27,7 +27,7 @@ export async function sendWhatsAppMessage(from_date: string, clNumber: string) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
+        Authorization: `Bearer ${process.env.SMS_TOKEN}`,
       },
       body: JSON.stringify(payload),
     });
