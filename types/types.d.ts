@@ -140,6 +140,7 @@ export type VerificationData = {
   name: string;
   request_id: string;
   phoneNumber: string;
+  fromDate: string;
   code: string;
   bussinesId: string;
 };

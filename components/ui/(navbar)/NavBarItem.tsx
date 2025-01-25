@@ -12,7 +12,7 @@ function NavBarItem({ title, link, icon }: NavItemProps) {
   const router = useRouter();
   const pathname = usePathname();
   const isActive = pathname === link;
-  console.log(link);
+  console.log("link", link);
 
   return (
     <li

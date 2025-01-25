@@ -22,7 +22,13 @@ const initDays: DayData[] = [
   { value: 6, label: "'ש", start: "09:00", end: "17:00", isActive: true },
 ];
 
-const Container = ({ session }: { session: Session }) => {
+const Container = ({
+  session,
+  locale,
+}: {
+  session: Session;
+  locale: string;
+}) => {
   console.log("session", session);
 
   const router = useRouter();
@@ -117,7 +123,7 @@ const Container = ({ session }: { session: Session }) => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (result.status === 200) {
-        return router.push("/schedule");
+        return router.push(`/${locale}/schedule`);
       }
       setIsLoading(false);
     } catch (err) {

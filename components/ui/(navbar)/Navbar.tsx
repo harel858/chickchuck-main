@@ -10,10 +10,11 @@ import { RiCoinsLine, RiTeamLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import Avatar from "@ui/Avatar";
 import { IoSettingsOutline, IoCalendarOutline } from "react-icons/io5";
-/* import logo from "@public/QuickLinelogotemp3.png";
- */ import { CombinedEvent } from "types/types";
+import logo from "@public/QuickLinelogotemp3.png";
+import { CombinedEvent } from "types/types";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 function Navbar({
@@ -23,58 +24,67 @@ function Navbar({
   customers,
   confirmationNeeded,
   access_token,
+  locale,
 }: {
   session: Session;
   scheduleProps: CombinedEvent[];
   user: User & { accounts: Account[] };
   customers: Customer[];
+  locale: string;
   confirmationNeeded: boolean | null;
   access_token: string;
 }) {
+  const t = useTranslations("navbar");
+
   const profileImage = session.user.image;
 
   const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-"); // Replace whitespace with hyphens
+  console.log("locale", locale);
 
   return (
     <nav className="fixed px-0 py-1 flex items-center justify-center max-2xl:p-0 backdrop-blur-sm bg-slate-300 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-slate-200 dark:border-slate-800 shadow-sm ">
-      <div className="flex font-semibold absolute left-0 pointer-events-none">
+      <Link href="/" className="flex z-40 font-semibold absolute left-0">
         <Image
-          width={200}
-          height={200}
+          width={300}
+          height={300}
           className="p-0 m-0"
           alt="logo"
           aria-hidden="true"
-          src="/QuickLinelogotemp3.png"
+          src={logo.src}
         />
-      </div>
+      </Link>
 
       <ul className="max-xl:hidden h-full flex flex-row justify-between items-center align-between text-md text-white dark:text-white">
         <NavBarItem
-          title={"דף העסק"}
+          title={t("onlinePage")}
           link={formattedBusinessName}
           icon={<FiExternalLink />}
         />
         {session.user.isAdmin ? (
           <>
             <NavBarItem
-              title={"יומן"}
-              link={`/schedule`}
+              title={t("schedule")}
+              link={`/${locale}/schedule`}
               icon={<IoCalendarOutline />}
             />
             <NavBarItem
-              title={"שירותים"}
-              link={`/services`}
+              title={t("services")}
+              link={`/${locale}/services`}
               icon={<RiCoinsLine />}
             />
             <NavBarItem
-              title={"לקוחות"}
-              link={"/clients"}
+              title={t("clients")}
+              link={`/${locale}/clients`}
               icon={<CgProfile />}
             />
-            <NavBarItem title={"צוות"} link={"/team"} icon={<RiTeamLine />} />
             <NavBarItem
-              title={"הגדרות"}
-              link={`/profile`}
+              title={t("team")}
+              link={`/${locale}/team`}
+              icon={<RiTeamLine />}
+            />
+            <NavBarItem
+              title={t("settings")}
+              link={`/${locale}/profile`}
               icon={<IoSettingsOutline />}
             />
           </>

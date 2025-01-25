@@ -28,7 +28,7 @@ import {
   Treatment,
   User,
 } from "@prisma/client";
-import { DataSource } from "@app/(business)/schedule/page";
+import { DataSource } from "app/[locale]/(auth)/(business)/schedule/page";
 import { onDataBinding } from "./utils/onDataBinding";
 import { onCellClick } from "./utils/onCellClick";
 import resourceHeaderTemplate from "./resourceHeaderTemplate";
@@ -37,9 +37,17 @@ import eventTemplate from "./eventTemplate";
 import { onPopupOpen } from "./utils/onPopupOpen";
 import { fields } from "./utils/eventSettings";
 import { enableRtl, L10n } from "@syncfusion/ej2-base";
-import he from "./he.json";
-import axios from "axios";
+import { registerLicense } from "@syncfusion/ej2-base";
+import { useLocale } from "use-intl";
 
+if (process.env.NEXT_PUBLIC_SYNCFUSION_SECRET) {
+  registerLicense(process.env.NEXT_PUBLIC_SYNCFUSION_SECRET);
+} else {
+  console.error("Syncfusion license key is not defined");
+}
+
+// Enables Right to left alignment for all controls
+enableRtl(true);
 export type AdditionData = {
   service?: { label: string; value: string };
   customer?: { label: string; value: string };
@@ -249,8 +257,7 @@ const RecurrenceEvents = ({
   };
   resourceData: DataSource[];
 }) => {
-  console.log("access_token", access_token);
-
+  const locale = useLocale();
   const scheduleObj = useRef<ScheduleComponent>(null);
 
   const [eventSettings, setEventSettings] = useState<EventSettingsModel>({
@@ -341,17 +348,23 @@ const RecurrenceEvents = ({
             <ViewsDirective>
               <ViewDirective
                 eventTemplate={eventTemplate}
-                dateHeaderTemplate={CustomHeaderTemplate}
+                dateHeaderTemplate={(props: any) =>
+                  CustomHeaderTemplate(props, locale)
+                }
                 option="Day"
               />
               <ViewDirective
                 eventTemplate={eventTemplate}
                 option="Week"
-                dateHeaderTemplate={CustomHeaderTemplate}
+                dateHeaderTemplate={(props: any) =>
+                  CustomHeaderTemplate(props, locale)
+                }
               />
               <ViewDirective
                 eventTemplate={eventTemplate}
-                dateHeaderTemplate={CustomHeaderTemplate}
+                dateHeaderTemplate={(props: any) =>
+                  CustomHeaderTemplate(props, locale)
+                }
                 option="Month"
               />
             </ViewsDirective>

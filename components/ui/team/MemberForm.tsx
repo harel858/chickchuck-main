@@ -40,7 +40,11 @@ const MemberForm = ({
   const [isPanding, setIsPending] = useTransition();
   const form = useForm<TMemberValidation>({
     resolver: zodResolver(MemberValidation),
-    defaultValues: { calendarHide: false, pageHide: false },
+    defaultValues: {
+      calendarHide: false,
+      pageHide: false,
+      authorization: "CALENDAR",
+    },
   });
   const {
     register,
@@ -50,6 +54,8 @@ const MemberForm = ({
   } = form;
   const data = form.getValues();
   const onSubmit = async (data: TMemberValidation) => {
+    console.log("data", data);
+
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // America/Los_Angeles
     try {
       setIsPending(async () => {

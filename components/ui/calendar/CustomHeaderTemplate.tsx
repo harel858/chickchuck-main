@@ -1,11 +1,11 @@
 import React from "react";
 import dayjs from "dayjs";
 import he from "dayjs/locale/he";
+import en from "dayjs/locale/en-au";
 
-// Set Hebrew locale globally
-dayjs.locale(he);
+function CustomHeaderTemplate(props: any, locale: string) {
+  dayjs.locale(locale === "he" ? he : en);
 
-function CustomHeaderTemplate(props: any) {
   const dayDateFormatting = dayjs(props?.date).format("D");
   const dayFormatting = dayjs(props?.date).format("dd");
   const isToday =

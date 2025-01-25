@@ -4,6 +4,8 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getImage } from "./aws/s3";
 import googleProvider from "next-auth/providers/google";
+import { updateUserByPhone } from "./prisma/users";
+import bcrypt from "bcryptjs";
 import bcrypt from "bcryptjs";
 import findUserByPhone from "actions/findUserByPhone";
 import findCustomer from "actions/findCustomer";
@@ -23,6 +25,7 @@ type UserCredentials = {
   password: string;
   confirmPassword: string;
 };
+
 //team member sign up
 const authorizeUserSignUp = async (credentials: any, req: any) => {
   try {
@@ -31,7 +34,13 @@ const authorizeUserSignUp = async (credentials: any, req: any) => {
 
     const user = await updateUserByPhone(phone, hashedPassword);
 
-    return user;
+    if (user) {
+      return {
+        ...user,
+        UserRole: user.UserRole || undefined,
+      };
+    }
+    return null;
   } catch (err: any) {
     console.log(err);
     throw new Error(err);
@@ -49,7 +58,11 @@ const authorizeUserSignIn = async (credentials: any, req: any) => {
       let verify = await bcrypt.compare(password, user.password);
 
       if (!verify) return null;
-      return user;
+
+      return {
+        ...user,
+        UserRole: user.UserRole || undefined,
+      };
     }
     return null;
   } catch (err: any) {
@@ -75,7 +88,7 @@ const authorizeCustomerSignUp = async (credentials: any, req: any) => {
   }
 };
 
-//customer sign InIn
+//customer sign in
 const authorizeCustomerSignIn = async (credentials: any, req: any) => {
   console.log("authorizeCustomerSignIn");
   try {
@@ -86,6 +99,7 @@ const authorizeCustomerSignIn = async (credentials: any, req: any) => {
       let verify = await bcrypt.compare(password, user.password);
 
       if (!verify) return null;
+
       return user;
     }
     return null;
@@ -146,7 +160,11 @@ async function refreshAccessToken(
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
-  pages: { signIn: "/signin", newUser: "/createbusinessdetails" },
+  pages: {
+    signIn: "/signin",
+    error: "/error",
+    newUser: "/he/createbusinessdetails",
+  },
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   providers: [
     CredentialsProvider({
@@ -190,6 +208,10 @@ export const authOptions: NextAuthOptions = {
     googleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      httpOptions: {
+        timeout: 50000,
+      },
+
       authorization: {
         params: {
           scope:
@@ -200,6 +222,9 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async profile(profile, tokens) {
+        console.log("profile", profile);
+        console.log("tokens", tokens);
+
         try {
           return {
             id: profile.sub,
@@ -215,9 +240,38 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt(props) {
-      const { account, token, user, profile, session, trigger } = props;
+    async signIn(params) {
+      const { profile, account, user, credentials, email } = params;
+      console.log("signinParam", params);
 
+      // Check if the user is new based on your business logic
+      if (user && "businessId" in user && user.businessId) {
+        user.isNewUser = false; // Set this to `true` for new users
+        return true; // Allow sign-in
+      }
+      return true; // Allow sign-in
+    },
+    async redirect({ url, baseUrl }) {
+      // Check if the URL contains the locale ('he' or 'en')
+      const localeMatch = url.match(/\/(he|en)(\/|$)/); // Matches 'he' or 'en' in the URL path
+      const locale = localeMatch ? localeMatch[1] : null;
+      console.log("locale", locale);
+
+      // If locale is found, redirect to the localized path
+      if (locale) {
+        return `/${locale}/schedule`;
+      }
+
+      // Fallback: redirect to the default locale or base URL
+      return `/he/schedule`; // Default to 'he' if no locale found
+    },
+    async jwt(props) {
+      console.log("props", props);
+
+      const { account, token, user, profile, session, trigger } = props;
+      if (user) {
+        console.log("JWT Callback - New User:", user);
+      }
       try {
         let logo: string | null = "";
         let user = null;

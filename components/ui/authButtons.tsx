@@ -5,9 +5,20 @@ import googleLogo from "@public/google.png";
 import { signIn } from "next-auth/react";
 import { RiTeamFill } from "react-icons/ri";
 
-export function GoogleSignInButton() {
-  const handleClick = () => {
-    signIn("google");
+export function GoogleSignInButton({ locale }: { locale: string }) {
+  console.log("locale", locale);
+
+  const handleClick = async () => {
+    try {
+      const result = await signIn("google", { locale }, { locale });
+      console.log("result", result);
+
+      if (!result?.ok) {
+        console.error("Google sign-in failed");
+      }
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+    }
   };
 
   return (
@@ -20,26 +31,17 @@ export function GoogleSignInButton() {
     </button>
   );
 }
-/* 
-export function GithubSignInButton() {
-  const handleClick = () => {
-    signIn("github");
-  };
 
-  return (
-    <button
-      onClick={handleClick}
-      className="w-full flex items-center font-semibold justify-center h-14 px-6 mt-4 text-xl transition-colors duration-300 bg-white border-2 border-black text-black rounded-lg focus:shadow-outline hover:bg-slate-200"
-    >
-      <Image src={githubLogo} alt="Github Logo" width={20} height={20} />
-      <span className="ml-4">Continue with Github</span>
-    </button>
-  );
-}
- */
 export function CredentialsSignInButton() {
-  const handleClick = () => {
-    signIn();
+  const handleClick = async () => {
+    try {
+      const result: any = await signIn();
+      if (!result) {
+        console.error("Credentials sign-in failed");
+      }
+    } catch (error) {
+      console.error("Credentials sign-in error:", error);
+    }
   };
 
   return (
