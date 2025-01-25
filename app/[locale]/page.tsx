@@ -10,7 +10,7 @@ import Icons from "@ui/Icons";
 import { ArrowLeft, ArrowRight, Check, Star } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Link } from "../../i18n/routing";
+import { Link } from "i18n/routing";
 
 export default function Home({
   params: { locale },
