@@ -5,7 +5,7 @@ import { withAuth } from "next-auth/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { differenceInMonths } from "date-fns";
 import createMiddleware from "next-intl/middleware";
-import { routing } from "src/i18n/routing";
+import { routing } from "./i18n/routing";
 
 // Apply i18n and authentication middleware together
 const redis = new Redis({

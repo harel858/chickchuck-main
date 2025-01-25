@@ -49,11 +49,11 @@ function GallerySection({
           setGalleryOrUpload={setGalleryOrUpload}
         />
       ) : (
-        <GallerySlider
+        /*   <GallerySlider
           adminUserId={adminUserId}
           setGalleryOrUpload={setGalleryOrUpload}
           urls={urls}
-        />
+        /> */ <></>
       )}
     </>
   );
