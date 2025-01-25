@@ -16,7 +16,11 @@ export type DataSource = {
   Color?: string;
 };
 
-async function ScheduleListPage() {
+async function ScheduleListPage({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
   const session = await getServerSession(authOptions);
   if (!session) {
     return notFound();

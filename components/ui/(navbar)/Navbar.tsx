@@ -14,6 +14,7 @@ import logo from "@public/QuickLinelogotemp3.png";
 import { CombinedEvent } from "types/types";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 const lobster = Lobster_Two({ weight: "400", subsets: ["latin"] });
 
 function Navbar({
@@ -33,6 +34,8 @@ function Navbar({
   confirmationNeeded: boolean | null;
   access_token: string;
 }) {
+  const t = useTranslations("navbar");
+
   const profileImage = session.user.image;
 
   const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-"); // Replace whitespace with hyphens
@@ -53,34 +56,34 @@ function Navbar({
 
       <ul className="max-xl:hidden h-full flex flex-row justify-between items-center align-between text-md text-white dark:text-white">
         <NavBarItem
-          title={"דף העסק"}
+          title={t("onlinePage")}
           link={formattedBusinessName}
           icon={<FiExternalLink />}
         />
         {session.user.isAdmin ? (
           <>
             <NavBarItem
-              title={"יומן"}
+              title={t("schedule")}
               link={`/${locale}/schedule`}
               icon={<IoCalendarOutline />}
             />
             <NavBarItem
-              title={"שירותים"}
+              title={t("services")}
               link={`/${locale}/services`}
               icon={<RiCoinsLine />}
             />
             <NavBarItem
-              title={"לקוחות"}
+              title={t("clients")}
               link={`/${locale}/clients`}
               icon={<CgProfile />}
             />
             <NavBarItem
-              title={"צוות"}
+              title={t("team")}
               link={`/${locale}/team`}
               icon={<RiTeamLine />}
             />
             <NavBarItem
-              title={"הגדרות"}
+              title={t("settings")}
               link={`/${locale}/profile`}
               icon={<IoSettingsOutline />}
             />

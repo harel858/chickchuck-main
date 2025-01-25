@@ -7,9 +7,9 @@ import { Inter } from "next/font/google";
 import Providers from "@ui/Providers";
 import { cn } from "@lib/utils";
 import { notFound } from "next/navigation";
-import { routing } from "src/i18n/routing";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
+import { routing } from "i18n/routing";
 
 const inter = Inter({
   weight: ["100", "300", "400", "500"],

@@ -26,7 +26,7 @@ import {
   Treatment,
   User,
 } from "@prisma/client";
-import { DataSource } from "src/app/[locale]/(auth)/(business)/schedule/page";
+import { DataSource } from "app/[locale]/(auth)/(business)/schedule/page";
 import { onDataBinding } from "./utils/onDataBinding";
 import { onCellClick } from "./utils/onCellClick";
 import resourceHeaderTemplate from "./resourceHeaderTemplate";
@@ -36,6 +36,7 @@ import { onPopupOpen } from "./utils/onPopupOpen";
 import { fields } from "./utils/eventSettings";
 import { enableRtl } from "@syncfusion/ej2-base";
 import { registerLicense } from "@syncfusion/ej2-base";
+import { useLocale } from "use-intl";
 
 if (process.env.NEXT_PUBLIC_SYNCFUSION_SECRET) {
   registerLicense(process.env.NEXT_PUBLIC_SYNCFUSION_SECRET);
@@ -80,6 +81,7 @@ const RecurrenceEvents = ({
   };
   resourceData: DataSource[];
 }) => {
+  const locale = useLocale();
   const scheduleObj = useRef<ScheduleComponent>(null);
 
   const [eventSettings, setEventSettings] = useState<EventSettingsModel>({
@@ -166,17 +168,23 @@ const RecurrenceEvents = ({
             <ViewsDirective>
               <ViewDirective
                 eventTemplate={eventTemplate}
-                dateHeaderTemplate={CustomHeaderTemplate}
+                dateHeaderTemplate={(props: any) =>
+                  CustomHeaderTemplate(props, locale)
+                }
                 option="Day"
               />
               <ViewDirective
                 eventTemplate={eventTemplate}
                 option="Week"
-                dateHeaderTemplate={CustomHeaderTemplate}
+                dateHeaderTemplate={(props: any) =>
+                  CustomHeaderTemplate(props, locale)
+                }
               />
               <ViewDirective
                 eventTemplate={eventTemplate}
-                dateHeaderTemplate={CustomHeaderTemplate}
+                dateHeaderTemplate={(props: any) =>
+                  CustomHeaderTemplate(props, locale)
+                }
                 option="Month"
               />
             </ViewsDirective>

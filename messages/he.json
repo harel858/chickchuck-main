@@ -20,5 +20,16 @@
     "keyfeature5": "דו\"חות וניתוח נתונים",
     "keyfeature6": "ניהול לקוחות (CRM) משולב",
     "keyfeature7": "מנגנון ביטול תורים"
+  },
+   "navbar": {
+    "onlinePage": "דף העסק",
+    "schedule": "יומן",
+    "services": "שירותים",
+    "clients": "לקוחות",
+    "team": "צוות",
+    "settings": "הגדרות"
+  },
+  "plusButton": {
+    "copy": "קישור הועתק ללוח"
   }
 }

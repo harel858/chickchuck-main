@@ -1,4 +1,3 @@
-import "../../../../../../syncfusion-license";
 import React from "react";
 import { OAuth2Client } from "google-auth-library";
 import { getServerSession } from "next-auth";
@@ -13,7 +12,6 @@ import { v4 as uuidv4 } from "uuid";
 import { setupGoogleCalendarClient } from "@lib/google/client";
 import Hamburger from "@ui/(navbar)/(responsiveNav)/Hamburger";
 import { fetchEvents2 } from "@lib/google/eventList";
-import { th } from "date-fns/locale";
 
 async function fetchWatch(
   userId: string,

@@ -13,12 +13,23 @@
     "keyfeaturesA":"Quickline's",
     "keyfeaturesB":"Key",
     "keyfeaturesC":"Features",
- "keyfeature1": "One-Click Google Login",
+    "keyfeature1": "One-Click Google Login",
     "keyfeature2": "Advance Payments",
     "keyfeature3": "WhatsApp Reminders",
     "keyfeature4": "Team Management",
     "keyfeature5": "Data Reports & Analytics",
     "keyfeature6": "Integrated CRM",
     "keyfeature7": "Appointment Cancellation"
+  },
+  "navbar": {
+    "onlinePage": "onlinePage",
+    "schedule": "schedule",
+    "services": "services",
+    "clients": "clients",
+    "team": "team",
+    "settings": "settings"
+  },
+  "plusButton": {
+    "copy": "Link copied to clipboard"
   }
 }
