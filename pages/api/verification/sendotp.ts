@@ -25,6 +25,7 @@ export default async function handler(
           phone: phoneNumber,
           app_id: "1000",
           source: "0537761400",
+          includes_international: "1",
           max_tries: "4",
           text: "the code is [code]",
         },
