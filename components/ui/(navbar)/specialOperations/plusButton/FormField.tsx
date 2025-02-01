@@ -23,7 +23,7 @@ import {
 } from "@prisma/client";
 
 export interface FieldType {
-  label: "בחירת לקוח" | "סוג השירות" | "?למתי";
+  label: string;
   name: "Service" | "Date" | "Client" | "slot";
 }
 

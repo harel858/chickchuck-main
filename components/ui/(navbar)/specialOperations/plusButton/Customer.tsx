@@ -14,6 +14,7 @@ import { cn } from "@lib/utils";
 import { message } from "antd";
 import { createNewCustomer } from "actions/createCustomer";
 import { Business } from "@prisma/client";
+import { useTranslations } from "next-intl";
 
 function AddCustomer({
   business,
@@ -24,6 +25,8 @@ function AddCustomer({
   handleCancel?: () => void;
   isHidden: boolean;
 }) {
+  const t = useTranslations("plusButton");
+
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<TCustomerDetailsValidation>({
     resolver: zodResolver(customerDetailsValidation),
@@ -45,7 +48,7 @@ function AddCustomer({
         phoneNumber: Phone,
         bussinesId: business.id,
       });
-      message.success(`${Name} הוסף לרשימה`);
+      message.success(`${Name} ${t("added")}`);
       if (res) {
         handleCancel && handleCancel();
         setIsLoading(false);
@@ -70,14 +73,14 @@ function AddCustomer({
       <Form {...form}>
         <form className="flex flex-col items-center gap-4 mt-4 w-full relative">
           <h2 className={`text-slate-900 font-normal font-serif text-2xl`}>
-            יצירת לקוח חדש
+            {t("addCustomer")}
           </h2>
           <div className="flex flex-col items-center gap-4 mt-4 w-10/12 max-2xl:w-full pb-5">
             <div
               key={"Name"}
               className="flex flex-col justify-center items-center gap-2"
             >
-              <Label htmlFor={"Name"}>{"שם מלא"}</Label>
+              <Label htmlFor={"Name"}>{t("fullName")}</Label>
               <Input
                 style={{ width: "15rem" }} // Set the specific width here
                 {...register("Name")}
@@ -97,7 +100,7 @@ function AddCustomer({
               key={"Phone"}
               className="flex flex-col justify-center items-center gap-2"
             >
-              <Label htmlFor={"Phone"}>{"מספר פלאפון"}</Label>
+              <Label htmlFor={"Phone"}>{t("phoneNumber")}</Label>
               <Input
                 style={{ width: "15rem" }} // Set the specific width here
                 {...register("Phone")}
@@ -121,7 +124,7 @@ function AddCustomer({
             type="button"
             onClick={handleSubmit(submitForm)}
           >
-            הוסף
+            {t("confirm")}
           </Button>
         </form>
       </Form>

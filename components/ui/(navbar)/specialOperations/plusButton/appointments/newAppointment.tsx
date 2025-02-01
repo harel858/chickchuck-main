@@ -25,6 +25,7 @@ import {
 
 import { createAppointment } from "actions/createAppointment";
 import UserList from "@components/UserList";
+import { useTranslations } from "next-intl";
 
 const AppointmentSteps = ({
   session,
@@ -47,6 +48,8 @@ const AppointmentSteps = ({
     Customer: Customer[];
   };
 }) => {
+  const t = useTranslations("plusButton");
+
   const [isPending, startTransition] = useTransition();
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
@@ -57,10 +60,11 @@ const AppointmentSteps = ({
     resolver: zodResolver(appointmentValidation),
     defaultValues: {
       Date: dayjs().toISOString(),
+      confirmationNeeded: business.confirmationNeeded ?? false,
     },
   });
   const next = () => {
-    if (current === 0 && business.user.length < 2)
+    if (current === 0 && business.user.length >= 2)
       return setCurrent((prevActiveStep) => prevActiveStep + 2);
 
     setCurrent(current + 1);
@@ -80,11 +84,13 @@ const AppointmentSteps = ({
     getValues,
   } = form;
   const data = getValues();
+
   const onSubmit = async (data: TAppointmentValidation) => {
+    console.log("getValues", form.getValues());
     try {
       const customerName = data?.Client?.label.split(" - ")[0];
       const eventProps = {
-        summary: data.Client.label,
+        summary: data.Service.label,
         description: "",
         start: {
           dateTime: data.slot.start, // Date.toISOString() ->
@@ -114,7 +120,7 @@ const AppointmentSteps = ({
       });
       setCurrent(0);
       handleCancel2 && handleCancel2();
-      return message.success("הפגישה נוצרה בהצלחה");
+      return message.success(t("appointmentCreated"));
     } catch (err: any) {
       message.error("Internal error");
       console.log("err", err);
@@ -127,7 +133,7 @@ const AppointmentSteps = ({
   const switchIsNewClient = () => setIsNewClient((prev) => !prev);
   const steps = [
     {
-      title: "?למי",
+      title: t("forWho"),
       content: (
         <div>
           <AppointmentField
@@ -136,7 +142,7 @@ const AppointmentSteps = ({
             register={register}
             control={control}
             name={"Client"}
-            label={"בחירת לקוח"}
+            label={t("chooseClient")}
             key={"For Who"}
             session={session}
             user={user}
@@ -150,15 +156,15 @@ const AppointmentSteps = ({
             variant={"link"}
             type="button"
           >
-            {!isNewClient ? "?לקוח/ה חדש/ה" : "?לקוח קיים"}
+            {!isNewClient ? t("NewCustomer?") : t("ExistingCustomer?")}
           </Button>
         </div>
       ),
     },
-    ...(business.user.length > 2
+    ...(business.user.length >= 2
       ? [
           {
-            title: "?אצל מי",
+            title: t("whose"),
             content: (
               <UserList
                 users={business.user}
@@ -170,7 +176,7 @@ const AppointmentSteps = ({
         ]
       : []),
     {
-      title: "?למה",
+      title: t("forWhat"),
       content: (
         <AppointmentField
           business={business}
@@ -179,7 +185,7 @@ const AppointmentSteps = ({
           register={register}
           control={control}
           name={"Service"}
-          label={"סוג השירות"}
+          label={t("pickService")}
           key={"Pick A Service"}
           session={session}
           user={user}
@@ -189,7 +195,7 @@ const AppointmentSteps = ({
       ),
     },
     {
-      title: "?מתי",
+      title: t("when"),
       content: (
         <AppointmentField
           business={business}
@@ -198,7 +204,7 @@ const AppointmentSteps = ({
           control={control}
           getValues={getValues}
           name={"Date"}
-          label={"?למתי"}
+          label={t("whenDoYouWant")}
           key={"When Do You Want"}
           session={session}
           user={user}
@@ -249,7 +255,7 @@ const AppointmentSteps = ({
             variant={"link"}
             type="button"
           >
-            {!isNewClient ? "?לקוח/ה חדש/ה" : "?לקוח קיים"}
+            {!isNewClient ? t("NewCustomer?") : t("ExistingCustomer?")}
           </Button>
         </div>
       ) : (
@@ -271,7 +277,7 @@ const AppointmentSteps = ({
                   variant={"ghost"}
                   onClick={() => prev()}
                 >
-                  Previous
+                  {t("back")}
                 </Button>
               )}
               {current == steps.length - 1 ? (
@@ -286,7 +292,7 @@ const AppointmentSteps = ({
                   }
                   isLoading={isSubmitting}
                 >
-                  Done
+                  {t("confirm")}
                 </Button>
               ) : (
                 <Button
@@ -299,7 +305,7 @@ const AppointmentSteps = ({
                     (current === 1 && !data.Service)
                   }
                 >
-                  Next
+                  {t("next")}
                 </Button>
               )}
             </div>

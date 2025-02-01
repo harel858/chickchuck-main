@@ -16,6 +16,7 @@ import {
   User,
 } from "@prisma/client";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const PlusButton = ({
   session,
@@ -38,7 +39,7 @@ const PlusButton = ({
     Customer: Customer[];
   };
 }) => {
-  console.log("user", user);
+  const t = useTranslations("plusButton");
   const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-"); // Replace whitespace with hyphens
 
   const [open, setOpen] = useState(false);
@@ -55,12 +56,10 @@ const PlusButton = ({
   }, []);
 
   const handleCancel = useCallback(() => {
-    console.log("Clicked cancel button");
     setOpen(false);
   }, [setOpen]);
 
   const handleCancel2 = useCallback(() => {
-    console.log("Clicked cancel button");
     setOpen2(false);
   }, [setOpen2]);
 
@@ -76,7 +75,7 @@ const PlusButton = ({
   const copyToClipboard = () => {
     const link = `https://www.quickline.co.il/${locale}/${formattedBusinessName}`;
     navigator.clipboard.writeText(link);
-    message.success("קישור הועתק ללוח");
+    message.success(t("linkCopied"));
   };
   return (
     <>

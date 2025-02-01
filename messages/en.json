@@ -22,14 +22,36 @@
     "keyfeature7": "Appointment Cancellation"
   },
   "navbar": {
-    "onlinePage": "onlinePage",
-    "schedule": "schedule",
-    "services": "services",
-    "clients": "clients",
-    "team": "team",
-    "settings": "settings"
+    "onlinePage": "Online Page",
+    "schedule": "Schedule",
+    "services": "Services",
+    "clients": "Clients",
+    "team": "Team",
+    "settings": "Settings"
   },
   "plusButton": {
-    "copy": "Link copied to clipboard"
+    "linkCopied": "Link copied to clipboard",
+    "added": "Added",
+    "addCustomer": "Add Customer",
+    "fullName": "Full Name",
+    "phoneNumber": "Phone Number",
+    "confirm": "Confirm",
+    "appointmentCreated": "Appointment created successfully",
+    "forWho": "For who?",
+    "whose": "Who is the recipient?",
+    "forWhat": "For what?",
+    "when": "When?",
+    "pickService": "Select Service",
+    "whenDoYouWant": "When do you want to schedule the appointment?",
+    "NewCustomer?": "New Customer?",
+    "ExistingCustomer?": "Existing Customer?",
+    "back": "Back",
+    "next": "Next",
+    "chooseClient": "Choose Client"
+
+
+
+
+
   }
 }

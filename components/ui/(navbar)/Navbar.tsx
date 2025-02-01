@@ -43,16 +43,16 @@ function Navbar({
 
   return (
     <nav className="fixed px-0 py-1 flex items-center justify-center max-2xl:p-0 backdrop-blur-sm bg-slate-300 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-slate-200 dark:border-slate-800 shadow-sm ">
-      <Link href="/" className="flex z-40 font-semibold absolute left-0">
+      <div className="flex z-0 font-semibold absolute p-0 left-0 pointer-events-none">
         <Image
-          width={300}
-          height={300}
-          className="p-0 m-0"
+          width={200}
+          height={200}
+          className="p-0 m-0 pointer-events-none"
           alt="logo"
           aria-hidden="true"
           src={logo.src}
         />
-      </Link>
+      </div>
 
       <ul className="max-xl:hidden h-full flex flex-row justify-between items-center align-between text-md text-white dark:text-white">
         <NavBarItem

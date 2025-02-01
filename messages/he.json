@@ -30,6 +30,23 @@
     "settings": "הגדרות"
   },
   "plusButton": {
-    "copy": "קישור הועתק ללוח"
+    "linkCopied": "קישור הועתק ללוח",
+    "added": "נוסף",
+    "addCustomer": "הוסף לקוח",
+    "fullName": "שם מלא",
+    "phoneNumber": "מספר פלאפון",
+    "confirm": "אישור",
+    "appointmentCreated": "תור נוצר בהצלחה",
+    "forWho": "למי?",
+    "whose":"אצל מי?",
+    "forWhat": "למה?",
+    "when": "מתי?",
+    "pickService": "בחר שירות",
+    "whenDoYouWant": "מתי תרצה לקבוע תור?",
+    "NewCustomer?": "לקוח חדש?",
+    "ExistingCustomer?": "לקוח קיים?",
+    "back": "חזור",
+    "next": "הבא",
+    "chooseClient": "בחר לקוח"
   }
 }

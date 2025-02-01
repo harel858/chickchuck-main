@@ -75,9 +75,9 @@ const SelectField = ({
             options={selectOptions}
             className="w-full"
           />
-          {errors?.[name] && (
+          {/* {errors?.[name] && (
             <p className="text-sm text-red-500">{errors[name]?.message}</p>
-          )}
+          )} */}
           <FormDescription></FormDescription>
           <FormMessage />
         </FormItem>
