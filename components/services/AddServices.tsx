@@ -27,9 +27,11 @@ const initService: ServiceInput = { duration: 0, price: 0, title: "" };
 const InitServices = ({
   users,
   businessId,
+  locale,
 }: {
   users: User[];
   businessId: string;
+  locale: string;
 }) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -91,6 +93,7 @@ const InitServices = ({
         onCancel={handleCancel}
       >
         <ServiceForm
+          locale={locale}
           service={service}
           handleServicesChange={handleServicesChange}
         />
