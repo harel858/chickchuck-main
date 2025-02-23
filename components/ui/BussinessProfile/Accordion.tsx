@@ -16,8 +16,10 @@ const text = `
 
 const Accordion = ({
   business,
+  locale,
 }: {
   business: Business & { activityDays: ActivityDays[] };
+  locale: string;
 }) => {
   const [isPending, startTransition] = useTransition();
   const [activityDays, setActivityDays] = useState<DayData[]>([]);
@@ -54,6 +56,7 @@ const Accordion = ({
       children: (
         <div className="flex flex-col justify-center items-center gap-2">
           <InitActivityDetails
+            locale={locale}
             setActivityDays={setActivityDays}
             activityDays={activityDays}
           />

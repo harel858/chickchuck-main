@@ -27,11 +27,13 @@ async function fetchUser(businessId: string | null | undefined) {
   }
 }
 
-async function Page() {
+async function Page({ params }: { params: { locale: string } }) {
   const session = await getServerSession(authOptions);
   const business = await fetchUser(session?.user?.businessId);
   if (!business?.user || !session?.user.isAdmin) return notFound();
-  return <Services business={business} session={session} />;
+  return (
+    <Services locale={params.locale} business={business} session={session} />
+  );
 }
 
 export default Page;

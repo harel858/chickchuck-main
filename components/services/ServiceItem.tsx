@@ -8,11 +8,13 @@ export default function ClientItem({
   i,
   bussinesDocs,
   treatment,
+  locale,
 }: {
   i: number;
   treatment: Treatment & {
     RequiredDocument?: RequiredDocument[];
   };
+  locale: string;
   bussinesDocs?: RequiredDocument[];
 }) {
   return (
@@ -31,7 +33,7 @@ export default function ClientItem({
         <p className="font-sans font-semibold text-2xl w-max">
           {treatment.title}
         </p>
-        <DetailsButton treatment={treatment} />
+        <DetailsButton locale={locale} treatment={treatment} />
       </div>
       <div className="flex flex-row gap-1 justify-between items-center w-full">
         <p className="font-semibold text-xl text-green-600">

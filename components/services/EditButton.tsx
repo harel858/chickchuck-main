@@ -13,18 +13,27 @@ import { Treatment, User } from "@prisma/client";
 import createService from "actions/createService";
 import editService from "actions/editService";
 import { BiEdit } from "react-icons/bi";
+import { locale } from "dayjs";
 type NewService = {
   title: string;
   duration: number;
   price: number;
   treatmentId: string;
 };
+
 export type ServiceInput = {
   title: string;
   duration: number;
   price: number;
 };
-const InitServices = ({ treatment }: { treatment: Treatment }) => {
+
+const InitServices = ({
+  treatment,
+  locale,
+}: {
+  treatment: Treatment;
+  locale: string;
+}) => {
   const initService: ServiceInput = {
     duration: treatment.duration,
     price: treatment.cost,
@@ -90,6 +99,7 @@ const InitServices = ({ treatment }: { treatment: Treatment }) => {
         onCancel={handleCancel}
       >
         <ServiceForm
+          locale={locale}
           service={service}
           handleServicesChange={handleServicesChange}
         />

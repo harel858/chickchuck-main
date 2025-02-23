@@ -12,17 +12,19 @@ const Profile = ({
   user,
   session,
   business,
+  locale,
 }: {
   business: Business & { activityDays: ActivityDays[] };
   link: string;
   user: any;
   session: Session;
+  locale: string;
 }) => {
   const items: TabsProps["items"] = [
     {
       key: "0",
       label: `הגדרות עסק`,
-      children: <Accordion business={business} />,
+      children: <Accordion locale={locale} business={business} />,
     },
     {
       key: "1",

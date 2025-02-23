@@ -18,7 +18,7 @@ async function fetchBussines(businessId: string) {
   }
 }
 
-async function Page() {
+async function Page({ params }: { params: { locale: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user.isAdmin) return notFound();
   const business = await fetchBussines(session?.user.businessId);
@@ -32,6 +32,7 @@ async function Page() {
 
   return (
     <Profile
+      locale={params.locale}
       business={business}
       session={session}
       user={session?.user as any}

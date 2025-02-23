@@ -20,8 +20,10 @@ import { FaClock } from "react-icons/fa";
 function Services({
   session,
   business,
+  locale,
 }: {
   session: Session;
+  locale: string;
   business: Business & {
     Treatment: Treatment[];
     user: (User & { activityDays: ActivityDays[] })[];
@@ -65,7 +67,11 @@ function Services({
         />
         <div className="w-full flex flex-row-reverse justify-between items-center gap-10 max-lg:flex-col">
           <div className="flex flex-row gap-4 justify-center items-center">
-            <AddServices users={business.user} businessId={business.id} />
+            <AddServices
+              locale={locale}
+              users={business.user}
+              businessId={business.id}
+            />
             {/*   <AddRequiredDocuments
               businessId={user.businessId!}
               docs={Business?.RequiredDocument || []}
@@ -81,7 +87,12 @@ function Services({
             className={`flex gap-4 flex-1 w-full flex-row flex-wrap justify-evenly content-center items-center overflow-x-hidden rounded-bl-3xl rounded-br-3xl `}
           >
             {business.Treatment?.map((Treatment, i) => (
-              <ServiceItem key={Treatment.id} i={i} treatment={Treatment} />
+              <ServiceItem
+                locale={locale}
+                key={Treatment.id}
+                i={i}
+                treatment={Treatment}
+              />
             ))}
           </ul>
         ) : (
@@ -89,7 +100,12 @@ function Services({
             className={`flex gap-4 flex-1 w-full flex-row flex-wrap justify-evenly content-center items-center overflow-x-hidden rounded-bl-3xl rounded-br-3xl `}
           >
             {searchResult.map((Treatment, i) => (
-              <ServiceItem key={Treatment.id} i={i} treatment={Treatment} />
+              <ServiceItem
+                locale={locale}
+                key={Treatment.id}
+                i={i}
+                treatment={Treatment}
+              />
             ))}
           </ul>
         )}
