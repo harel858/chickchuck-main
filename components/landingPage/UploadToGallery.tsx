@@ -151,22 +151,6 @@ const UploadGallery = ({
   return (
     <>
       <div className="flex flex-col justify-center items-center gap-2 w-11/12">
-        <div className="flex justify-center items-center gap-2">
-          {urls?.galleryImgUrls && urls.galleryImgUrls.length > 0 ? (
-            <Button variant={"ghost"} onClick={() => setGalleryOrUpload(false)}>
-              בטל
-            </Button>
-          ) : null}
-          <Button
-            type="button"
-            variant={"default"}
-            disabled={galleryList.length === 0}
-            isLoading={isLoading}
-            onClick={onDone}
-          >
-            שמור בגלריה
-          </Button>
-        </div>{" "}
         <Dragger
           action="/api/progress"
           beforeUpload={handlebeforeUpload}
@@ -181,7 +165,23 @@ const UploadGallery = ({
         >
           {uploadButton}
         </Dragger>
-      </div>
+      </div>{" "}
+      <div className="flex justify-center items-center gap-2">
+        {urls?.galleryImgUrls && urls.galleryImgUrls.length > 0 ? (
+          <Button variant={"ghost"} onClick={() => setGalleryOrUpload(false)}>
+            בטל
+          </Button>
+        ) : null}
+        <Button
+          type="button"
+          variant={"default"}
+          disabled={galleryList.length === 0}
+          isLoading={isLoading}
+          onClick={onDone}
+        >
+          שמור בגלריה
+        </Button>
+      </div>{" "}
       <Modal
         open={previewOpen}
         title={previewTitle}

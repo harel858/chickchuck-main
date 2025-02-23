@@ -4,6 +4,7 @@ import { Table, Switch, Select } from "antd";
 import dayjs from "dayjs";
 import { ColumnsType } from "antd/es/table";
 import { AlignType } from "rc-table/lib/interface";
+import { useTranslations } from "next-intl";
 
 const { Option } = Select;
 
@@ -26,10 +27,13 @@ export interface DayData {
 function InitDetails({
   setActivityDays,
   activityDays,
+  locale,
 }: {
   setActivityDays: React.Dispatch<React.SetStateAction<DayData[]>>;
   activityDays: DayData[];
+  locale: string;
 }) {
+  const t = useTranslations("businessDetailsForm");
   const [firstTime, setFirstTime] = useState(true);
   const [firstTime2, setFirstTime2] = useState(true);
 
@@ -107,7 +111,7 @@ function InitDetails({
   const columns: ColumnsType<DataType> = useMemo(() => {
     return [
       {
-        title: "יום",
+        title: t("day"),
         dataIndex: "Days",
         key: "Days",
         align: "center" as AlignType,
@@ -116,7 +120,7 @@ function InitDetails({
         ),
       },
       {
-        title: "התחלה",
+        title: t("start"),
         dataIndex: "start",
         key: "start",
         align: "center" as AlignType,
@@ -139,7 +143,7 @@ function InitDetails({
         },
       },
       {
-        title: "סיום",
+        title: t("end"),
         dataIndex: "end",
         key: "end",
         align: "center" as AlignType,
@@ -162,7 +166,7 @@ function InitDetails({
         },
       },
       {
-        title: "פעיל",
+        title: t("isActive"),
         key: "isActive",
         dataIndex: "isActive",
         align: "center" as AlignType,
@@ -181,6 +185,7 @@ function InitDetails({
 
   return (
     <Table
+      direction={locale === "he" ? "rtl" : "ltr"}
       className="rounded-3xl"
       sticky
       columns={columns}
@@ -188,7 +193,7 @@ function InitDetails({
       size={"small"}
       pagination={false}
       title={() => (
-        <h2 className="text-black text-2xl text-center">זמני פעילות</h2>
+        <h2 className="text-black text-2xl text-center">{t("activitytime")}</h2>
       )}
     />
   );

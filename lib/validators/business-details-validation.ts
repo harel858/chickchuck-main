@@ -8,7 +8,7 @@ export const BusinessDetailsValidation = z.object({
     message: "Phone number must be at least 10 characters long.",
   }),
   businessAddress: z.string().min(2, {
-    message: "Phone number must be at least 2 characters long.",
+    message: "business address number must be at least 2 characters long.",
   }),
 });
 

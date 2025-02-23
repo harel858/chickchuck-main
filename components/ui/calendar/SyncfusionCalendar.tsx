@@ -55,7 +55,7 @@ export type AdditionData = {
 
 const ScheduleComponenta = React.forwardRef(
   (props: any, ref: React.Ref<Schedule>) => {
-    L10n.load({
+    /*  L10n.load({
       en: {
         schedule: {
           day: "יום",
@@ -228,7 +228,7 @@ const ScheduleComponenta = React.forwardRef(
       },
     });
     // Enables Right to left alignment for all controls
-    enableRtl(true);
+    enableRtl(true); */
     return <ScheduleComponent {...props} />;
   }
 );

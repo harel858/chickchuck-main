@@ -42,25 +42,28 @@ function Navbar({
   console.log("locale", locale);
 
   return (
-    <nav className="fixed px-0 py-1 flex items-center justify-center max-2xl:p-0 backdrop-blur-sm bg-slate-300 dark:bg-gray-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-slate-200 dark:border-slate-800 shadow-sm ">
-      <div className="flex z-0 font-semibold absolute p-0 left-0 pointer-events-none">
+    <nav className="fixed px-4 py-2 flex items-center justify-between backdrop-blur-sm bg-gradient-to-r from-orange-200 via-orange-50 to-orange-200 dark:bg-amber-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-gray-300 dark:border-amber-700 shadow-sm">
+      <div className="flex items-center">
         <Image
           width={200}
           height={200}
-          className="p-0 m-0 pointer-events-none"
+          className="mr-4"
           alt="logo"
           aria-hidden="true"
           src={logo.src}
         />
+        {/*      <span className="text-xl font-bold text-white dark:text-white">
+          {t("title")}
+        </span> */}
       </div>
 
-      <ul className="max-xl:hidden h-full flex flex-row justify-between items-center align-between text-md text-white dark:text-white">
+      <ul className="hidden xl:flex flex-row justify-between items-center text-md text-white dark:text-white">
         <NavBarItem
           title={t("onlinePage")}
           link={formattedBusinessName}
           icon={<FiExternalLink />}
         />
-        {session.user.isAdmin ? (
+        {session.user.isAdmin && (
           <>
             <NavBarItem
               title={t("schedule")}
@@ -88,11 +91,10 @@ function Navbar({
               icon={<IoSettingsOutline />}
             />
           </>
-        ) : (
-          <></>
         )}
       </ul>
-      <div className="flex flex-row justify-between items-center gap-4 absolute right-2">
+
+      <div className="flex items-center gap-4">
         <Notifications
           scheduleProps={scheduleProps}
           session={session}

@@ -128,8 +128,12 @@ export default async function Layout({
       </head>
       <body
         className={cn(
-          "h-full font-sans bg-slate-300 dark:bg-slate-900 antialiased relative"
+          "h-full font-sans dark:bg-slate-900 antialiased relative"
         )}
+        style={{
+          backgroundImage:
+            "linear-gradient(330deg, hsl(272, 53%, 50%) 0%, hsl(226, 68%, 56%) 100%)",
+        }}
       >
         {" "}
         {/* עטיפת תוכן ראשי עם Providers לניהול מצב גלובלי ותמיכת תמה */}

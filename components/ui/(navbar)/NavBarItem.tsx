@@ -28,7 +28,7 @@ function NavBarItem({ title, link, icon }: NavItemProps) {
       </div>
       <div
         className={`text-black relative ${
-          isActive ? `font-medium ` : `font-light`
+          isActive ? `font-bold ` : `font-normal`
         } w-max after:absolute after:bottom-0 after:mt-1 after:left-0 after:h-0.5 after:w-full after:bg-blue-500 after:translate-y-1 after:scale-x-0 after:ease-in after:duration-200 ease-in duration-200 group-hover:after:scale-x-125 ${
           isActive && "after:scale-x-125"
         } text-lg`}

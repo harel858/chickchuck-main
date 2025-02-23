@@ -48,10 +48,71 @@
     "back": "Back",
     "next": "Next",
     "chooseClient": "Choose Client"
-
-
-
-
-
+  },
+  "login":{
+    "businessOwnerSignin": "Sign In as a Business Owner",
+    "teamMateSignin": "Sign In as a Team Member"
+  },
+  "createbusinessdetails":{
+    "sunday": "Su",
+    "monday": "Mo",
+    "tuesday": "Tu",
+    "wednesday": "We",
+    "thursday": "Th",
+    "friday": "Fr",
+    "saturday": "Sa",
+    "businessName": "Business Name",
+    "businessAddress": "Business Address",
+    "businessPhone": "Business Phone",
+    "businessLogo": "Business Logo",
+    "AboutTheBusiness": "About the Business",
+    "OperatingSchedule": "Operating Schedule",
+    "BusinessServices": "Business Services",
+    "BusinessPage": "Business Page",
+    "next": "Next",
+    "back": "Back",
+    "finish": "Finish",
+    "addService": "Add Service",
+    "serviceName": "Service Name",
+    "serviceDuration": "Service Duration",
+    "servicePrice": "Service Price"
+  },
+  "businessDetailsForm":{
+    "businessName": "Business Name",
+    "businessAddress": "Business Address",
+    "noresults": "No results found",
+    "businessPhone": "Business Phone",
+    "businessLogo": "Business Logo",
+    "AboutTheBusiness": "About the Business",
+    "OperatingSchedule": "Operating Schedule",
+    "BusinessServices": "Business Services",
+    "BusinessPage": "Business Page",
+    "next": "Next",
+    "back": "Back",
+    "finish": "Finish",
+    "addService": "Add Service",
+    "serviceName": "Service Name",
+    "serviceDuration": "Service Duration",
+    "servicePrice": "Service Price",
+    "header": "Create Business Details",
+    "subheader": "Let's get started! Tell us about your business.",
+    "start": "start",
+    "end": "end",
+    "isActive": "Is Active",
+    "activitytime": "Activity Time",
+    "day": "Day"
+  },
+  "serviceForm": {
+    "header": "Service Details",
+    "subheader": "Please fill in the following details for the new service",
+    "serviceName": "Service Name",
+    "serviceDuration": "Service Duration (in minutes)",
+    "servicePrice": "Service Price (in dollars)",
+    "addService": "Add Service",
+    "cancel": "Cancel",
+    "save": "Save",
+    "minutes": "minutes"
   }
+
+   
 }

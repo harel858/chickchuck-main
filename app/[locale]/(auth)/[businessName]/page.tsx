@@ -5,7 +5,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@lib/auth";
 import NavButtons from "@ui/NavButtons";
 import { getImages2 } from "@lib/aws/s3";
-import Images from "@ui/Images";
 import BackgroundImage from "@components/landingPage/BackgroundImage";
 import { prisma } from "@lib/prisma";
 import GallerySection from "@components/landingPage/GallerySection";
@@ -15,6 +14,7 @@ import { getEventsByCustomer } from "@lib/google/getEventsByCustomer";
 import { AppointmentRequest, Customer, Treatment, User } from "@prisma/client";
 import { isGoogleEvent } from "@ui/(navbar)/specialOperations/notifications/utils/typeGourd";
 import dayjs from "dayjs";
+import AdminImages from "@ui/Images";
 
 type LandingPageProps = {
   params: {
@@ -151,11 +151,10 @@ export default async function LandingPage({
   return (
     <>
       {isAdmin ? (
-        <Images urls={urls} session={session} />
+        <AdminImages business={business} urls={urls} session={session} />
       ) : (
         <BackgroundImage urls={urls} />
       )}
-      <NavButtons business={business} />
 
       <AppointmentSteps
         business={business}

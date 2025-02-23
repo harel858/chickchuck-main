@@ -1,18 +1,23 @@
+"use client";
 import React, { ChangeEvent, useCallback, useState } from "react";
 import { List, Modal } from "antd";
 import { ServiceInput } from "./InitServices";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import ServiceForm from "./ServiceForm";
+import { useTranslations } from "next-intl";
 
 const CardItem = ({
   item,
   setServices,
   services,
+  locale,
 }: {
   item: ServiceInput;
   services: ServiceInput[];
   setServices: React.Dispatch<React.SetStateAction<ServiceInput[]>>;
+  locale: string;
 }) => {
+  const t = useTranslations("serviceForm");
   const [open, setOpen] = useState(false);
   const [service, setService] = useState<ServiceInput>(item);
 
@@ -58,7 +63,7 @@ const CardItem = ({
   return (
     <>
       <List.Item
-        className="bg-orange-50 border-slate-950 w-full border-b"
+        className="bg-white border border-gray-300 w-full rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-4"
         actions={[
           <CiTrash
             className="text-2xl hover:text-red-500 cursor-pointer"
@@ -73,9 +78,17 @@ const CardItem = ({
         ]}
       >
         <List.Item.Meta
-          title={`${item.title} ${item.price}₪`}
-          description={<p className="text-black">{item.duration} דקות</p>}
-          className="border-slate-950"
+          className="text-gray-800"
+          title={
+            <span className="font-bold text-lg">
+              {`${item.title} ${locale === "he" ? "₪" : "$"}${item.price}`}
+            </span>
+          }
+          description={
+            <p className="text-gray-600 text-sm">
+              {item.duration} {t("minutes")}
+            </p>
+          }
         />
       </List.Item>
       <Modal
@@ -83,8 +96,10 @@ const CardItem = ({
         open={open}
         onOk={handleOk}
         onCancel={handleCancel}
+        className="bg-white p-6 rounded-lg shadow-lg"
       >
         <ServiceForm
+          locale={locale}
           service={service}
           handleServicesChange={handleServicesChange}
         />

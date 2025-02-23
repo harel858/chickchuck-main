@@ -86,7 +86,7 @@ const middleware = withAuth(
 export default createMiddleware({
   locales: ["en", "he"], // Supported locales
   defaultLocale: "en", // Default fallback
-  localeDetection: true, // Automatically detect locale from the URL
+  localeDetection: false, // Automatically detect locale from the URL
 }); // Export i18n separately
 
 export const config = {

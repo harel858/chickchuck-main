@@ -31,7 +31,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     // Access cookies
     const allCookies = cookies({ req });
     console.log("Cookies in API route:", allCookies);
-    const preferredLocale = (allCookies.NEXT_LOCALE || "he").toLowerCase(); // Convert to lowercase
+    const preferredLocale = (allCookies.NEXT_LOCALE || "en").toLowerCase(); // Convert to lowercase
 
     const form = new formidable.IncomingForm({ multiples: false });
     await new Promise((resolve, reject) => {

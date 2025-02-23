@@ -11,16 +11,13 @@ import OnlinePage from "./onlinePage/OnlinePage";
 import { createBusiness } from "actions/createBusiness";
 import axios from "axios";
 import { RcFile } from "antd/es/upload";
-
-const initDays: DayData[] = [
-  { value: 0, label: "'א", start: "09:00", end: "17:00", isActive: true },
-  { value: 1, label: "'ב", start: "09:00", end: "17:00", isActive: true },
-  { value: 2, label: "'ג", start: "09:00", end: "17:00", isActive: true },
-  { value: 3, label: "'ד", start: "09:00", end: "17:00", isActive: true },
-  { value: 4, label: "'ה", start: "09:00", end: "17:00", isActive: true },
-  { value: 5, label: "'ו", start: "09:00", end: "17:00", isActive: true },
-  { value: 6, label: "'ש", start: "09:00", end: "17:00", isActive: true },
-];
+import { useTranslations } from "next-intl";
+import {
+  Progress,
+  ProgressIndicator,
+  Root,
+  Indicator,
+} from "@radix-ui/react-progress";
 
 const Container = ({
   session,
@@ -29,11 +26,65 @@ const Container = ({
   session: Session;
   locale: string;
 }) => {
+  const t = useTranslations("createbusinessdetails");
+  const initDays: DayData[] = [
+    {
+      value: 0,
+      label: t("sunday"),
+      start: "09:00",
+      end: "17:00",
+      isActive: true,
+    },
+    {
+      value: 1,
+      label: t("monday"),
+      start: "09:00",
+      end: "17:00",
+      isActive: true,
+    },
+    {
+      value: 2,
+      label: t("tuesday"),
+      start: "09:00",
+      end: "17:00",
+      isActive: true,
+    },
+    {
+      value: 3,
+      label: t("wednesday"),
+      start: "09:00",
+      end: "17:00",
+      isActive: true,
+    },
+    {
+      value: 4,
+      label: t("thursday"),
+      start: "09:00",
+      end: "17:00",
+      isActive: true,
+    },
+    {
+      value: 5,
+      label: t("friday"),
+      start: "09:00",
+      end: "17:00",
+      isActive: true,
+    },
+    {
+      value: 6,
+      label: t("saturday"),
+      start: "09:00",
+      end: "17:00",
+      isActive: true,
+    },
+  ];
   console.log("session", session);
 
   const router = useRouter();
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
+  const [progress, setProgress] = useState(75);
+
   const [isLoading, setIsLoading] = useState(false);
   const [stepsInitialized, setStepsInitialized] = useState(false);
   const [businessDetails, setBusinessDetails] =
@@ -42,6 +93,11 @@ const Container = ({
   const [services, setServices] = useState<ServiceInput[]>([]);
   const [gallaryList, setGallaryList] = useState<UploadFile[]>([]);
   const [logo, setLogo] = useState<UploadFile[]>([]);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setProgress(75), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     // Simulate asynchronous initialization
@@ -52,36 +108,46 @@ const Container = ({
 
   const next = useCallback(() => {
     setCurrent(current + 1);
+    setProgress(progress - 25);
   }, [current]);
 
   const prev = () => {
     setCurrent(current - 1);
+    setProgress(progress + 25);
   };
   const steps = [
     {
-      title: "קצת על העסק",
+      title: t("AboutTheBusiness"),
       content: (
         <BusinessDetailsForm
+          locale={locale}
           next={next}
           setBusinessDetails={setBusinessDetails}
         />
       ),
     },
     {
-      title: "זמני פעילות",
+      title: t("OperatingSchedule"),
       content: (
         <InitActivityDetails
+          locale={locale}
           setActivityDays={setActivityDays}
           activityDays={activityDays}
         />
       ),
     },
     {
-      title: "שירותי העסק",
-      content: <InitServices services={services} setServices={setServices} />,
+      title: t("BusinessServices"),
+      content: (
+        <InitServices
+          locale={locale}
+          services={services}
+          setServices={setServices}
+        />
+      ),
     },
     {
-      title: "עמוד עסקי",
+      title: t("BusinessPage"),
       content: (
         <OnlinePage
           fileList={gallaryList}
@@ -136,48 +202,65 @@ const Container = ({
 
   const contentStyle: React.CSSProperties = {
     textAlign: "center",
-    borderRadius: token.borderRadiusLG,
-    border: `1px dashed ${token.colorBorder}`,
+    padding: "2rem 0 2rem 0",
+    borderRadius: "10px 10px 10px 10px",
     width: "100%",
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-10 p-4 rounded-xl w-10/12 shadow-lg shadow-black/50 bg-orange-200">
-      {stepsInitialized && (
+    <div className="flex flex-col justify-center items-center p-4 rounded-xl w-10/12 shadow-lg shadow-black/50 bg-slate-200">
+      {/* {stepsInitialized && (
         <Steps
           direction="horizontal"
           current={current}
           items={items}
           responsive
-          className="border-b border-gray-500/50"
+          className="mt-4"
         />
-      )}
-
+      )} */}
+      <Root
+        className="relative h-[25px] w-11/12 md:w-[300px] overflow-hidden rounded-full bg-purple-500/50"
+        style={{
+          // Fix overflow clipping in Safari
+          // https://gist.github.com/domske/b66047671c780a238b51c51ffde8d3a0
+          transform: "translateZ(0)",
+        }}
+        value={progress}
+      >
+        <Indicator
+          className="ease-[cubic-bezier(0.65, 0, 0.35, 1)] size-full bg-white transition-transform duration-[660ms]"
+          style={{ transform: `translateX(-${100 - progress}%)` }}
+        />
+      </Root>
       <div
         style={contentStyle}
-        className="flex flex-col justify-center items-center text-black bg-orange-200 w-full"
+        className="flex flex-col justify-center items-center text-black bg-slate-200 w-full"
       >
         {steps[current]?.content}
       </div>
       <div className="mt-2 space-x-4">
         {current > 0 && (
           <Button className="hover:bg-white/30" onClick={() => prev()}>
-            חזור
+            {t("back")}
           </Button>
         )}
         {current < steps.length - 1 && current != 0 && (
-          <Button className="bg-sky-600" type="primary" onClick={() => next()}>
-            המשך
+          <Button
+            className="bg-slate-950"
+            type="primary"
+            onClick={() => next()}
+          >
+            {t("next")}
           </Button>
         )}
         {current === steps.length - 1 && (
           <Button
             loading={isLoading}
             type="primary"
-            className="bg-sky-600"
+            className="bg-slate-950"
             onClick={onDone}
           >
-            סיים
+            {t("finish")}
           </Button>
         )}
       </div>

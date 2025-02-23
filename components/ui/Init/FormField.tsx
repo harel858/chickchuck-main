@@ -5,6 +5,7 @@ import { cn } from "@lib/utils";
 import { TBusinessDetailsValidation } from "@lib/validators/business-details-validation";
 import { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import { FieldType } from "./BusinessDetailsForm";
+import { locale } from "dayjs";
 
 const FormFields = ({
   label,
@@ -12,17 +13,20 @@ const FormFields = ({
   register,
   errors,
   control,
+  locale,
 }: {
   label: FieldType["label"];
   control: Control<TBusinessDetailsValidation>;
   name: FieldType["name"];
   register: UseFormRegister<TBusinessDetailsValidation>;
   errors: FieldErrors<TBusinessDetailsValidation>;
+  locale: string;
 }) => {
   return (
     <div key={name} className="flex flex-col justify-center items-center gap-2">
       <Label htmlFor={name}>{label}</Label>
       <Input
+        dir={locale === "he" ? "rtl" : "ltr"}
         style={{ width: "15rem" }} // Set the specific width here
         {...register(name)}
         className={cn({

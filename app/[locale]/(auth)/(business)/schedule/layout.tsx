@@ -2,7 +2,7 @@ import React from "react";
 import { OAuth2Client } from "google-auth-library";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@lib/auth";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Navbar from "@ui/(navbar)/Navbar";
 import { prisma } from "@lib/prisma";
 import PlusButton from "@ui/(navbar)/specialOperations/plusButton/PlusButton";
@@ -77,9 +77,9 @@ async function Layout({
 
   if (!session?.user.id) {
     console.log("User has no id");
-
     return notFound();
   }
+
   const user = await getUserAccount(session?.user.id);
   const access_token = user?.accounts[0]?.access_token;
   const googleClient = setupGoogleCalendarClient(access_token);
@@ -88,9 +88,10 @@ async function Layout({
     console.log("User has no accounts or access token");
     return notFound();
   }
-  if (!user?.accounts[0] || !user.Business) {
-    console.log("User has no accounts or business");
-    return notFound();
+
+  if (!user?.Business) {
+    console.log("User has no business");
+    return redirect(`/${locale}/createbusinessdetails`);
   }
 
   const calendars: {

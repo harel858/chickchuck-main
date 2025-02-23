@@ -48,5 +48,71 @@
     "back": "חזור",
     "next": "הבא",
     "chooseClient": "בחר לקוח"
+  },
+  "login":{
+    "businessOwnerSignin": "התחבר כבעל עסק",
+    "teamMateSignin": "התחבר כחבר צוות"
+  },
+  "createbusinessdetails":{
+    "sunday": "א'",
+    "monday": "ב'",
+    "tuesday": "ג'",
+    "wednesday": "ד'",
+    "thursday": "ה'",
+    "friday": "ו'",
+    "saturday": "ש'",
+    "businessName": "שם העסק",
+    "businessAddress": "כתובת העסק",
+    "businessPhone": "טלפון העסק",
+    "businessLogo": "לוגו העסק",
+    "AboutTheBusiness": "קצת על העסק",
+    "OperatingSchedule": "זמני פעילות",
+    "BusinessServices": "שירותי העסק",
+    "BusinessPage": "דף העסק",
+    "next": "הבא",
+    "back": "חזור",
+    "addService": "הוסף שירות",
+    "serviceName": "שם השירות",
+    "finish": "סיום",
+    "serviceDuration": "משך השירות",
+    "servicePrice": "מחיר"
+  },
+  "businessDetailsForm":{
+    "header": "קצת על העסק שלך",
+    "subheader": "כדי להתחיל נצטרך קצת פרטים על העסק שלך",
+    "noresults": "לא נמצאו תוצאות",
+    "businessName": "שם העסק",
+    "businessAddress": "כתובת העסק",
+    "businessPhone": "טלפון העסק",
+    "businessLogo": "לוגו העסק",
+    "AboutTheBusiness": "קצת על העסק",
+    "OperatingSchedule": "זמני פעילות",
+    "BusinessServices": "שירותי העסק",
+    "BusinessPage": "דף העסק",
+    "next": "הבא",
+    "back": "חזור",
+    "addService": "הוסף שירות",
+    "serviceName": "שם השירות",
+    "serviceDuration": "משך השירות",
+    "servicePrice": "מחיר",
+    "start": "התחלה",
+    "end": "סיום",
+    "isActive": "פעיל",
+    "activitytime": "זמני פעילות",
+    "day": "יום"
+  },
+  "serviceForm": {
+    "header": "פרטי השירות",
+    "subheader": "נא למלא את הפרטים הבאים עבור השירות החדש",
+    "serviceName": "שם השירות",
+    "serviceDuration": "משך השירות (בדקות)",
+    "servicePrice": "מחיר השירות (בשקלים)",
+    "addService": "הוסף שירות",
+    "cancel": "ביטול",
+    "save": "שמור",
+    "minutes": "דקות"
   }
+   
+
+
 }

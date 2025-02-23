@@ -7,7 +7,13 @@ async function SignInLayout({ children }: { children: React.ReactNode }) {
   console.log("session", session);
 
   return (
-    <section className="h-screen w-full flex justify-center items-center">
+    <section
+      style={{
+        backgroundImage:
+          "linear-gradient(330deg, hsl(272, 53%, 50%) 0%, hsl(226, 68%, 56%) 100%)",
+      }}
+      className="h-screen w-full flex  justify-center items-center"
+    >
       {children}
     </section>
   );

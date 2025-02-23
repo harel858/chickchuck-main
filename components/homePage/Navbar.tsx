@@ -20,15 +20,15 @@ const Navbar = async ({ locale }: { locale: string }) => {
     <nav className="sticky z-[100] h-20 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all">
       <MaxWidthWrapper>
         <div className="flex flex-row h-20 items-center justify-between border-b border-zinc-200">
-          <Link href="/" className="flex z-40 font-semibold">
+          <div className="flex z-0 pointer-events-none font-semibold">
             <Image
-              width={300}
-              height={300}
+              width={200}
+              height={200}
               alt="logo"
               aria-hidden="true"
               src={logo.src}
             />
-          </Link>
+          </div>
 
           <div className="h-full flex items-center space-x-4">
             {user ? (

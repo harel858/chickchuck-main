@@ -10,9 +10,9 @@ import { IoIosPin } from "react-icons/io";
 function NavButtons({ business }: { business: Business }) {
   return (
     <div className="flex flex-col justify-center items-center gap-0">
-      <LargeHeading size={"default"} className="text-black font-normal m-0">
+      <h1 className="text-black text-2xl font-bold m-0">
         {business.businessName}
-      </LargeHeading>
+      </h1>
       {business.Address ? (
         <a href={`https://waze.com/ul?q=${business?.Address}`}>
           <Button

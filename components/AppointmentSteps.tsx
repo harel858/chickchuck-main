@@ -18,7 +18,12 @@ import {
   Treatment,
   User,
 } from "@prisma/client";
-import { Button } from "@ui/Button";
+import {
+  Progress,
+  ProgressIndicator,
+  Root,
+  Indicator,
+} from "@radix-ui/react-progress";
 import dayjs, { Dayjs } from "dayjs";
 import { calendar_v3 } from "googleapis";
 import { TUserValidation } from "@lib/validators/userValidation";
@@ -26,6 +31,8 @@ import { message } from "antd";
 import { Session } from "next-auth";
 import CustomerSignIn from "./landingPage/CustomerSignIn";
 import CustomerAppointments from "./landingPage/CustomerAppointments";
+import { useTranslations } from "next-intl";
+import { Button } from "@ui/Button";
 export default function AppointmentSteps({
   business,
   freeBusy,
@@ -54,6 +61,7 @@ export default function AppointmentSteps({
     | null
     | undefined;
 }) {
+  const t = useTranslations("createbusinessdetails");
   const [isLoading, setIsLoading] = useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const [selectedService, setSelectedService] =
@@ -61,6 +69,7 @@ export default function AppointmentSteps({
   const [selectedDate, setSelectedDate] = React.useState<Dayjs>(dayjs());
   const [slots, setSlots] = React.useState<calendar_v3.Schema$TimePeriod[]>([]);
   const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
+  const [progress, setProgress] = useState(75);
   const [slotsForMonth, setSlotsForMonth] = React.useState<Record<
     string,
     calendar_v3.Schema$TimePeriod[]
@@ -120,7 +129,10 @@ export default function AppointmentSteps({
     [slotsForMonth, setSlotsForMonth]
   );
   const onSelectedService = useCallback(
-    (service: Treatment) => setSelectedService(service),
+    (service: Treatment) => {
+      setSelectedService(service);
+      handleNext();
+    },
     [selectedService, setSelectedService]
   );
 
@@ -243,49 +255,68 @@ export default function AppointmentSteps({
     },
   ];
   console.log("session", session);
+  const contentStyle: React.CSSProperties = {
+    textAlign: "center",
+    padding: "2rem 0 2rem 0",
+    borderRadius: "10px 10px 10px 10px",
+    width: "100%",
+  };
 
   return (
-    <div className="relative w-1/3 max-md:w-11/12 flex flex-col justify-center items-center bg-slate-200 rounded-xl">
-      {!session ? (
-        <CustomerSignIn />
-      ) : !session.user.businessId ? (
-        <CustomerAppointments
-          freebusy={freebusy}
-          customerAppointments={customerAppointments}
+    <div className="w-1/2 max-md:w-10/12 gap-0 flex flex-col justify-center items-center p-4 rounded-xl shadow-lg shadow-black/50 bg-slate-200">
+      {/* {stepsInitialized && (
+        <Steps
+          direction="horizontal"
+          current={current}
+          items={items}
+          responsive
+          className="mt-4"
         />
-      ) : (
-        <></>
-      )}
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyItems: "center",
-          justifyContent: "center",
-          alignItems: "center",
+      )} */}
+      <Root
+        className="relative h-[25px] w-11/12 md:w-[300px] overflow-hidden rounded-full bg-purple-500/50"
+        style={{
+          // Fix overflow clipping in Safari
+          // https://gist.github.com/domske/b66047671c780a238b51c51ffde8d3a0
+          transform: "translateZ(0)",
         }}
+        value={progress}
       >
-        <MobileStepperMUI
-          stepsLength={steps.length}
-          activeStep={activeStep}
-          handleNext={handleNext}
-          handleBack={handleBack}
+        <Indicator
+          className="ease-[cubic-bezier(0.65, 0, 0.35, 1)] size-full bg-white transition-transform duration-[660ms]"
+          style={{ transform: `translateX(-${100 - progress}%)` }}
         />
-        <div className="w-full">{steps[activeStep]?.content}</div>
-      </Box>
-      {selectedService && activeStep === 0 ? (
-        <Button
-          isLoading={isLoading}
-          disabled={activeStep >= steps.length}
-          onClick={() => handleNext()}
-          className="bg-blue-600 text-2xl w-full transition-all ease-in-out duration-300 z-50"
-        >
-          המשך
-        </Button>
-      ) : (
-        <></>
-      )}
+      </Root>
+      <div
+        style={contentStyle}
+        className="flex flex-col justify-center items-center text-black w-full"
+      >
+        {steps[activeStep]?.content}
+      </div>
+      <div className="mt-2 space-x-4">
+        {/*  {activeStep > 0 && (
+          <Button className="hover:bg-white/30" onClick={() => handleBack()}>
+            {t("back")}
+          </Button>
+        )}
+        {activeStep < steps.length - 1 && activeStep != 0 && (
+          <Button className="bg-slate-950" onClick={() => handleNext()}>
+            {t("next")}
+          </Button>
+        )}
+        {selectedService && activeStep === 0 ? (
+          <Button
+            isLoading={isLoading}
+            disabled={activeStep >= steps.length}
+            onClick={() => handleNext()}
+            className="bg-slate-950 text-2xl w-full transition-all ease-in-out duration-300 z-50"
+          >
+            המשך
+          </Button>
+        ) : (
+          <></>
+        )} */}
+      </div>
     </div>
   );
 }

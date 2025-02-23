@@ -2,14 +2,15 @@ import { NextAuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getImage } from "./aws/s3";
 import googleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
+import { prisma } from "./prisma";
+import { getImage } from "./aws/s3";
 import findUserByPhone from "actions/findUserByPhone";
 import findCustomer from "actions/findCustomer";
 import { updateUserByPhone } from "./prisma/users";
 import { updateCustomerByPhone } from "./prisma/customer/updateCustomerByPhone";
-import { prisma } from "./prisma";
+import { getLocaleFromRequest, defaultLocale } from "./intl";
 
 const bucketName = process.env.BUCKET_NAME!;
 console.log("process.env.GOOGLE_CLIENT_ID", process.env.GOOGLE_CLIENT_ID);
@@ -24,18 +25,19 @@ type UserCredentials = {
   confirmPassword: string;
 };
 
-//team member sign up
+// Team member sign up
 const authorizeUserSignUp = async (credentials: any, req: any) => {
   try {
     const { phone, password } = credentials as UserCredentials;
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = await updateUserByPhone(phone, hashedPassword);
 
     if (user) {
       return {
         ...user,
         UserRole: user.UserRole || undefined,
+        preferredLocale:
+          user.preferredLocale || getLocaleFromRequest(req) || defaultLocale, // Set preferredLocale
       };
     }
     return null;
@@ -45,21 +47,22 @@ const authorizeUserSignUp = async (credentials: any, req: any) => {
   }
 };
 
-//team member sign in
+// Team member sign in
 const authorizeUserSignIn = async (credentials: any, req: any) => {
   console.log("authorizeUserSignIn");
 
   try {
-    const { phone, password, confirmPassword } = credentials as UserCredentials;
+    const { phone, password } = credentials as UserCredentials;
     const user = await findUserByPhone(phone);
     if (user?.password) {
-      let verify = await bcrypt.compare(password, user.password);
-
+      const verify = await bcrypt.compare(password, user.password);
       if (!verify) return null;
 
       return {
         ...user,
         UserRole: user.UserRole || undefined,
+        preferredLocale:
+          user.preferredLocale || getLocaleFromRequest(req) || defaultLocale, // Set preferredLocale
       };
     }
     return null;
@@ -69,36 +72,21 @@ const authorizeUserSignIn = async (credentials: any, req: any) => {
   }
 };
 
-//customer sign up
+// Customer sign up
 const authorizeCustomerSignUp = async (credentials: any, req: any) => {
   console.log("authorizeCustomerSignUp");
 
   try {
     const { phone, password } = credentials as UserCredentials;
     const hashedPassword = await bcrypt.hash(password, 10);
+    const customer = await updateCustomerByPhone(phone, hashedPassword);
 
-    const user = await updateCustomerByPhone(phone, hashedPassword);
-
-    return user;
-  } catch (err: any) {
-    console.log(err);
-    throw new Error(err);
-  }
-};
-
-//customer sign in
-const authorizeCustomerSignIn = async (credentials: any, req: any) => {
-  console.log("authorizeCustomerSignIn");
-  try {
-    const { phone, password, confirmPassword } = credentials as UserCredentials;
-
-    const user = await findCustomer(phone);
-    if (user?.password) {
-      let verify = await bcrypt.compare(password, user.password);
-
-      if (!verify) return null;
-
-      return user;
+    if (customer) {
+      return {
+        ...customer,
+        /*         preferredLocale:
+          user.preferredLocale || getLocaleFromRequest(req) || defaultLocale, */ // Set preferredLocale
+      };
     }
     return null;
   } catch (err: any) {
@@ -107,11 +95,31 @@ const authorizeCustomerSignIn = async (credentials: any, req: any) => {
   }
 };
 
-async function refreshAccessToken(
-  token: JWT & {
-    accountId: string;
+// Customer sign in
+const authorizeCustomerSignIn = async (credentials: any, req: any) => {
+  console.log("authorizeCustomerSignIn");
+
+  try {
+    const { phone, password } = credentials as UserCredentials;
+    const user = await findCustomer(phone);
+    if (user?.password) {
+      const verify = await bcrypt.compare(password, user.password);
+      if (!verify) return null;
+
+      return user; /* {
+        ...user,
+        preferredLocale:
+          user.preferredLocale || getLocaleFromRequest(req) || defaultLocale, // Set preferredLocale
+      }; */
+    }
+    return null;
+  } catch (err: any) {
+    console.log(err);
+    throw new Error(err);
   }
-) {
+};
+
+async function refreshAccessToken(token: JWT & { accountId: string }) {
   try {
     const url =
       "https://oauth2.googleapis.com/token?" +
@@ -161,7 +169,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/signin",
     error: "/error",
-    newUser: "/he/createbusinessdetails",
+    newUser: "/en/createbusinessdetails",
   },
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   providers: [
@@ -209,7 +217,6 @@ export const authOptions: NextAuthOptions = {
       httpOptions: {
         timeout: 50000,
       },
-
       authorization: {
         params: {
           scope:
@@ -229,6 +236,7 @@ export const authOptions: NextAuthOptions = {
             name: `${profile.given_name} ${profile.family_name}`,
             email: profile.email,
             image: profile.image,
+            preferredLocale: defaultLocale, // Set default preferredLocale
           };
         } catch (err: any) {
           console.log(err);
@@ -243,16 +251,14 @@ export const authOptions: NextAuthOptions = {
       console.log("signinParam", params);
 
       // Check if the user is new based on your business logic
-      if (user && "businessId" in user && user.businessId) {
-        user.isNewUser = false; // Set this to `true` for new users
-        return true; // Allow sign-in
+      if (user && "businessId" in user && !user.businessId) {
+        const locale = user.preferredLocale || defaultLocale; // Get the locale from user
+        return true; // Redirect to create business details if no businessId
       }
       return true; // Allow sign-in
     },
     async redirect({ url, baseUrl }) {
-      // Check if the URL contains the locale ('he' or 'en')
-      const localeMatch = url.match(/\/(he|en)(\/|$)/); // Matches 'he' or 'en' in the URL path
-      const locale = localeMatch ? localeMatch[1] : null;
+      const locale = url.split("/")[1]; // Extract the locale from the URL
       console.log("locale", locale);
 
       // If locale is found, redirect to the localized path
@@ -261,7 +267,7 @@ export const authOptions: NextAuthOptions = {
       }
 
       // Fallback: redirect to the default locale or base URL
-      return `/he/schedule`; // Default to 'he' if no locale found
+      return `/en/schedule`; // Default to 'he' if no locale found
     },
     async jwt(props) {
       console.log("props", props);
@@ -340,6 +346,7 @@ export const authOptions: NextAuthOptions = {
         token.businessName = user.Business?.businessName || "";
         token.access_token = user.accounts[0]?.access_token || "";
         token.refresh_token = user.accounts[0]?.refresh_token || "";
+        token.locale = user.preferredLocale ?? undefined; // Add the locale to the token
         console.log("user", user);
         console.log("account?.expires_at", account?.expires_at);
 
@@ -379,6 +386,7 @@ export const authOptions: NextAuthOptions = {
           businessId: token.businessId,
           businessName: token.businessName,
           isAdmin: token.user.isAdmin,
+          locale: token.locale, // Add the locale to the session
         },
       };
     },

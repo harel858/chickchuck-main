@@ -11,7 +11,13 @@ async function Layout({
   params: { businessName },
 }: LandingPageProps) {
   return (
-    <section className="flex flex-col justify-center items-center gap-10 pb-10">
+    <section
+      style={{
+        backgroundImage:
+          "linear-gradient(330deg, hsl(272, 53%, 50%) 0%, hsl(226, 68%, 56%) 100%)",
+      }}
+      className="flex flex-col justify-center items-center gap-10 pb-10"
+    >
       {children}
     </section>
   );

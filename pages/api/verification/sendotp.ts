@@ -22,7 +22,7 @@ export default async function handler(
           user: {
             username: "harellevi",
           },
-          phone: phoneNumber,
+          phone: "1" + phoneNumber,
           app_id: "1000",
           source: "0537761400",
           includes_international: "1",

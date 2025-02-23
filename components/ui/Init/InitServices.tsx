@@ -2,9 +2,10 @@
 import React, { ChangeEvent, useCallback, useState } from "react";
 import { List, Modal } from "antd";
 import { Button } from "@ui/Button";
-import { PlusCircleTwoTone, PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import ServiceForm, { ServiceFieldType } from "./ServiceForm";
 import CardItem from "./CardItem";
+import { useTranslations } from "next-intl";
 
 export type ServiceInput = {
   title: string;
@@ -19,13 +20,15 @@ const initService: ServiceInput = {
 const InitServices = ({
   services,
   setServices,
+  locale,
 }: {
   services: ServiceInput[];
   setServices: React.Dispatch<React.SetStateAction<ServiceInput[]>>;
+  locale: string;
 }) => {
+  const t = useTranslations("serviceForm");
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState("Content of the modal");
   const [service, setService] = useState<ServiceInput>(initService);
 
   const showModal = () => {
@@ -48,7 +51,6 @@ const InitServices = ({
   }, [service]);
 
   const handleCancel = () => {
-    ("Clicked cancel button");
     setOpen(false);
     setService(initService);
   };
@@ -59,7 +61,7 @@ const InitServices = ({
         className="flex justify-center items-center gap-1 bg-white text-black hover:bg-slate-950 hover:text-white"
         onClick={showModal}
       >
-        <span>הוספת שירות</span>
+        <span>{t("addService")}</span>
         <PlusOutlined className="text-xl" />
       </Button>
       <List
@@ -73,11 +75,11 @@ const InitServices = ({
             setServices={setServices}
             services={services}
             item={item}
+            locale={locale}
           />
         )}
       />
       <Modal
-        title="שירות חדש"
         open={open}
         onOk={handleOk}
         okButtonProps={{
@@ -90,6 +92,7 @@ const InitServices = ({
         <ServiceForm
           service={service}
           handleServicesChange={handleServicesChange}
+          locale={locale}
         />
       </Modal>
     </div>
