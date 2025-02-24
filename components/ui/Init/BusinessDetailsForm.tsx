@@ -20,6 +20,9 @@ import {
 } from "@styles/components/ui/command";
 import debounce from "lodash.debounce";
 import { useTranslations } from "next-intl";
+import { Input } from "@components/input";
+import { FaSearch } from "react-icons/fa";
+import { Label } from "@components/label";
 
 export interface FieldType {
   label: string;
@@ -115,37 +118,52 @@ const BusinessDetailsForm = ({
             <div className="flex flex-col justify-center items-center gap-x-4 gap-y-4 w-full">
               {formType.map(({ label, name }) =>
                 name === "businessAddress" ? (
-                  <Command className="rounded-lg border shadow-md" key={label}>
-                    <CommandInput
-                      {...register("businessAddress")}
-                      placeholder="Business street address"
-                      value={selectedAddress}
-                      onValueChange={(e) => handleSearch(e)}
-                    />
-                    <CommandList>
-                      {/*  {selectedAddress && suggestions.length === 0 && (
+                  <div
+                    key={name}
+                    className="flex flex-col justify-center items-center gap-2"
+                  >
+                    {" "}
+                    <Label htmlFor={name}>{label}</Label>
+                    <Command
+                      className="rounded-lg border shadow-md"
+                      key={label}
+                    >
+                      <div className="relative w-full">
+                        <Input
+                          {...register("businessAddress")}
+                          placeholder="Business street address"
+                          value={selectedAddress}
+                          onChange={(e) => handleSearch(e.target.value)}
+                          style={{ width: "15rem" }} // Set the specific width here
+                          className="pl-10" // Add padding to the left to make space for the icon
+                        />
+                        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      </div>
+                      <CommandList>
+                        {/*  {selectedAddress && suggestions.length === 0 && (
                         <CommandEmpty>{t("noresults")}</CommandEmpty>
                       )} */}
-                      {selectedAddress && suggestions.length > 0 && (
-                        <CommandGroup heading="Suggestions">
-                          {suggestions.map((suggestion, index) => (
-                            <CommandItem
-                              className={`hover:bg-slate-100 cursor-pointer ${
-                                selectedAddress === suggestion
-                                  ? "bg-slate-100 text-slate-900"
-                                  : ""
-                              }`}
-                              key={index}
-                              onSelect={() => handleSelect(suggestion)}
-                            >
-                              {suggestion}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      )}
-                      <CommandSeparator />
-                    </CommandList>
-                  </Command>
+                        {selectedAddress && suggestions.length > 0 && (
+                          <CommandGroup heading="Suggestions">
+                            {suggestions.map((suggestion, index) => (
+                              <CommandItem
+                                className={`hover:bg-slate-100 cursor-pointer ${
+                                  selectedAddress === suggestion
+                                    ? "bg-slate-100 text-slate-900"
+                                    : ""
+                                }`}
+                                key={index}
+                                onSelect={() => handleSelect(suggestion)}
+                              >
+                                {suggestion}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        )}
+                        <CommandSeparator />
+                      </CommandList>
+                    </Command>
+                  </div>
                 ) : (
                   <FormField
                     locale={locale}
