@@ -1,5 +1,3 @@
-"use server";
-
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const fetchSuggestions = async (query: string): Promise<string[]> => {
