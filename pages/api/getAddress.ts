@@ -3,15 +3,20 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const fetchSuggestions = async (query: string): Promise<string[]> => {
-  const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-  console.log("apiKey", apiKey);
+  try {
+    const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+    console.log("apiKey", apiKey);
 
-  const response = await fetch(
-    `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${apiKey}&components=country:IL|country:US`
-  );
-  const data = await response.json();
-  const typedData = data as { predictions: { description: string }[] };
-  return typedData.predictions.map((prediction) => prediction.description);
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${apiKey}&components=country:IL|country:US`
+    );
+    const data = await response.json();
+    const typedData = data as { predictions: { description: string }[] };
+    return typedData.predictions.map((prediction) => prediction.description);
+  } catch (err: any) {
+    console.log("err", err);
+    throw new Error("Failed to fetch suggestions");
+  }
 };
 
 export default async function handler(

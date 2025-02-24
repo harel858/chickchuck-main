@@ -74,6 +74,8 @@ const BusinessDetailsForm = ({
   const fetchSuggestions = async (query: string): Promise<string[]> => {
     const response = await fetch(`/api/getAddress?query=${query}`);
     const data = await response.json();
+    console.log("data", data);
+
     const typedData = data as string[];
     return typedData.map((prediction) => prediction);
   };
