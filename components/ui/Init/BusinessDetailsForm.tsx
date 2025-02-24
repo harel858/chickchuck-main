@@ -117,6 +117,7 @@ const BusinessDetailsForm = ({
                 name === "businessAddress" ? (
                   <Command className="rounded-lg border shadow-md" key={label}>
                     <CommandInput
+                      {...register("businessAddress")}
                       placeholder="Business street address"
                       value={selectedAddress}
                       onValueChange={(e) => handleSearch(e)}
