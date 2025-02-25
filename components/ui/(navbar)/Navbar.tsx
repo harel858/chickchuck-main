@@ -60,7 +60,7 @@ function Navbar({
       <ul className="hidden xl:flex flex-row justify-between items-center text-md text-white dark:text-white">
         <NavBarItem
           title={t("onlinePage")}
-          link={`${locale}/${formattedBusinessName}`}
+          link={`/${locale}/${formattedBusinessName}`}
           icon={<FiExternalLink />}
         />
         {session.user.isAdmin && (
