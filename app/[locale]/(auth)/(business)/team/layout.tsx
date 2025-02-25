@@ -135,6 +135,7 @@ async function Layout({
       />
       <Hamburger
         user={user}
+        locale={locale}
         profileImage={profileImage || ""}
         formattedBusinessName={formattedBusinessName}
       />

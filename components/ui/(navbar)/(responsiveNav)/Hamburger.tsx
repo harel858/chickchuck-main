@@ -54,10 +54,12 @@ const Hamburger = ({
   user,
   formattedBusinessName,
   profileImage,
+  locale,
 }: {
   user: User & { accounts: Account[] };
   formattedBusinessName: string;
   profileImage: string | null;
+  locale: string;
 }) => {
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
@@ -96,6 +98,7 @@ const Hamburger = ({
       <Navigation
         formattedBusinessName={formattedBusinessName}
         isOpen={isOpen}
+        locale={locale}
       />
       <MenuToggle toggle={() => toggleOpen()} />
     </motion.nav>

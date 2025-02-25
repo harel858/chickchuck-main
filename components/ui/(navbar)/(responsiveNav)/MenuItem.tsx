@@ -1,8 +1,8 @@
 import classes from "./style.module.css";
 import React from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import { Link } from "i18n/routing";
 
 const variants = {
   open: {

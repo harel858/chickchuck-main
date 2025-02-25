@@ -101,6 +101,8 @@ const getAppointmentRequest = async (
 export default async function LandingPage({
   params: { businessName },
 }: LandingPageProps) {
+  console.log("businessName", businessName);
+
   const result = await getBusiness(businessName);
   const session = await getServerSession(authOptions);
 

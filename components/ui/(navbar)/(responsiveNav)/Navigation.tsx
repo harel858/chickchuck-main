@@ -19,35 +19,37 @@ const variants = {
 export const Navigation = ({
   isOpen,
   formattedBusinessName,
+  locale,
 }: {
   isOpen: boolean;
   formattedBusinessName: string;
+  locale: string;
 }) => {
   const itemIds = [
     {
       title: "יומן",
-      link: `/schedule`,
+      link: `/${locale}/schedule`,
       icon: <IoCalendarOutline />,
     },
     { title: "שירותים", link: `/services`, icon: <RiCoinsLine /> },
     {
       title: "לקוחות",
-      link: `/clients`,
+      link: `/${locale}/clients`,
       icon: <CgProfile />,
     },
     {
       title: "צוות",
-      link: `/team`,
+      link: `/${locale}/team`,
       icon: <RiTeamLine />,
     },
     {
       title: "דף העסק",
-      link: `/${formattedBusinessName}`,
+      link: `/${locale}/${formattedBusinessName}`,
       icon: <FiExternalLink />,
     },
     {
       title: "הגדרות",
-      link: `/profile`,
+      link: `/${locale}/profile`,
       icon: <IoSettingsOutline />,
     },
   ];
