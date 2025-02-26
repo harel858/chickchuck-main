@@ -9,42 +9,51 @@ import { FiShare } from "react-icons/fi";
 import { Session } from "next-auth";
 import { Badge, Button, Tooltip } from "antd";
 import Avatar from "@ui/Avatar";
+import NavButtons from "@ui/NavButtons";
+import { ActivityDays, Business, Images, Treatment } from "@prisma/client";
 
-function Images({
+function TopHead({
   urls,
+  business,
 }: {
   urls: {
     profileUrls: string;
     backgroundUrls: string;
   } | null;
+  business: Business & {
+    Treatment: Treatment[];
+    Images: Images[];
+    activityDays: ActivityDays[];
+    user: User[];
+  };
 }) {
   const profileImage = urls?.profileUrls;
   const backgroundUrl = urls?.backgroundUrls;
 
   return (
     <div
-      className="relative p-32 max-2xl:m-0 rounded-3xl  inset-y-0 top-0 left-0 right-0 w-1/2 h-1/5 bg-cover bg-center z-0 max-2xl:w-full max-2xl:rounded-t-none max-2xl:ml-auto shadow-2xl dark:shadow-white/10"
+      className="relative flex flex-col justify-end items-center pt-40 max-md:m-0 rounded-3xl inset-y-0 top-0 left-0 right-0 w-7/12 h-1/6 bg-cover bg-center z-0 max-md:w-full max-md:rounded-t-none max-md:ml-auto shadow-2xl dark:shadow-white/10"
       style={{
-        backgroundImage: `url(${backgroundUrl})`,
+        backgroundImage: `linear-gradient(to top, rgba(255, 255, 255, 1) 10%, rgba(255, 255, 255, 0)), url(${backgroundUrl})`,
         backgroundSize: "cover",
-        boxShadow: "inset 0px -20vh 70px rgba(0, 0, 0, 0.4)",
+        /*         boxShadow: "inset 0px -50vh 30px rgba(0, 0, 0, 0.4)",
+         */
       }}
     >
-      <Button className="bg-slate-200 shadow-md shadow-black/50 hover:bg-slate-900 text-black hover:text-white absolute z-20 top-5 left-4 text-base">
-        <FiShare className="text-xl" />
-      </Button>
-
-      <div className="absolute rounded-full z-40 -bottom-1/4 right-4 transform -translate-y-1/2 flex justify-center hover:scale-125 transition-all ease-in-out duration-200">
+      <div className="rounded-full flex justify-center transition-all ease-in-out duration-200">
         <Avatar
           alt="Profile Img"
-          className={`border-white border-2 p-0 m-0`}
+          className="border-black border-2 cursor-pointer rounded-full p-0 m-0"
           height={90}
           width={90}
           src={profileImage || undefined}
         />
+      </div>{" "}
+      <div className="flex justify-center">
+        <NavButtons business={business} />
       </div>
     </div>
   );
 }
 
-export default Images;
+export default TopHead;

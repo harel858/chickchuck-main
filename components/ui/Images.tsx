@@ -89,11 +89,11 @@ function AdminImages({
 
   return (
     <div
-      className="border border-gray-500 relative flex flex-col justify-end items-center pt-40 max-md:m-0 rounded-3xl inset-y-0 top-0 left-0 right-0 w-7/12 h-1/5 bg-cover bg-center z-0 max-md:w-full max-md:rounded-t-none max-md:ml-auto shadow-2xl dark:shadow-white/10"
+      className="relative flex flex-col justify-end items-center pt-40 max-md:m-0 rounded-3xl inset-y-0 top-0 left-0 right-0 w-7/12 h-1/6 bg-cover bg-center z-0 max-md:w-full max-md:rounded-t-none max-md:ml-auto shadow-2xl dark:shadow-white/10"
       style={{
-        backgroundImage: `linear-gradient(to top, rgba(226 ,232 ,240, 1) 10% ,rgba(226 ,232 ,240, 0)), url(${backgroundUrl})`,
+        backgroundImage: `linear-gradient(to top, rgba(255, 255, 255, 1) 10%, rgba(255, 255, 255, 0)), url(${backgroundUrl})`,
         backgroundSize: "cover",
-        /*         boxShadow: "inset 0px -50vh 30px rgba(226 ,232 ,240, 0)",
+        /*         boxShadow: "inset 0px -50vh 30px rgba(0, 0, 0, 0.4)",
          */
       }}
     >
@@ -121,7 +121,7 @@ function AdminImages({
       />
       <div className="flex flex-col items-center justify-end mt-auto mb-4">
         <Tooltip title="שינוי תמונה" arrow={false} placement={"bottom"}>
-          <div className="absolute rounded-full z-40 -bottom-1/4 right-4 transform -translate-y-1/2 flex justify-center hover:scale-125 transition-all ease-in-out duration-200">
+          <div className="rounded-full z-40 flex justify-center hover:scale-125 transition-all ease-in-out duration-200">
             <Badge
               offset={[-10, 10]}
               count={

@@ -3,9 +3,7 @@ import { notFound } from "next/navigation";
 import AppointmentSteps from "@components/AppointmentSteps";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@lib/auth";
-import NavButtons from "@ui/NavButtons";
 import { getImages2 } from "@lib/aws/s3";
-import BackgroundImage from "@components/landingPage/BackgroundImage";
 import { prisma } from "@lib/prisma";
 import GallerySection from "@components/landingPage/GallerySection";
 import { calendar_v3 } from "googleapis";
@@ -15,6 +13,7 @@ import { AppointmentRequest, Customer, Treatment, User } from "@prisma/client";
 import { isGoogleEvent } from "@ui/(navbar)/specialOperations/notifications/utils/typeGourd";
 import dayjs from "dayjs";
 import AdminImages from "@ui/Images";
+import TopHead from "@components/landingPage/BackgroundImage";
 
 type LandingPageProps = {
   params: {
@@ -155,7 +154,7 @@ export default async function LandingPage({
       {isAdmin ? (
         <AdminImages business={business} urls={urls} session={session} />
       ) : (
-        <BackgroundImage urls={urls} />
+        <TopHead business={business} urls={urls} />
       )}
 
       <AppointmentSteps
