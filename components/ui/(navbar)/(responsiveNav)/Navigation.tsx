@@ -31,7 +31,7 @@ export const Navigation = ({
       link: `/${locale}/schedule`,
       icon: <IoCalendarOutline />,
     },
-    { title: "שירותים", link: `/services`, icon: <RiCoinsLine /> },
+    { title: "שירותים", link: `/${locale}/services`, icon: <RiCoinsLine /> },
     {
       title: "לקוחות",
       link: `/${locale}/clients`,
