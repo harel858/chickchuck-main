@@ -1,5 +1,5 @@
 "use client";
-import "./schedule-component.css";
+import "./tailwind.css";
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import {
   ScheduleComponent,
@@ -15,7 +15,9 @@ import {
   Schedule,
   Resize,
   DragAndDrop,
+  Agenda,
 } from "@syncfusion/ej2-react-schedule";
+
 import { DataManager, UrlAdaptor } from "@syncfusion/ej2-data";
 import { Session } from "next-auth";
 import NewEvent from "./NewEvent";
@@ -55,180 +57,6 @@ export type AdditionData = {
 
 const ScheduleComponenta = React.forwardRef(
   (props: any, ref: React.Ref<Schedule>) => {
-    /*  L10n.load({
-      en: {
-        schedule: {
-          day: "יום",
-          week: "שבוע",
-          workWeek: "שבוע עבודה",
-          month: "חודש",
-          agenda: "סדר יום",
-          weekAgenda: "סדר יום שבועי",
-          workWeekAgenda: "סדר יום לשבוע עבודה",
-          monthAgenda: "סדר יום חודשי",
-          today: "היום",
-          noEvents: "אין אירועים",
-          emptyContainer: "אין אירועים מתוכננים ליום זה.",
-          allDay: "כל היום",
-          start: "התחלה",
-          end: "סיום",
-          more: "עוד",
-          close: "סגור",
-          cancel: "ביטול",
-          noTitle: "(ללא כותרת)",
-          delete: "מחק",
-          deleteEvent: "אירוע זה",
-          deleteMultipleEvent: "מחק מספר אירועים",
-          selectedItems: "פריטים נבחרים",
-          deleteSeries: "סדרה מלאה",
-          edit: "ערוך",
-          editSeries: "סדרה מלאה",
-          editEvent: "אירוע זה",
-          createEvent: "צור",
-          subject: "נושא",
-          addTitle: "הוסף כותרת",
-          moreDetails: "פרטים נוספים",
-          save: "שמור",
-          editContent: "כיצד ברצונך לשנות את המפגש בסדרה?",
-          deleteContent: "האם אתה בטוח שברצונך למחוק את האירוע הזה?",
-          deleteMultipleContent:
-            "האם אתה בטוח שברצונך למחוק את האירועים שנבחרו?",
-          newEvent: "אירוע חדש",
-          title: "כותרת",
-          location: "מיקום",
-          description: "תיאור",
-          timezone: "אזור זמן",
-          startTimezone: "אזור זמן התחלה",
-          endTimezone: "אזור זמן סיום",
-          repeat: "חזור",
-          saveButton: "שמור",
-          cancelButton: "ביטול",
-          deleteButton: "מחק",
-          recurrence: "הופעה חוזרת",
-          wrongPattern: "תבנית החזרה אינה תקפה.",
-          seriesChangeAlert:
-            "האם ברצונך לבטל את השינויים שבוצעו במקרים מסוימים של הסדרה הזו ולחברם שוב עם כל הסדרה?",
-          createError:
-            "משך הזמן של האירוע חייב להיות קצר יותר מתדירות ההופעה. קיצר את משך הזמן או שנה את תבנית החזרה בעורך האירועים החוזרים.",
-          sameDayAlert: "שתי הופעות של אותו אירוע לא יכולות להתרחש באותו יום.",
-          editRecurrence: "ערוך הופעה חוזרת",
-          repeats: "חוזר",
-          alert: "התראה",
-          startEndError: "התאריך הנבחר לסיום קורה לפני תאריך ההתחלה.",
-          invalidDateError: "הערך שהוזן לתאריך אינו תקף.",
-          blockAlert: "לא ניתן לתכנן אירועים בטווח הזמן החסום.",
-          ok: "אישור",
-          yes: "כן",
-          no: "לא",
-          occurrence: "התרחשות",
-          series: "סדרה",
-          previous: "קודם",
-          next: "הבא",
-          timelineDay: "יום קו זמן",
-          timelineWeek: "שבוע קו זמן",
-          timelineWorkWeek: "שבוע עבודה בקו זמן",
-          timelineMonth: "חודש קו זמן",
-          timelineYear: "שנת קו זמן",
-          editFollowingEvent: "ערוך אירועים עוקבים",
-          deleteTitle: "מחק אירוע",
-          editTitle: "ערוך אירוע",
-          beginFrom: "התחל מ",
-          endAt: "סיים ב",
-        },
-        recurrenceeditor: {
-          none: "אין",
-          daily: "יומי",
-          weekly: "שבועי",
-          monthly: "חודשי",
-          month: "חודש",
-          yearly: "שנתי",
-          never: "לעולם לא",
-          until: "עד",
-          count: "ספירה",
-          first: "ראשון",
-          second: "שני",
-          third: "שלישי",
-          fourth: "רביעי",
-          last: "אחרון",
-          repeat: "חזור",
-          repeatEvery: "חזור כל",
-          on: "חזור ב",
-          end: "סיום",
-          onDay: "יום",
-          days: "ימים)",
-          weeks: "שבועות)",
-          months: "חודשים)",
-          years: "שנים)",
-          every: "כל",
-          summaryTimes: "פעמים)",
-          summaryOn: "ב",
-          summaryUntil: "עד",
-          summaryRepeat: "חוזר",
-          summaryDay: "ימים)",
-          summaryWeek: "שבועות)",
-          summaryMonth: "חודשים)",
-          summaryYear: "שנים)",
-          monthWeek: "שבוע חודש",
-          monthPosition: "מיקום חודש",
-          monthExpander: "מאריך חודש",
-          yearExpander: "מאריך שנה",
-          repeatInterval: "מרווח חזרה",
-        },
-        calendar: {
-          today: "היום",
-          weekHeader: "שבוע",
-          firstDayOfWeek: 0, // Sunday as the first day of the week
-          months: {
-            names: [
-              "ינואר",
-              "פברואר",
-              "מרץ",
-              "אפריל",
-              "מאי",
-              "יוני",
-              "יולי",
-              "אוגוסט",
-              "ספטמבר",
-              "אוקטובר",
-              "נובמבר",
-              "דצמבר",
-            ],
-            namesAbbr: [
-              "ינו",
-              "פבר",
-              "מרץ",
-              "אפר",
-              "מאי",
-              "יונ",
-              "יול",
-              "אוג",
-              "ספט",
-              "אוק",
-              "נוב",
-              "דצמ",
-            ],
-          },
-          days: {
-            names: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"],
-            namesAbbr: ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "שבת"],
-            namesShort: ["א", "ב", "ג", "ד", "ה", "ו", "ש"],
-          },
-        },
-        datepicker: {
-          placeholder: "בחר תאריך",
-          today: "היום",
-        },
-        timepicker: {
-          placeholder: "בחר זמן",
-        },
-        datetimepicker: {
-          placeholder: "בחר תאריך ושעה",
-          today: "היום",
-        },
-      },
-    });
-    // Enables Right to left alignment for all controls
-    enableRtl(true); */
     return <ScheduleComponent {...props} />;
   }
 );
@@ -303,7 +131,7 @@ const RecurrenceEvents = ({
     },
     [session, business, user]
   );
-  const timeScale = { enable: true, interval: 60, slotCount: 6 };
+  const timeScale = { enable: true, interval: 15, slotCount: 1 };
   const onDataBindingCallBack = useCallback(
     (e: Record<string, any>) => onDataBinding(e),
     []
@@ -328,6 +156,8 @@ const RecurrenceEvents = ({
             resourceHeaderTemplate={resourceHeaderTemplate}
             group={{ allowGroupEdit: true, resources: ["Conferences"] }}
             enableRtl
+            workHours={{ start: "08:00", end: "18:00" }}
+            workDays={[0, 1, 2, 3, 4, 5, 6]} // כל הימים נחשבים ימי עבודה
             timeScale={timeScale}
             allowDragAndDrop
             allowResizing
@@ -368,7 +198,9 @@ const RecurrenceEvents = ({
                 option="Month"
               />
             </ViewsDirective>
-            <Inject services={[Day, Week, Month, Resize, DragAndDrop]} />
+            <Inject
+              services={[Day, Week, Month, Agenda, Resize, DragAndDrop]}
+            />
           </ScheduleComponenta>
         </div>
       </div>

@@ -37,27 +37,23 @@ function Navbar({
   const t = useTranslations("navbar");
 
   const profileImage = session.user.image;
-
-  const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-"); // Replace whitespace with hyphens
+  const formattedBusinessName = session.user.businessName?.replace(/\s+/g, "-");
   console.log("locale", locale);
 
   return (
-    <nav className="fixed px-4 py-2 flex items-center justify-between backdrop-blur-sm bg-gradient-to-r from-orange-200 via-orange-50 to-orange-200 dark:bg-amber-900/95 z-40 top-0 left-0 right-0 h-20 border-b border-gray-300 dark:border-amber-700 shadow-sm">
-      <div className="flex items-center">
+    <nav className="fixed px-6 py-3 flex items-center justify-between backdrop-blur-md bg-gray-100 dark:bg-gray-900 z-50 top-0 left-0 right-0 h-20 border-b border-gray-300 dark:border-gray-700 shadow-md">
+      <div className="flex items-center pointer-events-none -z-0">
         <Image
-          width={200}
-          height={200}
-          className="mr-4"
+          width={180}
+          height={180}
+          className="mr-4 pointer-events-none -z-0"
           alt="logo"
           aria-hidden="true"
           src={logo.src}
         />
-        {/*      <span className="text-xl font-bold text-white dark:text-white">
-          {t("title")}
-        </span> */}
       </div>
 
-      <ul className="hidden xl:flex flex-row justify-between items-center text-md text-white dark:text-white">
+      <ul className="hidden xl:flex flex-row justify-between items-center text-lg text-gray-900 dark:text-white gap-6">
         <NavBarItem
           title={t("onlinePage")}
           link={`/${locale}/${formattedBusinessName}`}
@@ -94,7 +90,7 @@ function Navbar({
         )}
       </ul>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-5">
         <Notifications
           scheduleProps={scheduleProps}
           session={session}
