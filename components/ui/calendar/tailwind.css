@@ -66047,3 +66047,37 @@ li.e-separator.e-menu-item.e-excel-separator {
   min-height: 40px !important;
   /* מתאים את הגובה של כל משבצת */
 }
+
+.e-schedule .e-time-cells {
+  min-height: 40px !important;
+  /* מבטיח שהשורות לא יהיו קטנות מדי */
+}
+
+.e-schedule .e-work-cells {
+  min-height: 40px !important;
+  /* מונע התכווצות של השורות */
+}
+.e-schedule .e-time-cells {
+  min-width: 60px !important;
+  /* מגדיל את הרוחב כך שהשעות יוצגו נכון */
+  text-align: center !important;
+  font-size: 14px !important;
+  white-space: nowrap !important;
+  /* מונע חיתוך של AM/PM */
+}
+
+.e-schedule {
+  overflow: visible !important;
+}
+.e-time-slots span {
+  display: inline-block !important;
+  visibility: visible !important;
+}
+
+.e-time-slots span {
+  display: inline-block !important;
+  visibility: visible !important;
+  min-width: 50px !important;
+  /* מבטיח שהשעות יוצגו עם דקות */
+  white-space: nowrap !important;
+}

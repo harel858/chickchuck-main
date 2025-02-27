@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 
 function eventTemplate(props: any) {
   const getTimeString = (value: any) => {
-    return dayjs(value).format("HH:mm"); // 24 שעות (ל-AM/PM השתמש ב "h:mm A")
+    return dayjs(value).format("HH:mm a"); // 24 שעות (ל-AM/PM השתמש ב "h:mm A")
   };
 
   return (
@@ -25,7 +25,8 @@ function eventTemplate(props: any) {
 
       {/* שעות האירוע */}
       <p className="text-sm max-md:text-xs opacity-75">
-        ⏰ {getTimeString(props.StartTime)} - {getTimeString(props.EndTime)}
+        <span className="text-lg">⏰</span> {getTimeString(props.StartTime)} -{" "}
+        {getTimeString(props.EndTime)}
       </p>
     </div>
   );

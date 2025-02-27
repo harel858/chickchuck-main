@@ -12,12 +12,11 @@ import {
   EventSettingsModel,
   ResourcesDirective,
   ResourceDirective,
-  Schedule,
   Resize,
   DragAndDrop,
   Agenda,
+  Schedule,
 } from "@syncfusion/ej2-react-schedule";
-
 import { DataManager, UrlAdaptor } from "@syncfusion/ej2-data";
 import { Session } from "next-auth";
 import NewEvent from "./NewEvent";
@@ -38,8 +37,7 @@ import CustomHeaderTemplate from "./CustomHeaderTemplate";
 import eventTemplate from "./eventTemplate";
 import { onPopupOpen } from "./utils/onPopupOpen";
 import { fields } from "./utils/eventSettings";
-import { enableRtl, L10n } from "@syncfusion/ej2-base";
-import { registerLicense } from "@syncfusion/ej2-base";
+import { enableRtl, L10n, registerLicense } from "@syncfusion/ej2-base";
 import { useLocale } from "use-intl";
 
 if (process.env.NEXT_PUBLIC_SYNCFUSION_SECRET) {
@@ -48,13 +46,40 @@ if (process.env.NEXT_PUBLIC_SYNCFUSION_SECRET) {
   console.error("Syncfusion license key is not defined");
 }
 
-// Enables Right to left alignment for all controls
+// ✅ תבנית מותאמת אישית להצגת השעות
+const timeTemplate = (props: any) => {
+  const dateObj = new Date(props?.date);
+  const hours = dateObj.getHours();
+  const minutes = dateObj.getMinutes();
+  const isMajor = minutes === 0; // האם זו שעה עגולה?
+
+  return (
+    <div className={`${isMajor ? "font-bold" : "font-normal"}`}>
+      {dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+    </div>
+  );
+};
+
+// ✅ הגדרת תרגום לפורמט השעות
+L10n.load({
+  en: {
+    schedule: {
+      timeScale: {
+        majorSlotTemplate: timeTemplate, // תבנית לשעות עגולות
+        minorSlotTemplate: timeTemplate, // תבנית לרבעי שעה
+      },
+    },
+  },
+});
+// ✅ הפעלת RTL לכל הקומפוננטות
 enableRtl(true);
+
 export type AdditionData = {
   service?: { label: string; value: string };
   customer?: { label: string; value: string };
 };
 
+// ✅ קומפוננטה ראשית
 const ScheduleComponenta = React.forwardRef(
   (props: any, ref: React.Ref<Schedule>) => {
     return <ScheduleComponent {...props} />;
@@ -85,6 +110,14 @@ const RecurrenceEvents = ({
   };
   resourceData: DataSource[];
 }) => {
+  const [timeScale, setTimeScale] = useState({
+    enable: true,
+    interval: 30,
+    slotCount: 2,
+    majorSlotTemplate: timeTemplate,
+    minorSlotTemplate: timeTemplate,
+  });
+
   const locale = useLocale();
   const scheduleObj = useRef<ScheduleComponent>(null);
 
@@ -102,6 +135,36 @@ const RecurrenceEvents = ({
     includeFiltersInQuery: true,
     fields: fields,
   });
+
+  // ✅ התאמת `timeScale` בהתאם לגודל המסך
+  useEffect(() => {
+    const updateScale = () => {
+      const newTimeScale =
+        window.innerWidth < 768
+          ? {
+              enable: true,
+              interval: 30,
+              slotCount: 2,
+              majorSlotTemplate: timeTemplate,
+              minorSlotTemplate: timeTemplate,
+            }
+          : {
+              enable: true,
+              interval: 15,
+              slotCount: 4,
+              majorSlotTemplate: timeTemplate,
+              minorSlotTemplate: timeTemplate,
+            };
+
+      setTimeScale(newTimeScale);
+      console.log("Updated timeScale:", newTimeScale); // בדיקה אם הערך מתעדכן
+    };
+
+    window.addEventListener("resize", updateScale);
+    updateScale(); // הפעלת הפונקציה מיד בעת טעינת העמוד
+
+    return () => window.removeEventListener("resize", updateScale);
+  }, []);
 
   const editorTemplate = useCallback(
     (props: any) => {
@@ -131,11 +194,12 @@ const RecurrenceEvents = ({
     },
     [session, business, user]
   );
-  const timeScale = { enable: true, interval: 15, slotCount: 4 };
+
   const onDataBindingCallBack = useCallback(
     (e: Record<string, any>) => onDataBinding(e),
     []
   );
+
   return (
     <div className="schedule-control-section">
       <div className="col-lg-9 control-section">
@@ -144,7 +208,7 @@ const RecurrenceEvents = ({
             width="100%"
             height="100vh"
             selectedDate={new Date()}
-            timeFormat="hh:mm a"
+            timeFormat="HH:mm"
             ref={scheduleObj}
             eventSettings={eventSettings}
             dataBinding={onDataBindingCallBack}
@@ -175,27 +239,9 @@ const RecurrenceEvents = ({
               />
             </ResourcesDirective>
             <ViewsDirective>
-              <ViewDirective
-                eventTemplate={eventTemplate}
-                dateHeaderTemplate={(props: any) =>
-                  CustomHeaderTemplate(props, locale)
-                }
-                option="Day"
-              />
-              <ViewDirective
-                eventTemplate={eventTemplate}
-                option="Week"
-                dateHeaderTemplate={(props: any) =>
-                  CustomHeaderTemplate(props, locale)
-                }
-              />
-              <ViewDirective
-                eventTemplate={eventTemplate}
-                dateHeaderTemplate={(props: any) =>
-                  CustomHeaderTemplate(props, locale)
-                }
-                option="Month"
-              />
+              <ViewDirective eventTemplate={eventTemplate} option="Day" />
+              <ViewDirective eventTemplate={eventTemplate} option="Week" />
+              <ViewDirective eventTemplate={eventTemplate} option="Month" />
             </ViewsDirective>
             <Inject
               services={[Day, Week, Month, Agenda, Resize, DragAndDrop]}
