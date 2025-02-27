@@ -131,7 +131,7 @@ const RecurrenceEvents = ({
     },
     [session, business, user]
   );
-  const timeScale = { enable: true, interval: 15, slotCount: 1 };
+  const timeScale = { enable: true, interval: 15, slotCount: 4 };
   const onDataBindingCallBack = useCallback(
     (e: Record<string, any>) => onDataBinding(e),
     []
@@ -161,7 +161,6 @@ const RecurrenceEvents = ({
             timeScale={timeScale}
             allowDragAndDrop
             allowResizing
-            locale="en"
           >
             <ResourcesDirective>
               <ResourceDirective

@@ -66041,3 +66041,9 @@ li.e-separator.e-menu-item.e-excel-separator {
   margin-left: -18px;
   margin-right: unset;
 }
+
+.e-schedule .e-work-cells,
+.e-schedule .e-time-cells {
+  min-height: 40px !important;
+  /* מתאים את הגובה של כל משבצת */
+}

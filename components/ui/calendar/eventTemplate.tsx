@@ -3,26 +3,32 @@ import dayjs from "dayjs";
 
 function eventTemplate(props: any) {
   const getTimeString = (value: any) => {
-    return dayjs(value).format("h:mm");
+    return dayjs(value).format("HH:mm"); // 24 שעות (ל-AM/PM השתמש ב "h:mm A")
   };
 
   return (
     <div
-      className="flex flex-col justify-start items-center w-full relative"
-      style={{ background: props.SecondaryColor }}
+      className="p-2 w-full text-white rounded flex flex-col justify-start items-start shadow-md"
+      style={{ background: props.SecondaryColor }} // צבע ברירת מחדל
     >
-      <p className="absolute top-0 right-0 font-semibold text-base text-justify max-md:text-xs">
-        {props?.Subject || ""}
+      {/* כותרת האירוע */}
+      <p className="font-semibold text-base max-md:text-sm truncate">
+        {props?.Subject || "אירוע חדש"}
       </p>
 
-      <p className="absolute top-5 right-0 font-semibold text-base max-md:text-xs">
-        {props?.ExtendedProperties?.private?.customerName || ""}
-      </p>
-      <p className="absolute top-10 right-0 font-semibold text-sm max-md:text-xs flex flex-wrap">
-        <span>{getTimeString(props.StartTime)} - </span>
-        <span> {getTimeString(props.EndTime)}</span>
+      {/* שם הלקוח (אם קיים) */}
+      {props?.ExtendedProperties?.private?.customerName && (
+        <p className="text-sm max-md:text-xs opacity-90">
+          לקוח: {props.ExtendedProperties.private.customerName}
+        </p>
+      )}
+
+      {/* שעות האירוע */}
+      <p className="text-sm max-md:text-xs opacity-75">
+        ⏰ {getTimeString(props.StartTime)} - {getTimeString(props.EndTime)}
       </p>
     </div>
   );
 }
+
 export default eventTemplate;

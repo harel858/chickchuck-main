@@ -127,13 +127,7 @@ export default async function Layout({
         <link rel="canonical" href="https://www.quickline.co.il" />
       </head>
       <body
-        className={cn(
-          "h-full font-sans dark:bg-slate-900 antialiased relative"
-        )}
-        style={{
-          backgroundImage:
-            "linear-gradient(330deg, hsl(272, 53%, 50%) 0%, hsl(226, 68%, 56%) 100%)",
-        }}
+        className={cn("h-full font-sans bg-slate-900 antialiased relative")}
       >
         {" "}
         {/* עטיפת תוכן ראשי עם Providers לניהול מצב גלובלי ותמיכת תמה */}
