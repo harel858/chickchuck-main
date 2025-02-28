@@ -14,7 +14,7 @@ export function GoogleSignInButton({ locale }: { locale: string }) {
   const handleClick = async () => {
     try {
       const result = await signIn("google", {
-        callbackUrl: `/${locale}/login`,
+        callbackUrl: `/${locale}/schedule`,
       });
       console.log("result", result);
 

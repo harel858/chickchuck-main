@@ -213,6 +213,7 @@ export const authOptions: NextAuthOptions = {
       authorize: authorizeUserSignIn,
     }),
     googleProvider({
+      allowDangerousEmailAccountLinking: true,
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
       httpOptions: {
@@ -247,29 +248,6 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn(params) {
-      const { profile, account, user, credentials, email } = params;
-      console.log("signinParam", params);
-
-      // Check if the user is new based on your business logic
-      if (user && "businessId" in user && !user.businessId) {
-        const locale = user.preferredLocale || defaultLocale; // Get the locale from user
-        return true; // Redirect to create business details if no businessId
-      }
-      return true; // Allow sign-in
-    },
-    async redirect({ url, baseUrl }) {
-      const locale = url.split("/")[1]; // Extract the locale from the URL
-      console.log("locale", locale);
-
-      // If locale is found, redirect to the localized path
-      if (locale) {
-        return `/${locale}/schedule`;
-      }
-
-      // Fallback: redirect to the default locale or base URL
-      return `/en/schedule`; // Default to 'he' if no locale found
-    },
     async jwt(props) {
       console.log("props", props);
 

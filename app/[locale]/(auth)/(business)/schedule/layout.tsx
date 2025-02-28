@@ -89,7 +89,7 @@ async function Layout({
     return notFound();
   }
 
-  if (!user?.Business) {
+  if (!user?.Business?.id) {
     console.log("User has no business");
     return redirect(`/${locale}/createbusinessdetails`);
   }
