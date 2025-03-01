@@ -54,8 +54,12 @@ const timeTemplate = (props: any) => {
   const isMajor = minutes === 0; // האם זו שעה עגולה?
 
   return (
-    <div className={`${isMajor ? "font-bold text-xl" : "font-normal text-sm"}`}>
-      {dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+    <div className={`${isMajor ? "font-bold" : "font-normal"}`}>
+      {dateObj.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })}
     </div>
   );
 };
@@ -113,7 +117,7 @@ const RecurrenceEvents = ({
   const [timeScale, setTimeScale] = useState({
     enable: true,
     interval: 60, // Set interval to 60 minutes
-    slotCount: 4, // Set slot count to 4 (15 minutes per slot)
+    slotCount: 4, // Set slot count to 4 (14 minutes per slot)
     majorSlotTemplate: timeTemplate,
     minorSlotTemplate: timeTemplate,
   });
@@ -144,14 +148,14 @@ const RecurrenceEvents = ({
           ? {
               enable: true,
               interval: 60,
-              slotCount: 5,
+              slotCount: 4,
               majorSlotTemplate: timeTemplate,
               minorSlotTemplate: timeTemplate,
             }
           : {
               enable: true,
               interval: 60,
-              slotCount: 5,
+              slotCount: 4,
               majorSlotTemplate: timeTemplate,
               minorSlotTemplate: timeTemplate,
             };
